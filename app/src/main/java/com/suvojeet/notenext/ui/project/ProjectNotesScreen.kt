@@ -10,7 +10,6 @@ import androidx.compose.animation.SharedTransitionLayout
 import androidx.compose.animation.core.spring
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
-import androidx.compose.animation.rememberSharedContentState
 import androidx.compose.animation.scaleIn
 import androidx.compose.animation.scaleOut
 import androidx.compose.animation.togetherWith
@@ -625,8 +624,6 @@ fun ProjectNotesScreen(
                         }
                     }
                 }
-            }
-                }
             } else {
                 AddEditNoteScreen(
                     state = state.toNotesEditState(),
@@ -643,7 +640,6 @@ fun ProjectNotesScreen(
             }
         }
     }
-}
 
     if (state.showSummaryDialog) {
         AiSummarySheet(
@@ -653,4 +649,5 @@ fun ProjectNotesScreen(
             onClearSummary = { viewModel.onEvent(ProjectNotesEvent.ClearSummary) }
         )
     }
+}
 }
