@@ -10,6 +10,8 @@ import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.emitAll
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import kotlinx.serialization.builtins.ListSerializer
@@ -20,6 +22,7 @@ import java.util.concurrent.ConcurrentHashMap
 import kotlinx.coroutines.flow.first
 import com.suvojeet.notenext.data.remote.ModelListResponse
 import com.suvojeet.notenext.data.remote.GroqModel
+import com.suvojeet.notenext.data.remote.ChatCompletionStreamResponse
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -202,6 +205,80 @@ class GroqRepository @Inject constructor(
         } ?: GroqResult.AllModelsFailed
     }
 
+    private fun executeWithRetryStream(
+        isFast: Boolean,
+        messages: List<Message>,
+        maxRetriesPerModel: Int = 2
+    ): Flow<GroqResult<String>> = flow {
+        val models = getTargetModels(isFast)
+        var lastException: Exception? = null
+
+        for (model in models) {
+            if (GroqRateLimitManager.isRateLimited(model)) continue
+
+            var currentRetry = 0
+            while (currentRetry <= maxRetriesPerModel) {
+                try {
+                    val request = ChatCompletionRequest(
+                        model = model,
+                        messages = messages,
+                        stream = true
+                    )
+                    val responseBody = apiService.getChatCompletionStream(request)
+                    val accumulated = StringBuilder()
+                    
+                    responseBody.byteStream().bufferedReader().useLines { lines ->
+                        for (line in lines) {
+                            if (line.startsWith("data: ")) {
+                                val data = line.substring(6).trim()
+                                if (data == "[DONE]") break
+                                
+                                try {
+                                    val streamResponse = json.decodeFromString<ChatCompletionStreamResponse>(data)
+                                    val content = streamResponse.choices.firstOrNull()?.delta?.content
+                                    if (content != null) {
+                                        accumulated.append(content)
+                                        emit(GroqResult.Success(accumulated.toString()))
+                                    }
+                                } catch (e: Exception) {
+                                    // Ignore parse errors for partial chunks
+                                }
+                            }
+                        }
+                    }
+                    return@flow
+                } catch (e: Exception) {
+                    lastException = e
+                    val message = e.message ?: ""
+                    
+                    if (message.contains("429")) {
+                        val retryAfter = GroqRateLimitManager.getRetryAfter(model).coerceAtLeast(60)
+                        GroqRateLimitManager.update(model, remaining = 0, tokens = null, retryAfter = retryAfter)
+                        break
+                    }
+                    
+                    if (message.contains("401")) {
+                        emit(GroqResult.InvalidKey)
+                        return@flow
+                    }
+                    
+                    if (message.contains("503") || message.contains("502") || e is IOException) {
+                        currentRetry++
+                        if (currentRetry <= maxRetriesPerModel) {
+                            delay(1000L * currentRetry)
+                        }
+                    } else {
+                        break
+                    }
+                }
+            }
+        }
+
+        lastException?.let {
+            emit(GroqResult.NetworkError(it.message ?: "Unknown error occurred"))
+        } ?: emit(GroqResult.AllModelsFailed)
+    }
+
     /**
      * Task 3.4: Prevents duplicate in-flight requests for the same content.
      */
@@ -235,22 +312,27 @@ class GroqRepository @Inject constructor(
             return@flow
         }
 
-        val result = deduplicate("summarize_${content.hashCode()}") {
-            val wordCount = content.split("\\s+".toRegex()).size
-            val isFast = wordCount < 1000
+        val wordCount = content.split("\\s+".toRegex()).size
+        val isFast = wordCount < 1000
 
-            val messages = listOf(
-                Message(role = "system", content = "You are a helpful assistant that summarizes notes concisely."),
-                Message(role = "user", content = "Summarize the following note:\n\n$content")
-            )
+        val messages = listOf(
+            Message(role = "system", content = "You are a helpful assistant that summarizes notes concisely."),
+            Message(role = "user", content = "Summarize the following note:\n\n$content")
+        )
 
-            executeWithRetry(isFast, messages) { it.trim() }
-        }
+        var finalSummary = ""
+        emitAll(
+            executeWithRetryStream(isFast, messages)
+                .onEach { result ->
+                    if (result is GroqResult.Success) {
+                        finalSummary = result.data
+                    }
+                }
+        )
         
-        if (result is GroqResult.Success) {
-            summaryCache.put(content, result.data)
+        if (finalSummary.isNotEmpty()) {
+            summaryCache.put(content, finalSummary)
         }
-        emit(result)
     }
 
     fun generateChecklist(topic: String): Flow<GroqResult<List<String>>> = flow {

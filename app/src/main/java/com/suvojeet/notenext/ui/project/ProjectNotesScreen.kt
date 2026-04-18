@@ -4,10 +4,13 @@ package com.suvojeet.notenext.ui.project
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.AnimatedVisibilityScope
 import androidx.compose.animation.ExperimentalSharedTransitionApi
+import androidx.compose.animation.SharedTransitionLayout
 import androidx.compose.animation.core.spring
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
+import androidx.compose.animation.rememberSharedContentState
 import androidx.compose.animation.scaleIn
 import androidx.compose.animation.scaleOut
 import androidx.compose.animation.togetherWith
@@ -148,8 +151,24 @@ fun ProjectNotesScreen(
     }
 
     Box(modifier = Modifier.fillMaxSize()) {
-        Scaffold(
-            modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
+        SharedTransitionLayout {
+            AnimatedContent(
+                targetState = state.expandedNoteId,
+                label = "NoteTransition",
+                transitionSpec = {
+                    val springSpec = spring<Float>(dampingRatio = 0.8f, stiffness = 300f)
+                    if (targetState != null) {
+                        (fadeIn(spring()) + scaleIn(initialScale = 0.85f, animationSpec = springSpec))
+                            .togetherWith(fadeOut(spring()))
+                    } else {
+                        fadeIn(spring())
+                            .togetherWith(fadeOut(spring()) + scaleOut(targetScale = 0.85f, animationSpec = springSpec))
+                    }
+                }
+            ) { expandedId ->
+                if (expandedId == null) {
+                    Scaffold(
+                        modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
             topBar = {
                 AnimatedContent(
                     targetState = isSelectionModeActive,
@@ -465,11 +484,13 @@ fun ProjectNotesScreen(
                                             key = { it.note.id },
                                             contentType = { it.note.noteType }
                                         ) { note ->
-                                            val isExpanded = state.expandedNoteId == note.note.id
                                             NoteItem(
                                                 modifier = Modifier
                                                     .animateItem()
-                                                    .graphicsLayer { alpha = if (isExpanded) 0f else 1f },
+                                                    .sharedElement(
+                                                        rememberSharedContentState(key = "note-${note.note.id}"),
+                                                        animatedVisibilityScope = this@AnimatedContent
+                                                    ),
                                                 note = note,
                                                 isSelected = state.selectedNoteIds.contains(note.note.id),
                                                 onNoteClick = {
@@ -502,11 +523,13 @@ fun ProjectNotesScreen(
                                             key = { it.note.id },
                                             contentType = { it.note.noteType }
                                         ) { note ->
-                                            val isExpanded = state.expandedNoteId == note.note.id
                                             NoteItem(
                                                 modifier = Modifier
                                                     .animateItem()
-                                                    .graphicsLayer { alpha = if (isExpanded) 0f else 1f },
+                                                    .sharedElement(
+                                                        rememberSharedContentState(key = "note-${note.note.id}"),
+                                                        animatedVisibilityScope = this@AnimatedContent
+                                                    ),
                                                 note = note,
                                                 isSelected = state.selectedNoteIds.contains(note.note.id),
                                                 onNoteClick = {
@@ -540,11 +563,13 @@ fun ProjectNotesScreen(
                                             )
                                         }
                                         items(pinnedNotes, key = { it.note.id }) { note ->
-                                            val isExpanded = state.expandedNoteId == note.note.id
                                             NoteItem(
                                                 modifier = Modifier
                                                     .animateItem()
-                                                    .graphicsLayer { alpha = if (isExpanded) 0f else 1f },
+                                                    .sharedElement(
+                                                        rememberSharedContentState(key = "note-${note.note.id}"),
+                                                        animatedVisibilityScope = this@AnimatedContent
+                                                    ),
                                                 note = note,
                                                 isSelected = state.selectedNoteIds.contains(note.note.id),
                                                 onNoteClick = {
@@ -573,11 +598,13 @@ fun ProjectNotesScreen(
                                             }
                                         }
                                         items(otherNotes, key = { it.note.id }) { note ->
-                                            val isExpanded = state.expandedNoteId == note.note.id
                                             NoteItem(
                                                 modifier = Modifier
                                                     .animateItem()
-                                                    .graphicsLayer { alpha = if (isExpanded) 0f else 1f },
+                                                    .sharedElement(
+                                                        rememberSharedContentState(key = "note-${note.note.id}"),
+                                                        animatedVisibilityScope = this@AnimatedContent
+                                                    ),
                                                 note = note,
                                                 isSelected = state.selectedNoteIds.contains(note.note.id),
                                                 onNoteClick = {
@@ -599,23 +626,24 @@ fun ProjectNotesScreen(
                     }
                 }
             }
-        }
-
-        AnimatedVisibility(
-            visible = state.expandedNoteId != null,
-            enter = scaleIn(initialScale = 0.85f, animationSpec = spring()) + fadeIn(animationSpec = spring()),
-            exit = scaleOut(targetScale = 0.85f, animationSpec = spring()) + fadeOut(animationSpec = spring())
-        ) {
-            AddEditNoteScreen(
-                state = state.toNotesEditState(),
-                onEvent = { viewModel.onEvent(it.toProjectNotesEvent()) },
-                onDismiss = { viewModel.onEvent(ProjectNotesEvent.CollapseNote) },
-                themeMode = themeMode,
-                settingsRepository = settingsRepository,
-                events = viewModel.events.map { it.toNotesUiEvent() }.shareIn(rememberCoroutineScope(), SharingStarted.WhileSubscribed())
-            )
+                }
+            } else {
+                AddEditNoteScreen(
+                    state = state.toNotesEditState(),
+                    onEvent = { viewModel.onEvent(it.toProjectNotesEvent()) },
+                    onDismiss = { viewModel.onEvent(ProjectNotesEvent.CollapseNote) },
+                    themeMode = themeMode,
+                    settingsRepository = settingsRepository,
+                    events = viewModel.events.map { it.toNotesUiEvent() }.shareIn(rememberCoroutineScope(), SharingStarted.WhileSubscribed()),
+                    modifier = Modifier.sharedElement(
+                        rememberSharedContentState(key = "note-${expandedId}"),
+                        animatedVisibilityScope = this@AnimatedContent
+                    )
+                )
+            }
         }
     }
+}
 
     if (state.showSummaryDialog) {
         AiSummarySheet(
