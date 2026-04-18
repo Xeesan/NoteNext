@@ -6,6 +6,9 @@ import com.suvojeet.notenext.data.NoteRepository
 import com.suvojeet.notenext.data.Project
 import com.suvojeet.notenext.data.Label
 import com.suvojeet.notenext.data.NoteWithAttachments
+import com.suvojeet.notenext.data.TodoItem
+import com.suvojeet.notenext.data.TodoRepository
+import com.suvojeet.notenext.data.TodoSubtask
 import kotlinx.serialization.builtins.ListSerializer
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
@@ -39,6 +42,7 @@ data class BackupScanResult(
 @Singleton
 class BackupRepository @Inject constructor(
     private val repository: NoteRepository,
+    private val todoRepository: TodoRepository,
     @ApplicationContext private val context: Context,
     private val googleDriveManager: GoogleDriveManager
 ) {
@@ -222,6 +226,18 @@ class BackupRepository @Inject constructor(
         writeEntryWithHash("labels.json", json.encodeToString(ListSerializer(Label.serializer()), labels).toByteArray())
         writeEntryWithHash("projects.json", json.encodeToString(ListSerializer(Project.serializer()), projects).toByteArray())
 
+        // Bug C1 fix: include Todos and their subtasks in FULL backups only.
+        // TodoItem has no modifiedAt column and the restore flow has no dedup for
+        // todos, so exporting them in incremental backups would double them on each
+        // incremental restore. Incremental = notes-only delta; a periodic full backup
+        // remains the source of truth for todos.
+        if (since == 0L) {
+            val todos = todoRepository.getAllTodosList()
+            val subtasks = todoRepository.getAllSubtasksList()
+            writeEntryWithHash("todos.json", json.encodeToString(ListSerializer(TodoItem.serializer()), todos).toByteArray())
+            writeEntryWithHash("todo_subtasks.json", json.encodeToString(ListSerializer(TodoSubtask.serializer()), subtasks).toByteArray())
+        }
+
         // Backup attachments with deduplication
         if (includeAttachments && notes.isNotEmpty()) {
             val processedHashes = mutableSetOf<String>()
@@ -320,8 +336,10 @@ class BackupRepository @Inject constructor(
         val oldToNewProjectIds = mutableMapOf<Int, Int>()
         var notesJson: String? = null
         var projectsJson: String? = null
-        var labelsJson: String? = null 
+        var labelsJson: String? = null
         var manifestJson: String? = null
+        var todosJson: String? = null
+        var todoSubtasksJson: String? = null
 
         // Pass 1: Read JSON Data
         context.contentResolver.openInputStream(uri)?.use { inputStream ->
@@ -333,6 +351,8 @@ class BackupRepository @Inject constructor(
                         "labels.json" -> labelsJson = InputStreamReader(zis).readText()
                         "projects.json" -> projectsJson = InputStreamReader(zis).readText()
                         "manifest.json" -> manifestJson = InputStreamReader(zis).readText()
+                        "todos.json" -> todosJson = InputStreamReader(zis).readText()
+                        "todo_subtasks.json" -> todoSubtasksJson = InputStreamReader(zis).readText()
                     }
                     zipEntry = zis.nextEntry
                 }
@@ -371,9 +391,20 @@ class BackupRepository @Inject constructor(
                     val oldProjectId = noteWithAttachments.note.projectId
                     // Only restore if the note belongs to a selected project
                     if (oldToNewProjectIds.containsKey(oldProjectId)) {
-                        val newProjectId = oldToNewProjectIds[oldProjectId]!!
+                        val newProjectId = oldToNewProjectIds[oldProjectId] ?: return@forEach
                         val newNote = noteWithAttachments.note.copy(id = 0, projectId = newProjectId)
                         val newNoteId = repository.insertNote(newNote).toInt()
+
+                        // Restore Checklist Items (Bug C2 fix: partial restore flow was skipping these)
+                        if (noteWithAttachments.checklistItems.isNotEmpty()) {
+                            val remappedChecklist = noteWithAttachments.checklistItems.map { item ->
+                                item.copy(
+                                    id = java.util.UUID.randomUUID().toString(),
+                                    noteId = newNoteId
+                                )
+                            }
+                            repository.insertChecklistItems(remappedChecklist)
+                        }
 
                         // Handle Attachments
                         noteWithAttachments.attachments.forEach { attachment ->
@@ -393,8 +424,14 @@ class BackupRepository @Inject constructor(
                                 if (!attachmentsDir.exists()) attachmentsDir.mkdirs()
                                 
                                 val targetFile = File(attachmentsDir, uniqueFileName)
-                                
-                                val newUri = Uri.fromFile(targetFile).toString()
+
+                                // Bug H1 fix: use FileProvider to avoid FileUriExposedException when
+                                // the attachment URI is later shared across app boundaries.
+                                val newUri = androidx.core.content.FileProvider.getUriForFile(
+                                    context,
+                                    "${context.packageName}.fileprovider",
+                                    targetFile
+                                ).toString()
                                 
                                 val newAttachment = attachment.copy(id = 0, noteId = newNoteId, uri = newUri)
                                 repository.insertAttachment(newAttachment)
@@ -405,6 +442,42 @@ class BackupRepository @Inject constructor(
                             }
                         }
                     }
+                }
+            }
+
+            // 4. Restore Todos + Subtasks (Bug C1 fix). Todos without a projectId are
+            // always restored; todos tied to a project are only restored when that
+            // project was selected. Parent IDs are remapped to the new autogen IDs.
+            val todos: List<TodoItem> = todosJson?.let {
+                json.decodeFromString(ListSerializer(TodoItem.serializer()), it)
+            } ?: emptyList()
+            val subtasks: List<TodoSubtask> = todoSubtasksJson?.let {
+                json.decodeFromString(ListSerializer(TodoSubtask.serializer()), it)
+            } ?: emptyList()
+
+            if (todos.isNotEmpty()) {
+                val oldToNewTodoIds = mutableMapOf<Int, Int>()
+                todos.forEach { todo ->
+                    val oldProjectId = todo.projectId
+                    val include = oldProjectId == null || oldToNewProjectIds.containsKey(oldProjectId)
+                    if (!include) return@forEach
+
+                    val remappedProjectId = oldProjectId?.let { oldToNewProjectIds[it] }
+                    val newId = todoRepository.insertTodo(
+                        todo.copy(id = 0, projectId = remappedProjectId)
+                    ).toInt()
+                    oldToNewTodoIds[todo.id] = newId
+                }
+
+                val remappedSubtasks = subtasks.mapNotNull { subtask ->
+                    val newParentId = oldToNewTodoIds[subtask.todoId] ?: return@mapNotNull null
+                    subtask.copy(
+                        id = java.util.UUID.randomUUID().toString(),
+                        todoId = newParentId
+                    )
+                }
+                if (remappedSubtasks.isNotEmpty()) {
+                    todoRepository.insertSubtasks(remappedSubtasks)
                 }
             }
         }

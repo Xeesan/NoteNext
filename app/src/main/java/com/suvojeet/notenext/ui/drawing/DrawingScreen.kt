@@ -102,9 +102,8 @@ fun DrawingScreen(
                     Spacer(Modifier.width(8.dp))
                     
                     if (state.isSaving) {
-                        CircularProgressIndicator(
-                            modifier = Modifier.size(24.dp).padding(end = 16.dp),
-                            strokeWidth = 2.dp
+                        LoadingIndicator(
+                            modifier = Modifier.size(24.dp).padding(end = 16.dp)
                         )
                     } else {
                         Button(

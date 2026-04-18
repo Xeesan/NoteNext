@@ -19,6 +19,31 @@ class AlarmSchedulerImpl(private val context: Context) : AlarmScheduler {
 
     private val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
 
+    // Bug H2 fix: unified scheduling so Notes and Todos fall back the same way when
+    // SCHEDULE_EXACT_ALARM is denied. Previously Notes silently failed while Todos
+    // fell back to inexact alarms — now both degrade gracefully to setAndAllowWhileIdle.
+    private fun scheduleAlarm(triggerAtMillis: Long, pendingIntent: PendingIntent) {
+        try {
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S) {
+                if (alarmManager.canScheduleExactAlarms()) {
+                    alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, triggerAtMillis, pendingIntent)
+                } else {
+                    alarmManager.setAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, triggerAtMillis, pendingIntent)
+                }
+            } else {
+                alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, triggerAtMillis, pendingIntent)
+            }
+        } catch (e: SecurityException) {
+            // Permission revoked between check and call — log and fall back to inexact.
+            android.util.Log.w("AlarmScheduler", "Exact alarm denied, scheduling inexact", e)
+            try {
+                alarmManager.setAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, triggerAtMillis, pendingIntent)
+            } catch (e2: SecurityException) {
+                android.util.Log.e("AlarmScheduler", "Alarm scheduling failed entirely", e2)
+            }
+        }
+    }
+
     override fun schedule(note: Note) {
         val reminderTime = note.reminderTime ?: return
         if (reminderTime <= System.currentTimeMillis()) return
@@ -36,21 +61,7 @@ class AlarmSchedulerImpl(private val context: Context) : AlarmScheduler {
             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )
 
-        // Always use exact alarm for precision
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S) {
-            if (alarmManager.canScheduleExactAlarms()) {
-                alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, reminderTime, pendingIntent)
-            } else {
-                // Fallback or just try anyway (will crash if permission revoked, but we handle permission in UI now)
-                try {
-                     alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, reminderTime, pendingIntent)
-                } catch (e: SecurityException) {
-                    e.printStackTrace()
-                }
-            }
-        } else {
-             alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, reminderTime, pendingIntent)
-        }
+        scheduleAlarm(reminderTime, pendingIntent)
     }
 
     override fun cancel(note: Note) {
@@ -80,21 +91,18 @@ class AlarmSchedulerImpl(private val context: Context) : AlarmScheduler {
         }
         val pendingIntent = PendingIntent.getBroadcast(
             context,
-            todo.id + 1000000, // Offset for Todos to avoid ID conflict with Notes
+            todoRequestCode(todo.id),
             intent,
             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )
 
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S) {
-            if (alarmManager.canScheduleExactAlarms()) {
-                alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, reminderTime, pendingIntent)
-            } else {
-                alarmManager.set(AlarmManager.RTC_WAKEUP, reminderTime, pendingIntent)
-            }
-        } else {
-            alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, reminderTime, pendingIntent)
-        }
+        scheduleAlarm(reminderTime, pendingIntent)
     }
+
+    // Bug M4 fix: instead of additive offset (todo.id + 1_000_000) which collides once
+    // note IDs grow past a million, set the high bit to mark a Todo request code.
+    // This gives a disjoint namespace for Note and Todo PendingIntents.
+    private fun todoRequestCode(todoId: Int): Int = todoId or 0x4000_0000
 
     override fun cancelTodo(todo: TodoItem) {
         val intent = Intent().apply {
@@ -102,12 +110,16 @@ class AlarmSchedulerImpl(private val context: Context) : AlarmScheduler {
             putExtra("TODO_ID", todo.id)
             putExtra("TYPE", "TODO")
         }
-        val pendingIntent = PendingIntent.getBroadcast(
-            context,
-            todo.id + 1000000,
-            intent,
-            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
-        )
-        alarmManager.cancel(pendingIntent)
+        // Cancel with both new and legacy request codes to cover alarms scheduled
+        // before the M4 fix (pre-upgrade) as well as new ones.
+        listOf(todoRequestCode(todo.id), todo.id + 1_000_000).forEach { code ->
+            val pendingIntent = PendingIntent.getBroadcast(
+                context,
+                code,
+                intent,
+                PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+            )
+            alarmManager.cancel(pendingIntent)
+        }
     }
 }

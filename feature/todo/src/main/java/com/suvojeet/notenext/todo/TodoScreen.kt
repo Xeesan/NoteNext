@@ -376,7 +376,7 @@ fun AiTodoDialog(
                 enabled = input.isNotBlank() && !isGenerating
             ) {
                 if (isGenerating) {
-                    CircularProgressIndicator(modifier = Modifier.size(16.dp), strokeWidth = 2.dp)
+                    LoadingIndicator(modifier = Modifier.size(16.dp))
                     Spacer(modifier = Modifier.width(8.dp))
                     Text("Thinking...", style = MaterialTheme.typography.labelMedium)
                 } else {

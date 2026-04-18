@@ -79,6 +79,7 @@ data class BackupRestoreState(
 class BackupRestoreViewModel @Inject constructor(
     private val repository: com.suvojeet.notenext.data.NoteRepository,
     private val backupRepository: com.suvojeet.notenext.data.backup.BackupRepository,
+    private val todoRepository: com.suvojeet.notenext.data.TodoRepository,
     private val application: Application,
     private val googleDriveManager: GoogleDriveManager
 ) : ViewModel() {
@@ -402,6 +403,9 @@ class BackupRestoreViewModel @Inject constructor(
         var labelsJson: String? = null
         var projectsJson: String? = null
         var manifestJson: String? = null
+        // Bug C1 fix: read Todo archives so we can restore them below.
+        var todosJson: String? = null
+        var todoSubtasksJson: String? = null
 
         // Pass 1: Read JSON Data from ZIP
         try {
@@ -412,6 +416,8 @@ class BackupRestoreViewModel @Inject constructor(
                     "labels.json" -> labelsJson = InputStreamReader(zis).readText()
                     "projects.json" -> projectsJson = InputStreamReader(zis).readText()
                     "manifest.json" -> manifestJson = InputStreamReader(zis).readText()
+                    "todos.json" -> todosJson = InputStreamReader(zis).readText()
+                    "todo_subtasks.json" -> todoSubtasksJson = InputStreamReader(zis).readText()
                 }
                 zipEntry = zis.nextEntry
             }
@@ -437,6 +443,8 @@ class BackupRestoreViewModel @Inject constructor(
             verify("notes.json", notesJson)
             verify("labels.json", labelsJson)
             verify("projects.json", projectsJson)
+            verify("todos.json", todosJson)
+            verify("todo_subtasks.json", todoSubtasksJson)
         }
 
         // Pass 2: Deserialize into in-memory objects BEFORE deletion
@@ -473,6 +481,8 @@ class BackupRestoreViewModel @Inject constructor(
                 existingNotes.forEach { repository.deleteNote(it.note) }
                 existingLabels.forEach { repository.deleteLabel(it) }
                 existingProjects.forEach { repository.deleteProject(it.id) }
+                // Bug C1 fix: wipe todos on full restore too (subtasks cascade via FK).
+                todoRepository.deleteAllTodos()
             }
         }
 
@@ -555,7 +565,12 @@ class BackupRestoreViewModel @Inject constructor(
                             if (!attachmentsDir.exists()) attachmentsDir.mkdirs()
                             
                             val targetFile = java.io.File(attachmentsDir, uniqueFileName)
-                            val newUri = Uri.fromFile(targetFile).toString()
+                            // Bug H1 fix: FileProvider URI so the stored attachment URI survives cross-app share.
+                            val newUri = androidx.core.content.FileProvider.getUriForFile(
+                                application,
+                                "${application.packageName}.fileprovider",
+                                targetFile
+                            ).toString()
                             
                             val newAttachment = attachment.copy(id = 0, noteId = newNoteId.toInt(), uri = newUri)
                             repository.insertAttachment(newAttachment)
@@ -565,6 +580,39 @@ class BackupRestoreViewModel @Inject constructor(
                             e.printStackTrace()
                         }
                     }
+                }
+            }
+        }
+
+        // Bug C1 fix: restore Todos and their Subtasks from the backup archive.
+        // Older backups (pre-v1.3.8) did not include these entries — in that case we
+        // silently skip. Todos are keyed by (title, createdAt) for merge dedup.
+        val todosToRestore: List<TodoItem> = todosJson?.let {
+            json.decodeFromString(ListSerializer(TodoItem.serializer()), it)
+        } ?: emptyList()
+        val subtasksToRestore: List<TodoSubtask> = todoSubtasksJson?.let {
+            json.decodeFromString(ListSerializer(TodoSubtask.serializer()), it)
+        } ?: emptyList()
+
+        if (todosToRestore.isNotEmpty()) {
+            val oldToNewTodoIds = mutableMapOf<Int, Int>()
+            repository.runInTransaction {
+                todosToRestore.forEach { todo ->
+                    val remappedProjectId = todo.projectId?.let { oldToNewProjectIds[it] }
+                    val newId = todoRepository.insertTodo(
+                        todo.copy(id = 0, projectId = remappedProjectId)
+                    ).toInt()
+                    oldToNewTodoIds[todo.id] = newId
+                }
+                val remappedSubtasks = subtasksToRestore.mapNotNull { subtask ->
+                    val newParentId = oldToNewTodoIds[subtask.todoId] ?: return@mapNotNull null
+                    subtask.copy(
+                        id = java.util.UUID.randomUUID().toString(),
+                        todoId = newParentId
+                    )
+                }
+                if (remappedSubtasks.isNotEmpty()) {
+                    todoRepository.insertSubtasks(remappedSubtasks)
                 }
             }
         }

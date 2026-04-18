@@ -68,4 +68,15 @@ interface TodoDao {
 
     @Query("SELECT COUNT(*) FROM todos WHERE isCompleted = 1 AND completedAt >= :startOfDay")
     fun getCompletedTodayCount(startOfDay: Long): Flow<Int>
+
+    // Backup support (Bug C1): one-shot snapshots for inclusion in backup ZIPs.
+    @Query("SELECT * FROM todos")
+    suspend fun getAllTodosList(): List<TodoItem>
+
+    @Query("SELECT * FROM todo_subtasks")
+    suspend fun getAllSubtasksList(): List<TodoSubtask>
+
+    // Backup support: wipe all todos on non-merge restore. Subtasks cascade via FK.
+    @Query("DELETE FROM todos")
+    suspend fun deleteAllTodos()
 }

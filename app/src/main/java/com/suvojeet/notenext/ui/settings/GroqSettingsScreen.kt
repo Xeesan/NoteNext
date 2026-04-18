@@ -137,7 +137,7 @@ fun GroqSettingsScreen(
                                     shape = MaterialTheme.shapes.large
                                 ) {
                                     if (isLoadingModels) {
-                                        CircularProgressIndicator(modifier = Modifier.size(24.dp), color = MaterialTheme.colorScheme.onPrimary, strokeWidth = 2.dp)
+                                        LoadingIndicator(modifier = Modifier.size(24.dp), color = MaterialTheme.colorScheme.onPrimary)
                                         Spacer(modifier = Modifier.width(12.dp))
                                         Text(stringResource(R.string.fetching_models))
                                     } else {

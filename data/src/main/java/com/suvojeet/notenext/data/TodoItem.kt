@@ -4,7 +4,9 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 import androidx.room.Embedded
 import androidx.room.Relation
+import kotlinx.serialization.Serializable
 
+@Serializable
 @Entity(tableName = "todos")
 data class TodoItem(
     @PrimaryKey(autoGenerate = true)

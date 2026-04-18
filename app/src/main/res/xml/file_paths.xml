@@ -4,6 +4,9 @@
         <!-- Camera photos stored in filesDir/camera_photos -->
         <files-path name="camera_photos" path="camera_photos/" />
 
+        <!-- Attachments restored from backup stored in filesDir/attachments -->
+        <files-path name="attachments" path="attachments/" />
+
         <!-- Logcat sharing -->
         <cache-path name="logs" path="logs" />
     </paths>

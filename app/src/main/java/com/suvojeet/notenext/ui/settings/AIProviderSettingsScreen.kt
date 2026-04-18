@@ -234,7 +234,7 @@ fun AIProviderSettingsScreen(
                                         shape = MaterialTheme.shapes.medium
                                     ) {
                                         if (isLoadingModels) {
-                                            CircularProgressIndicator(modifier = Modifier.size(20.dp), color = MaterialTheme.colorScheme.onPrimary, strokeWidth = 2.dp)
+                                            LoadingIndicator(modifier = Modifier.size(20.dp), color = MaterialTheme.colorScheme.onPrimary)
                                             Spacer(modifier = Modifier.width(8.dp))
                                             Text("Fetching Models...")
                                         } else {

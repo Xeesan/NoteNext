@@ -27,6 +27,11 @@ interface TodoRepository {
     suspend fun updateSubtask(subtask: TodoSubtask)
     suspend fun deleteSubtask(subtask: TodoSubtask)
     suspend fun deleteSubtasksForTodo(todoId: Int)
+
+    // Backup support (Bug C1)
+    suspend fun getAllTodosList(): List<TodoItem>
+    suspend fun getAllSubtasksList(): List<TodoSubtask>
+    suspend fun deleteAllTodos()
 }
 
 class TodoRepositoryImpl(
@@ -91,4 +96,8 @@ class TodoRepositoryImpl(
     override suspend fun updateSubtask(subtask: TodoSubtask) = todoDao.updateSubtask(subtask)
     override suspend fun deleteSubtask(subtask: TodoSubtask) = todoDao.deleteSubtask(subtask)
     override suspend fun deleteSubtasksForTodo(todoId: Int) = todoDao.deleteSubtasksForTodo(todoId)
+
+    override suspend fun getAllTodosList(): List<TodoItem> = todoDao.getAllTodosList()
+    override suspend fun getAllSubtasksList(): List<TodoSubtask> = todoDao.getAllSubtasksList()
+    override suspend fun deleteAllTodos() = todoDao.deleteAllTodos()
 }
