@@ -255,6 +255,9 @@ interface NoteDao {
     @Query("SELECT * FROM notes WHERE lastEdited > :timestamp ORDER BY lastEdited DESC")
     fun getAllNotesModifiedSince(timestamp: Long): Flow<List<NoteWithAttachments>>
 
+    @Query("SELECT isLocked FROM notes WHERE id = :id")
+    suspend fun isNoteLocked(id: Int): Boolean
+
     @Query("SELECT id FROM notes WHERE title = :title AND isBinned = 0 LIMIT 1")
     suspend fun getNoteIdByTitle(title: String): Int?
 

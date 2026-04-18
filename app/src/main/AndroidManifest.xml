@@ -101,7 +101,7 @@
         <receiver
             android:name=".util.ReminderBroadcastReceiver"
             android:enabled="true"
-            android:exported="true" />
+            android:exported="false" />
 
         <receiver
             android:name=".util.BootReceiver"

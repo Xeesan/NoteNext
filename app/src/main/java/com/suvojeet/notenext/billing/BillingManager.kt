@@ -95,11 +95,6 @@ class BillingManager @Inject constructor(
         })
     }
 
-    fun destroy() {
-        reconnectScope.cancel()
-        if (billingClient.isReady) billingClient.endConnection()
-    }
-
     private fun queryProducts() {
         val productList = DonationSkus.ALL.map { sku ->
             QueryProductDetailsParams.Product.newBuilder()

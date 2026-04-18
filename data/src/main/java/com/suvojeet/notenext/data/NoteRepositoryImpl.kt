@@ -261,8 +261,7 @@ class NoteRepositoryImpl @Inject constructor(
     override suspend fun insertChecklistItems(items: List<ChecklistItem>) {
         if (items.isEmpty()) return
         val noteId = items.first().noteId
-        val note = noteDao.getNoteById(noteId)
-        val isLocked = note?.note?.isLocked == true
+        val isLocked = noteDao.isNoteLocked(noteId)
         val encryptedItems = if (isLocked) {
             items.map { CryptoUtils.encryptChecklistItem(it, isLocked) }
         } else {
@@ -272,8 +271,7 @@ class NoteRepositoryImpl @Inject constructor(
     }
 
     override suspend fun updateChecklistItem(item: ChecklistItem) {
-        val note = noteDao.getNoteById(item.noteId)
-        val isLocked = note?.note?.isLocked == true
+        val isLocked = noteDao.isNoteLocked(item.noteId)
         val itemToUpdate = if (isLocked) CryptoUtils.encryptChecklistItem(item, isLocked) else item
         checklistItemDao.updateChecklistItem(itemToUpdate)
     }
@@ -285,8 +283,7 @@ class NoteRepositoryImpl @Inject constructor(
     override suspend fun updateChecklistItems(items: List<ChecklistItem>) {
         if (items.isEmpty()) return
         val noteId = items.first().noteId
-        val note = noteDao.getNoteById(noteId)
-        val isLocked = note?.note?.isLocked == true
+        val isLocked = noteDao.isNoteLocked(noteId)
         val itemsToUpdate = if (isLocked) {
             items.map { CryptoUtils.encryptChecklistItem(it, isLocked) }
         } else {
@@ -300,8 +297,7 @@ class NoteRepositoryImpl @Inject constructor(
     override suspend fun deleteChecklistForNote(noteId: Int) = checklistItemDao.deleteChecklistForNote(noteId)
 
     override suspend fun insertNoteVersion(version: NoteVersion) {
-        val note = noteDao.getNoteById(version.noteId)
-        val isLocked = note?.note?.isLocked == true
+        val isLocked = noteDao.isNoteLocked(version.noteId)
         val versionToInsert = if (isLocked) CryptoUtils.encryptNoteVersion(version, isLocked) else version
         noteDao.insertNoteVersion(versionToInsert)
     }
