@@ -51,6 +51,7 @@ okhttp   = "5.0.0-alpha.14"    # first stable-ish alpha with full HTTP/3 support
 
 # ── Kotlinx ─────────────────────────────────────────────────────
 kotlinx-serialization = "1.8.1"
+kotlinx-collections-immutable = "0.4.0"
 
 # ── Third-party ─────────────────────────────────────────────────
 jsoup = "1.21.2"
