@@ -2,8 +2,6 @@ package com.suvojeet.notenext.data
 
 import androidx.compose.runtime.Immutable
 import com.suvojeet.notenext.core.model.NoteType
-import kotlinx.collections.immutable.ImmutableList
-import kotlinx.collections.immutable.persistentListOf
 import kotlinx.serialization.Serializable
 
 @Immutable
@@ -30,6 +28,6 @@ data class NoteSummary(
     val iv: String?,
     val isEncrypted: Boolean,
     val repeatOption: String?,
-    val linkPreviews: ImmutableList<LinkPreview> = persistentListOf()
+    val linkPreviews: List<LinkPreview> = emptyList()
 )
 

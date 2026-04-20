@@ -6,8 +6,6 @@ import androidx.room.Entity
 import androidx.room.Index
 import androidx.room.PrimaryKey
 import com.suvojeet.notenext.core.model.NoteType
-import kotlinx.collections.immutable.ImmutableList
-import kotlinx.collections.immutable.persistentListOf
 import kotlinx.serialization.Serializable
 
 @Immutable
@@ -39,7 +37,7 @@ data class Note(
     val label: String? = null,
     val isBinned: Boolean = false,
     val binnedOn: Long? = null,
-    val linkPreviews: ImmutableList<LinkPreview> = persistentListOf(),
+    val linkPreviews: List<LinkPreview> = emptyList(),
     val noteType: NoteType = NoteType.TEXT,
     val projectId: Int? = null,
     val isLocked: Boolean = false,
