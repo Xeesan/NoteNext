@@ -1,4 +1,3 @@
-
 package com.suvojeet.notenext.ui.notes.delegate
 
 import androidx.compose.ui.text.SpanStyle
@@ -6,7 +5,6 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.lifecycle.SavedStateHandle
 import com.suvojeet.notenext.core.model.NoteType
 import com.suvojeet.notenext.ui.notes.NotesEditState
-import com.suvojeet.notenext.ui.notes.NotesEvent
 import com.suvojeet.notenext.ui.notes.RichTextController
 import com.suvojeet.notenext.ui.notes.SaveStatus
 import com.suvojeet.notenext.ui.util.UndoRedoManager
@@ -17,6 +15,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.collections.immutable.toImmutableSet
 import javax.inject.Inject
 
 class NoteEditorDelegate @Inject constructor(
@@ -46,7 +45,6 @@ class NoteEditorDelegate @Inject constructor(
     fun onTitleChange(newTitle: String) {
         _editState.update { it.copy(editingTitle = newTitle, saveStatus = SaveStatus.UNSAVED) }
         savedStateHandle[KEY_EDITING_TITLE] = newTitle
-        // Add to undo history with debounce if needed
     }
 
     fun onContentChange(newContent: TextFieldValue, scope: CoroutineScope, onSave: suspend () -> Unit) {
@@ -62,13 +60,12 @@ class NoteEditorDelegate @Inject constructor(
             it.copy(
                 editingContent = processedContent,
                 saveStatus = SaveStatus.UNSAVED,
-                canUndo = true // Update based on undoRedoManager
+                canUndo = true 
             ) 
         }
         
         savedStateHandle[KEY_EDITING_CONTENT] = processedContent.text
         
-        // Handle Undo/Redo logic
         if (processedContent.text != oldContent.text) {
              undoRedoManager.addState(_editState.value.editingTitle to processedContent)
              updateUndoRedoFlags()
@@ -91,7 +88,6 @@ class NoteEditorDelegate @Inject constructor(
             state.copy(
                 editingContent = result.updatedContent ?: state.editingContent,
                 activeStyles = result.updatedActiveStyles?.toImmutableSet() ?: state.activeStyles,
-                // Update specific flags if needed
                 isBoldActive = result.updatedActiveStyles?.any { s -> s.fontWeight == androidx.compose.ui.text.font.FontWeight.Bold } ?: state.isBoldActive,
                 isItalicActive = result.updatedActiveStyles?.any { s -> s.fontStyle == androidx.compose.ui.text.font.FontStyle.Italic } ?: state.isItalicActive,
                 isUnderlineActive = result.updatedActiveStyles?.any { s -> s.textDecoration == androidx.compose.ui.text.style.TextDecoration.Underline } ?: state.isUnderlineActive
@@ -125,7 +121,7 @@ class NoteEditorDelegate @Inject constructor(
     fun scheduleAutoSave(scope: CoroutineScope, onSave: suspend () -> Unit) {
         autoSaveJob?.cancel()
         autoSaveJob = scope.launch {
-            delay(2000L) // 2 second debounce for auto-save
+            delay(2000L) 
             _editState.update { it.copy(saveStatus = SaveStatus.SAVING) }
             try {
                 onSave()
@@ -149,13 +145,6 @@ class NoteEditorDelegate @Inject constructor(
     
     fun cancelAutoSave() {
         autoSaveJob?.cancel()
-    }
-
-    fun updateState(transform: (NotesEditState) -> NotesEditState) {
-        _editState.update(transform)
-    }
-}
-SaveJob?.cancel()
     }
 
     fun updateState(transform: (NotesEditState) -> NotesEditState) {

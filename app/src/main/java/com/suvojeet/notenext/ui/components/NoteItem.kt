@@ -47,22 +47,26 @@ fun NoteItem(
     binnedDaysRemaining: Int? = null,
     isDarkTheme: Boolean = isSystemInDarkTheme()
 ) {
+    val colorScheme = MaterialTheme.colorScheme
+    val onSurface = colorScheme.onSurface
+    val onSurfaceVariant = colorScheme.onSurfaceVariant
+
     val adaptiveColor = remember(note.note.color, isDarkTheme) {
         NoteGradients.getAdaptiveColor(note.note.color, isDarkTheme)
     }
     val isDefaultColor = adaptiveColor == 0
 
-    val contentColor = remember(isDefaultColor, adaptiveColor) {
+    val contentColor = remember(isDefaultColor, adaptiveColor, onSurface) {
         if (isDefaultColor) {
-            MaterialTheme.colorScheme.onSurface
+            onSurface
         } else {
             NoteGradients.getContentColor(adaptiveColor)
         }
     }
     
-    val tintColor = remember(isDefaultColor, contentColor) {
+    val tintColor = remember(isDefaultColor, contentColor, onSurfaceVariant) {
         if (isDefaultColor) {
-            MaterialTheme.colorScheme.onSurfaceVariant
+            onSurfaceVariant
         } else {
             contentColor.copy(alpha = 0.7f)
         }
@@ -83,6 +87,10 @@ fun NoteItem(
         }
     }
     val motionScheme = MaterialTheme.motionScheme
+    val surfaceContainer = MaterialTheme.colorScheme.surfaceContainer
+    val primary = MaterialTheme.colorScheme.primary
+    val outline = MaterialTheme.colorScheme.outline
+    
     val elevation by animateDpAsState(
         targetValue = if (isSelected) 4.dp else (if (isDefaultColor) 1.dp else 0.dp),
         animationSpec = motionScheme.fastSpatialSpec(),
@@ -96,9 +104,9 @@ fun NoteItem(
     }
 
     val borderStroke = if (isSelected) {
-        BorderStroke(2.dp, MaterialTheme.colorScheme.primary)
+        BorderStroke(2.dp, primary)
     } else if (isDefaultColor) {
-        BorderStroke(1.dp, MaterialTheme.colorScheme.outline.copy(alpha = 0.12f))
+        BorderStroke(1.dp, outline.copy(alpha = 0.12f))
     } else {
         null
     }
@@ -113,7 +121,7 @@ fun NoteItem(
             ),
         shape = cardShape,
         colors = CardDefaults.cardColors(
-            containerColor = if (isDefaultColor) MaterialTheme.colorScheme.surfaceContainer else Color(adaptiveColor),
+            containerColor = if (isDefaultColor) surfaceContainer else Color(adaptiveColor),
             contentColor = contentColor
         ),
         border = borderStroke,
@@ -141,7 +149,10 @@ fun NoteItem(
                     val unescapedTitle = remember(decryptedNote.title) {
                         androidx.core.text.HtmlCompat.fromHtml(decryptedNote.title, androidx.core.text.HtmlCompat.FROM_HTML_MODE_LEGACY).toString()
                     }
-                    val titleText = remember(unescapedTitle, searchQuery, MaterialTheme.colorScheme.primaryContainer, MaterialTheme.colorScheme.onPrimaryContainer) {
+                    val primaryContainer = MaterialTheme.colorScheme.primaryContainer
+                    val onPrimaryContainer = MaterialTheme.colorScheme.onPrimaryContainer
+                    
+                    val titleText = remember(unescapedTitle, searchQuery, primaryContainer, onPrimaryContainer) {
                         if (searchQuery.isNotEmpty()) {
                             buildAnnotatedString {
                                 val text = unescapedTitle
@@ -152,8 +163,8 @@ fun NoteItem(
                                 while (index >= 0) {
                                     addStyle(
                                         style = SpanStyle(
-                                            background = MaterialTheme.colorScheme.primaryContainer,
-                                            color = MaterialTheme.colorScheme.onPrimaryContainer
+                                            background = primaryContainer,
+                                            color = onPrimaryContainer
                                         ),
                                         start = index,
                                         end = index + searchQuery.length
@@ -203,11 +214,16 @@ fun NoteItem(
                         if (decryptedNote.noteType == NoteType.TEXT) {
                             val rawContentLength = decryptedNote.content.length
                             
-                            val (textStyle, maxLines, fontWeight) = remember(rawContentLength, decryptedNote.title) {
+                            val typography = MaterialTheme.typography
+                            val headlineSmall = typography.headlineSmall
+                            val bodyLarge = typography.bodyLarge
+                            val bodyMedium = typography.bodyMedium
+
+                            val (textStyle, maxLines, fontWeight) = remember(rawContentLength, decryptedNote.title, headlineSmall, bodyLarge, bodyMedium) {
                                 val style = when {
-                                    rawContentLength < 100 -> MaterialTheme.typography.headlineSmall to 6
-                                    rawContentLength < 250 -> MaterialTheme.typography.bodyLarge to 8
-                                    else -> MaterialTheme.typography.bodyMedium to 10
+                                    rawContentLength < 100 -> headlineSmall to 6
+                                    rawContentLength < 250 -> bodyLarge to 8
+                                    else -> bodyMedium to 10
                                 }
                                 val weight = if (decryptedNote.title.isEmpty() && rawContentLength < 100) FontWeight.SemiBold else FontWeight.Normal
                                 Triple(style.first, style.second, weight)
@@ -220,7 +236,10 @@ fun NoteItem(
                                 androidx.compose.ui.text.AnnotatedString(unescaped)
                             }
 
-                            val highlightedContent = remember(annotatedContent, searchQuery, MaterialTheme.colorScheme.primaryContainer, MaterialTheme.colorScheme.onPrimaryContainer) {
+                            val primaryContainer = MaterialTheme.colorScheme.primaryContainer
+                            val onPrimaryContainer = MaterialTheme.colorScheme.onPrimaryContainer
+
+                            val highlightedContent = remember(annotatedContent, searchQuery, primaryContainer, onPrimaryContainer) {
                                 if (searchQuery.isNotEmpty()) {
                                     buildAnnotatedString {
                                         append(annotatedContent)
@@ -230,8 +249,8 @@ fun NoteItem(
                                         while (index >= 0) {
                                             addStyle(
                                                 style = SpanStyle(
-                                                    background = MaterialTheme.colorScheme.primaryContainer,
-                                                    color = MaterialTheme.colorScheme.onPrimaryContainer
+                                                    background = primaryContainer,
+                                                    color = onPrimaryContainer
                                                 ),
                                                 start = index,
                                                 end = index + searchQuery.length
@@ -333,7 +352,10 @@ fun NoteItem(
                                     shape = MaterialTheme.shapes.small,
                                     color = if (isDefaultColor) MaterialTheme.colorScheme.secondaryContainer else contentColor.copy(alpha = 0.15f)
                                 ) {
-                                    val labelText = remember(label, searchQuery, MaterialTheme.colorScheme.primaryContainer, MaterialTheme.colorScheme.onPrimaryContainer) {
+                                    val primaryContainer = MaterialTheme.colorScheme.primaryContainer
+                                    val onPrimaryContainer = MaterialTheme.colorScheme.onPrimaryContainer
+
+                                    val labelText = remember(label, searchQuery, primaryContainer, onPrimaryContainer) {
                                         if (searchQuery.isNotEmpty()) {
                                             buildAnnotatedString {
                                                 append(label)
@@ -343,8 +365,8 @@ fun NoteItem(
                                                 while (index >= 0) {
                                                     addStyle(
                                                         style = SpanStyle(
-                                                            background = MaterialTheme.colorScheme.primaryContainer,
-                                                            color = MaterialTheme.colorScheme.onPrimaryContainer
+                                                            background = primaryContainer,
+                                                            color = onPrimaryContainer
                                                         ),
                                                         start = index,
                                                         end = index + searchQuery.length
@@ -406,7 +428,10 @@ private fun ChecklistPreview(checklistItems: List<ChecklistItem>, contentColor: 
                     androidx.core.text.HtmlCompat.fromHtml(item.text, androidx.core.text.HtmlCompat.FROM_HTML_MODE_LEGACY).toString()
                 }
                 
-                val itemText = remember(unescapedItemText, searchQuery, MaterialTheme.colorScheme.primaryContainer, MaterialTheme.colorScheme.onPrimaryContainer) {
+                val primaryContainer = MaterialTheme.colorScheme.primaryContainer
+                val onPrimaryContainer = MaterialTheme.colorScheme.onPrimaryContainer
+
+                val itemText = remember(unescapedItemText, searchQuery, primaryContainer, onPrimaryContainer) {
                     if (searchQuery.isNotEmpty()) {
                         buildAnnotatedString {
                             val text = unescapedItemText
@@ -417,8 +442,8 @@ private fun ChecklistPreview(checklistItems: List<ChecklistItem>, contentColor: 
                             while (index >= 0) {
                                 addStyle(
                                     style = SpanStyle(
-                                        background = MaterialTheme.colorScheme.primaryContainer,
-                                        color = MaterialTheme.colorScheme.onPrimaryContainer
+                                        background = primaryContainer,
+                                        color = onPrimaryContainer
                                     ),
                                     start = index,
                                     end = index + searchQuery.length

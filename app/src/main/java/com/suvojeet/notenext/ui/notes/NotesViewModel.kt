@@ -72,6 +72,8 @@ import kotlinx.collections.immutable.toImmutableList
 import kotlinx.collections.immutable.toImmutableSet
 import kotlinx.collections.immutable.toImmutableMap
 import kotlinx.collections.immutable.persistentListOf
+import kotlinx.collections.immutable.persistentMapOf
+import kotlinx.collections.immutable.persistentSetOf
 import javax.inject.Inject
 
 @HiltViewModel
@@ -186,16 +188,16 @@ class NotesViewModel @Inject constructor(
                             position = editState.value.editingChecklist.size + index,
                             noteId = editState.value.expandedNoteId ?: 0
                         ) 
-                    }
+                    }.toImmutableList()
                     
                     val newInputValues = checklistItems.associate { item ->
                         item.id to TextFieldValue(item.text)
-                    }
+                    }.toImmutableMap()
 
                     editorDelegate.updateState { it.copy(
                         editingNoteType = NoteType.CHECKLIST,
                         editingChecklist = (editState.value.editingChecklist + checklistItems).toImmutableList(),
-                        checklistInputValues = editState.value.checklistInputValues + newInputValues,
+                        checklistInputValues = (editState.value.checklistInputValues + newInputValues).toImmutableMap(),
                         generatedChecklistPreview = persistentListOf()
                     ) }
                 }
@@ -735,46 +737,46 @@ class NotesViewModel @Inject constructor(
             is NotesEvent.AddChecklistItem -> {
                 val (updatedChecklist, newItemId) = ChecklistManager.addChecklistItem(editState.value.editingChecklist)
                 editorDelegate.updateState { it.copy(
-                    editingChecklist = updatedChecklist,
+                    editingChecklist = updatedChecklist.toImmutableList(),
                     newlyAddedChecklistItemId = newItemId,
-                    checklistInputValues = editState.value.checklistInputValues + (newItemId to TextFieldValue(""))
+                    checklistInputValues = (editState.value.checklistInputValues + (newItemId to TextFieldValue(""))).toImmutableMap()
                 ) }
                 scheduleAutoSave()
             }
             is NotesEvent.SwapChecklistItems -> {
                 val updatedList = ChecklistManager.swapItems(editState.value.editingChecklist, event.fromId, event.toId)
                 if (updatedList != editState.value.editingChecklist) {
-                    editorDelegate.updateState { it.copy(editingChecklist = updatedList) }
+                    editorDelegate.updateState { it.copy(editingChecklist = updatedList.toImmutableList()) }
                     scheduleAutoSave()
                 }
             }
             is NotesEvent.DeleteChecklistItem -> {
                 val updatedChecklist = ChecklistManager.deleteItem(editState.value.editingChecklist, event.itemId)
                 editorDelegate.updateState { it.copy(
-                    editingChecklist = updatedChecklist,
-                    checklistInputValues = editState.value.checklistInputValues - event.itemId
+                    editingChecklist = updatedChecklist.toImmutableList(),
+                    checklistInputValues = (editState.value.checklistInputValues - event.itemId).toImmutableMap()
                 ) }
                 scheduleAutoSave()
             }
             is NotesEvent.IndentChecklistItem -> {
                 val updatedChecklist = ChecklistManager.indentItem(editState.value.editingChecklist, event.itemId)
-                editorDelegate.updateState { it.copy(editingChecklist = updatedChecklist) }
+                editorDelegate.updateState { it.copy(editingChecklist = updatedChecklist.toImmutableList()) }
                 scheduleAutoSave()
             }
             is NotesEvent.OutdentChecklistItem -> {
                 val updatedChecklist = ChecklistManager.outdentItem(editState.value.editingChecklist, event.itemId)
-                editorDelegate.updateState { it.copy(editingChecklist = updatedChecklist) }
+                editorDelegate.updateState { it.copy(editingChecklist = updatedChecklist.toImmutableList()) }
                 scheduleAutoSave()
             }
 
             is NotesEvent.OnChecklistItemCheckedChange -> {
                 val updatedChecklist = ChecklistManager.changeItemCheckedState(editState.value.editingChecklist, event.itemId, event.isChecked)
-                editorDelegate.updateState { it.copy(editingChecklist = updatedChecklist) }
+                editorDelegate.updateState { it.copy(editingChecklist = updatedChecklist.toImmutableList()) }
                 scheduleAutoSave()
             }
             is NotesEvent.OnChecklistItemTextChange -> {
                 val updatedChecklist = ChecklistManager.changeItemText(editState.value.editingChecklist, event.itemId, event.text)
-                editorDelegate.updateState { it.copy(editingChecklist = updatedChecklist) }
+                editorDelegate.updateState { it.copy(editingChecklist = updatedChecklist.toImmutableList()) }
                 scheduleAutoSave()
             }
             is NotesEvent.OnTitleChange -> {
@@ -798,7 +800,7 @@ class NotesViewModel @Inject constructor(
                             it.start <= selection.start - 1 && it.end >= selection.start
                         }
                     } else {
-                        emptyList()
+                        persistentListOf()
                     }
                 } else {
                     event.value.annotatedString.spanStyles.filter {
@@ -807,7 +809,7 @@ class NotesViewModel @Inject constructor(
                 }
 
                 editorDelegate.updateState { it.copy(
-                    checklistInputValues = updatedInputValues,
+                    checklistInputValues = updatedInputValues.toImmutableMap(),
                      isBoldActive = styles.any { style -> style.item.fontWeight == FontWeight.Bold },
                      isItalicActive = styles.any { style -> style.item.fontStyle == FontStyle.Italic },
                      isUnderlineActive = styles.any { style -> style.item.textDecoration == TextDecoration.Underline }
@@ -823,7 +825,7 @@ class NotesViewModel @Inject constructor(
                     val updatedChecklist = editState.value.editingChecklist.map {
                         if (it.id == event.itemId) it.copy(text = updatedText) else it
                     }
-                    editorDelegate.updateState { it.copy(editingChecklist = updatedChecklist) }
+                    editorDelegate.updateState { it.copy(editingChecklist = updatedChecklist.toImmutableList()) }
                 }
             }
             is NotesEvent.OnChecklistItemFocus -> {
@@ -851,7 +853,7 @@ class NotesViewModel @Inject constructor(
                              val result = richTextController.toggleStyle(
                                 currentValue,
                                 event.style,
-                                emptySet(), // We don't track activeStyles per item easily yet, relies on result
+                                persistentSetOf(), // We don't track activeStyles per item easily yet, relies on result
                                 editState.value.isBoldActive,
                                 editState.value.isItalicActive,
                                 editState.value.isUnderlineActive
@@ -924,7 +926,7 @@ class NotesViewModel @Inject constructor(
                         repository.getNoteById(noteId)?.let { note ->
                             val updatedNote = note.note.copy(isArchived = !note.note.isArchived)
                             repository.updateNote(updatedNote)
-                            val updatedNotesList = listState.value.notes.map { if (it.note.id == updatedNote.id) it.copy(note = updatedNote.toNoteSummary()) else it }
+                            val updatedNotesList = listState.value.notes.map { if (it.note.id == updatedNote.id) it.copy(note = updatedNote.toNoteSummary()) else it }.toImmutableList()
                             editorDelegate.updateState { it.copy(
                                 isArchived = updatedNote.isArchived,
                             ) }
@@ -996,7 +998,7 @@ class NotesViewModel @Inject constructor(
                 listDelegate.setSortType(event.sortType)
             }
             is NotesEvent.OnRemoveLinkPreview -> {
-                val updatedLinkPreviews = editState.value.linkPreviews.filter { it.url != event.url }
+                val updatedLinkPreviews = editState.value.linkPreviews.filter { it.url != event.url }.toImmutableList()
                 editorDelegate.updateState { it.copy(linkPreviews = updatedLinkPreviews) }
                 viewModelScope.launch {
                     _events.emit(NotesUiEvent.LinkPreviewRemoved)
@@ -1037,7 +1039,7 @@ class NotesViewModel @Inject constructor(
                     mimeType = event.mimeType,
                     tempId = java.util.UUID.randomUUID().toString()
                 )
-                editorDelegate.updateState { it.copy(editingAttachments = editState.value.editingAttachments + attachment) }
+                editorDelegate.updateState { it.copy(editingAttachments = (editState.value.editingAttachments + attachment).toImmutableList()) }
                 scheduleAutoSave()
             }
             is NotesEvent.OnLinkDetected -> {
@@ -1059,7 +1061,7 @@ class NotesViewModel @Inject constructor(
             }
             is NotesEvent.OnLinkPreviewFetched -> {
                 val newPreview = LinkPreview(event.url, event.title, event.description, event.imageUrl)
-                val updatedPreviews = (editState.value.linkPreviews + newPreview).distinctBy { it.url }
+                val updatedPreviews = (editState.value.linkPreviews + newPreview).distinctBy { it.url }.toImmutableList()
                 editorDelegate.updateState { it.copy(linkPreviews = updatedPreviews) }
                 scheduleAutoSave()
             }
@@ -1070,7 +1072,7 @@ class NotesViewModel @Inject constructor(
                         if (it.id != 0) { // Only delete from DB if it has a real ID
                             repository.deleteAttachmentById(it.id)
                         }
-                        val updatedAttachments = editState.value.editingAttachments.filter { attachment -> attachment.tempId != event.tempId }
+                        val updatedAttachments = editState.value.editingAttachments.filter { attachment -> attachment.tempId != event.tempId }.toImmutableList()
                         editorDelegate.updateState { it.copy(editingAttachments = updatedAttachments) }
                         scheduleAutoSave()
                     }
@@ -1194,7 +1196,7 @@ class NotesViewModel @Inject constructor(
             }
             is NotesEvent.DeleteAllCheckedItems -> {
                 val updatedChecklist = ChecklistManager.deleteAllCheckedItems(editState.value.editingChecklist)
-                editorDelegate.updateState { it.copy(editingChecklist = updatedChecklist) }
+                editorDelegate.updateState { it.copy(editingChecklist = updatedChecklist.toImmutableList()) }
             }
             is NotesEvent.CreateNoteFromSharedText -> {
                 editorDelegate.reset("", TextFieldValue(event.text))
@@ -1206,10 +1208,10 @@ class NotesViewModel @Inject constructor(
                     editingIsNewNote = true,
                     editingLastEdited = 0,
                     editingLabel = null,
-                    linkPreviews = emptyList(),
+                    linkPreviews = persistentListOf(),
                     editingNoteType = NoteType.TEXT,
-                    editingChecklist = emptyList(),
-                    editingAttachments = emptyList()
+                    editingChecklist = persistentListOf(),
+                    editingAttachments = persistentListOf()
                 ) }
             }
             is NotesEvent.SetInitialTitle -> {
@@ -1417,9 +1419,9 @@ class NotesViewModel @Inject constructor(
 
                 // Handle attachments
                 val existingAttachmentsInDb = if (noteId != -1) {
-                    repository.getNoteById(noteId)?.attachments ?: emptyList()
+                    repository.getNoteById(noteId)?.attachments ?: persistentListOf()
                 } else {
-                    emptyList()
+                    persistentListOf()
                 }
 
                 val attachmentsToAdd = editState.value.editingAttachments.filter { uiAttachment ->

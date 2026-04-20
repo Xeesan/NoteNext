@@ -2,6 +2,10 @@ package com.suvojeet.notenext.ui.project
 
 import com.suvojeet.notenext.ui.notes.NotesEditState
 import com.suvojeet.notenext.ui.notes.NotesListState
+import kotlinx.collections.immutable.toImmutableList
+import kotlinx.collections.immutable.toImmutableMap
+import kotlinx.collections.immutable.toImmutableSet
+import kotlinx.collections.immutable.persistentListOf
 
 fun ProjectNotesState.toNotesEditState(): NotesEditState {
     return NotesEditState(
@@ -20,17 +24,17 @@ fun ProjectNotesState.toNotesEditState(): NotesEditState {
         isItalicActive = this.isItalicActive,
         isUnderlineActive = this.isUnderlineActive,
         activeHeadingStyle = this.activeHeadingStyle,
-        activeStyles = this.activeStyles,
-        linkPreviews = this.linkPreviews,
+        activeStyles = this.activeStyles.toImmutableSet(),
+        linkPreviews = this.linkPreviews.toImmutableList(),
         editingNoteType = this.editingNoteType,
-        editingChecklist = this.editingChecklist,
-        checklistInputValues = this.checklistInputValues,
+        editingChecklist = this.editingChecklist.toImmutableList(),
+        checklistInputValues = this.checklistInputValues.toImmutableMap(),
         focusedChecklistItemId = this.focusedChecklistItemId,
         isCheckedItemsExpanded = this.isCheckedItemsExpanded,
         newlyAddedChecklistItemId = this.newlyAddedChecklistItemId,
-        editingAttachments = this.editingAttachments,
+        editingAttachments = this.editingAttachments.toImmutableList(),
         editingIsLocked = this.editingIsLocked,
-        editingNoteVersions = this.editingNoteVersions,
+        editingNoteVersions = this.editingNoteVersions.toImmutableList(),
         editingReminderTime = this.editingReminderTime,
         editingRepeatOption = this.editingRepeatOption,
         saveStatus = this.saveStatus,
@@ -38,27 +42,27 @@ fun ProjectNotesState.toNotesEditState(): NotesEditState {
         summaryResult = this.summaryResult,
         showSummaryDialog = this.showSummaryDialog,
         isGeneratingChecklist = this.isGeneratingChecklist,
-        generatedChecklistPreview = this.generatedChecklistPreview,
+        generatedChecklistPreview = this.generatedChecklistPreview.toImmutableList(),
         isFixingGrammar = this.isFixingGrammar,
         fixedContentPreview = this.fixedContentPreview,
         originalContentBackup = this.originalContentBackup,
         isMentionPopupVisible = false,
         mentionSearchQuery = "",
-        mentionableNotes = emptyList()
+        mentionableNotes = persistentListOf()
     )
 }
 
 fun ProjectNotesState.toNotesListState(): NotesListState {
     return NotesListState(
-        notes = this.notes,
-        pinnedNotes = this.notes.filter { it.note.isPinned },
+        notes = this.notes.toImmutableList(),
+        pinnedNotes = this.notes.filter { it.note.isPinned }.toImmutableList(),
         layoutType = this.layoutType,
         sortType = this.sortType,
-        selectedNoteIds = this.selectedNoteIds,
-        labels = this.labels,
+        selectedNoteIds = this.selectedNoteIds.toImmutableList(),
+        labels = this.labels.toImmutableList(),
         filteredLabel = this.filteredLabel,
         isLoading = false,
-        projects = this.projects,
+        projects = this.projects.toImmutableList(),
         searchQuery = "",
         filteredProjectId = null
     )
