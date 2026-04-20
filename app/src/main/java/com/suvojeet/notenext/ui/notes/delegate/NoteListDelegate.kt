@@ -15,6 +15,8 @@ import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
+import kotlinx.collections.immutable.toImmutableList
+import kotlinx.collections.immutable.persistentListOf
 import javax.inject.Inject
 
 class NoteListDelegate @Inject constructor(
@@ -38,7 +40,7 @@ class NoteListDelegate @Inject constructor(
         combinedFlow.flatMapLatest { (query, _, project) ->
             repository.getPinnedNoteSummaries(query, project)
         }.onEach { pinned ->
-            _listState.update { it.copy(pinnedNotes = pinned) }
+            _listState.update { it.copy(pinnedNotes = pinned.toImmutableList()) }
         }.launchIn(scope)
 
         combinedFlow.onEach { (query, sort, project) ->
@@ -53,12 +55,12 @@ class NoteListDelegate @Inject constructor(
         }.launchIn(scope)
 
         repository.getLabels().onEach { labels ->
-            val labelNames = labels.map { it.name }
+            val labelNames = labels.map { it.name }.toImmutableList()
             _listState.update { it.copy(labels = labelNames) }
         }.launchIn(scope)
 
         repository.getProjects().onEach { projects ->
-            _listState.update { it.copy(projects = projects, isLoading = false) }
+            _listState.update { it.copy(projects = projects.toImmutableList(), isLoading = false) }
         }.launchIn(scope)
     }
 
@@ -82,12 +84,12 @@ class NoteListDelegate @Inject constructor(
             } else {
                 selectedIds.add(noteId)
             }
-            state.copy(selectedNoteIds = selectedIds)
+            state.copy(selectedNoteIds = selectedIds.toImmutableList())
         }
     }
 
     fun clearSelection() {
-        _listState.update { it.copy(selectedNoteIds = emptyList()) }
+        _listState.update { it.copy(selectedNoteIds = persistentListOf()) }
     }
 
     fun updateState(transform: (NotesListState) -> NotesListState) {

@@ -47,19 +47,25 @@ fun NoteItem(
     binnedDaysRemaining: Int? = null,
     isDarkTheme: Boolean = isSystemInDarkTheme()
 ) {
-    val adaptiveColor = NoteGradients.getAdaptiveColor(note.note.color, isDarkTheme)
+    val adaptiveColor = remember(note.note.color, isDarkTheme) {
+        NoteGradients.getAdaptiveColor(note.note.color, isDarkTheme)
+    }
     val isDefaultColor = adaptiveColor == 0
 
-    val contentColor = if (isDefaultColor) {
-        MaterialTheme.colorScheme.onSurface
-    } else {
-        NoteGradients.getContentColor(adaptiveColor)
+    val contentColor = remember(isDefaultColor, adaptiveColor) {
+        if (isDefaultColor) {
+            MaterialTheme.colorScheme.onSurface
+        } else {
+            NoteGradients.getContentColor(adaptiveColor)
+        }
     }
     
-    val tintColor = if (isDefaultColor) {
-        MaterialTheme.colorScheme.onSurfaceVariant
-    } else {
-        contentColor.copy(alpha = 0.7f)
+    val tintColor = remember(isDefaultColor, contentColor) {
+        if (isDefaultColor) {
+            MaterialTheme.colorScheme.onSurfaceVariant
+        } else {
+            contentColor.copy(alpha = 0.7f)
+        }
     }
 
     val decryptedNote = remember(note.note.title, note.note.content, note.note.isEncrypted) {
@@ -135,27 +141,29 @@ fun NoteItem(
                     val unescapedTitle = remember(decryptedNote.title) {
                         androidx.core.text.HtmlCompat.fromHtml(decryptedNote.title, androidx.core.text.HtmlCompat.FROM_HTML_MODE_LEGACY).toString()
                     }
-                    val titleText = if (searchQuery.isNotEmpty()) {
-                        buildAnnotatedString {
-                            val text = unescapedTitle
-                            append(text)
-                            val lowerText = text.lowercase()
-                            val lowerQuery = searchQuery.lowercase()
-                            var index = lowerText.indexOf(lowerQuery)
-                            while (index >= 0) {
-                                addStyle(
-                                    style = SpanStyle(
-                                        background = MaterialTheme.colorScheme.primaryContainer,
-                                        color = MaterialTheme.colorScheme.onPrimaryContainer
-                                    ),
-                                    start = index,
-                                    end = index + searchQuery.length
-                                )
-                                index = lowerText.indexOf(lowerQuery, index + searchQuery.length)
+                    val titleText = remember(unescapedTitle, searchQuery, MaterialTheme.colorScheme.primaryContainer, MaterialTheme.colorScheme.onPrimaryContainer) {
+                        if (searchQuery.isNotEmpty()) {
+                            buildAnnotatedString {
+                                val text = unescapedTitle
+                                append(text)
+                                val lowerText = text.lowercase()
+                                val lowerQuery = searchQuery.lowercase()
+                                var index = lowerText.indexOf(lowerQuery)
+                                while (index >= 0) {
+                                    addStyle(
+                                        style = SpanStyle(
+                                            background = MaterialTheme.colorScheme.primaryContainer,
+                                            color = MaterialTheme.colorScheme.onPrimaryContainer
+                                        ),
+                                        start = index,
+                                        end = index + searchQuery.length
+                                    )
+                                    index = lowerText.indexOf(lowerQuery, index + searchQuery.length)
+                                }
                             }
+                        } else {
+                            androidx.compose.ui.text.AnnotatedString(unescapedTitle)
                         }
-                    } else {
-                        androidx.compose.ui.text.AnnotatedString(unescapedTitle)
                     }
 
                     Text(
@@ -195,13 +203,15 @@ fun NoteItem(
                         if (decryptedNote.noteType == NoteType.TEXT) {
                             val rawContentLength = decryptedNote.content.length
                             
-                            val (textStyle, maxLines) = when {
-                                rawContentLength < 100 -> MaterialTheme.typography.headlineSmall to 6
-                                rawContentLength < 250 -> MaterialTheme.typography.bodyLarge to 8
-                                else -> MaterialTheme.typography.bodyMedium to 10
+                            val (textStyle, maxLines, fontWeight) = remember(rawContentLength, decryptedNote.title) {
+                                val style = when {
+                                    rawContentLength < 100 -> MaterialTheme.typography.headlineSmall to 6
+                                    rawContentLength < 250 -> MaterialTheme.typography.bodyLarge to 8
+                                    else -> MaterialTheme.typography.bodyMedium to 10
+                                }
+                                val weight = if (decryptedNote.title.isEmpty() && rawContentLength < 100) FontWeight.SemiBold else FontWeight.Normal
+                                Triple(style.first, style.second, weight)
                             }
-    
-                            val fontWeight = if (decryptedNote.title.isEmpty() && rawContentLength < 100) FontWeight.SemiBold else FontWeight.Normal
     
                             val annotatedContent = remember(decryptedNote.content) {
                                 // Strip HTML tags for preview and unescape entities
@@ -210,26 +220,28 @@ fun NoteItem(
                                 androidx.compose.ui.text.AnnotatedString(unescaped)
                             }
 
-                            val highlightedContent = if (searchQuery.isNotEmpty()) {
-                                buildAnnotatedString {
-                                    append(annotatedContent)
-                                    val lowerText = annotatedContent.text.lowercase()
-                                    val lowerQuery = searchQuery.lowercase()
-                                    var index = lowerText.indexOf(lowerQuery)
-                                    while (index >= 0) {
-                                        addStyle(
-                                            style = SpanStyle(
-                                                background = MaterialTheme.colorScheme.primaryContainer,
-                                                color = MaterialTheme.colorScheme.onPrimaryContainer
-                                            ),
-                                            start = index,
-                                            end = index + searchQuery.length
-                                        )
-                                        index = lowerText.indexOf(lowerQuery, index + searchQuery.length)
+                            val highlightedContent = remember(annotatedContent, searchQuery, MaterialTheme.colorScheme.primaryContainer, MaterialTheme.colorScheme.onPrimaryContainer) {
+                                if (searchQuery.isNotEmpty()) {
+                                    buildAnnotatedString {
+                                        append(annotatedContent)
+                                        val lowerText = annotatedContent.text.lowercase()
+                                        val lowerQuery = searchQuery.lowercase()
+                                        var index = lowerText.indexOf(lowerQuery)
+                                        while (index >= 0) {
+                                            addStyle(
+                                                style = SpanStyle(
+                                                    background = MaterialTheme.colorScheme.primaryContainer,
+                                                    color = MaterialTheme.colorScheme.onPrimaryContainer
+                                                ),
+                                                start = index,
+                                                end = index + searchQuery.length
+                                            )
+                                            index = lowerText.indexOf(lowerQuery, index + searchQuery.length)
+                                        }
                                     }
+                                } else {
+                                    annotatedContent
                                 }
-                            } else {
-                                annotatedContent
                             }
     
                             val uriHandler = LocalUriHandler.current
@@ -321,26 +333,28 @@ fun NoteItem(
                                     shape = MaterialTheme.shapes.small,
                                     color = if (isDefaultColor) MaterialTheme.colorScheme.secondaryContainer else contentColor.copy(alpha = 0.15f)
                                 ) {
-                                    val labelText = if (searchQuery.isNotEmpty()) {
-                                        buildAnnotatedString {
-                                            append(label)
-                                            val lowerText = label.lowercase()
-                                            val lowerQuery = searchQuery.lowercase()
-                                            var index = lowerText.indexOf(lowerQuery)
-                                            while (index >= 0) {
-                                                addStyle(
-                                                    style = SpanStyle(
-                                                        background = MaterialTheme.colorScheme.primaryContainer,
-                                                        color = MaterialTheme.colorScheme.onPrimaryContainer
-                                                    ),
-                                                    start = index,
-                                                    end = index + searchQuery.length
-                                                )
-                                                index = lowerText.indexOf(lowerQuery, index + searchQuery.length)
+                                    val labelText = remember(label, searchQuery, MaterialTheme.colorScheme.primaryContainer, MaterialTheme.colorScheme.onPrimaryContainer) {
+                                        if (searchQuery.isNotEmpty()) {
+                                            buildAnnotatedString {
+                                                append(label)
+                                                val lowerText = label.lowercase()
+                                                val lowerQuery = searchQuery.lowercase()
+                                                var index = lowerText.indexOf(lowerQuery)
+                                                while (index >= 0) {
+                                                    addStyle(
+                                                        style = SpanStyle(
+                                                            background = MaterialTheme.colorScheme.primaryContainer,
+                                                            color = MaterialTheme.colorScheme.onPrimaryContainer
+                                                        ),
+                                                        start = index,
+                                                        end = index + searchQuery.length
+                                                    )
+                                                    index = lowerText.indexOf(lowerQuery, index + searchQuery.length)
+                                                }
                                             }
+                                        } else {
+                                            androidx.compose.ui.text.AnnotatedString(label)
                                         }
-                                    } else {
-                                        androidx.compose.ui.text.AnnotatedString(label)
                                     }
 
                                     Text(
@@ -392,27 +406,29 @@ private fun ChecklistPreview(checklistItems: List<ChecklistItem>, contentColor: 
                     androidx.core.text.HtmlCompat.fromHtml(item.text, androidx.core.text.HtmlCompat.FROM_HTML_MODE_LEGACY).toString()
                 }
                 
-                val itemText = if (searchQuery.isNotEmpty()) {
-                    buildAnnotatedString {
-                        val text = unescapedItemText
-                        append(text)
-                        val lowerText = text.lowercase()
-                        val lowerQuery = searchQuery.lowercase()
-                        var index = lowerText.indexOf(lowerQuery)
-                        while (index >= 0) {
-                            addStyle(
-                                style = SpanStyle(
-                                    background = MaterialTheme.colorScheme.primaryContainer,
-                                    color = MaterialTheme.colorScheme.onPrimaryContainer
-                                ),
-                                start = index,
-                                end = index + searchQuery.length
-                            )
-                            index = lowerText.indexOf(lowerQuery, index + searchQuery.length)
+                val itemText = remember(unescapedItemText, searchQuery, MaterialTheme.colorScheme.primaryContainer, MaterialTheme.colorScheme.onPrimaryContainer) {
+                    if (searchQuery.isNotEmpty()) {
+                        buildAnnotatedString {
+                            val text = unescapedItemText
+                            append(text)
+                            val lowerText = text.lowercase()
+                            val lowerQuery = searchQuery.lowercase()
+                            var index = lowerText.indexOf(lowerQuery)
+                            while (index >= 0) {
+                                addStyle(
+                                    style = SpanStyle(
+                                        background = MaterialTheme.colorScheme.primaryContainer,
+                                        color = MaterialTheme.colorScheme.onPrimaryContainer
+                                    ),
+                                    start = index,
+                                    end = index + searchQuery.length
+                                )
+                                index = lowerText.indexOf(lowerQuery, index + searchQuery.length)
+                            }
                         }
+                    } else {
+                        androidx.compose.ui.text.AnnotatedString(unescapedItemText)
                     }
-                } else {
-                    androidx.compose.ui.text.AnnotatedString(unescapedItemText)
                 }
 
                 Text(

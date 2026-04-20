@@ -1,11 +1,13 @@
 package com.suvojeet.notenext.data
 
+import androidx.compose.runtime.Immutable
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
 import com.suvojeet.notenext.core.model.AttachmentType
 import kotlinx.serialization.Serializable
 
+@Immutable
 @Serializable
 @Entity(
     tableName = "attachments",

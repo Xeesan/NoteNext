@@ -90,7 +90,7 @@ class NoteEditorDelegate @Inject constructor(
         _editState.update { state ->
             state.copy(
                 editingContent = result.updatedContent ?: state.editingContent,
-                activeStyles = result.updatedActiveStyles ?: state.activeStyles,
+                activeStyles = result.updatedActiveStyles?.toImmutableSet() ?: state.activeStyles,
                 // Update specific flags if needed
                 isBoldActive = result.updatedActiveStyles?.any { s -> s.fontWeight == androidx.compose.ui.text.font.FontWeight.Bold } ?: state.isBoldActive,
                 isItalicActive = result.updatedActiveStyles?.any { s -> s.fontStyle == androidx.compose.ui.text.font.FontStyle.Italic } ?: state.isItalicActive,
@@ -149,6 +149,13 @@ class NoteEditorDelegate @Inject constructor(
     
     fun cancelAutoSave() {
         autoSaveJob?.cancel()
+    }
+
+    fun updateState(transform: (NotesEditState) -> NotesEditState) {
+        _editState.update(transform)
+    }
+}
+SaveJob?.cancel()
     }
 
     fun updateState(transform: (NotesEditState) -> NotesEditState) {

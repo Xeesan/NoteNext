@@ -469,15 +469,21 @@ fun NotesScreen(
                                                                 rememberSharedContentState(key = "note-${note.note.id}"),
                                                                 animatedVisibilityScope = this@AnimatedContent
                                                             )
+                                                        
+                                                        val onNoteClick = remember(note, onNoteClickAction) {
+                                                            { onNoteClickAction(note) }
+                                                        }
+                                                        val onNoteLongClick = remember(note.note.id) {
+                                                            { viewModel.onEvent(NotesEvent.ToggleNoteSelection(note.note.id)) }
+                                                        }
+
                                                         NoteItem(
                                                             modifier = noteModifier,
                                                             note = note,
                                                             isSelected = listState.selectedNoteIds.contains(note.note.id),
                                                             searchQuery = listState.searchQuery,
-                                                            onNoteClick = { onNoteClickAction(note) },
-                                                            onNoteLongClick = {
-                                                                viewModel.onEvent(NotesEvent.ToggleNoteSelection(note.note.id))
-                                                            },
+                                                            onNoteClick = onNoteClick,
+                                                            onNoteLongClick = onNoteLongClick,
                                                             isDarkTheme = isDarkTheme
                                                         )
                                                     }
@@ -508,15 +514,21 @@ fun NotesScreen(
                                                                     rememberSharedContentState(key = "note-${note.note.id}"),
                                                                     animatedVisibilityScope = this@AnimatedContent
                                                                 )
+                                                            
+                                                            val onNoteClick = remember(note, onNoteClickAction) {
+                                                                { onNoteClickAction(note) }
+                                                            }
+                                                            val onNoteLongClick = remember(note.note.id) {
+                                                                { viewModel.onEvent(NotesEvent.ToggleNoteSelection(note.note.id)) }
+                                                            }
+
                                                             NoteItem(
                                                                 modifier = noteModifier,
                                                                 note = note,
                                                                 isSelected = listState.selectedNoteIds.contains(note.note.id),
                                                                 searchQuery = listState.searchQuery,
-                                                                onNoteClick = { onNoteClickAction(note) },
-                                                                onNoteLongClick = {
-                                                                    viewModel.onEvent(NotesEvent.ToggleNoteSelection(note.note.id))
-                                                                },
+                                                                onNoteClick = onNoteClick,
+                                                                onNoteLongClick = onNoteLongClick,
                                                                 isDarkTheme = isDarkTheme
                                                             )
                                                         }
@@ -551,15 +563,21 @@ fun NotesScreen(
                                                                 rememberSharedContentState(key = "note-${note.note.id}"),
                                                                 animatedVisibilityScope = this@AnimatedContent
                                                             )
+                                                        
+                                                        val onNoteClick = remember(note, onNoteClickAction) {
+                                                            { onNoteClickAction(note) }
+                                                        }
+                                                        val onNoteLongClick = remember(note.note.id) {
+                                                            { viewModel.onEvent(NotesEvent.ToggleNoteSelection(note.note.id)) }
+                                                        }
+
                                                         NoteItem(
                                                             modifier = noteModifier,
                                                             note = note,
                                                             isSelected = listState.selectedNoteIds.contains(note.note.id),
                                                             searchQuery = listState.searchQuery,
-                                                            onNoteClick = { onNoteClickAction(note) },
-                                                            onNoteLongClick = {
-                                                                viewModel.onEvent(NotesEvent.ToggleNoteSelection(note.note.id))
-                                                            },
+                                                            onNoteClick = onNoteClick,
+                                                            onNoteLongClick = onNoteLongClick,
                                                             isDarkTheme = isDarkTheme
                                                         )
                                                     }
@@ -590,15 +608,21 @@ fun NotesScreen(
                                                                     rememberSharedContentState(key = "note-${note.note.id}"),
                                                                     animatedVisibilityScope = this@AnimatedContent
                                                                 )
+                                                            
+                                                            val onNoteClick = remember(note, onNoteClickAction) {
+                                                                { onNoteClickAction(note) }
+                                                            }
+                                                            val onNoteLongClick = remember(note.note.id) {
+                                                                { viewModel.onEvent(NotesEvent.ToggleNoteSelection(note.note.id)) }
+                                                            }
+
                                                             NoteItem(
                                                                 modifier = noteModifier,
                                                                 note = note,
                                                                 isSelected = listState.selectedNoteIds.contains(note.note.id),
                                                                 searchQuery = listState.searchQuery,
-                                                                onNoteClick = { onNoteClickAction(note) },
-                                                                onNoteLongClick = {
-                                                                    viewModel.onEvent(NotesEvent.ToggleNoteSelection(note.note.id))
-                                                                },
+                                                                onNoteClick = onNoteClick,
+                                                                onNoteLongClick = onNoteLongClick,
                                                                 isDarkTheme = isDarkTheme
                                                             )
                                                         }

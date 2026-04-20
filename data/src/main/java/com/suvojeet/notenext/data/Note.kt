@@ -1,12 +1,16 @@
 
 package com.suvojeet.notenext.data
 
+import androidx.compose.runtime.Immutable
 import androidx.room.Entity
 import androidx.room.Index
 import androidx.room.PrimaryKey
 import com.suvojeet.notenext.core.model.NoteType
+import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.persistentListOf
 import kotlinx.serialization.Serializable
 
+@Immutable
 @Serializable
 @Entity(
     tableName = "notes",
@@ -35,7 +39,7 @@ data class Note(
     val label: String? = null,
     val isBinned: Boolean = false,
     val binnedOn: Long? = null,
-    val linkPreviews: List<LinkPreview> = emptyList(),
+    val linkPreviews: ImmutableList<LinkPreview> = persistentListOf(),
     val noteType: NoteType = NoteType.TEXT,
     val projectId: Int? = null,
     val isLocked: Boolean = false,

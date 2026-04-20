@@ -68,6 +68,10 @@ import android.content.ComponentName
 import com.suvojeet.notenext.widget.NoteWidgetProvider
 import com.suvojeet.notenext.R
 import com.suvojeet.notenext.ui.theme.NoteGradients
+import kotlinx.collections.immutable.toImmutableList
+import kotlinx.collections.immutable.toImmutableSet
+import kotlinx.collections.immutable.toImmutableMap
+import kotlinx.collections.immutable.persistentListOf
 import javax.inject.Inject
 
 @HiltViewModel
@@ -148,16 +152,16 @@ class NotesViewModel @Inject constructor(
         when (event) {
             is NotesEvent.GenerateChecklist -> {
                 viewModelScope.launch {
-                    editorDelegate.updateState { it.copy(isGeneratingChecklist = true, generatedChecklistPreview = emptyList()) }
+                    editorDelegate.updateState { it.copy(isGeneratingChecklist = true, generatedChecklistPreview = persistentListOf()) }
                     groqRepository.generateChecklist(event.topic).collect { result ->
                         result.onSuccess { items ->
                             // Store preview instead of inserting directly
                             editorDelegate.updateState { it.copy(
                                 isGeneratingChecklist = false,
-                                generatedChecklistPreview = items
+                                generatedChecklistPreview = items.toImmutableList()
                             ) }
                         }.onFailure { failure ->
-                            editorDelegate.updateState { it.copy(isGeneratingChecklist = false, generatedChecklistPreview = emptyList()) }
+                            editorDelegate.updateState { it.copy(isGeneratingChecklist = false, generatedChecklistPreview = persistentListOf()) }
 
                             val errorMessage = when (failure) {
                                 is GroqResult.RateLimited -> "AI is busy. Please try again in ${failure.retryAfterSeconds}s."
@@ -190,14 +194,14 @@ class NotesViewModel @Inject constructor(
 
                     editorDelegate.updateState { it.copy(
                         editingNoteType = NoteType.CHECKLIST,
-                        editingChecklist = editState.value.editingChecklist + checklistItems,
+                        editingChecklist = (editState.value.editingChecklist + checklistItems).toImmutableList(),
                         checklistInputValues = editState.value.checklistInputValues + newInputValues,
-                        generatedChecklistPreview = emptyList()
+                        generatedChecklistPreview = persistentListOf()
                     ) }
                 }
             }
             is NotesEvent.ClearGeneratedChecklist -> {
-                editorDelegate.updateState { it.copy(generatedChecklistPreview = emptyList(), isGeneratingChecklist = false) }
+                editorDelegate.updateState { it.copy(generatedChecklistPreview = persistentListOf(), isGeneratingChecklist = false) }
             }
             is NotesEvent.FixGrammar -> {
                 aiDelegate.fixGrammar(editState.value.editingContent, viewModelScope, _events) { transform ->
@@ -215,7 +219,7 @@ class NotesViewModel @Inject constructor(
                 val filteredNotes = listState.value.notes.filter { 
                     it.note.title.contains(query, ignoreCase = true) && 
                     it.note.id != editState.value.expandedNoteId 
-                }
+                }.toImmutableList()
                 editorDelegate.updateState { it.copy(
                     isMentionPopupVisible = true,
                     mentionSearchQuery = query,
@@ -243,13 +247,13 @@ class NotesViewModel @Inject constructor(
                         editingContent = TextFieldValue(newAnnotatedString, androidx.compose.ui.text.TextRange(newCursorPosition)),
                         isMentionPopupVisible = false,
                         mentionSearchQuery = "",
-                        mentionableNotes = emptyList()
+                        mentionableNotes = persistentListOf()
                     ) }
                 } else {
                     editorDelegate.updateState { it.copy(
                         isMentionPopupVisible = false,
                         mentionSearchQuery = "",
-                        mentionableNotes = emptyList()
+                        mentionableNotes = persistentListOf()
                     ) }
                 }
             }
@@ -257,7 +261,7 @@ class NotesViewModel @Inject constructor(
                 editorDelegate.updateState { it.copy(
                     isMentionPopupVisible = false,
                     mentionSearchQuery = "",
-                    mentionableNotes = emptyList()
+                    mentionableNotes = persistentListOf()
                 ) }
             }
             is NotesEvent.ImportImage -> {
@@ -370,7 +374,7 @@ class NotesViewModel @Inject constructor(
                 editorDelegate.updateState { it.copy(
                     isSearchingInNote = isSearching,
                     noteSearchQuery = if (!isSearching) "" else editState.value.noteSearchQuery,
-                    searchResultIndices = if (!isSearching) emptyList() else editState.value.searchResultIndices,
+                    searchResultIndices = if (!isSearching) persistentListOf() else editState.value.searchResultIndices,
                     currentSearchResultIndex = if (!isSearching) -1 else editState.value.currentSearchResultIndex
                 ) }
             }
@@ -384,8 +388,8 @@ class NotesViewModel @Inject constructor(
                         foundIndices.add(index)
                         index = content.indexOf(query, index + 1, ignoreCase = true)
                     }
-                    foundIndices
-                } else emptyList()
+                    foundIndices.toImmutableList()
+                } else persistentListOf()
 
                 editorDelegate.updateState { it.copy(
                     noteSearchQuery = query,
@@ -436,7 +440,7 @@ class NotesViewModel @Inject constructor(
             }
             is NotesEvent.SelectAllNotes -> {
                 viewModelScope.launch {
-                    val allPinned = listState.value.pinnedNotes.map { it.note.id }
+                    val allPinned = listState.value.pinnedNotes.map { it.note.id }.toImmutableList()
                     listDelegate.updateState { it.copy(selectedNoteIds = allPinned) }
                 }
             }
@@ -451,7 +455,7 @@ class NotesViewModel @Inject constructor(
                         repository.updateNote(note.note.copy(isPinned = areNotesBeingPinned))
                     }
 
-                    listDelegate.updateState { it.copy(selectedNoteIds = emptyList()) }
+                    listDelegate.updateState { it.copy(selectedNoteIds = persistentListOf()) }
                     val message = if (areNotesBeingPinned) {
 
                         if (allSelectedNotes.size > 1) "${allSelectedNotes.size} notes pinned" else "Note pinned"
@@ -476,7 +480,7 @@ class NotesViewModel @Inject constructor(
                             }
                             repository.updateNote(noteToUpdate)
                             }
-                            listDelegate.updateState { it.copy(selectedNoteIds = emptyList()) }
+                            listDelegate.updateState { it.copy(selectedNoteIds = persistentListOf()) }
                             val message = if (areNotesBeingLocked) {
 
                             if (selectedNotes.size > 1) "${selectedNotes.size} notes locked" else "Note locked"
@@ -498,7 +502,7 @@ class NotesViewModel @Inject constructor(
                     for (note in selectedNotes) {
                         repository.updateNote(note.note.copy(isBinned = true, binnedOn = System.currentTimeMillis()))
                     }
-                    listDelegate.updateState { it.copy(selectedNoteIds = emptyList()) }
+                    listDelegate.updateState { it.copy(selectedNoteIds = persistentListOf()) }
                     _events.emit(NotesUiEvent.ShowToast("${selectedNotes.size} notes moved to Bin"))
                     updateWidgets()
                 }
@@ -509,7 +513,7 @@ class NotesViewModel @Inject constructor(
                     for (note in selectedNotes) {
                         repository.updateNote(note.note.copy(isArchived = !note.note.isArchived))
                     }
-                    listDelegate.updateState { it.copy(selectedNoteIds = emptyList()) }
+                    listDelegate.updateState { it.copy(selectedNoteIds = persistentListOf()) }
                     updateWidgets()
                 }
             }
@@ -519,7 +523,7 @@ class NotesViewModel @Inject constructor(
                     for (note in selectedNotes) {
                         repository.updateNote(note.note.copy(isImportant = !note.note.isImportant))
                     }
-                    listDelegate.updateState { it.copy(selectedNoteIds = emptyList()) }
+                    listDelegate.updateState { it.copy(selectedNoteIds = persistentListOf()) }
                 }
             }
             is NotesEvent.ChangeColorForSelectedNotes -> {
@@ -529,7 +533,7 @@ class NotesViewModel @Inject constructor(
                         repository.updateNote(note.note.copy(color = event.color))
                     }
                     listDelegate.updateState { it.copy(
-                        selectedNoteIds = emptyList()
+                        selectedNoteIds = persistentListOf()
                     ) }
                     _events.emit(NotesUiEvent.ShowToast("Color updated"))
                 }
@@ -550,7 +554,7 @@ class NotesViewModel @Inject constructor(
                         }
                         repository.insertChecklistItems(newChecklistItems)
                     }
-                    listDelegate.updateState { it.copy(selectedNoteIds = emptyList()) }
+                    listDelegate.updateState { it.copy(selectedNoteIds = persistentListOf()) }
                     val message = if (selectedNotes.size > 1) "${selectedNotes.size} notes copied" else "Note copied"
                     _events.emit(NotesUiEvent.ShowToast(message))
                 }
@@ -569,7 +573,7 @@ class NotesViewModel @Inject constructor(
                         }
                         _events.emit(NotesUiEvent.SendNotes(title, contentBuilder.toString()))
                     }
-                    listDelegate.updateState { it.copy(selectedNoteIds = emptyList()) }
+                    listDelegate.updateState { it.copy(selectedNoteIds = persistentListOf()) }
                 }
             }
             is NotesEvent.SetReminderForSelectedNotes -> {
@@ -586,7 +590,7 @@ class NotesViewModel @Inject constructor(
                         repository.updateNote(updatedNote)
                         alarmScheduler.schedule(updatedNote)
                     }
-                    listDelegate.updateState { it.copy(selectedNoteIds = emptyList()) }
+                    listDelegate.updateState { it.copy(selectedNoteIds = persistentListOf()) }
                     _events.emit(NotesUiEvent.ShowToast("Reminder set for ${selectedNotes.size} notes"))
                 }
             }
@@ -599,7 +603,7 @@ class NotesViewModel @Inject constructor(
                     for (note in selectedNotes) {
                         repository.updateNote(note.note.copy(label = event.label))
                     }
-                    listDelegate.updateState { it.copy(selectedNoteIds = emptyList()) }
+                    listDelegate.updateState { it.copy(selectedNoteIds = persistentListOf()) }
                 }
             }
             is NotesEvent.ExpandNote -> {
@@ -629,14 +633,14 @@ class NotesViewModel @Inject constructor(
                                     } else {
                                         item
                                     }
-                                }
+                                }.toImmutableList()
                             } else {
-                                emptyList<ChecklistItem>()
+                                persistentListOf<ChecklistItem>()
                             }
 
                             viewModelScope.launch {
                                 repository.getNoteVersions(event.noteId).collect { versions ->
-                                    editorDelegate.updateState { it.copy(editingNoteVersions = versions) }
+                                    editorDelegate.updateState { it.copy(editingNoteVersions = versions.toImmutableList()) }
                                 }
                             }
                             
@@ -661,14 +665,14 @@ class NotesViewModel @Inject constructor(
                                 editingProjectId = note.projectId,
                                 canUndo = false, // Will be updated by reset() above
                                 canRedo = false,
-                                linkPreviews = note.linkPreviews,
+                                linkPreviews = note.linkPreviews.toImmutableList(),
                                 editingNoteType = note.noteType,
                                 editingChecklist = checklist,
-                                editingAttachments = noteWithAttachments.attachments.map { it.copy(tempId = java.util.UUID.randomUUID().toString()) },
+                                editingAttachments = noteWithAttachments.attachments.map { it.copy(tempId = java.util.UUID.randomUUID().toString()) }.toImmutableList(),
                                 editingIsLocked = note.isLocked,
                                 checklistInputValues = checklist.associate { item ->
                                     item.id to TextFieldValue(richTextController.parseMarkdownToAnnotatedString(item.text))
-                                },
+                                }.toImmutableMap(),
                                 editingReminderTime = note.reminderTime,
                                 editingRepeatOption = note.repeatOption,
                                 summaryResult = note.aiSummary,
@@ -691,13 +695,13 @@ class NotesViewModel @Inject constructor(
                             canUndo = false,
                             canRedo = false,
                             editingLabel = null,
-                            linkPreviews = emptyList(),
+                            linkPreviews = persistentListOf(),
                             editingNoteType = event.noteType,
-                            editingChecklist = emptyList(),
-                            checklistInputValues = emptyMap(),
-                            editingAttachments = emptyList(),
+                            editingChecklist = persistentListOf(),
+                            checklistInputValues = persistentMapOf(),
+                            editingAttachments = persistentListOf(),
                             editingIsLocked = false,
-                            editingNoteVersions = emptyList(),
+                            editingNoteVersions = persistentListOf(),
                             summaryResult = null,
                             showSummaryDialog = false
                         ) }
@@ -880,7 +884,7 @@ class NotesViewModel @Inject constructor(
                     }
                     editorDelegate.updateState { it.copy(
                         activeHeadingStyle = event.level,
-                        activeStyles = newActiveStyles,
+                        activeStyles = newActiveStyles.toImmutableSet(),
                         isBoldActive = false,
                         isItalicActive = false,
                         isUnderlineActive = false
@@ -1085,7 +1089,7 @@ class NotesViewModel @Inject constructor(
                     for (note in selectedNotes) {
                         repository.updateNote(note.note.copy(projectId = event.projectId))
                     }
-                    listDelegate.updateState { it.copy(selectedNoteIds = emptyList()) }
+                    listDelegate.updateState { it.copy(selectedNoteIds = persistentListOf()) }
                     _events.emit(NotesUiEvent.ShowToast("${selectedNotes.size} notes moved to project"))
                 }
             }
@@ -1105,7 +1109,7 @@ class NotesViewModel @Inject constructor(
 
                     editorDelegate.updateState { it.copy(
                         editingNoteType = NoteType.CHECKLIST,
-                        editingChecklist = finalItems,
+                        editingChecklist = finalItems.toImmutableList(),
                         editingContent = TextFieldValue("") // Clear text content
                     ) }
                 } else {
@@ -1117,7 +1121,7 @@ class NotesViewModel @Inject constructor(
                     editorDelegate.updateState { it.copy(
                         editingNoteType = NoteType.TEXT,
                         editingContent = TextFieldValue(textContent),
-                        editingChecklist = emptyList()
+                        editingChecklist = persistentListOf()
                     ) }
                 }
             }
@@ -1477,10 +1481,10 @@ class NotesViewModel @Inject constructor(
                 isBoldActive = false,
                 isItalicActive = false,
                 isUnderlineActive = false,
-                activeStyles = emptySet(),
-                linkPreviews = emptyList(),
-                editingChecklist = emptyList(),
-                editingAttachments = emptyList(),
+                activeStyles = persistentSetOf(),
+                linkPreviews = persistentListOf(),
+                editingChecklist = persistentListOf(),
+                editingAttachments = persistentListOf(),
                 editingReminderTime = null,
                 editingRepeatOption = null
             ) }

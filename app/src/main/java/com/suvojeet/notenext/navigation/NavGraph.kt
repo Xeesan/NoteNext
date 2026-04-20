@@ -266,12 +266,12 @@ private fun DrawerContent(
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentDestination = navBackStackEntry?.destination
 
-    data class DrawerItem(val label: Int, val icon: @Composable () -> Unit, val isSelected: Boolean, val onClick: () -> Unit)
+    data class DrawerItem(val label: Int, val icon: androidx.compose.ui.graphics.vector.ImageVector, val isSelected: Boolean, val onClick: () -> Unit)
 
     val items = listOf(
         DrawerItem(
             R.string.notes, 
-            { Icon(Icons.AutoMirrored.Filled.Label, contentDescription = stringResource(id = R.string.notes)) }, 
+            Icons.AutoMirrored.Filled.Label, 
             currentDestination?.hasRoute<Destination.Notes>() == true && notesState.filteredLabel == null
         ) {
             onCloseDrawer()
@@ -288,7 +288,7 @@ private fun DrawerContent(
         },
         DrawerItem(
             R.string.projects, 
-            { Icon(Icons.Default.CreateNewFolder, contentDescription = stringResource(id = R.string.projects)) }, 
+            Icons.Default.CreateNewFolder, 
             currentDestination?.hasRoute<Destination.Projects>() == true
         ) {
             onCloseDrawer()
@@ -302,7 +302,7 @@ private fun DrawerContent(
         },
         DrawerItem(
             R.string.archive, 
-            { Icon(Icons.Default.Archive, contentDescription = stringResource(id = R.string.archive)) }, 
+            Icons.Default.Archive, 
             currentDestination?.hasRoute<Destination.Archive>() == true
         ) {
             onCloseDrawer()
@@ -316,7 +316,7 @@ private fun DrawerContent(
         },
         DrawerItem(
             R.string.reminders, 
-            { Icon(Icons.Default.Notifications, contentDescription = stringResource(id = R.string.reminders)) }, 
+            Icons.Default.Notifications, 
             currentDestination?.hasRoute<Destination.Reminder>() == true
         ) {
             onCloseDrawer()
@@ -330,7 +330,7 @@ private fun DrawerContent(
         },
         DrawerItem(
             R.string.todos, 
-            { Icon(Icons.Default.PlaylistAddCheck, contentDescription = stringResource(id = R.string.todos)) }, 
+            Icons.Default.PlaylistAddCheck, 
             currentDestination?.hasRoute<Destination.Todo>() == true
         ) {
             onCloseDrawer()
@@ -344,7 +344,7 @@ private fun DrawerContent(
         },
         DrawerItem(
             R.string.bin, 
-            { Icon(Icons.Default.Delete, contentDescription = stringResource(id = R.string.bin)) }, 
+            Icons.Default.Delete, 
             currentDestination?.hasRoute<Destination.Bin>() == true
         ) {
             onCloseDrawer()
@@ -358,7 +358,7 @@ private fun DrawerContent(
         },
         DrawerItem(
             R.string.settings, 
-            { Icon(Icons.Default.Settings, contentDescription = stringResource(id = R.string.settings)) }, 
+            Icons.Default.Settings, 
             currentDestination?.hasRoute<Destination.Settings>() == true
         ) {
             onCloseDrawer()
@@ -374,7 +374,7 @@ private fun DrawerContent(
 
     items.forEach { item ->
         NavigationDrawerItem(
-            icon = { item.icon() },
+            icon = { Icon(item.icon, contentDescription = stringResource(id = item.label)) },
             label = { Text(stringResource(id = item.label), fontWeight = FontWeight.Bold) },
             selected = item.isSelected,
             onClick = item.onClick,

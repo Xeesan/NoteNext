@@ -11,23 +11,33 @@ import com.suvojeet.notenext.data.SortType
 
 import com.suvojeet.notenext.core.model.NoteType
 
+import androidx.compose.runtime.Immutable
+import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.ImmutableSet
+import kotlinx.collections.immutable.ImmutableMap
+import kotlinx.collections.immutable.persistentListOf
+import kotlinx.collections.immutable.persistentSetOf
+import kotlinx.collections.immutable.persistentMapOf
+
+@Immutable
 data class NotesListState(
-    val notes: List<NoteSummaryWithAttachments> = emptyList(),
-    val pinnedNotes: List<NoteSummaryWithAttachments> = emptyList(),
+    val notes: ImmutableList<NoteSummaryWithAttachments> = persistentListOf(),
+    val pinnedNotes: ImmutableList<NoteSummaryWithAttachments> = persistentListOf(),
     val pagedNotes: kotlinx.coroutines.flow.Flow<androidx.paging.PagingData<NoteSummaryWithAttachments>> = kotlinx.coroutines.flow.emptyFlow(),
     val layoutType: LayoutType = LayoutType.GRID,
     val sortType: SortType = SortType.DATE_MODIFIED,
-    val selectedNoteIds: List<Int> = emptyList(),
-    val labels: List<String> = emptyList(),
+    val selectedNoteIds: ImmutableList<Int> = persistentListOf(),
+    val labels: ImmutableList<String> = persistentListOf(),
     val filteredLabel: String? = null,
     val isLoading: Boolean = true,
-    val projects: List<Project> = emptyList(),
+    val projects: ImmutableList<Project> = persistentListOf(),
     val searchQuery: String = "",
     val filteredProjectId: Int? = null
 )
 
+@Immutable
 data class NotesEditState(
-    val labels: List<String> = emptyList(),
+    val labels: ImmutableList<String> = persistentListOf(),
     val expandedNoteId: Int? = null,
     val editingTitle: String = "",
     val editingContent: TextFieldValue = TextFieldValue(),
@@ -44,17 +54,17 @@ data class NotesEditState(
     val isItalicActive: Boolean = false,
     val isUnderlineActive: Boolean = false,
     val activeHeadingStyle: Int = 0,
-    val activeStyles: Set<androidx.compose.ui.text.SpanStyle> = emptySet(),
-    val linkPreviews: List<LinkPreview> = emptyList(),
+    val activeStyles: ImmutableSet<androidx.compose.ui.text.SpanStyle> = persistentSetOf(),
+    val linkPreviews: ImmutableList<LinkPreview> = persistentListOf(),
     val editingNoteType: NoteType = NoteType.TEXT,
-    val editingChecklist: List<ChecklistItem> = emptyList(),
-    val checklistInputValues: Map<String, TextFieldValue> = emptyMap(),
+    val editingChecklist: ImmutableList<ChecklistItem> = persistentListOf(),
+    val checklistInputValues: ImmutableMap<String, TextFieldValue> = persistentMapOf(),
     val focusedChecklistItemId: String? = null,
     val isCheckedItemsExpanded: Boolean = true,
     val newlyAddedChecklistItemId: String? = null,
-    val editingAttachments: List<Attachment> = emptyList(),
+    val editingAttachments: ImmutableList<Attachment> = persistentListOf(),
     val editingIsLocked: Boolean = false,
-    val editingNoteVersions: List<NoteVersion> = emptyList(),
+    val editingNoteVersions: ImmutableList<NoteVersion> = persistentListOf(),
     val editingReminderTime: Long? = null,
     val editingRepeatOption: String? = null,
     val isSummarizing: Boolean = false,
@@ -62,7 +72,7 @@ data class NotesEditState(
     val showSummaryDialog: Boolean = false,
     val showLabelDialog: Boolean = false,
     val isGeneratingChecklist: Boolean = false,
-    val generatedChecklistPreview: List<String> = emptyList(),
+    val generatedChecklistPreview: ImmutableList<String> = persistentListOf(),
     val isFixingGrammar: Boolean = false,
     val fixedContentPreview: String? = null,
     val originalContentBackup: TextFieldValue? = null,
@@ -71,13 +81,13 @@ data class NotesEditState(
     // Mention state
     val isMentionPopupVisible: Boolean = false,
     val mentionSearchQuery: String = "",
-    val mentionableNotes: List<NoteSummaryWithAttachments> = emptyList(),
+    val mentionableNotes: ImmutableList<NoteSummaryWithAttachments> = persistentListOf(),
 
     // External file & Search in note
     val externalUri: android.net.Uri? = null,
     val isSearchingInNote: Boolean = false,
     val noteSearchQuery: String = "",
-    val searchResultIndices: List<Int> = emptyList(),
+    val searchResultIndices: ImmutableList<Int> = persistentListOf(),
     val currentSearchResultIndex: Int = -1
 )
 
