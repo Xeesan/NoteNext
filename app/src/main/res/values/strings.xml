@@ -175,12 +175,12 @@
     <string name="local_storage_title">Local Storage</string>
     <string name="local_storage_description">All your notes are stored locally on your device</string>
     <string name="about_the_app_title">About the App</string>
-    <string name="about_the_app_description">NoteNext is a modern note-taking app</string>
+    <string name="about_the_app_description">NoteNext is an Indian, completely free, and open-source note-taking application. It helps you organize your thoughts, ideas, and daily tasks in a simple, intuitive, and privacy-focused way. Create notes, checklists, and set reminders to stay on top of your schedule while keeping your data under your control.</string>
     <string name="core_developer">Core Developer</string>
     <string name="open_source_title">Open Source</string>
     <string name="made_with_love">Made with ❤️</string>
     <string name="notenext">NoteNext</string>
-    <string name="about_subtitle">A modern note-taking app</string>
+    <string name="about_subtitle">Indian • Open Source • Free &amp; Private</string>
     <string name="notenext_logo">NoteNext Logo</string>
     <string name="ic_launcher_foreground">App Icon Foreground</string>
     

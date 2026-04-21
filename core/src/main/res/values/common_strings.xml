@@ -142,7 +142,7 @@
     <string name="open_source_title">Open Source</string>
     <string name="open_source_description">Transparent development. Contribute and customize freely.</string>
     <string name="about_the_app_title">About the App</string>
-    <string name="about_the_app_description">NoteNext helps you organize your thoughts, ideas, and daily tasks in a simple and intuitive way. Create notes, checklists, and set reminders to stay on top of your schedule.</string>
+    <string name="about_the_app_description">NoteNext is an Indian, completely free, and open-source note-taking application. It helps you organize your thoughts, ideas, and daily tasks in a simple, intuitive, and privacy-focused way. Create notes, checklists, and set reminders to stay on top of your schedule while keeping your data under your control.</string>
     <string name="meet_the_team">Meet the Team</string>
     <string name="core_developer">Core Developer</string>
     <string name="feedback_provider">Feedback &amp; Testing</string>
@@ -178,7 +178,7 @@
     <string name="add_reminder_title">Add Reminder</string>
     <string name="reminder_title_hint">Title</string>
     <string name="backup_title">Backup</string>
-    <string name="about_subtitle">Minimal • Open Source • Privacy-First</string>
+    <string name="about_subtitle">Indian • Open Source • Free &amp; Private</string>
     <string name="notenext_logo">NoteNext Logo</string>
     <string name="profile_picture">Profile Picture</string>
     <string name="labels_title">LABELS</string>

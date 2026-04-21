@@ -139,7 +139,7 @@
     <string name="open_source_title">ओपन सोर्स</string>
     <string name="open_source_description">पारदर्शी विकास। स्वतंत्र रूप से योगदान करें और अनुकूलित करें।</string>
     <string name="about_the_app_title">ऐप के बारे में</string>
-    <string name="about_the_app_description">नोटनेक्स्ट आपको अपने विचारों, विचारों और दैनिक कार्यों को एक सरल और सहज तरीके से व्यवस्थित करने में मदद करता है। अपने शेड्यूल के शीर्ष पर बने रहने के लिए नोट्स, चेकलिस्ट और रिमाइंडर सेट करें।</string>
+    <string name="about_the_app_description">नोटनेक्स्ट एक भारतीय, पूरी तरह से मुफ्त और ओपन-सोर्स नोट लेने वाला ऐप है। यह आपको अपने विचारों, विचारों और दैनिक कार्यों को सरल, सहज और गोपनीयता-केंद्रित तरीके से व्यवस्थित करने में मदद करता है। अपने डेटा पर नियंत्रण रखते हुए अपने शेड्यूल के शीर्ष पर बने रहने के लिए नोट्स, चेकलिस्ट और रिमाइंडर बनाएं।</string>
     <string name="meet_the_team">टीम से मिलें</string>
     <string name="core_developer">कोर डेवलपर</string>
     <string name="made_with_love">बेहतर नोट लेने के लिए ❤️ से बनाया गया</string>
@@ -174,7 +174,7 @@
     <string name="add_reminder_title">रिमाइंडर जोड़ें</string>
     <string name="reminder_title_hint">शीर्षक</string>
     <string name="backup_title">बैकअप</string>
-    <string name="about_subtitle">न्यूनतम • ओपन सोर्स • गोपनीयता-प्रथम</string>
+    <string name="about_subtitle">भारतीय • ओपन सोर्स • मुफ्त और निजी</string>
     <string name="notenext_logo">नोटनेक्स्ट लोगो</string>
     <string name="profile_picture">प्रोफ़ाइल चित्र</string>
     <string name="labels_title">लेबल</string>
