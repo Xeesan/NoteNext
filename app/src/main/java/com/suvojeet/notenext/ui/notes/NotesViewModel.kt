@@ -743,6 +743,15 @@ class NotesViewModel @Inject constructor(
                 ) }
                 scheduleAutoSave()
             }
+            is NotesEvent.AddChecklistItemAfter -> {
+                val (updatedChecklist, newItemId) = ChecklistManager.addChecklistItemAfter(editState.value.editingChecklist, event.itemId)
+                editorDelegate.updateState { it.copy(
+                    editingChecklist = updatedChecklist.toImmutableList(),
+                    newlyAddedChecklistItemId = newItemId,
+                    checklistInputValues = (editState.value.checklistInputValues + (newItemId to TextFieldValue(""))).toImmutableMap()
+                ) }
+                scheduleAutoSave()
+            }
             is NotesEvent.SwapChecklistItems -> {
                 val updatedList = ChecklistManager.swapItems(editState.value.editingChecklist, event.fromId, event.toId)
                 if (updatedList != editState.value.editingChecklist) {

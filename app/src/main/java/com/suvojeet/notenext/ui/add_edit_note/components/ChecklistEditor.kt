@@ -29,6 +29,7 @@ import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
+import androidx.compose.ui.input.key.*
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.res.stringResource
@@ -64,28 +65,29 @@ fun LazyListScope.ChecklistEditor(
         val currentUncheckedItems by rememberUpdatedState(uncheckedItems)
         val currentIndex by rememberUpdatedState(index)
         
+        val density = LocalDensity.current
+        val itemHeightPx = remember(density) { with(density) { 56.dp.toPx() } }
+        
         val dragModifier = Modifier
             .pointerInput(Unit) {
-                detectDragGesturesAfterLongPress(
+                androidx.compose.foundation.gestures.detectDragGestures(
                     onDragStart = { },
                     onDrag = { change, dragAmount ->
                         change.consume()
                         dragOffset.value += dragAmount.y
                         
-                        // Use a smaller threshold for faster response
-                        val threshold = 80f 
                         val items = currentUncheckedItems
                         val i = currentIndex
 
-                        if (dragOffset.value > threshold) {
+                        if (dragOffset.value > itemHeightPx) {
                             if (i < items.lastIndex) {
                                 onEvent(NotesEvent.SwapChecklistItems(item.id, items[i + 1].id))
-                                dragOffset.value -= threshold 
+                                dragOffset.value -= itemHeightPx 
                             }
-                        } else if (dragOffset.value < -threshold) {
+                        } else if (dragOffset.value < -itemHeightPx) {
                             if (i > 0) {
                                 onEvent(NotesEvent.SwapChecklistItems(item.id, items[i - 1].id))
-                                dragOffset.value += threshold
+                                dragOffset.value += itemHeightPx
                             }
                         }
                     },
@@ -104,14 +106,14 @@ fun LazyListScope.ChecklistEditor(
             isNewlyAdded = state.newlyAddedChecklistItemId == item.id,
             backgroundColor = backgroundColor,
             modifier = Modifier
-                .animateItem() // Built-in smooth animation for list reordering
+                .then(if (isDragging) Modifier else Modifier.animateItem()) // Built-in smooth animation for list reordering
                 .offset { IntOffset(0, dragOffset.value.roundToInt()) }
                 .zIndex(if (isDragging) 1f else 0f)
                 .graphicsLayer {
                     if (isDragging) {
-                        scaleX = 1.04f
-                        scaleY = 1.04f
-                        shadowElevation = 12f
+                        scaleX = 1.02f
+                        scaleY = 1.02f
+                        shadowElevation = 8f
                     }
                 },
             dragModifier = dragModifier
@@ -334,6 +336,27 @@ fun ChecklistItemRow(
                     .onFocusChanged { focusState ->
                         if (focusState.isFocused) {
                             onEvent(NotesEvent.OnChecklistItemFocus(item.id))
+                        }
+                    }
+                    .onKeyEvent { keyEvent ->
+                        if (keyEvent.type == KeyEventType.KeyDown) {
+                            when (keyEvent.key) {
+                                Key.Enter -> {
+                                    onEvent(NotesEvent.AddChecklistItemAfter(item.id))
+                                    true
+                                }
+                                Key.Backspace -> {
+                                    if (highlightedValue.text.isEmpty()) {
+                                        onEvent(NotesEvent.DeleteChecklistItem(item.id))
+                                        true
+                                    } else {
+                                        false
+                                    }
+                                }
+                                else -> false
+                            }
+                        } else {
+                            false
                         }
                     },
                 textStyle = TextStyle(

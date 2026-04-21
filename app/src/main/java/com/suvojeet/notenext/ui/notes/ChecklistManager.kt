@@ -9,6 +9,27 @@ object ChecklistManager {
         return (currentList + newItem) to newItem.id
     }
 
+    fun addChecklistItemAfter(currentList: List<ChecklistItem>, afterId: String): Pair<List<ChecklistItem>, String> {
+        val list = currentList.toMutableList()
+        val index = list.indexOfFirst { it.id == afterId }
+        val newItem = ChecklistItem(
+            text = "",
+            isChecked = false,
+            position = if (index != -1) index + 1 else list.size,
+            level = if (index != -1) list[index].level else 0
+        )
+        
+        if (index != -1) {
+            list.add(index + 1, newItem)
+        } else {
+            list.add(newItem)
+        }
+        
+        // Update positions for all items
+        val updatedList = list.mapIndexed { i, item -> item.copy(position = i) }
+        return updatedList to newItem.id
+    }
+
     fun swapItems(currentList: List<ChecklistItem>, fromId: String, toId: String): List<ChecklistItem> {
         val list = currentList.toMutableList()
         val fromIndex = list.indexOfFirst { it.id == fromId }

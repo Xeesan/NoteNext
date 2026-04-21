@@ -44,6 +44,7 @@ sealed class NotesEvent {
     data class OnChecklistItemFocus(val itemId: String) : NotesEvent()
     data class SwapChecklistItems(val fromId: String, val toId: String) : NotesEvent()
     object AddChecklistItem : NotesEvent()
+    data class AddChecklistItemAfter(val itemId: String) : NotesEvent()
     data class DeleteChecklistItem(val itemId: String) : NotesEvent()
     data class IndentChecklistItem(val itemId: String) : NotesEvent()
     data class OutdentChecklistItem(val itemId: String) : NotesEvent()
