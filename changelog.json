@@ -1,6 +1,37 @@
 {
   "releases": [
     {
+      "version": "1.3.8",
+      "date": "April 21, 2026",
+      "items": [
+        {
+          "title": "Interactive Checklist Experience",
+          "description": "Revolutionized checklist management with smooth, real-time drag-and-drop tracking and smart keyboard integration (Enter to add, Backspace to remove).",
+          "type": "FEATURE"
+        },
+        {
+          "title": "Indian & Open Source Identity",
+          "description": "Updated app mission to highlight our roots as a proudly Indian, 100% free, and open-source project dedicated to privacy.",
+          "type": "IMPROVEMENT"
+        },
+        {
+          "title": "Performance & State Stability",
+          "description": "Optimized recompositions using immutable collections and marked core data models as stable for a buttery-smooth UI experience.",
+          "type": "IMPROVEMENT"
+        },
+        {
+          "title": "Shared Element Transitions",
+          "description": "Implemented beautiful shared element transitions and AI streaming for project-based notes.",
+          "type": "FEATURE"
+        },
+        {
+          "title": "Reliability & Bug Fixes",
+          "description": "Fixed Room compatibility issues with immutable types, resolved lifecycle-related crashes, and improved backup/restore for Todo items.",
+          "type": "FIX"
+        }
+      ]
+    },
+    {
       "version": "1.3.7",
       "date": "April 16, 2026",
       "items": [
