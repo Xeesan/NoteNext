@@ -27,6 +27,7 @@ fun NotesEvent.toProjectNotesEvent(): ProjectNotesEvent {
         is NotesEvent.OnChecklistItemFocus -> ProjectNotesEvent.OnChecklistItemFocus(this.itemId)
         is NotesEvent.SwapChecklistItems -> ProjectNotesEvent.SwapChecklistItems(this.fromId, this.toId)
         is NotesEvent.AddChecklistItem -> ProjectNotesEvent.AddChecklistItem
+        is NotesEvent.AddChecklistItemAfter -> ProjectNotesEvent.AddChecklistItemAfter(this.itemId)
         is NotesEvent.DeleteChecklistItem -> ProjectNotesEvent.DeleteChecklistItem(this.itemId)
         is NotesEvent.IndentChecklistItem -> ProjectNotesEvent.IndentChecklistItem(this.itemId)
         is NotesEvent.OutdentChecklistItem -> ProjectNotesEvent.OutdentChecklistItem(this.itemId)

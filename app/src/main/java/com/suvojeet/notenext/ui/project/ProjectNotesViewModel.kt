@@ -421,6 +421,15 @@ class ProjectNotesViewModel @Inject constructor(
                 )
                 scheduleAutoSave()
             }
+            is ProjectNotesEvent.AddChecklistItemAfter -> {
+                val (updatedChecklist, newItemId) = com.suvojeet.notenext.ui.notes.ChecklistManager.addChecklistItemAfter(state.value.editingChecklist, event.itemId)
+                _state.value = state.value.copy(
+                    editingChecklist = updatedChecklist,
+                    newlyAddedChecklistItemId = newItemId,
+                    checklistInputValues = state.value.checklistInputValues + (newItemId to TextFieldValue(""))
+                )
+                scheduleAutoSave()
+            }
             is ProjectNotesEvent.SwapChecklistItems -> {
                 val updatedList = com.suvojeet.notenext.ui.notes.ChecklistManager.swapItems(state.value.editingChecklist, event.fromId, event.toId)
                 if (updatedList != state.value.editingChecklist) {
