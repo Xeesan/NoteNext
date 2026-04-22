@@ -7,8 +7,10 @@ import android.content.Context
 import android.content.Intent
 import android.widget.Toast
 import androidx.compose.animation.*
+import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
@@ -31,25 +33,43 @@ fun AiSummarySheet(
 ) {
     val context = LocalContext.current
     val scrollState = rememberScrollState()
-    val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
+    // Set skipPartiallyExpanded to false to allow the two-stage swipe behavior
+    val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = false)
     
+    // Determine if we are in the expanded state to adjust UI elements
+    val isExpanded = sheetState.targetValue == SheetValue.Expanded || sheetState.currentValue == SheetValue.Expanded
+    
+    val cornerRadius by animateDpAsState(
+        targetValue = if (isExpanded) 0.dp else 28.dp,
+        label = "CornerRadius"
+    )
+    
+    val horizontalPadding by animateDpAsState(
+        targetValue = if (isExpanded) 0.dp else 24.dp,
+        label = "HorizontalPadding"
+    )
+
     ModalBottomSheet(
         onDismissRequest = onDismiss,
         sheetState = sheetState,
         containerColor = MaterialTheme.colorScheme.surfaceContainerLow,
         dragHandle = { BottomSheetDefaults.DragHandle() },
-        shape = MaterialTheme.shapes.extraLarge,
-        tonalElevation = 6.dp
+        shape = RoundedCornerShape(topStart = cornerRadius, topEnd = cornerRadius),
+        tonalElevation = 6.dp,
+        windowInsets = if (isExpanded) WindowInsets.statusBars else BottomSheetDefaults.windowInsets
     ) {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 24.dp)
+                .then(if (isExpanded) Modifier.fillMaxHeight() else Modifier)
+                .padding(horizontal = horizontalPadding)
                 .padding(bottom = 24.dp)
         ) {
             // Header with Branding and Compact Actions
             Row(
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = if (isExpanded) 24.dp else 0.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
@@ -109,11 +129,12 @@ fun AiSummarySheet(
 
             // Content Area
             Surface(
-                shape = MaterialTheme.shapes.large,
+                shape = if (isExpanded) RoundedCornerShape(0.dp) else MaterialTheme.shapes.large,
                 color = MaterialTheme.colorScheme.surfaceContainerHigh,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .heightIn(min = 200.dp, max = 500.dp)
+                    .weight(if (isExpanded) 1f else 0f, fill = false)
+                    .heightIn(min = 200.dp, max = if (isExpanded) 2000.dp else 450.dp)
             ) {
                 Box(
                     modifier = Modifier.padding(8.dp),
@@ -160,8 +181,6 @@ fun AiSummarySheet(
                     }
                 }
             }
-            
-            // Note: Bottom actions removed as they are now in the header for a cleaner look.
         }
     }
 }
