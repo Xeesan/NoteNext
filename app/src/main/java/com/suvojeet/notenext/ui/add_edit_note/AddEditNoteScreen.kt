@@ -439,6 +439,10 @@ fun AddEditNoteScreen(
                                     Spacer(modifier = Modifier.height(8.dp))
                                 }
                             }
+
+                            item {
+                                Spacer(modifier = Modifier.height(300.dp))
+                            }
                         }
                     } else {
                         LazyColumn(
@@ -492,6 +496,10 @@ fun AddEditNoteScreen(
                                     LinkPreviewCard(linkPreview = linkPreview, onEvent = onEvent)
                                     Spacer(modifier = Modifier.height(8.dp))
                                 }
+                            }
+
+                            item {
+                                Spacer(modifier = Modifier.height(300.dp))
                             }
                         }
                     }

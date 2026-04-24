@@ -21,6 +21,8 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.text.input.TextFieldValue
 import com.suvojeet.notenext.ui.notes.NotesEvent
 import com.suvojeet.notenext.ui.notes.NotesEditState
+import androidx.compose.foundation.relocation.BringIntoViewRequester
+import androidx.compose.foundation.relocation.bringIntoViewRequester
 import androidx.compose.ui.res.stringResource
 import com.suvojeet.notenext.R
 import androidx.compose.ui.text.TextLayoutResult
@@ -35,6 +37,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Alarm
 import com.suvojeet.notenext.ui.components.springPress
 import com.suvojeet.notenext.ui.theme.*
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
 @Composable
@@ -184,6 +187,29 @@ fun NoteContentChunkEditor(
     }
 
     var chunkLayoutResult by remember { mutableStateOf<TextLayoutResult?>(null) }
+    val bringIntoViewRequester = remember { BringIntoViewRequester() }
+    val scope = rememberCoroutineScope()
+
+    // Auto-scroll to cursor
+    LaunchedEffect(state.editingContent.selection) {
+        val selection = state.editingContent.selection
+        if (selection.collapsed) {
+            val globalCursor = selection.start
+            if (globalCursor >= startOffset && globalCursor <= endOffset) {
+                chunkLayoutResult?.let { layout ->
+                    val localCursor = globalCursor - startOffset
+                    if (localCursor >= 0 && localCursor <= layout.layoutInput.text.length) {
+                        try {
+                            val cursorRect = layout.getCursorRect(localCursor)
+                            scope.launch {
+                                bringIntoViewRequester.bringIntoView(cursorRect)
+                            }
+                        } catch (e: Exception) {}
+                    }
+                }
+            }
+        }
+    }
 
     // Derive the chunk from global state
     val chunk = remember(state.editingContent, startOffset, endOffset) {
@@ -275,6 +301,7 @@ fun NoteContentChunkEditor(
             },
             modifier = Modifier
                 .fillMaxWidth()
+                .bringIntoViewRequester(bringIntoViewRequester)
                 .drawBehind {
                     chunkLayoutResult?.let { layout ->
                         val globalCursor = state.editingContent.selection.start

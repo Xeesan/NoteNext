@@ -13,6 +13,9 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.focusGroup
+import androidx.compose.foundation.relocation.BringIntoViewRequester
+import androidx.compose.foundation.relocation.bringIntoViewRequester
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material.icons.Icons
@@ -34,6 +37,7 @@ import androidx.compose.ui.input.key.*
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextLayoutResult
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.TextFieldValue
@@ -48,6 +52,7 @@ import com.suvojeet.notenext.ui.components.springPress
 import com.suvojeet.notenext.ui.notes.NotesEvent
 import com.suvojeet.notenext.ui.notes.NotesEditState
 import kotlin.math.roundToInt
+import kotlinx.coroutines.launch
 
 fun LazyListScope.ChecklistEditor(
     state: NotesEditState,
@@ -212,6 +217,10 @@ fun ChecklistItemRow(
     dragModifier: Modifier = Modifier
 ) {
     val focusRequester = remember { FocusRequester() }
+    val bringIntoViewRequester = remember { BringIntoViewRequester() }
+    var textLayoutResult by remember { mutableStateOf<TextLayoutResult?>(null) }
+    val scope = rememberCoroutineScope()
+
     val dismissState = rememberSwipeToDismissBoxState(
         confirmValueChange = {
             if (it == SwipeToDismissBoxValue.EndToStart) {
@@ -244,6 +253,24 @@ fun ChecklistItemRow(
         if (isNewlyAdded) {
             focusRequester.requestFocus()
             onEvent(NotesEvent.ClearNewlyAddedChecklistItemId)
+        }
+    }
+
+    LaunchedEffect(inputValue?.selection) {
+        inputValue?.let { value ->
+            if (value.selection.collapsed) {
+                textLayoutResult?.let { layout ->
+                    val cursorIndex = value.selection.start
+                    if (cursorIndex >= 0 && cursorIndex <= layout.layoutInput.text.length) {
+                        try {
+                            val cursorRect = layout.getCursorRect(cursorIndex)
+                            scope.launch {
+                                bringIntoViewRequester.bringIntoView(cursorRect)
+                            }
+                        } catch (e: Exception) {}
+                    }
+                }
+            }
         }
     }
 
@@ -332,6 +359,7 @@ fun ChecklistItemRow(
                 modifier = Modifier
                     .weight(1f)
                     .focusRequester(focusRequester)
+                    .bringIntoViewRequester(bringIntoViewRequester)
                     .padding(start = 12.dp)
                     .heightIn(max = maxSafeHeight)
                     .onFocusChanged { focusState ->
@@ -360,6 +388,7 @@ fun ChecklistItemRow(
                             false
                         }
                     },
+                onTextLayout = { textLayoutResult = it },
                 textStyle = TextStyle(
                     fontSize = 16.sp,
                     color = textColor,
