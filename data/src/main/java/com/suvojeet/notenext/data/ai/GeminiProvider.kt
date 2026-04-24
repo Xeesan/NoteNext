@@ -1,8 +1,10 @@
 package com.suvojeet.notenext.data.ai
 
-import com.suvojeet.notenext.data.remote.Message
-import com.suvojeet.notenext.data.remote.OpenAIApiService
-import com.suvojeet.notenext.data.remote.OpenAIChatRequest
+import com.suvojeet.notenext.data.remote.GeminiApiService
+import com.suvojeet.notenext.data.remote.GeminiContent
+import com.suvojeet.notenext.data.remote.GeminiPart
+import com.suvojeet.notenext.data.remote.GeminiRequest
+import com.suvojeet.notenext.data.repository.SettingsRepository
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.sync.Mutex
@@ -15,69 +17,63 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class OpenAIProvider @Inject constructor(
-    private val apiService: com.suvojeet.notenext.data.remote.OpenAIApiService,
-    private val settingsRepository: com.suvojeet.notenext.data.repository.SettingsRepository
+class GeminiProvider @Inject constructor(
+    private val apiService: GeminiApiService,
+    private val settingsRepository: SettingsRepository
 ) : AIProviderService {
 
     private val mutex = Mutex()
     private var isInitialized = false
     private var apiKey: String = ""
-    private var baseUrl: String = "https://api.openai.com/"
 
     private val defaultModels = listOf(
-        "gpt-5.5",
-        "gpt-5.4",
-        "gpt-5.4-mini",
-        "gpt-5.4-nano",
-        "gpt-5-codex",
-        "gpt-5.3-codex",
-        "gpt-4.1",
-        "gpt-4.1-mini",
-        "gpt-4.1-nano",
-        "gpt-4o",
-        "gpt-4o-mini"
+        "gemini-3.1-pro",
+        "gemini-3.1-flash",
+        "gemini-3.1-flash-lite",
+        "gemini-2.5-pro",
+        "gemini-2.5-flash"
     )
 
-    suspend fun initialize(apiKey: String, baseUrl: String = "https://api.openai.com/") {
+    suspend fun initialize(apiKey: String) {
         mutex.withLock {
             this.apiKey = apiKey
-            this.baseUrl = if (baseUrl.endsWith("/")) baseUrl else "$baseUrl/"
             isInitialized = true
         }
     }
 
-    override suspend fun getProviderName(): String = "OpenAI"
+    override suspend fun getProviderName(): String = "Google Gemini"
 
-    override suspend fun getAvailableModels(): List<String> {
-        if (!isProviderAvailable()) return defaultModels
-        return try {
-            val response = apiService.getModels("Bearer $apiKey")
-            response.data.map { it.id }.filter { it.contains("gpt") }
-        } catch (e: Exception) {
-            defaultModels
+    override suspend fun getAvailableModels(): List<String> = defaultModels
+
+    override suspend fun isProviderAvailable(): Boolean {
+        ensureInitialized()
+        return apiKey.isNotBlank()
+    }
+
+    private suspend fun ensureInitialized() {
+        if (isInitialized) return
+        mutex.withLock {
+            if (isInitialized) return@withLock
+            val key = settingsRepository.geminiApiKey.first()
+            if (key.isNotBlank()) {
+                apiKey = key
+                isInitialized = true
+            }
         }
     }
 
-    override suspend fun isProviderAvailable(): Boolean {
-        return isInitialized && apiKey.isNotBlank()
-    }
-
     override suspend fun summarizeNote(content: String): AIResult<String> {
-        return executeWithRetry(listOf(
-            Message(role = "system", content = "You are a helpful assistant that summarizes notes concisely."),
-            Message(role = "user", content = "Summarize the following note:\n\n$content")
-        )) { it.trim() }
+        return executeWithRetry(
+            systemPrompt = "You are a helpful assistant that summarizes notes concisely.",
+            userPrompt = "Summarize the following note:\n\n$content"
+        ) { it.trim() }
     }
 
     override suspend fun generateChecklist(topic: String): AIResult<List<String>> {
-        return executeWithRetry(listOf(
-            Message(
-                role = "system",
-                content = "You are a helpful assistant that generates checklists. Return ONLY a pure JSON array of strings, e.g. [\"Item 1\", \"Item 2\"]. Do not include markdown code blocks or any other text."
-            ),
-            Message(role = "user", content = "Create a checklist for: $topic")
-        )) { content ->
+        return executeWithRetry(
+            systemPrompt = "You are a helpful assistant that generates checklists. Return ONLY a pure JSON array of strings, e.g. [\"Item 1\", \"Item 2\"]. Do not include markdown code blocks or any other text.",
+            userPrompt = "Create a checklist for: $topic"
+        ) { content ->
             val cleaned = content.replace("```json", "").replace("```", "").trim()
             if (cleaned.startsWith("[") && cleaned.endsWith("]")) {
                 try {
@@ -95,13 +91,10 @@ class OpenAIProvider @Inject constructor(
     }
 
     override suspend fun generateTodos(input: String): AIResult<List<Pair<String, String>>> {
-        return executeWithRetry(listOf(
-            Message(
-                role = "system",
-                content = "You are a helpful assistant that converts paragraphs or messy notes into clear, point-by-point todo tasks. Return ONLY a pure JSON array of objects with 'title' and 'description' keys."
-            ),
-            Message(role = "user", content = "Convert this into a todo list:\n\n$input")
-        )) { content ->
+        return executeWithRetry(
+            systemPrompt = "You are a helpful assistant that converts paragraphs or messy notes into clear, point-by-point todo tasks. Return ONLY a pure JSON array of objects with 'title' and 'description' keys.",
+            userPrompt = "Convert this into a todo list:\n\n$input"
+        ) { content ->
             val cleaned = content.replace("```json", "").replace("```", "").trim()
             try {
                 val todoList = kotlinx.serialization.json.Json { ignoreUnknownKeys = true }.decodeFromString<List<Map<String, String>>>(cleaned)
@@ -115,31 +108,30 @@ class OpenAIProvider @Inject constructor(
     }
 
     override suspend fun fixGrammar(text: String): AIResult<String> {
-        return executeWithRetry(listOf(
-            Message(
-                role = "system",
-                content = "You are a grammar and spelling correction assistant. Fix typos, grammar errors, and improve punctuation. Keep the original meaning and tone intact. Return ONLY the corrected text without any explanations or additional comments."
-            ),
-            Message(role = "user", content = text)
-        )) { it.trim() }
+        return executeWithRetry(
+            systemPrompt = "You are a grammar and spelling correction assistant. Fix typos, grammar errors, and improve punctuation. Keep the original meaning and tone intact. Return ONLY the corrected text without any explanations or additional comments.",
+            userPrompt = text
+        ) { it.trim() }
     }
 
     override suspend fun generateCustomPrompt(systemPrompt: String, userPrompt: String): AIResult<String> {
-        return executeWithRetry(listOf(
-            Message(role = "system", content = systemPrompt),
-            Message(role = "user", content = userPrompt)
-        )) { it.trim() }
+        return executeWithRetry(
+            systemPrompt = systemPrompt,
+            userPrompt = userPrompt
+        ) { it.trim() }
     }
 
     private suspend fun <T> executeWithRetry(
-        messages: List<com.suvojeet.notenext.data.remote.Message>,
+        systemPrompt: String,
+        userPrompt: String,
         processor: (String) -> T
     ): AIResult<T> {
-        if (!isProviderAvailable()) {
-            return AIResult.AuthError("OpenAI not configured")
+        ensureInitialized()
+        if (apiKey.isBlank()) {
+            return AIResult.AuthError("Gemini API key not configured")
         }
 
-        val selectedModel = settingsRepository.openAIModel.first()
+        val selectedModel = settingsRepository.geminiModel.first()
         val modelsToTry = if (selectedModel.isNotBlank()) {
             listOf(selectedModel) + defaultModels.filter { it != selectedModel }
         } else {
@@ -152,18 +144,21 @@ class OpenAIProvider @Inject constructor(
             var currentRetry = 0
             while (currentRetry <= 2) {
                 try {
-                    val request = com.suvojeet.notenext.data.remote.OpenAIChatRequest(
-                        model = model,
-                        messages = messages
+                    val request = GeminiRequest(
+                        contents = listOf(
+                            GeminiContent(parts = listOf(GeminiPart(text = userPrompt)))
+                        ),
+                        system_instruction = GeminiContent(parts = listOf(GeminiPart(text = systemPrompt)))
                     )
-                    val response = apiService.getChatCompletion("Bearer $apiKey", request)
+
+                    val response = apiService.generateContent(model, apiKey, request)
                     
                     if (response.error != null) {
-                        lastException = Exception(response.error.message ?: "OpenAI error")
+                        lastException = Exception(response.error.message ?: "Gemini error")
                         break
                     }
 
-                    val content = response.choices?.firstOrNull()?.message?.content
+                    val content = response.candidates?.firstOrNull()?.content?.parts?.firstOrNull()?.text
                     if (content != null) {
                         return AIResult.Success(processor(content))
                     } else {
@@ -179,8 +174,8 @@ class OpenAIProvider @Inject constructor(
                         break
                     }
 
-                    if (message.contains("401")) {
-                        return AIResult.AuthError("Invalid OpenAI API key")
+                    if (message.contains("401") || message.contains("403")) {
+                        return AIResult.AuthError("Invalid Gemini API key")
                     }
 
                     if (message.contains("503") || message.contains("502") || e is IOException) {

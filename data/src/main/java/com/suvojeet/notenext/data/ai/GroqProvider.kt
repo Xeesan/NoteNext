@@ -25,17 +25,16 @@ class GroqProvider @Inject constructor(
     private var apiKey: String = ""
 
     private val fastModels = listOf(
-        "llama-3.1-8b-instant",
-        "qwen/qwen3-32b",
-        "meta-llama/llama-4-scout-17b-16e-instruct",
-        "llama-3.3-70b-versatile"
+        "llama-3",
+        "mistral-small-4",
+        "mixtral",
+        "llama-3.1-8b-instant"
     )
 
     private val largeModels = listOf(
-        "llama-3.3-70b-versatile",
-        "meta-llama/llama-4-scout-17b-16e-instruct",
-        "qwen/qwen3-32b",
-        "llama-3.1-8b-instant"
+        "llama-4",
+        "mistral-large",
+        "llama-3.3-70b-versatile"
     )
 
     private suspend fun ensureInitialized() {

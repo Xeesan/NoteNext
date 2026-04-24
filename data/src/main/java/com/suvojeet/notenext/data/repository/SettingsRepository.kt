@@ -38,6 +38,8 @@ object PreferencesKeys {
     val OPENAI_MODEL = stringPreferencesKey("openai_model")
     val ANTHROPIC_API_KEY = stringPreferencesKey("anthropic_api_key")
     val ANTHROPIC_MODEL = stringPreferencesKey("anthropic_model")
+    val GEMINI_API_KEY = stringPreferencesKey("gemini_api_key")
+    val GEMINI_MODEL = stringPreferencesKey("gemini_model")
 }
 
 class SettingsRepository(private val context: Context) {
@@ -217,5 +219,19 @@ class SettingsRepository(private val context: Context) {
 
     suspend fun saveAnthropicModel(model: String) {
         context.dataStore.edit { preferences -> preferences[PreferencesKeys.ANTHROPIC_MODEL] = model }
+    }
+
+    val geminiApiKey: Flow<String> = context.dataStore.data
+        .map { preferences -> preferences[PreferencesKeys.GEMINI_API_KEY] ?: "" }
+
+    suspend fun saveGeminiApiKey(key: String) {
+        context.dataStore.edit { preferences -> preferences[PreferencesKeys.GEMINI_API_KEY] = key }
+    }
+
+    val geminiModel: Flow<String> = context.dataStore.data
+        .map { preferences -> preferences[PreferencesKeys.GEMINI_MODEL] ?: "gemini-3.1-flash" }
+
+    suspend fun saveGeminiModel(model: String) {
+        context.dataStore.edit { preferences -> preferences[PreferencesKeys.GEMINI_MODEL] = model }
     }
 }

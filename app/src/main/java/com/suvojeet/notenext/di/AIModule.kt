@@ -2,9 +2,11 @@ package com.suvojeet.notenext.di
 
 import com.suvojeet.notenext.data.ai.AIProviderManager
 import com.suvojeet.notenext.data.ai.AnthropicProvider
+import com.suvojeet.notenext.data.ai.GeminiProvider
 import com.suvojeet.notenext.data.ai.GroqProvider
 import com.suvojeet.notenext.data.ai.OpenAIProvider
 import com.suvojeet.notenext.data.remote.AnthropicApiService
+import com.suvojeet.notenext.data.remote.GeminiApiService
 import com.suvojeet.notenext.data.remote.GroqApiService
 import com.suvojeet.notenext.data.remote.OpenAIApiService
 import com.suvojeet.notenext.data.repository.SettingsRepository
@@ -65,12 +67,30 @@ object AIModule {
 
     @Provides
     @Singleton
+    fun provideGeminiApiService(): GeminiApiService {
+        val contentType = "application/json".toMediaType()
+        val okHttpClient = OkHttpClient.Builder()
+            .connectTimeout(30, TimeUnit.SECONDS)
+            .readTimeout(60, TimeUnit.SECONDS)
+            .build()
+
+        return Retrofit.Builder()
+            .baseUrl("https://generativelanguage.googleapis.com/")
+            .client(okHttpClient)
+            .addConverterFactory(json.asConverterFactory(contentType))
+            .build()
+            .create(GeminiApiService::class.java)
+    }
+
+    @Provides
+    @Singleton
     fun provideAIProviderManager(
         groqProvider: GroqProvider,
         openAIProvider: OpenAIProvider,
         anthropicProvider: AnthropicProvider,
+        geminiProvider: GeminiProvider,
         settingsRepository: SettingsRepository
     ): AIProviderManager {
-        return AIProviderManager(groqProvider, openAIProvider, anthropicProvider, settingsRepository)
+        return AIProviderManager(groqProvider, openAIProvider, anthropicProvider, geminiProvider, settingsRepository)
     }
 }

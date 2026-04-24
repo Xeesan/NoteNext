@@ -128,15 +128,16 @@ fun AiSummarySheet(
 
             // Content Area
             Surface(
-                shape = if (isExpanded) RoundedCornerShape(0.dp) else MaterialTheme.shapes.large,
+                shape = if (isExpanded) RoundedCornerShape(0.dp) else MaterialTheme.shapes.extraLarge,
                 color = MaterialTheme.colorScheme.surfaceContainerHigh,
                 modifier = Modifier
                     .fillMaxWidth()
                     .weight(if (isExpanded) 1f else 0.0001f, fill = false)
-                    .heightIn(min = 200.dp, max = if (isExpanded) 2000.dp else 450.dp)
+                    .heightIn(min = 200.dp, max = if (isExpanded) 2000.dp else 450.dp),
+                border = androidx.compose.foundation.BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.5f))
             ) {
                 Box(
-                    modifier = Modifier.padding(8.dp),
+                    modifier = Modifier.padding(4.dp),
                     contentAlignment = if (isSummarizing) Alignment.Center else Alignment.TopStart
                 ) {
                     if (isSummarizing) {
@@ -170,6 +171,33 @@ fun AiSummarySheet(
                                 }
                                 
                                 MarkdownPreview(content = visibleText)
+
+                                // Disclaimer Section
+                                Surface(
+                                    modifier = Modifier
+                                        .padding(16.dp)
+                                        .fillMaxWidth(),
+                                    color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.3f),
+                                    shape = MaterialTheme.shapes.medium
+                                ) {
+                                    Row(
+                                        modifier = Modifier.padding(12.dp),
+                                        verticalAlignment = Alignment.CenterVertically
+                                    ) {
+                                        Icon(
+                                            imageVector = Icons.Default.Info,
+                                            contentDescription = null,
+                                            tint = MaterialTheme.colorScheme.primary,
+                                            modifier = Modifier.size(20.dp)
+                                        )
+                                        Spacer(modifier = Modifier.width(12.dp))
+                                        Text(
+                                            text = "AI-generated content can be inaccurate. Please verify important information.",
+                                            style = MaterialTheme.typography.labelSmall,
+                                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                                        )
+                                    }
+                                }
                             }
                         } ?: Text(
                             "No summary available.", 

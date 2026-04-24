@@ -25,18 +25,10 @@ class AnthropicProvider @Inject constructor(
     private var apiKey: String = ""
 
     private val defaultModels = listOf(
-        "claude-4.6-opus",
-        "claude-4.6-sonnet",
-        "claude-4.6-haiku",
-        "claude-4.5-opus",
-        "claude-4.5-sonnet",
-        "claude-4.5-haiku",
-        "claude-4.1-opus",
-        "claude-4-sonnet",
-        "claude-4-haiku",
-        "claude-3.7-sonnet",
-        "claude-3-opus",
-        "claude-2.1"
+        "claude-opus-4.7",
+        "claude-opus-4.6",
+        "claude-sonnet-4.6",
+        "claude-haiku-4.5"
     )
 
     suspend fun initialize(apiKey: String) {

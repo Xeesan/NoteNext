@@ -34,17 +34,24 @@ class AIProviderSettingsViewModel @Inject constructor(
     private val _anthropicApiKey = MutableStateFlow("")
     val anthropicApiKey: StateFlow<String> = _anthropicApiKey.asStateFlow()
 
+    private val _geminiApiKey = MutableStateFlow("")
+    val geminiApiKey: StateFlow<String> = _geminiApiKey.asStateFlow()
+
     private val _openaiModels = MutableStateFlow<List<String>>(emptyList())
     val openaiModels: StateFlow<List<String>> = _openaiModels.asStateFlow()
 
     private val _anthropicModels = MutableStateFlow<List<String>>(emptyList())
     val anthropicModels: StateFlow<List<String>> = _anthropicModels.asStateFlow()
 
+    private val _geminiModels = MutableStateFlow<List<String>>(emptyList())
+    val geminiModels: StateFlow<List<String>> = _geminiModels.asStateFlow()
+
     private val _isLoadingModels = MutableStateFlow(false)
     val isLoadingModels: StateFlow<Boolean> = _isLoadingModels.asStateFlow()
 
     val selectedOpenAIModel = settingsRepository.openAIModel
     val selectedAnthropicModel = settingsRepository.anthropicModel
+    val selectedGeminiModel = settingsRepository.geminiModel
 
     init {
         viewModelScope.launch {
@@ -53,6 +60,7 @@ class AIProviderSettingsViewModel @Inject constructor(
             _openaiApiKey.value = settingsRepository.openAIApiKey.first()
             _openaiBaseUrl.value = settingsRepository.openAIBaseUrl.first()
             _anthropicApiKey.value = settingsRepository.anthropicApiKey.first()
+            _geminiApiKey.value = settingsRepository.geminiApiKey.first()
             
             refreshModels()
         }
@@ -73,6 +81,12 @@ class AIProviderSettingsViewModel @Inject constructor(
             if (anthropicProvider != null) {
                 _anthropicModels.value = anthropicProvider.getAvailableModels()
             }
+
+            // Refresh Gemini models
+            val geminiProvider = aiProviderManager.getProviderService(AIProvider.GEMINI)
+            if (geminiProvider != null) {
+                _geminiModels.value = geminiProvider.getAvailableModels()
+            }
             
             _isLoadingModels.value = false
         }
@@ -87,6 +101,12 @@ class AIProviderSettingsViewModel @Inject constructor(
     fun selectAnthropicModel(model: String) {
         viewModelScope.launch {
             settingsRepository.saveAnthropicModel(model)
+        }
+    }
+
+    fun selectGeminiModel(model: String) {
+        viewModelScope.launch {
+            settingsRepository.saveGeminiModel(model)
         }
     }
 
@@ -128,6 +148,14 @@ class AIProviderSettingsViewModel @Inject constructor(
         viewModelScope.launch {
             _anthropicApiKey.value = key
             settingsRepository.saveAnthropicApiKey(key)
+            refreshModels()
+        }
+    }
+
+    fun saveGeminiKey(key: String) {
+        viewModelScope.launch {
+            _geminiApiKey.value = key
+            settingsRepository.saveGeminiApiKey(key)
             refreshModels()
         }
     }

@@ -42,16 +42,20 @@ fun AIProviderSettingsScreen(
     val openaiKey by viewModel.openaiApiKey.collectAsStateWithLifecycle(initialValue = "")
     val openaiBaseUrl by viewModel.openaiBaseUrl.collectAsStateWithLifecycle(initialValue = "https://api.openai.com/")
     val anthropicKey by viewModel.anthropicApiKey.collectAsStateWithLifecycle(initialValue = "")
+    val geminiKey by viewModel.geminiApiKey.collectAsStateWithLifecycle(initialValue = "")
     
     val openaiModels by viewModel.openaiModels.collectAsStateWithLifecycle()
     val anthropicModels by viewModel.anthropicModels.collectAsStateWithLifecycle()
+    val geminiModels by viewModel.geminiModels.collectAsStateWithLifecycle()
     val selectedOpenAIModel by viewModel.selectedOpenAIModel.collectAsStateWithLifecycle(initialValue = "gpt-4o-mini")
     val selectedAnthropicModel by viewModel.selectedAnthropicModel.collectAsStateWithLifecycle(initialValue = "claude-3-5-sonnet-20241022")
+    val selectedGeminiModel by viewModel.selectedGeminiModel.collectAsStateWithLifecycle(initialValue = "gemini-3.1-flash")
     val isLoadingModels by viewModel.isLoadingModels.collectAsStateWithLifecycle()
 
     var showGroqKeyVisible by remember { mutableStateOf(false) }
     var showOpenaiKeyVisible by remember { mutableStateOf(false) }
     var showAnthropicKeyVisible by remember { mutableStateOf(false) }
+    var showGeminiKeyVisible by remember { mutableStateOf(false) }
 
     Scaffold(
         modifier = Modifier
@@ -122,6 +126,18 @@ fun AIProviderSettingsScreen(
                                 iconColor = Color(0xFFFF5722),
                                 isSelected = selectedProvider == AIProvider.ANTHROPIC,
                                 onClick = { viewModel.selectProvider(AIProvider.ANTHROPIC) }
+                            )
+
+                            Spacer(modifier = Modifier.height(12.dp))
+
+                            AIProviderCard(
+                                provider = AIProvider.GEMINI,
+                                name = "Google Gemini",
+                                description = "Gemini 3.1 Pro and Flash models",
+                                icon = Icons.Rounded.ModelTraining,
+                                iconColor = Color(0xFF4285F4),
+                                isSelected = selectedProvider == AIProvider.GEMINI,
+                                onClick = { viewModel.selectProvider(AIProvider.GEMINI) }
                             )
                         }
                     }
@@ -310,6 +326,58 @@ fun AIProviderSettingsScreen(
                                 iconColor = Color(0xFFFF5722)
                             )
 
+                        }
+                    }
+                }
+            }
+
+            // Gemini Configuration
+            if (selectedProvider == AIProvider.GEMINI) {
+                item {
+                    ExpressiveSection(
+                        title = "Gemini Configuration",
+                        description = "Enter your Google Gemini API key"
+                    ) {
+                        SettingsGroupCard {
+                            Column(modifier = Modifier.padding(16.dp)) {
+                                OutlinedTextField(
+                                    value = geminiKey,
+                                    onValueChange = { viewModel.saveGeminiKey(it) },
+                                    label = { Text("Gemini API Key") },
+                                    placeholder = { Text("AIza...") },
+                                    modifier = Modifier.fillMaxWidth(),
+                                    visualTransformation = if (showGeminiKeyVisible) VisualTransformation.None else PasswordVisualTransformation(),
+                                    trailingIcon = {
+                                        IconButton(onClick = { showGeminiKeyVisible = !showGeminiKeyVisible }) {
+                                            Icon(
+                                                imageVector = if (showGeminiKeyVisible) Icons.Rounded.VisibilityOff else Icons.Rounded.Visibility,
+                                                contentDescription = null
+                                            )
+                                        }
+                                    },
+                                    shape = MaterialTheme.shapes.medium
+                                )
+
+                                Spacer(modifier = Modifier.height(8.dp))
+
+                                Text(
+                                    text = "Your API key is stored locally and never sent to any server except Google",
+                                    style = MaterialTheme.typography.bodySmall,
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                                )
+                            }
+
+                            HorizontalDivider(modifier = Modifier.padding(horizontal = 16.dp), color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.5f))
+
+                            ModelSelector(
+                                title = "Select Gemini Model",
+                                subtitle = "Choose which model to use for AI tasks",
+                                selectedModel = selectedGeminiModel,
+                                availableModels = geminiModels,
+                                onModelSelected = { viewModel.selectGeminiModel(it) },
+                                icon = Icons.Rounded.ModelTraining,
+                                iconColor = Color(0xFF4285F4)
+                            )
                         }
                     }
                 }

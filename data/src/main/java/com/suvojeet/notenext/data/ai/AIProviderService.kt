@@ -7,6 +7,7 @@ enum class AIProvider {
     GROQ,
     OPENAI,
     ANTHROPIC,
+    GEMINI,
     OLLAMA,
     CUSTOM
 }
