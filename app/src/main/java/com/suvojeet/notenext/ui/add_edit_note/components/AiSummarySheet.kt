@@ -132,7 +132,7 @@ fun AiSummarySheet(
                 color = MaterialTheme.colorScheme.surfaceContainerHigh,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .weight(if (isExpanded) 1f else 0f, fill = false)
+                    .weight(if (isExpanded) 1f else 0.0001f, fill = false)
                     .heightIn(min = 200.dp, max = if (isExpanded) 2000.dp else 450.dp)
             ) {
                 Box(

@@ -4,6 +4,10 @@
         <!-- Camera photos stored in filesDir/camera_photos -->
         <files-path name="camera_photos" path="camera_photos/" />
 
+        <!-- Images for attachments -->
+        <files-path name="images" path="images/" />
+        <external-files-path name="external_images" path="images/" />
+
         <!-- Attachments restored from backup stored in filesDir/attachments -->
         <files-path name="attachments" path="attachments/" />
 
