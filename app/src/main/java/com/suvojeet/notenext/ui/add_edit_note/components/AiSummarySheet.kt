@@ -55,8 +55,7 @@ fun AiSummarySheet(
         containerColor = MaterialTheme.colorScheme.surfaceContainerLow,
         dragHandle = { BottomSheetDefaults.DragHandle() },
         shape = RoundedCornerShape(topStart = cornerRadius, topEnd = cornerRadius),
-        tonalElevation = 6.dp,
-        windowInsets = if (isExpanded) WindowInsets.statusBars else BottomSheetDefaults.windowInsets
+        tonalElevation = 6.dp
     ) {
         Column(
             modifier = Modifier
