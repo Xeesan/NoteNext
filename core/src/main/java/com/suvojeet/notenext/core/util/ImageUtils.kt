@@ -81,7 +81,7 @@ object ImageUtils {
                 originalBitmap.recycle()
 
                 // Return the Uri for the new file
-                FileProvider.getUriForFile(context, "${context.packageName}.provider", file)
+                FileProvider.getUriForFile(context, "${context.packageName}.fileprovider", file)
             } catch (e: Exception) {
                 e.printStackTrace()
                 null

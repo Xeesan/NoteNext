@@ -287,7 +287,7 @@ class NotesViewModel @Inject constructor(
                             }
                             
                             val localUri = androidx.core.content.FileProvider.getUriForFile(
-                                context, "${context.packageName}.provider", destFile
+                                context, "${context.packageName}.fileprovider", destFile
                             )
                             val mimeType = context.contentResolver.getType(localUri)
                             onEvent(NotesEvent.AddAttachment(localUri.toString(), mimeType ?: "image/jpeg"))
