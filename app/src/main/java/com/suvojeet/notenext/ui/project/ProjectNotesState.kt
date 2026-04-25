@@ -15,6 +15,7 @@ import com.suvojeet.notenext.core.model.NoteType
 
 data class ProjectNotesState(
     val notes: List<NoteSummaryWithAttachments> = emptyList(),
+    val todos: List<com.suvojeet.notenext.data.TodoWithSubtasks> = emptyList(),
     val projects: List<Project> = emptyList(),
     val sortType: SortType = SortType.DATE_MODIFIED,
     val layoutType: LayoutType = LayoutType.GRID,

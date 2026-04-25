@@ -97,7 +97,12 @@ class ProjectNotesViewModel @Inject constructor(
                 }
             }
 
-            combine(repository.getNoteSummariesByProjectId(projectId), repository.getLabels(), _sortType) { notes, labels, sortType ->
+            combine(
+                repository.getNoteSummariesByProjectId(projectId),
+                todoRepository.getTodosByProjectId(projectId),
+                repository.getLabels(),
+                _sortType
+            ) { notes, todos, labels, sortType ->
                 val sortedNotes = when (sortType) {
                     SortType.DATE_CREATED -> notes.sortedByDescending { it.note.createdAt }
                     SortType.DATE_MODIFIED -> notes.sortedByDescending { it.note.lastEdited }
@@ -106,6 +111,7 @@ class ProjectNotesViewModel @Inject constructor(
                 }
                 _state.value = _state.value.copy(
                     notes = sortedNotes,
+                    todos = todos,
                     labels = labels.map { it.name },
                     sortType = sortType
                 )
@@ -1239,6 +1245,16 @@ class ProjectNotesViewModel @Inject constructor(
                         editingContent = TextFieldValue(textContent),
                         editingChecklist = emptyList()
                     )
+                }
+            }
+            is ProjectNotesEvent.ToggleTodoComplete -> {
+                viewModelScope.launch {
+                    todoRepository.updateTodo(event.todo.copy(isCompleted = !event.todo.isCompleted))
+                }
+            }
+            is ProjectNotesEvent.DeleteTodo -> {
+                viewModelScope.launch {
+                    todoRepository.deleteTodo(event.todo)
                 }
             }
             is ProjectNotesEvent.ConvertToTodo -> {

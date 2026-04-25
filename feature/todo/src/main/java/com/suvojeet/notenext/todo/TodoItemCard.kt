@@ -43,10 +43,13 @@ fun TodoItemCard(
     onToggleComplete: () -> Unit,
     onClick: () -> Unit,
     onDelete: () -> Unit,
+    onConvertToNote: () -> Unit,
+    onShare: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     val todo = todoWithSubtasks.todo
     val subtasks = todoWithSubtasks.subtasks
+    var showMenu by remember { mutableStateOf(false) }
     
     val priorityColor = when (todo.priority) {
         2 -> TodoPriorityColors.High
@@ -247,7 +250,7 @@ fun TodoItemCard(
                 Surface(
                     shape = CircleShape,
                     color = priorityColor.copy(alpha = 0.1f),
-                    modifier = Modifier.padding(end = 16.dp)
+                    modifier = Modifier.padding(end = 4.dp)
                 ) {
                     Text(
                         text = when (todo.priority) {
@@ -260,6 +263,44 @@ fun TodoItemCard(
                         color = priorityColor,
                         modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
                     )
+                }
+
+                Box {
+                    IconButton(onClick = { showMenu = true }, modifier = Modifier.springPress()) {
+                        Icon(Icons.Default.MoreVert, contentDescription = "More options")
+                    }
+                    DropdownMenu(
+                        expanded = showMenu,
+                        onDismissRequest = { showMenu = false },
+                        shape = MaterialTheme.shapes.large,
+                        containerColor = MaterialTheme.colorScheme.surfaceContainerHigh
+                    ) {
+                        DropdownMenuItem(
+                            text = { Text("Share") },
+                            leadingIcon = { Icon(Icons.Default.Share, contentDescription = null) },
+                            onClick = {
+                                onShare()
+                                showMenu = false
+                            }
+                        )
+                        DropdownMenuItem(
+                            text = { Text("Convert to Note") },
+                            leadingIcon = { Icon(Icons.Default.History, contentDescription = null) },
+                            onClick = {
+                                onConvertToNote()
+                                showMenu = false
+                            }
+                        )
+                        HorizontalDivider(modifier = Modifier.padding(vertical = 4.dp), color = MaterialTheme.colorScheme.outlineVariant)
+                        DropdownMenuItem(
+                            text = { Text("Delete", color = MaterialTheme.colorScheme.error) },
+                            leadingIcon = { Icon(Icons.Default.Delete, contentDescription = null, tint = MaterialTheme.colorScheme.error) },
+                            onClick = {
+                                onDelete()
+                                showMenu = false
+                            }
+                        )
+                    }
                 }
             }
         }

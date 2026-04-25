@@ -103,4 +103,8 @@ sealed class ProjectNotesEvent {
     // External file
     data class LoadExternalFile(val uri: android.net.Uri) : ProjectNotesEvent()
     object SaveExternalAsNote : ProjectNotesEvent()
+
+    // Project Todo Events
+    data class ToggleTodoComplete(val todo: com.suvojeet.notenext.data.TodoItem) : ProjectNotesEvent()
+    data class DeleteTodo(val todo: com.suvojeet.notenext.data.TodoItem) : ProjectNotesEvent()
 }

@@ -28,6 +28,7 @@ import javax.inject.Inject
 
 sealed class TodoUiEvent {
     data class ShowToast(val message: String) : TodoUiEvent()
+    data class ShareTodo(val title: String, val content: String) : TodoUiEvent()
 }
 
 @HiltViewModel
@@ -266,6 +267,60 @@ class TodoViewModel @Inject constructor(
             is TodoEvent.UpdatePositions -> {
                 viewModelScope.launch {
                     repository.updatePositions(event.items)
+                }
+            }
+            is TodoEvent.ConvertToNote -> {
+                viewModelScope.launch {
+                    val todo = event.todo.todo
+                    val subtasks = event.todo.subtasks
+                    
+                    val currentTime = System.currentTimeMillis()
+                    val note = com.suvojeet.notenext.data.Note(
+                        title = todo.title,
+                        content = todo.description,
+                        createdAt = currentTime,
+                        lastEdited = currentTime,
+                        noteType = if (subtasks.isNotEmpty()) com.suvojeet.notenext.core.model.NoteType.CHECKLIST else com.suvojeet.notenext.core.model.NoteType.TEXT,
+                        projectId = todo.projectId
+                    )
+                    
+                    val noteId = noteRepository.insertNote(note).toInt()
+                    
+                    if (subtasks.isNotEmpty()) {
+                        val checklistItems = subtasks.mapIndexed { index, subtask ->
+                            com.suvojeet.notenext.data.ChecklistItem(
+                                noteId = noteId,
+                                text = subtask.text,
+                                isChecked = subtask.isChecked,
+                                position = index
+                            )
+                        }
+                        noteRepository.insertChecklistItems(checklistItems)
+                    }
+                    
+                    repository.deleteTodo(todo)
+                    alarmScheduler.cancelTodo(todo)
+                    _events.emit(TodoUiEvent.ShowToast("Converted to Note"))
+                }
+            }
+            is TodoEvent.ShareTodo -> {
+                viewModelScope.launch {
+                    val todo = event.todo.todo
+                    val subtasks = event.todo.subtasks
+                    
+                    val sb = StringBuilder()
+                    if (todo.description.isNotBlank()) {
+                        sb.append(todo.description).append("\n\n")
+                    }
+                    
+                    if (subtasks.isNotEmpty()) {
+                        subtasks.forEach { subtask ->
+                            val status = if (subtask.isChecked) "[x]" else "[ ]"
+                            sb.append("$status ${subtask.text}\n")
+                        }
+                    }
+                    
+                    _events.emit(TodoUiEvent.ShareTodo(todo.title, sb.toString()))
                 }
             }
         }

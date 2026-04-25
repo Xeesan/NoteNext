@@ -35,6 +35,26 @@ fun TodoScreen(
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
     val state by viewModel.state.collectAsStateWithLifecycle()
     val pagedTodos = viewModel.pagedTodos.collectAsLazyPagingItems()
+    val context = androidx.compose.ui.platform.LocalContext.current
+
+    androidx.compose.runtime.LaunchedEffect(Unit) {
+        viewModel.events.collect { event ->
+            when (event) {
+                is TodoUiEvent.ShowToast -> {
+                    android.widget.Toast.makeText(context, event.message, android.widget.Toast.LENGTH_SHORT).show()
+                }
+                is TodoUiEvent.ShareTodo -> {
+                    val intent = android.content.Intent(android.content.Intent.ACTION_SEND).apply {
+                        type = "text/plain"
+                        putExtra(android.content.Intent.EXTRA_SUBJECT, event.title)
+                        putExtra(android.content.Intent.EXTRA_TEXT, event.content)
+                    }
+                    val chooser = android.content.Intent.createChooser(intent, "Share Checklist")
+                    context.startActivity(chooser)
+                }
+            }
+        }
+    }
 
     Scaffold(
         modifier = Modifier
@@ -129,7 +149,9 @@ fun TodoScreen(
                                 todoWithSubtasks = todoWithSubtasks,
                                 onToggleComplete = { viewModel.onEvent(TodoEvent.ToggleComplete(todoWithSubtasks.todo)) },
                                 onClick = { viewModel.onEvent(TodoEvent.ShowEditDialog(todoWithSubtasks.todo)) },
-                                onDelete = { viewModel.onEvent(TodoEvent.DeleteTodo(todoWithSubtasks.todo)) }
+                                onDelete = { viewModel.onEvent(TodoEvent.DeleteTodo(todoWithSubtasks.todo)) },
+                                onConvertToNote = { viewModel.onEvent(TodoEvent.ConvertToNote(todoWithSubtasks)) },
+                                onShare = { viewModel.onEvent(TodoEvent.ShareTodo(todoWithSubtasks)) }
                             )
                         }
                     }

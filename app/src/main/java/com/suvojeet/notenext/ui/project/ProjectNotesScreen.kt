@@ -67,6 +67,7 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.text.font.FontWeight
 import com.suvojeet.notenext.util.findActivity
 import com.suvojeet.notenext.ui.add_edit_note.components.AiSummarySheet
+import com.suvojeet.notenext.todo.TodoItemCard
 
 @Composable
 fun ProjectNotesScreen(
@@ -437,7 +438,7 @@ fun ProjectNotesScreen(
                             Spacer(modifier = Modifier.height(16.dp))
 
                             Box(modifier = Modifier.weight(1f)) {
-                                if (state.notes.isEmpty()) {
+                                if (state.notes.isEmpty() && state.todos.isEmpty()) {
                                     EmptyState(
                                         icon = Icons.Default.Info,
                                         message = stringResource(id = R.string.no_notes_yet)
@@ -446,6 +447,10 @@ fun ProjectNotesScreen(
                                     val filteredNotes = state.notes.filter { note ->
                                         !note.note.isArchived && (note.note.title.contains(searchQuery, ignoreCase = true) || note.note.content.contains(searchQuery, ignoreCase = true))
                                     }
+                                    val filteredTodos = state.todos.filter { todoWithSubtasks ->
+                                        todoWithSubtasks.todo.title.contains(searchQuery, ignoreCase = true) || todoWithSubtasks.todo.description.contains(searchQuery, ignoreCase = true)
+                                    }
+
                                     val pinnedNotes = filteredNotes.filter { it.note.isPinned }
                                     val otherNotes = filteredNotes.filter { !it.note.isPinned }
 
@@ -458,6 +463,40 @@ fun ProjectNotesScreen(
                                                 horizontalArrangement = Arrangement.spacedBy(12.dp),
                                                 verticalItemSpacing = 12.dp
                                             ) {
+                                                if (filteredTodos.isNotEmpty()) {
+                                                    item(span = StaggeredGridItemSpan.FullLine) {
+                                                        Text(
+                                                            text = "Todos",
+                                                            modifier = Modifier.padding(8.dp),
+                                                            style = MaterialTheme.typography.labelSmall,
+                                                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                                                        )
+                                                    }
+                                                    StaggeredGridItems(
+                                                        filteredTodos,
+                                                        key = { "todo-${it.todo.id}" }
+                                                    ) { todoWithSubtasks ->
+                                                        com.suvojeet.notenext.todo.TodoItemCard(
+                                                            todoWithSubtasks = todoWithSubtasks,
+                                                            onToggleComplete = { viewModel.onEvent(ProjectNotesEvent.ToggleTodoComplete(todoWithSubtasks.todo)) },
+                                                            onClick = { }, // For now, no edit from project screen or we can implement it
+                                                            onDelete = { viewModel.onEvent(ProjectNotesEvent.DeleteTodo(todoWithSubtasks.todo)) },
+                                                            onConvertToNote = { /* Implement if needed */ },
+                                                            onShare = { 
+                                                                val sb = StringBuilder()
+                                                                if (todoWithSubtasks.todo.description.isNotBlank()) {
+                                                                    sb.append(todoWithSubtasks.todo.description).append("\n\n")
+                                                                }
+                                                                todoWithSubtasks.subtasks.forEach { subtask ->
+                                                                    val status = if (subtask.isChecked) "[x]" else "[ ]"
+                                                                    sb.append("$status ${subtask.text}\n")
+                                                                }
+                                                                viewModel.onEvent(ProjectNotesUiEvent.SendNotes(todoWithSubtasks.todo.title, sb.toString()).toProjectNotesEvent()) // Reusing SendNotes
+                                                            }
+                                                        )
+                                                    }
+                                                }
+
                                                 if (pinnedNotes.isNotEmpty()) {
                                                     item(span = StaggeredGridItemSpan.FullLine) {
                                                         Text(
@@ -541,6 +580,37 @@ fun ProjectNotesScreen(
                                                 contentPadding = PaddingValues(8.dp),
                                                 verticalArrangement = Arrangement.spacedBy(12.dp)
                                             ) {
+                                                if (filteredTodos.isNotEmpty()) {
+                                                    item {
+                                                        Text(
+                                                            text = "Todos",
+                                                            modifier = Modifier.padding(8.dp),
+                                                            style = MaterialTheme.typography.labelSmall,
+                                                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                                                        )
+                                                    }
+                                                    items(filteredTodos, key = { "todo-${it.todo.id}" }) { todoWithSubtasks ->
+                                                        com.suvojeet.notenext.todo.TodoItemCard(
+                                                            todoWithSubtasks = todoWithSubtasks,
+                                                            onToggleComplete = { viewModel.onEvent(ProjectNotesEvent.ToggleTodoComplete(todoWithSubtasks.todo)) },
+                                                            onClick = { },
+                                                            onDelete = { viewModel.onEvent(ProjectNotesEvent.DeleteTodo(todoWithSubtasks.todo)) },
+                                                            onConvertToNote = { },
+                                                            onShare = {
+                                                                val sb = StringBuilder()
+                                                                if (todoWithSubtasks.todo.description.isNotBlank()) {
+                                                                    sb.append(todoWithSubtasks.todo.description).append("\n\n")
+                                                                }
+                                                                todoWithSubtasks.subtasks.forEach { subtask ->
+                                                                    val status = if (subtask.isChecked) "[x]" else "[ ]"
+                                                                    sb.append("$status ${subtask.text}\n")
+                                                                }
+                                                                viewModel.onEvent(ProjectNotesUiEvent.SendNotes(todoWithSubtasks.todo.title, sb.toString()).toProjectNotesEvent())
+                                                            }
+                                                        )
+                                                    }
+                                                }
+
                                                 if (pinnedNotes.isNotEmpty()) {
                                                     item {
                                                         Text(

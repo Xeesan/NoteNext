@@ -66,11 +66,8 @@ class MainActivity : FragmentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         val splashScreen = installSplashScreen()
         
-        val isSetupCompleteLoaded by viewModel.isSetupComplete.collectAsStateWithLifecycle()
-        val enableAppLockLoaded by viewModel.enableAppLock.collectAsStateWithLifecycle()
-
         splashScreen.setKeepOnScreenCondition {
-            isSetupCompleteLoaded == null || enableAppLockLoaded == null
+            viewModel.isSetupComplete.value == null || viewModel.enableAppLock.value == null
         }
         
         splashScreen.setOnExitAnimationListener { splashScreenView ->

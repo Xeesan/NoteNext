@@ -27,6 +27,10 @@ sealed class TodoEvent {
     object DismissAiTodoDialog : TodoEvent()
     data class GenerateAiTodos(val input: String) : TodoEvent()
 
+    // Conversion & Sharing
+    data class ConvertToNote(val todo: com.suvojeet.notenext.data.TodoWithSubtasks) : TodoEvent()
+    data class ShareTodo(val todo: com.suvojeet.notenext.data.TodoWithSubtasks) : TodoEvent()
+
     // Reordering
     data class UpdatePositions(val items: List<TodoItem>) : TodoEvent()
 }
