@@ -48,3 +48,14 @@
 # Allow full obfuscation of internal methods and fields
 -repackageclasses ''
 -allowaccessmodification
+
+# Google Play Core (App Update & Review)
+-keep class com.google.android.play.core.appupdate.** { *; }
+-keep class com.google.android.play.core.install.** { *; }
+-keep class com.google.android.play.core.review.** { *; }
+-keep class com.google.android.play.core.tasks.** { *; }
+-keep class com.google.android.play.core.common.** { *; }
+
+# Also keep the specific status constants
+-keep class com.google.android.play.core.install.model.** { *; }
+-keep class com.google.android.play.core.appupdate.model.** { *; }

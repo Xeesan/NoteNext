@@ -1,4 +1,7 @@
 import java.util.Base64
+import java.util.Date
+import java.util.Locale
+import java.text.SimpleDateFormat
 
 plugins {
     alias(libs.plugins.android.application)
@@ -16,8 +19,22 @@ android {
         applicationId = "com.suvojeet.notenext"
         minSdk = libs.versions.minSdk.get().toInt()
         targetSdk = libs.versions.targetSdk.get().toInt()
-        versionCode = project.properties["appVersionCode"]?.toString()?.toInt() ?: 26
-        versionName = project.properties["appVersionName"]?.toString() ?: "1.3.5"
+        
+        // Auto-generate versionCode based on date (YYMMDDHH)
+        // Format: YY (Year) MM (Month) DD (Day) HH (Hour)
+        // Example: April 25, 2026, 2:00 PM -> 26042514
+        val date = Date()
+        val formattedDate = SimpleDateFormat("yyMMddHH", Locale.US).format(date)
+        
+        // Use manual override from gradle.properties as the absolute minimum to prevent regressions
+        val baseVersionCode = (project.findProperty("appVersionCode") as? String)?.toInt() ?: 30
+        val generatedVersionCode = formattedDate.toInt()
+        
+        versionCode = if (generatedVersionCode > baseVersionCode) generatedVersionCode else baseVersionCode
+        
+        // Version name includes the manual version and the build timestamp for clarity
+        val baseVersionName = (project.findProperty("appVersionName") as? String) ?: "1.4.0"
+        versionName = "$baseVersionName (${SimpleDateFormat("yyyy.MM.dd", Locale.US).format(date)})"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         androidResources {
