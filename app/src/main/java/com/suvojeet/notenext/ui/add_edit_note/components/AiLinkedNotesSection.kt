@@ -14,6 +14,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Hub
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -76,6 +77,17 @@ fun AiLinkedNotesSection(
 
 @Composable
 private fun LinkedNoteCard(note: Note, onClick: () -> Unit) {
+    val cleanTitle = remember(note.title) {
+        val plainTitle = note.title.replace(Regex("<[^>]*>"), " ")
+        androidx.core.text.HtmlCompat.fromHtml(plainTitle, androidx.core.text.HtmlCompat.FROM_HTML_MODE_COMPACT).toString().trim()
+    }
+
+    val previewText = remember(note.content) {
+        // Strip HTML tags for preview and unescape entities
+        val plainText = note.content.replace(Regex("<[^>]*>"), " ")
+        androidx.core.text.HtmlCompat.fromHtml(plainText, androidx.core.text.HtmlCompat.FROM_HTML_MODE_COMPACT).toString().trim()
+    }
+
     Card(
         onClick = onClick,
         modifier = Modifier
@@ -89,14 +101,14 @@ private fun LinkedNoteCard(note: Note, onClick: () -> Unit) {
     ) {
         Column(modifier = Modifier.padding(12.dp)) {
             Text(
-                note.title.ifBlank { "(untitled)" },
+                cleanTitle.ifBlank { "(untitled)" },
                 style = MaterialTheme.typography.titleSmall,
                 fontWeight = FontWeight.Bold,
                 maxLines = 1
             )
             Spacer(Modifier.height(4.dp))
             Text(
-                note.content.take(120),
+                previewText.take(120),
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 maxLines = 3
