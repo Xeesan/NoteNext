@@ -568,7 +568,16 @@ class NotesViewModel @Inject constructor(
                         val title = if (selectedNotes.size == 1) selectedNotes.first().note.title else "Multiple Notes"
                         val contentBuilder = StringBuilder()
                         selectedNotes.forEachIndexed { index, it ->
-                            contentBuilder.append("Title: ${it.note.title}\n\n${HtmlConverter.htmlToPlainText(it.note.content)}")
+                            contentBuilder.append("Title: ${it.note.title}\n\n")
+                            if (it.note.noteType == NoteType.CHECKLIST) {
+                                it.checklistItems.sortedBy { item -> item.position }.forEach { item ->
+                                    val status = if (item.isChecked) "[x]" else "[ ]"
+                                    contentBuilder.append("$status ${item.text}\n")
+                                }
+                            } else {
+                                contentBuilder.append(HtmlConverter.htmlToPlainText(it.note.content))
+                            }
+                            
                             if (index < selectedNotes.size - 1) {
                                 contentBuilder.append("\n\n---\n\n")
                             }

@@ -292,7 +292,16 @@ class ProjectNotesViewModel @Inject constructor(
                         val contentBuilder = StringBuilder()
                         selectedIds.forEachIndexed { index, id ->
                             repository.getNoteById(id)?.let { it ->
-                                contentBuilder.append("Title: ${it.note.title}\n\n${HtmlConverter.htmlToPlainText(it.note.content)}")
+                                contentBuilder.append("Title: ${it.note.title}\n\n")
+                                if (it.note.noteType == NoteType.CHECKLIST) {
+                                    it.checklistItems.sortedBy { item -> item.position }.forEach { item ->
+                                        val status = if (item.isChecked) "[x]" else "[ ]"
+                                        contentBuilder.append("$status ${item.text}\n")
+                                    }
+                                } else {
+                                    contentBuilder.append(HtmlConverter.htmlToPlainText(it.note.content))
+                                }
+                                
                                 if (index < selectedIds.size - 1) {
                                     contentBuilder.append("\n\n---\n\n")
                                 }

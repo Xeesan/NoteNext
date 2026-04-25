@@ -280,6 +280,7 @@ class TodoViewModel @Inject constructor(
                         content = todo.description,
                         createdAt = currentTime,
                         lastEdited = currentTime,
+                        color = 0,
                         noteType = if (subtasks.isNotEmpty()) com.suvojeet.notenext.core.model.NoteType.CHECKLIST else com.suvojeet.notenext.core.model.NoteType.TEXT,
                         projectId = todo.projectId
                     )
