@@ -28,6 +28,7 @@ import com.suvojeet.notenext.ui.components.springPress
 import com.suvojeet.notenext.ui.notes.NotesEvent
 import com.suvojeet.notenext.ui.notes.NotesEditState
 import com.suvojeet.notenext.core.model.NoteType
+import com.suvojeet.notenext.data.ChecklistItem
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -71,9 +72,20 @@ fun MoreOptionsSheet(
             add(OptionItem(deleteLabel, Icons.Default.Delete) { showDeleteDialog(true) })
             add(OptionItem(copyLabel, Icons.Default.ContentCopy) { onEvent(NotesEvent.OnCopyCurrentNoteClick) })
             add(OptionItem(shareLabel, Icons.Default.Share) {
+                val shareContent = if (state.editingNoteType == NoteType.CHECKLIST) {
+                    val sb = StringBuilder()
+                    state.editingChecklist.forEach { item ->
+                        val status = if (item.isChecked) "[x]" else "[ ]"
+                        sb.append("$status ${item.text}\n")
+                    }
+                    sb.toString()
+                } else {
+                    state.editingContent.text
+                }
+
                 val sendIntent: Intent = Intent().apply {
                     action = Intent.ACTION_SEND
-                    putExtra(Intent.EXTRA_TEXT, state.editingTitle + "\n\n" + state.editingContent.text)
+                    putExtra(Intent.EXTRA_TEXT, state.editingTitle + "\n\n" + shareContent)
                     putExtra(Intent.EXTRA_SUBJECT, state.editingTitle)
                     type = "text/plain"
                 }
