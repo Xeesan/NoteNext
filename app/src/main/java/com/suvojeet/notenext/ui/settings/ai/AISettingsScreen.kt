@@ -46,6 +46,7 @@ import com.suvojeet.notenext.ui.components.springPress
 fun AISettingsScreen(
     onBackClick: () -> Unit,
     onOpenFeatures: () -> Unit,
+    onOpenOnDeviceFeatures: () -> Unit,
     onOpenDashboard: () -> Unit,
     viewModel: AISettingsViewModel = hiltViewModel()
 ) {
@@ -138,6 +139,17 @@ fun AISettingsScreen(
                             title = "AI Features",
                             subtitle = "Enable or disable each feature individually",
                             onClick = onOpenFeatures
+                        )
+                        HorizontalDivider(
+                            modifier = Modifier.padding(horizontal = 16.dp),
+                            color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.5f)
+                        )
+                        SettingsNav(
+                            icon = Icons.Rounded.Devices,
+                            iconColor = Color(0xFF00897B),
+                            title = "On-Device Features",
+                            subtitle = "Smart features that run locally without AI",
+                            onClick = onOpenOnDeviceFeatures
                         )
                         HorizontalDivider(
                             modifier = Modifier.padding(horizontal = 16.dp),

@@ -16,7 +16,8 @@ enum class AIFeature(
     val displayName: String,
     val description: String,
     val helpText: String,
-    val isSuggestionFeature: Boolean
+    val isSuggestionFeature: Boolean,
+    val isOnDevice: Boolean = false
 ) {
     SUMMARIZE(
         id = "summarize",
@@ -64,8 +65,9 @@ enum class AIFeature(
         id = "linked_notes",
         displayName = "Linked Notes",
         description = "Discover related notes you may have forgotten.",
-        helpText = "Shows up to 5 related notes at the bottom of the editor based on shared keywords/topics. Computed locally — no network call by default unless the provider is asked to extract topics.",
-        isSuggestionFeature = true
+        helpText = "Shows up to 5 related notes at the bottom of the editor based on shared keywords/topics. Computed locally — no network call is ever made.",
+        isSuggestionFeature = true,
+        isOnDevice = true
     ),
     TONE_REWRITE(
         id = "tone_rewrite",

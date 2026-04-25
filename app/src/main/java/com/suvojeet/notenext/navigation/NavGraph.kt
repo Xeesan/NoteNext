@@ -67,6 +67,7 @@ import com.suvojeet.notenext.ui.settings.GroqSettingsScreen
 import com.suvojeet.notenext.ui.settings.AIProviderSettingsScreen
 import com.suvojeet.notenext.ui.settings.ai.AISettingsScreen
 import com.suvojeet.notenext.ui.settings.ai.AIFeaturesScreen
+import com.suvojeet.notenext.ui.settings.ai.OnDeviceFeaturesScreen
 import com.suvojeet.notenext.ui.settings.ai.AIUsageDashboardScreen
 import com.suvojeet.notenext.ui.donate.DonationScreen
 import com.suvojeet.notenext.ui.project.ProjectScreen
@@ -575,6 +576,7 @@ private fun NavGraphBuilder.sharedRoutes(
         AISettingsScreen(
             onBackClick = { navController.popBackStack() },
             onOpenFeatures = { navController.navigate(Destination.AIFeatures) },
+            onOpenOnDeviceFeatures = { navController.navigate(Destination.OnDeviceFeatures) },
             onOpenDashboard = { navController.navigate(Destination.AIUsageDashboard) }
         )
     }
@@ -584,6 +586,13 @@ private fun NavGraphBuilder.sharedRoutes(
         exitTransition = { slideExit }
     ) {
         AIFeaturesScreen(onBackClick = { navController.popBackStack() })
+    }
+
+    composable<Destination.OnDeviceFeatures>(
+        enterTransition = { slideEnter },
+        exitTransition = { slideExit }
+    ) {
+        OnDeviceFeaturesScreen(onBackClick = { navController.popBackStack() })
     }
 
     composable<Destination.AIUsageDashboard>(

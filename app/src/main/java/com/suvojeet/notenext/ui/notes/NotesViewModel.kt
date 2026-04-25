@@ -701,6 +701,12 @@ class NotesViewModel @Inject constructor(
                                 summaryResult = note.aiSummary,
                                 showSummaryDialog = false
                             ) }
+
+                            // Compute linked notes immediately on open
+                            viewModelScope.launch {
+                                val linked = aiSuggestionsDelegate.findLinkedNotes(event.noteId, note.title, note.content)
+                                editorDelegate.updateState { it.copy(linkedNotes = linked.toImmutableList()) }
+                            }
                         }
                     } else {
                         editorDelegate.reset("", TextFieldValue())

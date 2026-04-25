@@ -27,7 +27,7 @@ class AIFeatureGate @Inject constructor(
     suspend fun isMasterEnabled(): Boolean = settingsRepository.aiMasterEnabled.first()
 
     suspend fun isEnabled(feature: AIFeature): Boolean {
-        if (!settingsRepository.aiMasterEnabled.first()) return false
+        if (!feature.isOnDevice && !settingsRepository.aiMasterEnabled.first()) return false
         return when (feature) {
             AIFeature.SUMMARIZE -> settingsRepository.aiFeatureSummarize.first()
             AIFeature.CHECKLIST -> settingsRepository.aiFeatureChecklist.first()
@@ -53,8 +53,12 @@ class AIFeatureGate @Inject constructor(
             AIFeature.TONE_REWRITE -> settingsRepository.aiFeatureToneRewrite
             AIFeature.CUSTOM_PROMPT -> settingsRepository.aiFeatureCustomPrompt
         }
-        return combine(settingsRepository.aiMasterEnabled, featureFlow) { master, feat ->
-            master && feat
+        return if (feature.isOnDevice) {
+            featureFlow
+        } else {
+            combine(settingsRepository.aiMasterEnabled, featureFlow) { master, feat ->
+                master && feat
+            }
         }
     }
 
@@ -74,6 +78,9 @@ class AIFeatureGate @Inject constructor(
         settingsRepository.aiFeatureCustomPrompt
     ) { values: Array<Boolean> ->
         val master = values[0]
-        AIFeature.values().mapIndexed { i, f -> f to (master && values[i + 1]) }.toMap()
+        AIFeature.values().mapIndexed { i, f -> 
+            val featEnabled = values[i + 1]
+            f to (if (f.isOnDevice) featEnabled else master && featEnabled)
+        }.toMap()
     }
 }

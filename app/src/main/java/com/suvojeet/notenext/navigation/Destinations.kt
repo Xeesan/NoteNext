@@ -61,6 +61,9 @@ sealed interface Destination {
     data object AIFeatures : Destination
 
     @Serializable
+    data object OnDeviceFeatures : Destination
+
+    @Serializable
     data object AIUsageDashboard : Destination
 
     @Serializable

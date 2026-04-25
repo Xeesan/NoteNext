@@ -30,21 +30,15 @@ import com.suvojeet.notenext.ui.components.SettingsGroupCard
 import com.suvojeet.notenext.ui.components.springPress
 
 /**
- * Per-feature AI toggles. Every entry shows:
- *   - the friendly name
- *   - a one-liner of what it does
- *   - a help line explaining what data leaves the device when it runs
- *
- * If the master switch is off, the whole list is dimmed and toggles are disabled
- * — this makes the privacy promise visually concrete.
+ * Features that run entirely on your device. These do not require an internet
+ * connection, an AI provider, or the AI master switch.
  */
 @Composable
-fun AIFeaturesScreen(
+fun OnDeviceFeaturesScreen(
     onBackClick: () -> Unit,
     viewModel: AIFeaturesViewModel = hiltViewModel()
 ) {
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
-    val masterEnabled by viewModel.masterEnabled.collectAsStateWithLifecycle()
     val states by viewModel.states.collectAsStateWithLifecycle()
 
     Scaffold(
@@ -55,7 +49,7 @@ fun AIFeaturesScreen(
             LargeTopAppBar(
                 title = {
                     Text(
-                        text = "AI Features",
+                        text = "On-Device Features",
                         style = MaterialTheme.typography.headlineLarge,
                         fontWeight = FontWeight.Black,
                         letterSpacing = (-1.0).sp
@@ -75,87 +69,22 @@ fun AIFeaturesScreen(
             contentPadding = PaddingValues(16.dp),
             verticalArrangement = Arrangement.spacedBy(20.dp)
         ) {
-            if (!masterEnabled) {
-                item { MasterDisabledBanner() }
-            }
+            item { OnDevicePrivacyBanner() }
 
             item {
                 ExpressiveSection(
-                    title = "Quick actions",
-                    description = "Apply to all features at once"
+                    title = "Local Intelligence",
+                    description = "These features use algorithms that stay on your phone. No data is ever sent to the cloud."
                 ) {
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.spacedBy(12.dp)
-                    ) {
-                        OutlinedButton(
-                            onClick = viewModel::disableAll,
-                            modifier = Modifier.weight(1f).springPress(),
-                            shape = MaterialTheme.shapes.large,
-                            enabled = masterEnabled
-                        ) {
-                            Icon(Icons.Rounded.Block, contentDescription = null, modifier = Modifier.size(18.dp))
-                            Spacer(Modifier.width(8.dp))
-                            Text("Disable all")
-                        }
-                        Button(
-                            onClick = viewModel::enableAll,
-                            modifier = Modifier.weight(1f).springPress(),
-                            shape = MaterialTheme.shapes.large,
-                            enabled = masterEnabled
-                        ) {
-                            Icon(Icons.Rounded.AutoAwesome, contentDescription = null, modifier = Modifier.size(18.dp))
-                            Spacer(Modifier.width(8.dp))
-                            Text("Enable all")
-                        }
+                    SettingsGroupCard {
+                        FeatureToggleRow(
+                            feature = AIFeature.LINKED_NOTES,
+                            enabled = states[AIFeature.LINKED_NOTES] == true,
+                            masterEnabled = true, // On-device features ignore master switch
+                            onToggle = { viewModel.toggle(AIFeature.LINKED_NOTES, it) }
+                        )
                     }
                 }
-            }
-
-            // Group by category for readability
-            item {
-                FeatureGroup(
-                    title = "Note actions (on demand)",
-                    description = "You explicitly trigger these — nothing runs unless you tap a button.",
-                    features = listOf(
-                        AIFeature.SUMMARIZE,
-                        AIFeature.CHECKLIST,
-                        AIFeature.TODOS,
-                        AIFeature.GRAMMAR,
-                        AIFeature.TONE_REWRITE,
-                        AIFeature.CUSTOM_PROMPT
-                    ),
-                    masterEnabled = masterEnabled,
-                    states = states,
-                    onToggle = viewModel::toggle
-                )
-            }
-
-            item {
-                FeatureGroup(
-                    title = "Suggestions (after save)",
-                    description = "These run quietly after a note is saved. They never apply changes — you tap to accept.",
-                    features = listOf(
-                        AIFeature.AUTO_TAG,
-                        AIFeature.SMART_REMINDER
-                    ),
-                    masterEnabled = masterEnabled,
-                    states = states,
-                    onToggle = viewModel::toggle
-                )
-            }
-
-            item {
-                FeatureGroup(
-                    title = "On-device features",
-                    description = "These run locally on your phone and do not require the AI master switch or a network provider.",
-                    features = listOf(
-                        AIFeature.LINKED_NOTES
-                    ),
-                    masterEnabled = true, // Always enabled for on-device features
-                    states = states,
-                    onToggle = viewModel::toggle
-                )
             }
 
             item { Spacer(Modifier.height(32.dp)) }
@@ -164,53 +93,24 @@ fun AIFeaturesScreen(
 }
 
 @Composable
-private fun MasterDisabledBanner() {
+private fun OnDevicePrivacyBanner() {
     Card(
         modifier = Modifier.fillMaxWidth(),
         shape = MaterialTheme.shapes.extraLarge,
-        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.errorContainer)
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.secondaryContainer)
     ) {
         Row(modifier = Modifier.padding(16.dp), verticalAlignment = Alignment.CenterVertically) {
             Icon(
-                Icons.Rounded.Info,
+                Icons.Rounded.VerifiedUser,
                 contentDescription = null,
-                tint = MaterialTheme.colorScheme.onErrorContainer
+                tint = MaterialTheme.colorScheme.onSecondaryContainer
             )
             Spacer(Modifier.width(12.dp))
             Text(
-                text = "AI master switch is OFF. Per-feature toggles below are disabled until you enable it from the AI Settings hub.",
+                text = "On-device features process your notes locally. They work offline and protect your privacy by keeping everything on your phone.",
                 style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.onErrorContainer
+                color = MaterialTheme.colorScheme.onSecondaryContainer
             )
-        }
-    }
-}
-
-@Composable
-private fun FeatureGroup(
-    title: String,
-    description: String,
-    features: List<AIFeature>,
-    masterEnabled: Boolean,
-    states: Map<AIFeature, Boolean>,
-    onToggle: (AIFeature, Boolean) -> Unit
-) {
-    ExpressiveSection(title = title, description = description) {
-        SettingsGroupCard {
-            features.forEachIndexed { index, feature ->
-                FeatureToggleRow(
-                    feature = feature,
-                    enabled = states[feature] == true,
-                    masterEnabled = masterEnabled,
-                    onToggle = { onToggle(feature, it) }
-                )
-                if (index < features.lastIndex) {
-                    HorizontalDivider(
-                        modifier = Modifier.padding(horizontal = 16.dp),
-                        color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.5f)
-                    )
-                }
-            }
         }
     }
 }
@@ -288,13 +188,6 @@ private fun FeatureToggleRow(
 }
 
 private fun iconFor(feature: AIFeature): Pair<ImageVector, Color> = when (feature) {
-    AIFeature.SUMMARIZE -> Icons.Rounded.Summarize to Color(0xFF1976D2)
-    AIFeature.CHECKLIST -> Icons.Rounded.Checklist to Color(0xFF7B1FA2)
-    AIFeature.TODOS -> Icons.Rounded.PlaylistAddCheck to Color(0xFFE65100)
-    AIFeature.GRAMMAR -> Icons.Rounded.Spellcheck to Color(0xFF00897B)
-    AIFeature.AUTO_TAG -> Icons.Rounded.Sell to Color(0xFFC2185B)
-    AIFeature.SMART_REMINDER -> Icons.Rounded.NotificationsActive to Color(0xFFE53935)
     AIFeature.LINKED_NOTES -> Icons.Rounded.Hub to Color(0xFF6750A4)
-    AIFeature.TONE_REWRITE -> Icons.Rounded.AutoFixHigh to Color(0xFF43A047)
-    AIFeature.CUSTOM_PROMPT -> Icons.Rounded.Code to Color(0xFF455A64)
+    else -> Icons.Rounded.AutoAwesome to Color.Gray
 }
