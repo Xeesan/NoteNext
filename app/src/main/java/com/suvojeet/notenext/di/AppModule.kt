@@ -129,5 +129,17 @@ object AppModule {
     fun provideSettingsRepository(@ApplicationContext context: Context): SettingsRepository {
         return SettingsRepository(context)
     }
+
+    @Provides
+    @Singleton
+    fun provideUpdateChecker(@ApplicationContext context: Context): com.suvojeet.notenext.util.UpdateChecker {
+        return com.suvojeet.notenext.util.UpdateChecker(context)
+    }
+
+    @Provides
+    @Singleton
+    fun provideReviewManager(@ApplicationContext context: Context): com.suvojeet.notenext.util.ReviewManager {
+        return com.suvojeet.notenext.util.ReviewManager(context)
+    }
 }
 

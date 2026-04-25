@@ -19,10 +19,10 @@ class ReviewManager(context: Context) {
         private const val LAUNCHES_UNTIL_PROMPT = 5
     }
 
-    fun checkAndRequestReview(activity: Activity) {
+    fun shouldRequestReview(): Boolean {
         val isReviewRequested = prefs.getBoolean(KEY_REVIEW_REQUESTED, false)
         if (isReviewRequested) {
-            return
+            return false
         }
 
         val firstOpenTime = prefs.getLong(KEY_FIRST_OPEN_TIME, 0L)
@@ -37,12 +37,10 @@ class ReviewManager(context: Context) {
         val timeSinceFirstOpen = System.currentTimeMillis() - firstOpenTime
         val daysSinceFirstOpen = TimeUnit.MILLISECONDS.toDays(timeSinceFirstOpen)
 
-        if (daysSinceFirstOpen >= DAYS_UNTIL_PROMPT || appOpensCount >= LAUNCHES_UNTIL_PROMPT) {
-            requestReviewFlow(activity)
-        }
+        return daysSinceFirstOpen >= DAYS_UNTIL_PROMPT || appOpensCount >= LAUNCHES_UNTIL_PROMPT
     }
 
-    private fun requestReviewFlow(activity: Activity) {
+    fun requestReviewFlow(activity: Activity) {
         val manager = ReviewManagerFactory.create(activity)
         val request = manager.requestReviewFlow()
         request.addOnCompleteListener { task ->

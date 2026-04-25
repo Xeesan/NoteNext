@@ -48,35 +48,29 @@ import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.compose.animation.*
 import androidx.compose.animation.core.*
 
+import androidx.activity.viewModels
+import com.suvojeet.notenext.ui.MainViewModel
+import com.suvojeet.notenext.ui.MainUiEvent
+
 @AndroidEntryPoint
 class MainActivity : FragmentActivity() {
 
+    private val viewModel: MainViewModel by viewModels()
+
     @Inject
-    lateinit var settingsRepository: SettingsRepository
-
-    private val _startNoteIdFlow = MutableStateFlow(-1)
-    private val _startAddNoteFlow = MutableStateFlow(false)
-    private val _sharedTextFlow = MutableStateFlow<String?>(null)
-    private val _initialTitleFlow = MutableStateFlow<String?>(null)
-    private val _searchQueryFlow = MutableStateFlow<String?>(null)
-    private val _externalUriFlow = MutableStateFlow<android.net.Uri?>(null)
-
-    private val _isSetupCompleteLoaded = MutableStateFlow<Boolean?>(null)
-    private val _enableAppLockLoaded = MutableStateFlow<Boolean?>(null)
-    private val _lockTrigger = MutableStateFlow(0L)
-
-    private var unlocked = false
-    private var lastPauseTime: Long = 0
-    
-    private lateinit var updateChecker: UpdateChecker
-    private lateinit var reviewManager: ReviewManager
+    lateinit var updateChecker: UpdateChecker
+    @Inject
+    lateinit var reviewManager: ReviewManager
 
     @OptIn(ExperimentalMaterial3WindowSizeClassApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         val splashScreen = installSplashScreen()
         
+        val isSetupCompleteLoaded by viewModel.isSetupComplete.collectAsStateWithLifecycle()
+        val enableAppLockLoaded by viewModel.enableAppLock.collectAsStateWithLifecycle()
+
         splashScreen.setKeepOnScreenCondition {
-            _isSetupCompleteLoaded.value == null || _enableAppLockLoaded.value == null
+            isSetupCompleteLoaded == null || enableAppLockLoaded == null
         }
         
         splashScreen.setOnExitAnimationListener { splashScreenView ->
@@ -88,7 +82,6 @@ class MainActivity : FragmentActivity() {
                 .setDuration(400L)
                 .setInterpolator(android.view.animation.AnticipateInterpolator())
                 .withEndAction {
-                    // Safety check to ensure activity is still alive and view is attached
                     if (!isFinishing && !isDestroyed) {
                         splashScreenView.remove()
                     }
@@ -108,24 +101,11 @@ class MainActivity : FragmentActivity() {
         )
         super.onCreate(savedInstanceState)
 
-        updateChecker = UpdateChecker(this)
-        reviewManager = ReviewManager(this)
-        
-        // Trigger review check
-        reviewManager.checkAndRequestReview(this)
-
-        handleIntent(intent)
-
-        lifecycleScope.launch {
-            settingsRepository.isSetupComplete.collect { _isSetupCompleteLoaded.value = it }
-        }
-        lifecycleScope.launch {
-            settingsRepository.enableAppLock.collect { _enableAppLockLoaded.value = it }
-        }
+        viewModel.handleIntent(intent)
 
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                settingsRepository.disallowScreenshots.collect { disallow ->
+                viewModel.disallowScreenshots.collect { disallow ->
                     if (disallow) {
                         window.setFlags(
                             android.view.WindowManager.LayoutParams.FLAG_SECURE,
@@ -139,10 +119,23 @@ class MainActivity : FragmentActivity() {
         }
 
         lifecycleScope.launch {
-            settingsRepository.language.collect { languageCode ->
-                val appLocales = LocaleListCompat.forLanguageTags(languageCode)
-                if (AppCompatDelegate.getApplicationLocales() != appLocales) {
-                    AppCompatDelegate.setApplicationLocales(appLocales)
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.language.collect { languageCode ->
+                    val appLocales = LocaleListCompat.forLanguageTags(languageCode)
+                    if (AppCompatDelegate.getApplicationLocales() != appLocales) {
+                        AppCompatDelegate.setApplicationLocales(appLocales)
+                    }
+                }
+            }
+        }
+
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.uiEvent.collect { event ->
+                    when (event) {
+                        is MainUiEvent.StartUpdateFlow -> updateChecker.startUpdate(this@MainActivity)
+                        is MainUiEvent.RequestReviewFlow -> reviewManager.requestReviewFlow(this@MainActivity)
+                    }
                 }
             }
         }
@@ -163,7 +156,7 @@ class MainActivity : FragmentActivity() {
 
         setContent {
             val windowSizeClass = calculateWindowSizeClass(this)
-            val themeMode by settingsRepository.themeMode.collectAsStateWithLifecycle(initialValue = ThemeMode.SYSTEM)
+            val themeMode by viewModel.themeMode.collectAsStateWithLifecycle()
             
             val isSystemDark = androidx.compose.foundation.isSystemInDarkTheme()
             val darkTheme = when (themeMode) {
@@ -201,14 +194,13 @@ class MainActivity : FragmentActivity() {
                 }
             }
 
-            val enableAppLockLoaded by _enableAppLockLoaded.collectAsStateWithLifecycle()
-            val isSetupCompleteLoaded by _isSetupCompleteLoaded.collectAsStateWithLifecycle()
-            val lockTrigger by _lockTrigger.collectAsStateWithLifecycle()
-
-            var unlockedByAuth by remember(lockTrigger) { mutableStateOf(unlocked) }
+            val enableAppLockLoaded by viewModel.enableAppLock.collectAsStateWithLifecycle()
+            val isSetupCompleteLoaded by viewModel.isSetupComplete.collectAsStateWithLifecycle()
+            val lockTrigger by viewModel.lockTrigger.collectAsStateWithLifecycle()
+            val unlockedByAuth by viewModel.unlockedByAuth.collectAsStateWithLifecycle()
 
             // In-App Update Handling
-            val updateStatus by updateChecker.updateStatus.collectAsStateWithLifecycle()
+            val updateStatus by viewModel.updateStatus.collectAsStateWithLifecycle()
             val snackbarHostState = remember { SnackbarHostState() }
             var showUpdateDialog by remember { mutableStateOf(false) }
             
@@ -216,8 +208,7 @@ class MainActivity : FragmentActivity() {
             val restartText = stringResource(R.string.restart_to_update)
 
             LaunchedEffect(Unit) {
-                kotlinx.coroutines.delay(2000L)
-                updateChecker.checkForUpdate()
+                viewModel.checkForUpdate()
             }
 
             LaunchedEffect(updateStatus) {
@@ -232,7 +223,7 @@ class MainActivity : FragmentActivity() {
                             duration = androidx.compose.material3.SnackbarDuration.Indefinite
                         )
                         if (result == SnackbarResult.ActionPerformed) {
-                            updateChecker.completeUpdate()
+                            viewModel.completeUpdate()
                         }
                     }
                     else -> {}
@@ -243,7 +234,7 @@ class MainActivity : FragmentActivity() {
                 com.suvojeet.notenext.ui.components.UpdateAvailableDialog(
                     onUpdateClick = {
                         showUpdateDialog = false
-                        updateChecker.startUpdate(this@MainActivity)
+                        viewModel.startUpdate()
                     },
                     onDismiss = { showUpdateDialog = false }
                 )
@@ -271,27 +262,23 @@ class MainActivity : FragmentActivity() {
                             label = "AppStartupTransition"
                         ) { isInitialLoading ->
                             if (isInitialLoading) {
-                                // Keep showing background color while waiting for splash screen to dismiss
                                 Box(modifier = Modifier.fillMaxSize().background(MaterialTheme.colorScheme.background))
                             } else if (isSetupCompleteLoaded == false) {
                                 SetupScreen { }
-                            } else if (enableAppLockLoaded!! && !unlockedByAuth) {
-                                LockScreen(onUnlock = { 
-                                    unlocked = true
-                                    unlockedByAuth = true 
-                                })
+                            } else if (enableAppLockLoaded == true && !unlockedByAuth) {
+                                LockScreen(onUnlock = { viewModel.onUnlock() })
                             } else {
-                                val startNoteId by _startNoteIdFlow.collectAsStateWithLifecycle()
-                                val startAddNote by _startAddNoteFlow.collectAsStateWithLifecycle()
-                                val sharedText by _sharedTextFlow.collectAsStateWithLifecycle()
-                                val initialTitle by _initialTitleFlow.collectAsStateWithLifecycle()
-                                val searchQuery by _searchQueryFlow.collectAsStateWithLifecycle()
-                                val externalUri by _externalUriFlow.collectAsStateWithLifecycle()
+                                val startNoteId by viewModel.startNoteId.collectAsStateWithLifecycle()
+                                val startAddNote by viewModel.startAddNote.collectAsStateWithLifecycle()
+                                val sharedText by viewModel.sharedText.collectAsStateWithLifecycle()
+                                val initialTitle by viewModel.initialTitle.collectAsStateWithLifecycle()
+                                val searchQuery by viewModel.searchQuery.collectAsStateWithLifecycle()
+                                val externalUri by viewModel.externalUri.collectAsStateWithLifecycle()
 
                                 NavGraph(
                                     themeMode = themeMode,
                                     windowSizeClass = windowSizeClass,
-                                    settingsRepository = settingsRepository,
+                                    settingsRepository = viewModel.settingsRepository, // We still need settingsRepository for NavGraph for now, or we should refactor NavGraph too.
                                     startNoteId = startNoteId,
                                     startAddNote = startAddNote,
                                     sharedText = sharedText,
@@ -307,50 +294,14 @@ class MainActivity : FragmentActivity() {
         }
     }
 
-    private fun handleIntent(intent: Intent) {
-        val noteId = intent.getIntExtra("NOTE_ID", -1)
-        _startNoteIdFlow.value = noteId
-
-        // Extract Assistant related actions
-        val isCreateNoteAction = intent.action == "android.intent.action.CREATE_NOTE"
-        _startAddNoteFlow.value = intent.getBooleanExtra("START_ADD_NOTE", false) || isCreateNoteAction
-        
-        _initialTitleFlow.value = intent.getStringExtra("TITLE") ?: intent.getStringExtra(Intent.EXTRA_SUBJECT)
-        _searchQueryFlow.value = intent.getStringExtra("QUERY")
-        
-        if (intent.action == Intent.ACTION_VIEW || intent.action == Intent.ACTION_EDIT) {
-            _externalUriFlow.value = intent.data
-        } else {
-            _externalUriFlow.value = null
-        }
-
-        val sharedText = when {
-            intent.action == Intent.ACTION_SEND && "text/plain" == intent.type -> {
-                intent.getStringExtra(Intent.EXTRA_TEXT)
-            }
-            intent.hasExtra(Intent.EXTRA_TEXT) -> {
-                intent.getStringExtra(Intent.EXTRA_TEXT)
-            }
-            else -> null
-        }
-        _sharedTextFlow.value = sharedText
-    }
-
     override fun onStart() {
         super.onStart()
-        // If app was in background for more than 2 minutes, re-lock
-        if (_enableAppLockLoaded.value == true && lastPauseTime > 0) {
-            val currentTime = System.currentTimeMillis()
-            if (currentTime - lastPauseTime > 120_000) { // 2 minutes
-                unlocked = false
-                _lockTrigger.value = currentTime
-            }
-        }
+        viewModel.onAppStart()
     }
 
     override fun onStop() {
         super.onStop()
-        lastPauseTime = System.currentTimeMillis()
+        viewModel.onAppStop()
     }
 
     override fun onResume() {
@@ -366,7 +317,7 @@ class MainActivity : FragmentActivity() {
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
         setIntent(intent)
-        handleIntent(intent)
+        viewModel.handleIntent(intent)
     }
 
     override fun onActionModeStarted(mode: android.view.ActionMode?) {
