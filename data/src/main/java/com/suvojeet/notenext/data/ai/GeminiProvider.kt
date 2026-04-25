@@ -23,7 +23,6 @@ class GeminiProvider @Inject constructor(
 ) : AIProviderService {
 
     private val mutex = Mutex()
-    private var isInitialized = false
     private var apiKey: String = ""
 
     private val defaultModels = listOf(
@@ -34,31 +33,18 @@ class GeminiProvider @Inject constructor(
         "gemini-2.5-flash"
     )
 
-    suspend fun initialize(apiKey: String) {
-        mutex.withLock {
-            this.apiKey = apiKey
-            isInitialized = true
-        }
-    }
-
     override suspend fun getProviderName(): String = "Google Gemini"
 
     override suspend fun getAvailableModels(): List<String> = defaultModels
 
     override suspend fun isProviderAvailable(): Boolean {
-        ensureInitialized()
+        refreshConfig()
         return apiKey.isNotBlank()
     }
 
-    private suspend fun ensureInitialized() {
-        if (isInitialized) return
+    private suspend fun refreshConfig() {
         mutex.withLock {
-            if (isInitialized) return@withLock
-            val key = settingsRepository.geminiApiKey.first()
-            if (key.isNotBlank()) {
-                apiKey = key
-                isInitialized = true
-            }
+            apiKey = settingsRepository.geminiApiKey.first()
         }
     }
 
@@ -126,9 +112,9 @@ class GeminiProvider @Inject constructor(
         userPrompt: String,
         processor: (String) -> T
     ): AIResult<T> {
-        ensureInitialized()
+        refreshConfig()
         if (apiKey.isBlank()) {
-            return AIResult.AuthError("Gemini API key not configured")
+            return AIResult.AuthError("Gemini API key not set. Add it in AI Settings.")
         }
 
         val selectedModel = settingsRepository.geminiModel.first()

@@ -88,7 +88,24 @@ data class NotesEditState(
     val isSearchingInNote: Boolean = false,
     val noteSearchQuery: String = "",
     val searchResultIndices: ImmutableList<Int> = persistentListOf(),
-    val currentSearchResultIndex: Int = -1
+    val currentSearchResultIndex: Int = -1,
+
+    // ─── AI advanced features (gated by AIFeatureGate) ─────────────────
+    // Tone rewriter
+    val showToneRewriteSheet: Boolean = false,
+    val toneRewriteSelectedTone: com.suvojeet.notenext.data.ai.ToneOption? = null,
+    val toneRewriteResult: String? = null,
+    val isToneRewriting: Boolean = false,
+    val toneRewriteError: String? = null,
+
+    // Auto-tagging suggestions (Feature 2)
+    val suggestedLabels: ImmutableList<String> = persistentListOf(),
+
+    // Smart reminder detection (Feature 6)
+    val extractedReminder: com.suvojeet.notenext.data.ai.ExtractedReminder? = null,
+
+    // Linked notes (Feature 7)
+    val linkedNotes: ImmutableList<com.suvojeet.notenext.data.Note> = persistentListOf()
 )
 
 enum class SaveStatus {

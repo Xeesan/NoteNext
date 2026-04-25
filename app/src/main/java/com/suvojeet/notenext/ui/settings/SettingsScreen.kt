@@ -233,18 +233,11 @@ fun SettingsScreen(onBackClick: () -> Unit, onNavigate: (String) -> Unit) {
                         onClick = { showImportSourceDialog = true }
                     ),
                     SettingsItemData(
-                        icon = Icons.Rounded.SmartToy,
-                        title = "Groq AI Settings",
-                        subtitle = "Configure custom API key and models",
-                        iconColor = primaryColor,
-                        onClick = { onNavigate("groq") }
-                    ),
-                    SettingsItemData(
-                        icon = Icons.Rounded.Cloud,
-                        title = "AI Providers",
-                        subtitle = "Switch between Groq, OpenAI, and Anthropic",
-                        iconColor = Color(0xFF6200EE),
-                        onClick = { onNavigate("ai_provider") }
+                        icon = Icons.Rounded.AutoAwesome,
+                        title = "AI",
+                        subtitle = "Master switch, providers, features, usage dashboard",
+                        iconColor = Color(0xFF6750A4),
+                        onClick = { onNavigate("ai") }
                     )
                 )
             ),

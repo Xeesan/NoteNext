@@ -1,6 +1,8 @@
 package com.suvojeet.notenext.di
 
+import com.suvojeet.notenext.data.ai.AIFeatureGate
 import com.suvojeet.notenext.data.ai.AIProviderManager
+import com.suvojeet.notenext.data.ai.AIUsageRepository
 import com.suvojeet.notenext.data.ai.AnthropicProvider
 import com.suvojeet.notenext.data.ai.GeminiProvider
 import com.suvojeet.notenext.data.ai.GroqProvider
@@ -89,8 +91,13 @@ object AIModule {
         openAIProvider: OpenAIProvider,
         anthropicProvider: AnthropicProvider,
         geminiProvider: GeminiProvider,
-        settingsRepository: SettingsRepository
+        settingsRepository: SettingsRepository,
+        featureGate: AIFeatureGate,
+        usageRepository: AIUsageRepository
     ): AIProviderManager {
-        return AIProviderManager(groqProvider, openAIProvider, anthropicProvider, geminiProvider, settingsRepository)
+        return AIProviderManager(
+            groqProvider, openAIProvider, anthropicProvider, geminiProvider,
+            settingsRepository, featureGate, usageRepository
+        )
     }
 }

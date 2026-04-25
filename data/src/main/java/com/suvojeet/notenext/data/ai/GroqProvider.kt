@@ -5,8 +5,6 @@ import com.suvojeet.notenext.data.remote.GroqApiService
 import com.suvojeet.notenext.data.remote.Message
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.sync.Mutex
-import kotlinx.coroutines.sync.withLock
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.builtins.ListSerializer
 import kotlinx.serialization.builtins.serializer
@@ -20,59 +18,36 @@ class GroqProvider @Inject constructor(
     private val settingsRepository: com.suvojeet.notenext.data.repository.SettingsRepository
 ) : AIProviderService {
 
-    private val mutex = Mutex()
-    private var isInitialized = false
-    private var apiKey: String = ""
-
     private val fastModels = listOf(
-        "llama-3",
-        "mistral-small-4",
-        "mixtral",
-        "llama-3.1-8b-instant"
-    )
-
-    private val largeModels = listOf(
-        "llama-4",
-        "mistral-large",
+        "llama-3.1-8b-instant",
+        "qwen/qwen3-32b",
+        "meta-llama/llama-4-scout-17b-16e-instruct",
         "llama-3.3-70b-versatile"
     )
 
-    private suspend fun ensureInitialized() {
-        if (isInitialized) return
-        mutex.withLock {
-            if (isInitialized) return@withLock
-            
-            val useCustom = settingsRepository.useCustomGroqKey.first()
-            val key = settingsRepository.customGroqKey.first()
-            
-            if (useCustom && key.isNotBlank()) {
-                apiKey = key
-            } else {
-                // Access BuildConfig from app module via reflection or pass as parameter
-                // For now, use empty - will fall back to custom key requirement
-                apiKey = ""
-            }
-            isInitialized = true
-        }
-    }
+    private val largeModels = listOf(
+        "llama-3.3-70b-versatile",
+        "meta-llama/llama-4-scout-17b-16e-instruct",
+        "qwen/qwen3-32b"
+    )
 
     override suspend fun getProviderName(): String = "Groq"
 
     override suspend fun getAvailableModels(): List<String> {
-        ensureInitialized()
-        if (apiKey.isBlank()) return fastModels
         return try {
             val response = groqApiService.getModels()
-            response.data.map { it.id }
+            response.data.map { it.id }.sorted()
         } catch (e: Exception) {
             fastModels
         }
     }
 
-    override suspend fun isProviderAvailable(): Boolean {
-        ensureInitialized()
-        return apiKey.isNotBlank()
-    }
+    /**
+     * Groq is always available because the app ships with a built-in
+     * encrypted API key (see NetworkModule.authInterceptor). The user can
+     * override it with their own key via Settings → AI → Providers.
+     */
+    override suspend fun isProviderAvailable(): Boolean = true
 
     override suspend fun summarizeNote(content: String): AIResult<String> {
         return executeWithRetry(content.split("\\s+".toRegex()).size < 1000, listOf(
@@ -147,11 +122,8 @@ class GroqProvider @Inject constructor(
         messages: List<Message>,
         processor: (String) -> T
     ): AIResult<T> {
-        ensureInitialized()
-        
-        if (apiKey.isBlank()) {
-            return AIResult.AuthError("API key not configured")
-        }
+        // Auth handled by NetworkModule.authInterceptor — uses the user's
+        // custom key when set, falls back to the built-in BuildConfig key.
 
         val customModel = if (isFast) {
             settingsRepository.customFastModel.first()

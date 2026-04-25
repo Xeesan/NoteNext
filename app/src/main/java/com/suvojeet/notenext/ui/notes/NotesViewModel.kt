@@ -90,7 +90,9 @@ class NotesViewModel @Inject constructor(
     private val editorDelegate: com.suvojeet.notenext.ui.notes.delegate.NoteEditorDelegate,
     private val listDelegate: com.suvojeet.notenext.ui.notes.delegate.NoteListDelegate,
     private val bulkActionDelegate: com.suvojeet.notenext.ui.notes.delegate.BulkActionDelegate,
-    private val aiDelegate: com.suvojeet.notenext.ui.notes.delegate.AIDelegate
+    private val aiDelegate: com.suvojeet.notenext.ui.notes.delegate.AIDelegate,
+    private val aiSuggestionsDelegate: com.suvojeet.notenext.ui.notes.delegate.AISuggestionsDelegate,
+    private val aiFeatureGate: com.suvojeet.notenext.data.ai.AIFeatureGate
 ) : ViewModel() {
 
     companion object {
@@ -154,6 +156,10 @@ class NotesViewModel @Inject constructor(
         when (event) {
             is NotesEvent.GenerateChecklist -> {
                 viewModelScope.launch {
+                    if (!aiFeatureGate.isEnabled(com.suvojeet.notenext.data.ai.AIFeature.CHECKLIST)) {
+                        _events.emit(NotesUiEvent.ShowToast("Checklist generation is disabled in AI Settings"))
+                        return@launch
+                    }
                     editorDelegate.updateState { it.copy(isGeneratingChecklist = true, generatedChecklistPreview = persistentListOf()) }
                     groqRepository.generateChecklist(event.topic).collect { result ->
                         result.onSuccess { items ->
@@ -206,8 +212,14 @@ class NotesViewModel @Inject constructor(
                 editorDelegate.updateState { it.copy(generatedChecklistPreview = persistentListOf(), isGeneratingChecklist = false) }
             }
             is NotesEvent.FixGrammar -> {
-                aiDelegate.fixGrammar(editState.value.editingContent, viewModelScope, _events) { transform ->
-                    editorDelegate.updateState(transform)
+                viewModelScope.launch {
+                    if (!aiFeatureGate.isEnabled(com.suvojeet.notenext.data.ai.AIFeature.GRAMMAR)) {
+                        _events.emit(NotesUiEvent.ShowToast("Grammar fix is disabled in AI Settings"))
+                        return@launch
+                    }
+                    aiDelegate.fixGrammar(editState.value.editingContent, viewModelScope, _events) { transform ->
+                        editorDelegate.updateState(transform)
+                    }
                 }
             }
             is NotesEvent.AutoSaveNote -> {
@@ -1203,8 +1215,14 @@ class NotesViewModel @Inject constructor(
                     if (editState.value.summaryResult != null) {
                          editorDelegate.updateState { it.copy(showSummaryDialog = true) }
                     } else {
-                         aiDelegate.summarize(content, viewModelScope, _events) { transform ->
-                             editorDelegate.updateState(transform)
+                         viewModelScope.launch {
+                             if (!aiFeatureGate.isEnabled(com.suvojeet.notenext.data.ai.AIFeature.SUMMARIZE)) {
+                                 _events.emit(NotesUiEvent.ShowToast("Summarize is disabled in AI Settings"))
+                                 return@launch
+                             }
+                             aiDelegate.summarize(content, viewModelScope, _events) { transform ->
+                                 editorDelegate.updateState(transform)
+                             }
                          }
                     }
                 }
@@ -1278,9 +1296,145 @@ class NotesViewModel @Inject constructor(
                     }
                 }
             }
+            // ─── AI advanced features (Tone Rewriter, Auto-tag, Smart Reminder, Linked Notes) ──
+            is NotesEvent.ShowToneRewriteSheet -> {
+                editorDelegate.updateState { it.copy(
+                    showToneRewriteSheet = true,
+                    toneRewriteSelectedTone = null,
+                    toneRewriteResult = null,
+                    toneRewriteError = null,
+                    isToneRewriting = false
+                ) }
+            }
+            is NotesEvent.DismissToneRewriteSheet -> {
+                editorDelegate.updateState { it.copy(
+                    showToneRewriteSheet = false,
+                    toneRewriteSelectedTone = null,
+                    toneRewriteResult = null,
+                    toneRewriteError = null,
+                    isToneRewriting = false
+                ) }
+            }
+            is NotesEvent.PickToneRewrite -> {
+                runToneRewrite(event.tone)
+            }
+            is NotesEvent.RetryToneRewrite -> {
+                editState.value.toneRewriteSelectedTone?.let { runToneRewrite(it) }
+            }
+            is NotesEvent.AcceptToneRewrite -> {
+                val rewritten = editState.value.toneRewriteResult ?: return
+                editorDelegate.updateState { st ->
+                    st.copy(
+                        editingContent = TextFieldValue(rewritten),
+                        showToneRewriteSheet = false,
+                        toneRewriteResult = null,
+                        toneRewriteSelectedTone = null
+                    )
+                }
+                scheduleAutoSave()
+            }
+            is NotesEvent.AcceptSuggestedLabel -> {
+                val label = event.label
+                viewModelScope.launch {
+                    runCatching { repository.insertLabel(Label(name = label)) }
+                    editorDelegate.updateState { st ->
+                        st.copy(
+                            editingLabel = label,
+                            suggestedLabels = persistentListOf()
+                        )
+                    }
+                    aiSuggestionsDelegate.recordLabelSuggestionAccepted(true)
+                    scheduleAutoSave()
+                }
+            }
+            is NotesEvent.DismissSuggestedLabels -> {
+                viewModelScope.launch {
+                    aiSuggestionsDelegate.recordLabelSuggestionAccepted(false)
+                }
+                editorDelegate.updateState { it.copy(suggestedLabels = persistentListOf()) }
+            }
+            is NotesEvent.AcceptExtractedReminder -> {
+                val r = editState.value.extractedReminder ?: return
+                editorDelegate.updateState { st ->
+                    st.copy(
+                        editingReminderTime = r.timestampMs,
+                        extractedReminder = null
+                    )
+                }
+                viewModelScope.launch {
+                    aiSuggestionsDelegate.recordReminderSuggestionAccepted(true)
+                }
+                scheduleAutoSave()
+            }
+            is NotesEvent.DismissExtractedReminder -> {
+                viewModelScope.launch {
+                    aiSuggestionsDelegate.recordReminderSuggestionAccepted(false)
+                }
+                editorDelegate.updateState { it.copy(extractedReminder = null) }
+            }
+            is NotesEvent.OpenLinkedNote -> {
+                onEvent(NotesEvent.ExpandNote(event.noteId))
+            }
             else -> {
                 // Handle any other events or do nothing
             }
+        }
+    }
+
+    private fun runToneRewrite(tone: com.suvojeet.notenext.data.ai.ToneOption) {
+        val source = editState.value.editingContent.text
+        if (source.isBlank()) {
+            viewModelScope.launch { _events.emit(NotesUiEvent.ShowToast("Nothing to rewrite")) }
+            return
+        }
+        editorDelegate.updateState { it.copy(
+            toneRewriteSelectedTone = tone,
+            isToneRewriting = true,
+            toneRewriteError = null,
+            toneRewriteResult = null
+        ) }
+        viewModelScope.launch {
+            when (val result = aiSuggestionsDelegate.rewriteTone(source, tone)) {
+                is com.suvojeet.notenext.data.ai.AIResult.Success -> {
+                    editorDelegate.updateState { it.copy(
+                        isToneRewriting = false,
+                        toneRewriteResult = result.data
+                    ) }
+                }
+                is com.suvojeet.notenext.data.ai.AIResult.AuthError ->
+                    editorDelegate.updateState { it.copy(isToneRewriting = false, toneRewriteError = result.message) }
+                is com.suvojeet.notenext.data.ai.AIResult.NetworkError ->
+                    editorDelegate.updateState { it.copy(isToneRewriting = false, toneRewriteError = "Network: ${result.message}") }
+                is com.suvojeet.notenext.data.ai.AIResult.RateLimited ->
+                    editorDelegate.updateState { it.copy(isToneRewriting = false, toneRewriteError = "Rate limited. Try again in ${result.retryAfterSeconds}s.") }
+                is com.suvojeet.notenext.data.ai.AIResult.ProviderError ->
+                    editorDelegate.updateState { it.copy(isToneRewriting = false, toneRewriteError = result.message) }
+                is com.suvojeet.notenext.data.ai.AIResult.AllProvidersFailed ->
+                    editorDelegate.updateState { it.copy(isToneRewriting = false, toneRewriteError = "All providers failed") }
+            }
+        }
+    }
+
+    /**
+     * Fires after every successful note save (called from saveNote()).
+     * Kicks off auto-tag and smart-reminder suggestions in the background.
+     * Both gated by AIFeatureGate inside the delegate.
+     */
+    private fun fireAISuggestionsAfterSave(noteId: Int, title: String, content: String) {
+        viewModelScope.launch {
+            // Auto-tag
+            val labelsResult = aiSuggestionsDelegate.suggestLabels("$title\n$content")
+            if (labelsResult is com.suvojeet.notenext.data.ai.AIResult.Success && labelsResult.data.isNotEmpty()) {
+                editorDelegate.updateState { it.copy(suggestedLabels = labelsResult.data.toImmutableList()) }
+            }
+            // Smart reminder
+            val reminderResult = aiSuggestionsDelegate.extractReminders(content)
+            if (reminderResult is com.suvojeet.notenext.data.ai.AIResult.Success && reminderResult.data.isNotEmpty()) {
+                editorDelegate.updateState { it.copy(extractedReminder = reminderResult.data.first()) }
+            }
+            // Linked notes
+            val linked = aiSuggestionsDelegate.findLinkedNotes(noteId, title, content)
+            editorDelegate.updateState { it.copy(linkedNotes = linked.toImmutableList()) }
         }
     }
 
@@ -1479,6 +1633,14 @@ class NotesViewModel @Inject constructor(
                         editingLastEdited = currentTime
                     ) }
                 }
+
+                // Fire AI suggestions (auto-tag, smart reminder, linked notes) — gated inside delegate.
+                // Skipped for empty-collapse and for new-note-with-no-content cases above.
+                fireAISuggestionsAfterSave(
+                    noteId = currentNoteId.toInt(),
+                    title = title,
+                    content = content
+                )
             }
         }
 

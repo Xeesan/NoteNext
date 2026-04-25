@@ -1409,6 +1409,7 @@ class ProjectNotesViewModel @Inject constructor(
                     _events.emit(ProjectNotesUiEvent.ShowToast("Saved as internal note"))
                 }
             }
+            is ProjectNotesEvent.NoOp -> { /* no-op bridge for AI suggestion events not yet wired into ProjectNotesViewModel */ }
         }
     }
 

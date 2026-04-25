@@ -422,7 +422,27 @@ fun AddEditNoteScreen(
                                     onReminderClick = { checkAndRequestReminderPermissions() }
                                 )
                             }
-                            
+
+                            // ─── AI suggestions (Auto-tag + Smart Reminder) ──────
+                            item {
+                                Column(modifier = Modifier.padding(horizontal = 16.dp)) {
+                                    AiSuggestedLabelsRow(
+                                        visible = state.suggestedLabels.isNotEmpty(),
+                                        suggestions = state.suggestedLabels,
+                                        onAcceptLabel = { onEvent(NotesEvent.AcceptSuggestedLabel(it)) },
+                                        onDismiss = { onEvent(NotesEvent.DismissSuggestedLabels) }
+                                    )
+                                    if (state.suggestedLabels.isNotEmpty()) Spacer(modifier = Modifier.height(8.dp))
+                                    AiSmartReminderChip(
+                                        visible = state.extractedReminder != null,
+                                        reminder = state.extractedReminder,
+                                        onSetReminder = { onEvent(NotesEvent.AcceptExtractedReminder) },
+                                        onDismiss = { onEvent(NotesEvent.DismissExtractedReminder) }
+                                    )
+                                    if (state.extractedReminder != null) Spacer(modifier = Modifier.height(8.dp))
+                                }
+                            }
+
                             NoteContentItems(
                                 state = state,
                                 splitOffsets = splitOffsets,
@@ -438,6 +458,15 @@ fun AddEditNoteScreen(
                                     LinkPreviewCard(linkPreview = linkPreview, onEvent = onEvent)
                                     Spacer(modifier = Modifier.height(8.dp))
                                 }
+                            }
+
+                            // ─── Linked Notes section ────────────────────────────
+                            item {
+                                AiLinkedNotesSection(
+                                    visible = state.linkedNotes.isNotEmpty(),
+                                    notes = state.linkedNotes,
+                                    onOpenNote = { note -> onEvent(NotesEvent.OpenLinkedNote(note.id)) }
+                                )
                             }
 
                             item {
@@ -662,6 +691,20 @@ fun AddEditNoteScreen(
             isSummarizing = state.isSummarizing,
             onDismiss = { onEvent(NotesEvent.ClearSummary) },
             onClearSummary = { onEvent(NotesEvent.ClearSummary) }
+        )
+    }
+
+    if (state.showToneRewriteSheet) {
+        AiToneRewriteSheet(
+            sourceText = state.editingContent.text,
+            rewrittenText = state.toneRewriteResult,
+            isLoading = state.isToneRewriting,
+            selectedTone = state.toneRewriteSelectedTone,
+            errorMessage = state.toneRewriteError,
+            onPickTone = { onEvent(NotesEvent.PickToneRewrite(it)) },
+            onAccept = { onEvent(NotesEvent.AcceptToneRewrite) },
+            onTryAgain = { onEvent(NotesEvent.RetryToneRewrite) },
+            onDismiss = { onEvent(NotesEvent.DismissToneRewriteSheet) }
         )
     }
     

@@ -59,7 +59,8 @@ object AppModule {
             NoteDatabase.MIGRATION_23_24,
             NoteDatabase.MIGRATION_24_25,
             NoteDatabase.MIGRATION_25_26,
-            NoteDatabase.MIGRATION_26_27
+            NoteDatabase.MIGRATION_26_27,
+            NoteDatabase.MIGRATION_27_28
         ).build()
     }
 
@@ -91,6 +92,12 @@ object AppModule {
     @Singleton
     fun provideTodoDao(db: NoteDatabase): TodoDao {
         return db.todoDao()
+    }
+
+    @Provides
+    @Singleton
+    fun provideAIUsageDao(db: NoteDatabase): com.suvojeet.notenext.data.ai.AIUsageDao {
+        return db.aiUsageDao()
     }
 
     @Provides

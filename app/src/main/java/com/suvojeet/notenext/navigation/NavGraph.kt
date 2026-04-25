@@ -65,6 +65,9 @@ import com.suvojeet.notenext.ui.settings.CreditsScreen
 import com.suvojeet.notenext.ui.settings.ChangelogScreen
 import com.suvojeet.notenext.ui.settings.GroqSettingsScreen
 import com.suvojeet.notenext.ui.settings.AIProviderSettingsScreen
+import com.suvojeet.notenext.ui.settings.ai.AISettingsScreen
+import com.suvojeet.notenext.ui.settings.ai.AIFeaturesScreen
+import com.suvojeet.notenext.ui.settings.ai.AIUsageDashboardScreen
 import com.suvojeet.notenext.ui.donate.DonationScreen
 import com.suvojeet.notenext.ui.project.ProjectScreen
 import com.suvojeet.notenext.ui.project.ProjectViewModel
@@ -542,6 +545,7 @@ private fun NavGraphBuilder.sharedRoutes(
                     "credits" -> navController.navigate(Destination.Credits)
                     "groq" -> navController.navigate(Destination.GroqSettings)
                     "ai_provider" -> navController.navigate(Destination.AIProviderSettings)
+                    "ai" -> navController.navigate(Destination.AISettings)
                     else -> {}
                 }
             }
@@ -560,6 +564,31 @@ private fun NavGraphBuilder.sharedRoutes(
         exitTransition = { slideExit }
     ) {
         AIProviderSettingsScreen(onBackClick = { navController.popBackStack() })
+    }
+
+    composable<Destination.AISettings>(
+        enterTransition = { slideEnter },
+        exitTransition = { slideExit }
+    ) {
+        AISettingsScreen(
+            onBackClick = { navController.popBackStack() },
+            onOpenFeatures = { navController.navigate(Destination.AIFeatures) },
+            onOpenDashboard = { navController.navigate(Destination.AIUsageDashboard) }
+        )
+    }
+
+    composable<Destination.AIFeatures>(
+        enterTransition = { slideEnter },
+        exitTransition = { slideExit }
+    ) {
+        AIFeaturesScreen(onBackClick = { navController.popBackStack() })
+    }
+
+    composable<Destination.AIUsageDashboard>(
+        enterTransition = { slideEnter },
+        exitTransition = { slideExit }
+    ) {
+        AIUsageDashboardScreen(onBackClick = { navController.popBackStack() })
     }
 
     composable<Destination.Backup>(

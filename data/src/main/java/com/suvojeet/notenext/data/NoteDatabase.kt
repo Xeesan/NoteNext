@@ -16,9 +16,11 @@ import com.suvojeet.notenext.data.ChecklistItem
 import com.suvojeet.notenext.data.NoteVersion
 import com.suvojeet.notenext.data.TodoItem
 import com.suvojeet.notenext.data.TodoSubtask
+import com.suvojeet.notenext.data.ai.AIUsageEvent
+import com.suvojeet.notenext.data.ai.AIUsageDao
 import kotlinx.serialization.builtins.ListSerializer
 
-@Database(entities = [Note::class, Label::class, Attachment::class, Project::class, NoteFts::class, ChecklistItem::class, NoteVersion::class, TodoItem::class, TodoSubtask::class], version = 27, exportSchema = true)
+@Database(entities = [Note::class, Label::class, Attachment::class, Project::class, NoteFts::class, ChecklistItem::class, NoteVersion::class, TodoItem::class, TodoSubtask::class, AIUsageEvent::class], version = 28, exportSchema = true)
 @TypeConverters(Converters::class)
 abstract class NoteDatabase : RoomDatabase() {
 
@@ -27,8 +29,28 @@ abstract class NoteDatabase : RoomDatabase() {
     abstract fun projectDao(): ProjectDao
     abstract fun checklistItemDao(): ChecklistItemDao
     abstract fun todoDao(): TodoDao
+    abstract fun aiUsageDao(): AIUsageDao
 
     companion object {
+        val MIGRATION_27_28 = object : Migration(27, 28) {
+            override fun migrate(db: SupportSQLiteDatabase) {
+                db.execSQL("""
+                    CREATE TABLE IF NOT EXISTS `ai_usage_events` (
+                        `id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+                        `featureId` TEXT NOT NULL,
+                        `provider` TEXT NOT NULL,
+                        `timestamp` INTEGER NOT NULL,
+                        `success` INTEGER NOT NULL,
+                        `durationMs` INTEGER NOT NULL,
+                        `accepted` INTEGER
+                    )
+                """.trimIndent())
+                db.execSQL("CREATE INDEX IF NOT EXISTS `index_ai_usage_events_timestamp` ON `ai_usage_events` (`timestamp`)")
+                db.execSQL("CREATE INDEX IF NOT EXISTS `index_ai_usage_events_featureId` ON `ai_usage_events` (`featureId`)")
+                db.execSQL("CREATE INDEX IF NOT EXISTS `index_ai_usage_events_provider` ON `ai_usage_events` (`provider`)")
+            }
+        }
+
         val MIGRATION_26_27 = object : Migration(26, 27) {
             override fun migrate(db: SupportSQLiteDatabase) {
                 // Create todo_subtasks table

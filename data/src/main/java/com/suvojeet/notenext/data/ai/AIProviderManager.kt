@@ -9,7 +9,17 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 /**
- * Manages multiple AI providers and routes requests to the appropriate one
+ * Single entry point for every AI feature in the app.
+ *
+ * Responsibilities:
+ *  - Route a request to the user's chosen provider (Groq / OpenAI / Anthropic / Gemini).
+ *  - Honor the AIFeatureGate before doing anything network-bound.
+ *  - Record an AIUsageEvent into the local dashboard regardless of outcome.
+ *
+ * If the master switch or a per-feature toggle is off, this returns
+ * `AIResult.AuthError("disabled")` immediately and records nothing — the UI
+ * should never even reach this point because feature buttons are hidden when
+ * disabled, but we double-check here as a safety net.
  */
 @Singleton
 class AIProviderManager @Inject constructor(
@@ -17,7 +27,9 @@ class AIProviderManager @Inject constructor(
     private val openAIProvider: OpenAIProvider,
     private val anthropicProvider: AnthropicProvider,
     private val geminiProvider: GeminiProvider,
-    private val settingsRepository: com.suvojeet.notenext.data.repository.SettingsRepository
+    private val settingsRepository: com.suvojeet.notenext.data.repository.SettingsRepository,
+    private val featureGate: AIFeatureGate,
+    private val usageRepository: AIUsageRepository
 ) {
     private val mutex = Mutex()
     private val _activeProvider = MutableStateFlow<AIProvider>(AIProvider.GROQ)
@@ -48,51 +60,79 @@ class AIProviderManager @Inject constructor(
         }
     }
 
-    suspend fun getProviderService(provider: AIProvider): AIProviderService? {
-        return providers[provider]
+    suspend fun getProviderService(provider: AIProvider): AIProviderService? = providers[provider]
+
+    suspend fun isProviderAvailable(provider: AIProvider): Boolean =
+        providers[provider]?.isProviderAvailable() == true
+
+    suspend fun getAllAvailableProviders(): List<AIProvider> =
+        providers.keys.filter { providers[it]?.isProviderAvailable() == true }
+
+    // ─── Gated, tracked invocations ──────────────────────────────────────
+
+    suspend fun summarizeNote(content: String): AIResult<String> =
+        invoke(AIFeature.SUMMARIZE) { it.summarizeNote(content) }
+
+    suspend fun generateChecklist(topic: String): AIResult<List<String>> =
+        invoke(AIFeature.CHECKLIST) { it.generateChecklist(topic) }
+
+    suspend fun generateTodos(input: String): AIResult<List<Pair<String, String>>> =
+        invoke(AIFeature.TODOS) { it.generateTodos(input) }
+
+    suspend fun fixGrammar(text: String): AIResult<String> =
+        invoke(AIFeature.GRAMMAR) { it.fixGrammar(text) }
+
+    suspend fun generateCustomPrompt(systemPrompt: String, userPrompt: String): AIResult<String> =
+        invoke(AIFeature.CUSTOM_PROMPT) { it.generateCustomPrompt(systemPrompt, userPrompt) }
+
+    suspend fun suggestLabels(content: String, existingLabels: List<String>): AIResult<List<String>> =
+        invoke(AIFeature.AUTO_TAG) { it.suggestLabels(content, existingLabels) }
+
+    suspend fun extractReminders(content: String): AIResult<List<ExtractedReminder>> =
+        invoke(AIFeature.SMART_REMINDER) { it.extractReminders(content, System.currentTimeMillis()) }
+
+    suspend fun rewriteWithTone(text: String, tone: ToneOption): AIResult<String> =
+        invoke(AIFeature.TONE_REWRITE) { it.rewriteWithTone(text, tone) }
+
+    suspend fun extractKeywords(content: String): AIResult<List<String>> =
+        invoke(AIFeature.LINKED_NOTES) { it.extractKeywords(content) }
+
+    /**
+     * Mark a user's accept/dismiss action on the most recent suggestion-style
+     * invocation of a feature so the dashboard can compute acceptance rate.
+     */
+    suspend fun recordSuggestionAccepted(feature: AIFeature, accepted: Boolean) {
+        usageRepository.record(
+            feature = feature,
+            provider = getActiveProvider(),
+            success = true,
+            durationMs = 0,
+            accepted = accepted
+        )
     }
 
-    suspend fun summarizeNote(content: String): AIResult<String> {
+    private suspend fun <T> invoke(
+        feature: AIFeature,
+        block: suspend (AIProviderService) -> AIResult<T>
+    ): AIResult<T> {
+        if (!featureGate.isEnabled(feature)) {
+            return AIResult.AuthError("Feature '${feature.displayName}' is disabled in AI Settings.")
+        }
         val provider = getActiveProvider()
-        val service = providers[provider] ?: return AIResult.ProviderError("Provider not available: $provider")
+        val service = providers[provider]
+            ?: return AIResult.ProviderError("Provider not available: $provider")
 
-        return service.summarizeNote(content)
-    }
+        val start = System.currentTimeMillis()
+        val result = block(service)
+        val duration = System.currentTimeMillis() - start
 
-    suspend fun generateChecklist(topic: String): AIResult<List<String>> {
-        val provider = getActiveProvider()
-        val service = providers[provider] ?: return AIResult.ProviderError("Provider not available: $provider")
-
-        return service.generateChecklist(topic)
-    }
-
-    suspend fun generateTodos(input: String): AIResult<List<Pair<String, String>>> {
-        val provider = getActiveProvider()
-        val service = providers[provider] ?: return AIResult.ProviderError("Provider not available: $provider")
-
-        return service.generateTodos(input)
-    }
-
-    suspend fun fixGrammar(text: String): AIResult<String> {
-        val provider = getActiveProvider()
-        val service = providers[provider] ?: return AIResult.ProviderError("Provider not available: $provider")
-
-        return service.fixGrammar(text)
-    }
-
-    suspend fun generateCustomPrompt(systemPrompt: String, userPrompt: String): AIResult<String> {
-        val provider = getActiveProvider()
-        val service = providers[provider] ?: return AIResult.ProviderError("Provider not available: $provider")
-
-        return service.generateCustomPrompt(systemPrompt, userPrompt)
-    }
-
-    suspend fun isProviderAvailable(provider: AIProvider): Boolean {
-        val service = providers[provider] ?: return false
-        return service.isProviderAvailable()
-    }
-
-    suspend fun getAllAvailableProviders(): List<AIProvider> {
-        return providers.keys.filter { providers[it]?.isProviderAvailable() == true }
+        usageRepository.record(
+            feature = feature,
+            provider = provider,
+            success = result is AIResult.Success,
+            durationMs = duration,
+            accepted = if (feature.isSuggestionFeature) null else null
+        )
+        return result
     }
 }

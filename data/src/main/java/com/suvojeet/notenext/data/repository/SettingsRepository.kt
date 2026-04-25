@@ -40,6 +40,19 @@ object PreferencesKeys {
     val ANTHROPIC_MODEL = stringPreferencesKey("anthropic_model")
     val GEMINI_API_KEY = stringPreferencesKey("gemini_api_key")
     val GEMINI_MODEL = stringPreferencesKey("gemini_model")
+
+    // AI Feature Toggles (privacy-first: ALL default OFF, master switch off)
+    val AI_MASTER_ENABLED = booleanPreferencesKey("ai_master_enabled")
+    val AI_USAGE_TRACKING_ENABLED = booleanPreferencesKey("ai_usage_tracking_enabled")
+    val AI_FEATURE_SUMMARIZE = booleanPreferencesKey("ai_feature_summarize")
+    val AI_FEATURE_CHECKLIST = booleanPreferencesKey("ai_feature_checklist")
+    val AI_FEATURE_TODOS = booleanPreferencesKey("ai_feature_todos")
+    val AI_FEATURE_GRAMMAR = booleanPreferencesKey("ai_feature_grammar")
+    val AI_FEATURE_AUTO_TAG = booleanPreferencesKey("ai_feature_auto_tag")
+    val AI_FEATURE_SMART_REMINDER = booleanPreferencesKey("ai_feature_smart_reminder")
+    val AI_FEATURE_LINKED_NOTES = booleanPreferencesKey("ai_feature_linked_notes")
+    val AI_FEATURE_TONE_REWRITE = booleanPreferencesKey("ai_feature_tone_rewrite")
+    val AI_FEATURE_CUSTOM_PROMPT = booleanPreferencesKey("ai_feature_custom_prompt")
 }
 
 class SettingsRepository(private val context: Context) {
@@ -233,5 +246,78 @@ class SettingsRepository(private val context: Context) {
 
     suspend fun saveGeminiModel(model: String) {
         context.dataStore.edit { preferences -> preferences[PreferencesKeys.GEMINI_MODEL] = model }
+    }
+
+    // ─── AI Feature Toggles (privacy-first, default OFF) ─────────────────
+    // The master switch must be ON before any feature toggle has effect.
+    // This is the core of NoteNext's privacy promise: nothing leaves the
+    // device until the user explicitly opts in.
+
+    val aiMasterEnabled: Flow<Boolean> = context.dataStore.data
+        .map { it[PreferencesKeys.AI_MASTER_ENABLED] ?: false }
+
+    suspend fun saveAiMasterEnabled(enabled: Boolean) {
+        context.dataStore.edit { it[PreferencesKeys.AI_MASTER_ENABLED] = enabled }
+    }
+
+    val aiUsageTrackingEnabled: Flow<Boolean> = context.dataStore.data
+        .map { it[PreferencesKeys.AI_USAGE_TRACKING_ENABLED] ?: true }
+
+    suspend fun saveAiUsageTrackingEnabled(enabled: Boolean) {
+        context.dataStore.edit { it[PreferencesKeys.AI_USAGE_TRACKING_ENABLED] = enabled }
+    }
+
+    val aiFeatureSummarize: Flow<Boolean> = context.dataStore.data
+        .map { it[PreferencesKeys.AI_FEATURE_SUMMARIZE] ?: false }
+    suspend fun saveAiFeatureSummarize(v: Boolean) {
+        context.dataStore.edit { it[PreferencesKeys.AI_FEATURE_SUMMARIZE] = v }
+    }
+
+    val aiFeatureChecklist: Flow<Boolean> = context.dataStore.data
+        .map { it[PreferencesKeys.AI_FEATURE_CHECKLIST] ?: false }
+    suspend fun saveAiFeatureChecklist(v: Boolean) {
+        context.dataStore.edit { it[PreferencesKeys.AI_FEATURE_CHECKLIST] = v }
+    }
+
+    val aiFeatureTodos: Flow<Boolean> = context.dataStore.data
+        .map { it[PreferencesKeys.AI_FEATURE_TODOS] ?: false }
+    suspend fun saveAiFeatureTodos(v: Boolean) {
+        context.dataStore.edit { it[PreferencesKeys.AI_FEATURE_TODOS] = v }
+    }
+
+    val aiFeatureGrammar: Flow<Boolean> = context.dataStore.data
+        .map { it[PreferencesKeys.AI_FEATURE_GRAMMAR] ?: false }
+    suspend fun saveAiFeatureGrammar(v: Boolean) {
+        context.dataStore.edit { it[PreferencesKeys.AI_FEATURE_GRAMMAR] = v }
+    }
+
+    val aiFeatureAutoTag: Flow<Boolean> = context.dataStore.data
+        .map { it[PreferencesKeys.AI_FEATURE_AUTO_TAG] ?: false }
+    suspend fun saveAiFeatureAutoTag(v: Boolean) {
+        context.dataStore.edit { it[PreferencesKeys.AI_FEATURE_AUTO_TAG] = v }
+    }
+
+    val aiFeatureSmartReminder: Flow<Boolean> = context.dataStore.data
+        .map { it[PreferencesKeys.AI_FEATURE_SMART_REMINDER] ?: false }
+    suspend fun saveAiFeatureSmartReminder(v: Boolean) {
+        context.dataStore.edit { it[PreferencesKeys.AI_FEATURE_SMART_REMINDER] = v }
+    }
+
+    val aiFeatureLinkedNotes: Flow<Boolean> = context.dataStore.data
+        .map { it[PreferencesKeys.AI_FEATURE_LINKED_NOTES] ?: false }
+    suspend fun saveAiFeatureLinkedNotes(v: Boolean) {
+        context.dataStore.edit { it[PreferencesKeys.AI_FEATURE_LINKED_NOTES] = v }
+    }
+
+    val aiFeatureToneRewrite: Flow<Boolean> = context.dataStore.data
+        .map { it[PreferencesKeys.AI_FEATURE_TONE_REWRITE] ?: false }
+    suspend fun saveAiFeatureToneRewrite(v: Boolean) {
+        context.dataStore.edit { it[PreferencesKeys.AI_FEATURE_TONE_REWRITE] = v }
+    }
+
+    val aiFeatureCustomPrompt: Flow<Boolean> = context.dataStore.data
+        .map { it[PreferencesKeys.AI_FEATURE_CUSTOM_PROMPT] ?: false }
+    suspend fun saveAiFeatureCustomPrompt(v: Boolean) {
+        context.dataStore.edit { it[PreferencesKeys.AI_FEATURE_CUSTOM_PROMPT] = v }
     }
 }

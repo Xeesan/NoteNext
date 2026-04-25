@@ -11,6 +11,8 @@ import java.time.LocalDate
 import java.time.LocalTime
 
 sealed class ProjectNotesEvent {
+    /** Bridge for cross-context events that have no behaviour in the project editor (currently AI suggestion events). */
+    object NoOp : ProjectNotesEvent()
     data class DeleteNote(val note: NoteSummaryWithAttachments) : ProjectNotesEvent()
     object RestoreNote : ProjectNotesEvent()
     data class ToggleNoteSelection(val noteId: Int) : ProjectNotesEvent()

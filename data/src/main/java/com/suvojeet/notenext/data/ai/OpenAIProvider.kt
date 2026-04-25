@@ -21,9 +21,21 @@ class OpenAIProvider @Inject constructor(
 ) : AIProviderService {
 
     private val mutex = Mutex()
-    private var isInitialized = false
     private var apiKey: String = ""
     private var baseUrl: String = "https://api.openai.com/"
+
+    /**
+     * Refreshes apiKey/baseUrl from SettingsRepository before every request.
+     * No explicit `initialize()` call needed — the user just enters their key
+     * in AI Settings and the provider becomes available immediately.
+     */
+    private suspend fun refreshConfig() {
+        mutex.withLock {
+            apiKey = settingsRepository.openAIApiKey.first()
+            val url = settingsRepository.openAIBaseUrl.first()
+            baseUrl = if (url.endsWith("/")) url else "$url/"
+        }
+    }
 
     private val defaultModels = listOf(
         "gpt-5.5",
@@ -39,18 +51,11 @@ class OpenAIProvider @Inject constructor(
         "gpt-4o-mini"
     )
 
-    suspend fun initialize(apiKey: String, baseUrl: String = "https://api.openai.com/") {
-        mutex.withLock {
-            this.apiKey = apiKey
-            this.baseUrl = if (baseUrl.endsWith("/")) baseUrl else "$baseUrl/"
-            isInitialized = true
-        }
-    }
-
     override suspend fun getProviderName(): String = "OpenAI"
 
     override suspend fun getAvailableModels(): List<String> {
-        if (!isProviderAvailable()) return defaultModels
+        refreshConfig()
+        if (apiKey.isBlank()) return defaultModels
         return try {
             val response = apiService.getModels("Bearer $apiKey")
             response.data.map { it.id }.filter { it.contains("gpt") }
@@ -60,7 +65,8 @@ class OpenAIProvider @Inject constructor(
     }
 
     override suspend fun isProviderAvailable(): Boolean {
-        return isInitialized && apiKey.isNotBlank()
+        refreshConfig()
+        return apiKey.isNotBlank()
     }
 
     override suspend fun summarizeNote(content: String): AIResult<String> {
@@ -135,8 +141,9 @@ class OpenAIProvider @Inject constructor(
         messages: List<com.suvojeet.notenext.data.remote.Message>,
         processor: (String) -> T
     ): AIResult<T> {
-        if (!isProviderAvailable()) {
-            return AIResult.AuthError("OpenAI not configured")
+        refreshConfig()
+        if (apiKey.isBlank()) {
+            return AIResult.AuthError("OpenAI API key not set. Add it in AI Settings.")
         }
 
         val selectedModel = settingsRepository.openAIModel.first()

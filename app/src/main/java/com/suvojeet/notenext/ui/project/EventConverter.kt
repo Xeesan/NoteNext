@@ -95,6 +95,20 @@ fun NotesEvent.toProjectNotesEvent(): ProjectNotesEvent {
         is NotesEvent.PreviousSearchResult -> ProjectNotesEvent.PreviousSearchResult
         is NotesEvent.LoadExternalFile -> ProjectNotesEvent.LoadExternalFile(this.uri)
         is NotesEvent.SaveExternalAsNote -> ProjectNotesEvent.SaveExternalAsNote
+
+        // AI advanced features are not yet wired into ProjectNotesViewModel.
+        // Tapping these inside a Project's note editor is a no-op until the
+        // feature is migrated to ProjectNotesEvent.
+        is NotesEvent.ShowToneRewriteSheet,
+        is NotesEvent.DismissToneRewriteSheet,
+        is NotesEvent.PickToneRewrite,
+        is NotesEvent.AcceptToneRewrite,
+        is NotesEvent.RetryToneRewrite,
+        is NotesEvent.AcceptSuggestedLabel,
+        is NotesEvent.DismissSuggestedLabels,
+        is NotesEvent.AcceptExtractedReminder,
+        is NotesEvent.DismissExtractedReminder,
+        is NotesEvent.OpenLinkedNote -> ProjectNotesEvent.NoOp
     }
 }
 

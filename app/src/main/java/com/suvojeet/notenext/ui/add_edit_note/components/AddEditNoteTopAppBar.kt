@@ -18,6 +18,7 @@ import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.PushPin
 import androidx.compose.material.icons.outlined.PushPin
 import androidx.compose.material.icons.filled.AutoAwesome
+import androidx.compose.material.icons.filled.AutoFixHigh
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.*
@@ -93,6 +94,16 @@ fun AddEditNoteTopAppBar(
                         modifier = Modifier.springPress()
                     ) {
                         Icon(Icons.Default.AutoAwesome, contentDescription = "Summarize Note", tint = contentColor)
+                    }
+                    IconButton(
+                        onClick = { onEvent(NotesEvent.ShowToneRewriteSheet) },
+                        modifier = Modifier.springPress()
+                    ) {
+                        Icon(
+                            Icons.Default.AutoFixHigh,
+                            contentDescription = "Rewrite tone",
+                            tint = contentColor
+                        )
                     }
                 }
                 

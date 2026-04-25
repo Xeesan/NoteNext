@@ -116,4 +116,19 @@ sealed class NotesEvent {
     data class OnNoteSearchQueryChange(val query: String) : NotesEvent()
     object NextSearchResult : NotesEvent()
     object PreviousSearchResult : NotesEvent()
+
+    // ─── AI advanced features ──────────────────────────────────────────
+    object ShowToneRewriteSheet : NotesEvent()
+    object DismissToneRewriteSheet : NotesEvent()
+    data class PickToneRewrite(val tone: com.suvojeet.notenext.data.ai.ToneOption) : NotesEvent()
+    object AcceptToneRewrite : NotesEvent()
+    object RetryToneRewrite : NotesEvent()
+
+    data class AcceptSuggestedLabel(val label: String) : NotesEvent()
+    object DismissSuggestedLabels : NotesEvent()
+
+    object AcceptExtractedReminder : NotesEvent()
+    object DismissExtractedReminder : NotesEvent()
+
+    data class OpenLinkedNote(val noteId: Int) : NotesEvent()
 }

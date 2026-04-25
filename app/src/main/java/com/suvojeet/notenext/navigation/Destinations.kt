@@ -55,6 +55,15 @@ sealed interface Destination {
     data object AIProviderSettings : Destination
 
     @Serializable
+    data object AISettings : Destination
+
+    @Serializable
+    data object AIFeatures : Destination
+
+    @Serializable
+    data object AIUsageDashboard : Destination
+
+    @Serializable
     data object Todo : Destination
     
     @Serializable

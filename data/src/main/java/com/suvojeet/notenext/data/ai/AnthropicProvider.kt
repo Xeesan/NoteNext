@@ -21,7 +21,6 @@ class AnthropicProvider @Inject constructor(
 ) : AIProviderService {
 
     private val mutex = Mutex()
-    private var isInitialized = false
     private var apiKey: String = ""
 
     private val defaultModels = listOf(
@@ -31,10 +30,9 @@ class AnthropicProvider @Inject constructor(
         "claude-haiku-4.5"
     )
 
-    suspend fun initialize(apiKey: String) {
+    private suspend fun refreshConfig() {
         mutex.withLock {
-            this.apiKey = apiKey
-            isInitialized = true
+            apiKey = settingsRepository.anthropicApiKey.first()
         }
     }
 
@@ -43,7 +41,8 @@ class AnthropicProvider @Inject constructor(
     override suspend fun getAvailableModels(): List<String> = defaultModels
 
     override suspend fun isProviderAvailable(): Boolean {
-        return isInitialized && apiKey.isNotBlank()
+        refreshConfig()
+        return apiKey.isNotBlank()
     }
 
     override suspend fun summarizeNote(content: String): AIResult<String> {
@@ -110,8 +109,9 @@ class AnthropicProvider @Inject constructor(
         userPrompt: String,
         processor: (String) -> T
     ): AIResult<T> {
-        if (!isProviderAvailable()) {
-            return AIResult.AuthError("Anthropic not configured")
+        refreshConfig()
+        if (apiKey.isBlank()) {
+            return AIResult.AuthError("Anthropic API key not set. Add it in AI Settings.")
         }
 
         val selectedModel = settingsRepository.anthropicModel.first()
