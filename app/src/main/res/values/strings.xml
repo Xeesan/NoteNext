@@ -37,6 +37,16 @@
     <string name="you_are_up_to_date">You are up to date</string>
     <string name="check_for_updates">Check for updates</string>
     <string name="checking_for_updates">Checking for updates…</string>
+    <string name="update_ready">Update Ready</string>
+    <string name="downloading_update">Downloading Update</string>
+    <string name="installing_update">Installing Update</string>
+    <string name="downloading_msg">We are downloading the latest version of NoteNext for you.</string>
+    <string name="installing_msg">Finalizing the update installation. This will take a moment.</string>
+    <string name="update_available_msg">We\'ve added some awesome new features and fixed bugs to improve your experience.</string>
+    <string name="downloading">Downloading…</string>
+    <string name="installing">Installing…</string>
+    <string name="run_in_background">Run in background</string>
+    <string name="later">Later</string>
     
     <!-- Navigation -->
     <string name="notes">Notes</string>

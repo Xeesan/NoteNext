@@ -62,6 +62,9 @@ class UpdateChecker(private val context: Context) {
         val updatePriority: Int = 0
     )
 
+    /**
+     * Internal listener for installation state changes.
+     */
     private val installStateListener = InstallStateUpdatedListener { state ->
         when (state.installStatus()) {
             InstallStatus.DOWNLOADING -> {
@@ -94,6 +97,11 @@ class UpdateChecker(private val context: Context) {
     }
 
     /**
+     * Flow-based version of update check for more reactive usage.
+     */
+    fun getUpdateStatusFlow(): Flow<UpdateStatus> = _updateStatus.asStateFlow()
+
+    /**
      * Checks for updates from the Play Store with internal throttling.
      */
     suspend fun checkForUpdate(force: Boolean = false): Result<UpdateResult> {
@@ -105,6 +113,10 @@ class UpdateChecker(private val context: Context) {
         
         if (!force && now - lastCheckTime < CHECK_THROTTLE_MS) {
             Log.d(TAG, "Check throttled. Last check was ${(now - lastCheckTime) / 1000}s ago.")
+            // Even if throttled, we might already have info
+            appUpdateInfo?.let { info ->
+                updateStatusFromInfo(info)
+            }
             return Result.failure(Exception("Throttled"))
         }
 
@@ -118,38 +130,16 @@ class UpdateChecker(private val context: Context) {
                     lastCheckTime = System.currentTimeMillis()
                     this.appUpdateInfo = info
                     
-                    // First, handle ongoing background installation/download
-                    if (info.installStatus() == InstallStatus.DOWNLOADED) {
-                        _updateStatus.value = UpdateStatus.Downloaded
-                    } else if (info.installStatus() == InstallStatus.DOWNLOADING) {
-                         appUpdateManager.registerListener(installStateListener)
-                         _updateStatus.value = UpdateStatus.Downloading
-                    }
-
-                    val availability = info.updateAvailability()
-                    val isAvailable = availability == UpdateAvailability.UPDATE_AVAILABLE || 
-                                      availability == UpdateAvailability.DEVELOPER_TRIGGERED_UPDATE_IN_PROGRESS
-                    
-                    val priority = info.updatePriority() // 0-5, 5 is highest
-                    val staleness = info.clientVersionStalenessDays() ?: 0
-                    
-                    // Recommend immediate if priority > 3 or staleness > 7 days
-                    val recommendImmediate = priority >= 4 || staleness > 7
-
-                    if (isAvailable && _updateStatus.value !is UpdateStatus.Downloaded) {
-                        _updateStatus.value = UpdateStatus.UpdateAvailable(info, recommendImmediate)
-                    } else if (!isAvailable && _updateStatus.value !is UpdateStatus.Downloaded) {
-                        _updateStatus.value = UpdateStatus.NoUpdateAvailable
-                    }
+                    updateStatusFromInfo(info)
 
                     continuation.resume(
                         Result.success(
                             UpdateResult(
-                                isUpdateAvailable = isAvailable,
+                                isUpdateAvailable = info.updateAvailability() == UpdateAvailability.UPDATE_AVAILABLE,
                                 availableVersionCode = info.availableVersionCode(),
                                 currentVersionCode = getCurrentVersionCode(),
                                 stalenessDays = info.clientVersionStalenessDays(),
-                                updatePriority = priority
+                                updatePriority = info.updatePriority()
                             )
                         )
                     )
@@ -159,6 +149,36 @@ class UpdateChecker(private val context: Context) {
                     _updateStatus.value = UpdateStatus.Error(exception.message ?: "Check failed")
                     continuation.resume(Result.failure(exception))
                 }
+        }
+    }
+
+    private fun updateStatusFromInfo(info: AppUpdateInfo) {
+        // First, handle ongoing background installation/download
+        if (info.installStatus() == InstallStatus.DOWNLOADED) {
+            _updateStatus.value = UpdateStatus.Downloaded
+            return
+        } 
+        
+        if (info.installStatus() == InstallStatus.DOWNLOADING) {
+             appUpdateManager.registerListener(installStateListener)
+             _updateStatus.value = UpdateStatus.Downloading
+             return
+        }
+
+        val availability = info.updateAvailability()
+        val isAvailable = availability == UpdateAvailability.UPDATE_AVAILABLE || 
+                          availability == UpdateAvailability.DEVELOPER_TRIGGERED_UPDATE_IN_PROGRESS
+        
+        val priority = info.updatePriority() // 0-5, 5 is highest
+        val staleness = info.clientVersionStalenessDays() ?: 0
+        
+        // Recommend immediate if priority > 3 or staleness > 7 days
+        val recommendImmediate = priority >= 4 || staleness > 7
+
+        if (isAvailable) {
+            _updateStatus.value = UpdateStatus.UpdateAvailable(info, recommendImmediate)
+        } else {
+            _updateStatus.value = UpdateStatus.NoUpdateAvailable
         }
     }
 

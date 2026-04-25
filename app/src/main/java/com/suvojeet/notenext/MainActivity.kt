@@ -214,13 +214,15 @@ class MainActivity : FragmentActivity() {
                         showUpdateDialog = true
                     }
                     is UpdateChecker.UpdateStatus.Downloaded -> {
-                        val result = snackbarHostState.showSnackbar(
-                            message = updateAvailableText,
-                            actionLabel = restartText,
-                            duration = androidx.compose.material3.SnackbarDuration.Indefinite
-                        )
-                        if (result == SnackbarResult.ActionPerformed) {
-                            viewModel.completeUpdate()
+                        if (!showUpdateDialog) {
+                            val result = snackbarHostState.showSnackbar(
+                                message = updateAvailableText,
+                                actionLabel = restartText,
+                                duration = androidx.compose.material3.SnackbarDuration.Indefinite
+                            )
+                            if (result == SnackbarResult.ActionPerformed) {
+                                viewModel.completeUpdate()
+                            }
                         }
                     }
                     else -> {}
@@ -229,9 +231,12 @@ class MainActivity : FragmentActivity() {
 
             if (showUpdateDialog) {
                 com.suvojeet.notenext.ui.components.UpdateAvailableDialog(
+                    updateStatus = updateStatus,
                     onUpdateClick = {
-                        showUpdateDialog = false
                         viewModel.startUpdate()
+                    },
+                    onCompleteUpdate = {
+                        viewModel.completeUpdate()
                     },
                     onDismiss = { showUpdateDialog = false }
                 )

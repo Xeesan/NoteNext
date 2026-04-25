@@ -57,9 +57,13 @@ import com.suvojeet.notenext.util.LogcatManager
 import android.widget.Toast
 
 @Composable
-fun SettingsScreen(onBackClick: () -> Unit, onNavigate: (String) -> Unit) {
+fun SettingsScreen(
+    onBackClick: () -> Unit, 
+    onNavigate: (String) -> Unit,
+    viewModel: com.suvojeet.notenext.ui.MainViewModel = hiltViewModel()
+) {
     val context = LocalContext.current
-    val settingsRepository = remember { SettingsRepository(context) }
+    val settingsRepository = viewModel.settingsRepository
     val scope = rememberCoroutineScope()
 
     val versionName = remember {
@@ -431,7 +435,7 @@ fun SettingsScreen(onBackClick: () -> Unit, onNavigate: (String) -> Unit) {
                                 iconColor = MaterialTheme.colorScheme.primary,
                                 onClick = { showRateDialog = true }
                             )
-                            CheckForUpdateItem(context = context)
+                            CheckForUpdateItem(viewModel = viewModel)
                             SettingsItem(
                                 icon = Icons.Rounded.NewReleases,
                                 title = "What's New",
@@ -633,78 +637,28 @@ private fun AutoDeleteDialog(currentDays: Int, onConfirm: (Int) -> Unit, onDismi
 }
 
 @Composable
-private fun CheckForUpdateItem(context: android.content.Context) {
-    var isChecking by remember { mutableStateOf(false) }
-    var showResultDialog by remember { mutableStateOf(false) }
-    var updateResult by remember { mutableStateOf<UpdateChecker.UpdateResult?>(null) }
-    var errorMessage by remember { mutableStateOf<String?>(null) }
+private fun CheckForUpdateItem(viewModel: com.suvojeet.notenext.ui.MainViewModel) {
+    val context = LocalContext.current
+    val updateStatus by viewModel.updateStatus.collectAsStateWithLifecycle()
     
-    val updateChecker = remember { UpdateChecker(context) }
-    val scope = rememberCoroutineScope()
+    val isChecking = updateStatus is UpdateChecker.UpdateStatus.Checking
     
     val currentVersionName = remember {
         try { context.packageManager.getPackageInfo(context.packageName, 0).versionName ?: "Unknown" }
         catch (e: Exception) { "Unknown" }
     }
 
-    // Pre-capture color
-    val updateIconColor = MaterialTheme.colorScheme.primary
-
     SettingsItem(
         icon = Icons.Rounded.Update,
         title = stringResource(R.string.check_for_updates),
-        subtitle = if (isChecking) stringResource(R.string.checking_for_updates) else errorMessage ?: "Current: v$currentVersionName",
-        iconColor = updateIconColor,
+        subtitle = if (isChecking) stringResource(R.string.checking_for_updates) else "Current: v$currentVersionName",
+        iconColor = MaterialTheme.colorScheme.primary,
         onClick = {
-            if (isChecking) return@SettingsItem
-            isChecking = true
-            errorMessage = null
-            scope.launch {
-                updateChecker.checkForUpdate()
-                    .onSuccess { result ->
-                        updateResult = result
-                        showResultDialog = true
-                        isChecking = false
-                    }
-                    .onFailure { error ->
-                        errorMessage = error.message ?: "Check failed"
-                        isChecking = false
-                    }
+            if (!isChecking) {
+                viewModel.checkForUpdate()
             }
         }
     )
-    
-    if (showResultDialog) {
-        val result = updateResult ?: return
-        AlertDialog(
-            onDismissRequest = { showResultDialog = false },
-            shape = MaterialTheme.shapes.extraLarge,
-            title = { Text(if (result.isUpdateAvailable) stringResource(R.string.update_available) else stringResource(R.string.you_are_up_to_date)) },
-            text = { 
-                Column {
-                    Text(if (result.isUpdateAvailable) 
-                        "A new version of NoteNext is available on the Play Store." 
-                        else "You're running the latest version of NoteNext.")
-                    
-                    if (result.isUpdateAvailable) {
-                        Spacer(modifier = Modifier.height(8.dp))
-                        Text("New Version: ${result.availableVersionCode}", style = MaterialTheme.typography.bodySmall)
-                    }
-                }
-            },
-            confirmButton = {
-                if (result.isUpdateAvailable) {
-                    Button(onClick = {
-                        showResultDialog = false
-                        (context as? android.app.Activity)?.let { updateChecker.startUpdate(it) }
-                    }, modifier = Modifier.springPress()) { Text(stringResource(R.string.update_now)) }
-                } else {
-                    TextButton(onClick = { showResultDialog = false }, modifier = Modifier.springPress()) { Text(stringResource(R.string.ok)) }
-                }
-            },
-            dismissButton = if (result.isUpdateAvailable) { { TextButton(onClick = { showResultDialog = false }, modifier = Modifier.springPress()) { Text(stringResource(R.string.cancel)) } } } else null
-        )
-    }
 }
 
 @Composable
