@@ -107,4 +107,5 @@ sealed class ProjectNotesEvent {
     // Project Todo Events
     data class ToggleTodoComplete(val todo: com.suvojeet.notenext.data.TodoItem) : ProjectNotesEvent()
     data class DeleteTodo(val todo: com.suvojeet.notenext.data.TodoItem) : ProjectNotesEvent()
+    data class ShareTodo(val todo: com.suvojeet.notenext.data.TodoWithSubtasks) : ProjectNotesEvent()
 }

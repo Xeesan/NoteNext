@@ -99,7 +99,7 @@ class ProjectNotesViewModel @Inject constructor(
 
             combine(
                 repository.getNoteSummariesByProjectId(projectId),
-                todoRepository.getTodosByProjectId(projectId),
+                todoRepository.getTodosByProject(projectId),
                 repository.getLabels(),
                 _sortType
             ) { notes, todos, labels, sortType ->
@@ -1264,6 +1264,26 @@ class ProjectNotesViewModel @Inject constructor(
             is ProjectNotesEvent.DeleteTodo -> {
                 viewModelScope.launch {
                     todoRepository.deleteTodo(event.todo)
+                }
+            }
+            is ProjectNotesEvent.ShareTodo -> {
+                viewModelScope.launch {
+                    val todo = event.todo.todo
+                    val subtasks = event.todo.subtasks
+
+                    val sb = StringBuilder()
+                    if (todo.description.isNotBlank()) {
+                        sb.append(todo.description).append("\n\n")
+                    }
+
+                    if (subtasks.isNotEmpty()) {
+                        subtasks.forEach { subtask ->
+                            val status = if (subtask.isChecked) "[x]" else "[ ]"
+                            sb.append("$status ${subtask.text}\n")
+                        }
+                    }
+
+                    _events.emit(ProjectNotesUiEvent.SendNotes(todo.title, sb.toString()))
                 }
             }
             is ProjectNotesEvent.ConvertToTodo -> {

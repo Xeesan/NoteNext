@@ -483,15 +483,7 @@ fun ProjectNotesScreen(
                                                             onDelete = { viewModel.onEvent(ProjectNotesEvent.DeleteTodo(todoWithSubtasks.todo)) },
                                                             onConvertToNote = { /* Implement if needed */ },
                                                             onShare = { 
-                                                                val sb = StringBuilder()
-                                                                if (todoWithSubtasks.todo.description.isNotBlank()) {
-                                                                    sb.append(todoWithSubtasks.todo.description).append("\n\n")
-                                                                }
-                                                                todoWithSubtasks.subtasks.forEach { subtask ->
-                                                                    val status = if (subtask.isChecked) "[x]" else "[ ]"
-                                                                    sb.append("$status ${subtask.text}\n")
-                                                                }
-                                                                viewModel.onEvent(ProjectNotesUiEvent.SendNotes(todoWithSubtasks.todo.title, sb.toString()).toProjectNotesEvent()) // Reusing SendNotes
+                                                                viewModel.onEvent(ProjectNotesEvent.ShareTodo(todoWithSubtasks))
                                                             }
                                                         )
                                                     }
@@ -597,15 +589,7 @@ fun ProjectNotesScreen(
                                                             onDelete = { viewModel.onEvent(ProjectNotesEvent.DeleteTodo(todoWithSubtasks.todo)) },
                                                             onConvertToNote = { },
                                                             onShare = {
-                                                                val sb = StringBuilder()
-                                                                if (todoWithSubtasks.todo.description.isNotBlank()) {
-                                                                    sb.append(todoWithSubtasks.todo.description).append("\n\n")
-                                                                }
-                                                                todoWithSubtasks.subtasks.forEach { subtask ->
-                                                                    val status = if (subtask.isChecked) "[x]" else "[ ]"
-                                                                    sb.append("$status ${subtask.text}\n")
-                                                                }
-                                                                viewModel.onEvent(ProjectNotesUiEvent.SendNotes(todoWithSubtasks.todo.title, sb.toString()).toProjectNotesEvent())
+                                                                viewModel.onEvent(ProjectNotesEvent.ShareTodo(todoWithSubtasks))
                                                             }
                                                         )
                                                     }
