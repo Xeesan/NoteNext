@@ -74,6 +74,7 @@ fun AddEditNoteScreen(
     state: NotesEditState,
     onEvent: (NotesEvent) -> Unit,
     onDismiss: () -> Unit,
+    onNavigateToToneRewrite: () -> Unit = {},
     themeMode: ThemeMode,
     settingsRepository: SettingsRepository,
     events: SharedFlow<NotesUiEvent>,
@@ -317,6 +318,7 @@ fun AddEditNoteScreen(
                         state = state,
                         onEvent = onEvent,
                         onDismiss = onDismiss,
+                        onNavigateToToneRewrite = onNavigateToToneRewrite,
                         editingNoteType = state.editingNoteType,
                         onToggleFocusMode = { isFocusMode = !isFocusMode },
                         isFocusMode = isFocusMode,
@@ -694,22 +696,7 @@ fun AddEditNoteScreen(
         )
     }
 
-    if (state.showToneRewriteSheet) {
-        AiToneRewriteSheet(
-            sourceText = state.editingContent.text,
-            rewrittenText = state.toneRewriteResult,
-            isLoading = state.isToneRewriting,
-            selectedTone = state.toneRewriteSelectedTone,
-            errorMessage = state.toneRewriteError,
-            onPickTone = { onEvent(NotesEvent.PickToneRewrite(it)) },
-            onAccept = { onEvent(NotesEvent.AcceptToneRewrite) },
-            onTryAgain = { onEvent(NotesEvent.RetryToneRewrite) },
-            onDismiss = { onEvent(NotesEvent.DismissToneRewriteSheet) }
-        )
-    }
-    
-    if (showReminderDialog) {
-        ModalBottomSheet(
+    if (showReminderDialog) {        ModalBottomSheet(
             onDismissRequest = { showReminderDialog = false },
             sheetState = reminderSheetState,
             containerColor = MaterialTheme.colorScheme.surfaceContainerHigh,

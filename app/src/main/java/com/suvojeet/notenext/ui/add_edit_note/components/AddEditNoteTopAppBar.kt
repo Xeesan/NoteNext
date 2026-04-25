@@ -41,6 +41,7 @@ fun AddEditNoteTopAppBar(
     state: NotesEditState,
     onEvent: (NotesEvent) -> Unit,
     onDismiss: () -> Unit,
+    onNavigateToToneRewrite: () -> Unit,
     editingNoteType: NoteType,
     onToggleFocusMode: () -> Unit,
     isFocusMode: Boolean,
@@ -96,7 +97,7 @@ fun AddEditNoteTopAppBar(
                         Icon(Icons.Default.AutoAwesome, contentDescription = "Summarize Note", tint = contentColor)
                     }
                     IconButton(
-                        onClick = { onEvent(NotesEvent.ShowToneRewriteSheet) },
+                        onClick = onNavigateToToneRewrite,
                         modifier = Modifier.springPress()
                     ) {
                         Icon(

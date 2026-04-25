@@ -71,4 +71,7 @@ sealed interface Destination {
     
     @Serializable
     data object Drawing : Destination
+
+    @Serializable
+    data object ToneRewrite : Destination
 }

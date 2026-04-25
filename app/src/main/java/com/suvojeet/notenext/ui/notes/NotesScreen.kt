@@ -66,6 +66,7 @@ import com.suvojeet.notenext.R
 import com.suvojeet.notenext.ui.reminder.ReminderSetDialog
 import com.suvojeet.notenext.util.findActivity
 import kotlinx.coroutines.flow.SharedFlow
+import com.suvojeet.notenext.navigation.Destination
 
 @Composable
 fun NotesScreen(
@@ -74,6 +75,7 @@ fun NotesScreen(
     onArchiveClick: () -> Unit,
     onEditLabelsClick: () -> Unit,
     onBinClick: () -> Unit,
+    onToneRewriteClick: () -> Unit = {},
     themeMode: ThemeMode,
     settingsRepository: SettingsRepository,
     onMenuClick: () -> Unit,
@@ -653,6 +655,7 @@ fun NotesScreen(
                     state = editState,
                     onEvent = viewModel::onEvent,
                     onDismiss = { viewModel.onEvent(NotesEvent.CollapseNote) },
+                    onNavigateToToneRewrite = onToneRewriteClick,
                     themeMode = themeMode,
                     settingsRepository = settingsRepository,
                     events = viewModel.events,

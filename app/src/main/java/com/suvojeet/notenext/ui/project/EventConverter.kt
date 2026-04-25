@@ -99,8 +99,6 @@ fun NotesEvent.toProjectNotesEvent(): ProjectNotesEvent {
         // AI advanced features are not yet wired into ProjectNotesViewModel.
         // Tapping these inside a Project's note editor is a no-op until the
         // feature is migrated to ProjectNotesEvent.
-        is NotesEvent.ShowToneRewriteSheet,
-        is NotesEvent.DismissToneRewriteSheet,
         is NotesEvent.PickToneRewrite,
         is NotesEvent.AcceptToneRewrite,
         is NotesEvent.RetryToneRewrite,

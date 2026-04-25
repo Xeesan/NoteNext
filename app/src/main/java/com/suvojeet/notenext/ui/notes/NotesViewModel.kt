@@ -1297,24 +1297,6 @@ class NotesViewModel @Inject constructor(
                 }
             }
             // ─── AI advanced features (Tone Rewriter, Auto-tag, Smart Reminder, Linked Notes) ──
-            is NotesEvent.ShowToneRewriteSheet -> {
-                editorDelegate.updateState { it.copy(
-                    showToneRewriteSheet = true,
-                    toneRewriteSelectedTone = null,
-                    toneRewriteResult = null,
-                    toneRewriteError = null,
-                    isToneRewriting = false
-                ) }
-            }
-            is NotesEvent.DismissToneRewriteSheet -> {
-                editorDelegate.updateState { it.copy(
-                    showToneRewriteSheet = false,
-                    toneRewriteSelectedTone = null,
-                    toneRewriteResult = null,
-                    toneRewriteError = null,
-                    isToneRewriting = false
-                ) }
-            }
             is NotesEvent.PickToneRewrite -> {
                 runToneRewrite(event.tone)
             }
@@ -1326,7 +1308,6 @@ class NotesViewModel @Inject constructor(
                 editorDelegate.updateState { st ->
                     st.copy(
                         editingContent = TextFieldValue(rewritten),
-                        showToneRewriteSheet = false,
                         toneRewriteResult = null,
                         toneRewriteSelectedTone = null
                     )

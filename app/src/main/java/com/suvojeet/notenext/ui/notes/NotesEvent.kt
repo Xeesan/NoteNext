@@ -118,8 +118,6 @@ sealed class NotesEvent {
     object PreviousSearchResult : NotesEvent()
 
     // ─── AI advanced features ──────────────────────────────────────────
-    object ShowToneRewriteSheet : NotesEvent()
-    object DismissToneRewriteSheet : NotesEvent()
     data class PickToneRewrite(val tone: com.suvojeet.notenext.data.ai.ToneOption) : NotesEvent()
     object AcceptToneRewrite : NotesEvent()
     object RetryToneRewrite : NotesEvent()

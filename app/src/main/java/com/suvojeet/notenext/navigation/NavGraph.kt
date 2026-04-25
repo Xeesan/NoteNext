@@ -76,6 +76,7 @@ import com.suvojeet.notenext.ui.project.ProjectNotesViewModel
 import com.suvojeet.notenext.ui.project.toNotesEditState
 import com.suvojeet.notenext.ui.project.toProjectNotesEvent
 import com.suvojeet.notenext.ui.add_edit_note.AddEditNoteScreen
+import com.suvojeet.notenext.ui.add_edit_note.ToneRewriteScreen
 import com.suvojeet.notenext.ui.theme.ThemeMode
 import com.suvojeet.notenext.data.LinkPreviewRepository
 import com.suvojeet.notenext.data.repository.SettingsRepository
@@ -509,6 +510,7 @@ private fun NavGraphBuilder.notesRoute(
             onArchiveClick = { navController.navigate(Destination.Archive) },
             onEditLabelsClick = { navController.navigate(Destination.EditLabels) },
             onBinClick = { navController.navigate(Destination.Bin) },
+            onToneRewriteClick = { navController.navigate(Destination.ToneRewrite) },
             themeMode = themeMode,
             settingsRepository = settingsRepository,
             onMenuClick = onMenuClick,
@@ -698,6 +700,7 @@ private fun NavGraphBuilder.sharedRoutes(
         exitTransition = { slideExit }
     ) {
         ProjectNotesScreen(
+            navController = navController,
             onBackClick = { navController.popBackStack() },
             themeMode = themeMode,
             settingsRepository = settingsRepository
@@ -731,6 +734,18 @@ private fun NavGraphBuilder.sharedRoutes(
                 navController.popBackStack()
             },
             onDismiss = { navController.popBackStack() }
+        )
+    }
+
+    composable<Destination.ToneRewrite>(
+        enterTransition = { slideEnter },
+        exitTransition = { slideExit }
+    ) {
+        val editState by notesViewModel.editState.collectAsState()
+        ToneRewriteScreen(
+            state = editState,
+            onEvent = notesViewModel::onEvent,
+            onBack = { navController.popBackStack() }
         )
     }
 }

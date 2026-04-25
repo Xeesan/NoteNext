@@ -92,7 +92,6 @@ data class NotesEditState(
 
     // ─── AI advanced features (gated by AIFeatureGate) ─────────────────
     // Tone rewriter
-    val showToneRewriteSheet: Boolean = false,
     val toneRewriteSelectedTone: com.suvojeet.notenext.data.ai.ToneOption? = null,
     val toneRewriteResult: String? = null,
     val isToneRewriting: Boolean = false,
