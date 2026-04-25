@@ -66,7 +66,7 @@ fun UpdateAvailableDialog(
                         when (status) {
                             is UpdateChecker.UpdateStatus.Downloaded -> {
                                 Icon(
-                                    imageVector = Icons.Default.AutoAwesome,
+                                    imageVector = Icons.Outlined.AutoAwesome,
                                     contentDescription = null,
                                     modifier = Modifier.size(44.dp),
                                     tint = MaterialTheme.colorScheme.onTertiaryContainer
@@ -198,7 +198,7 @@ fun UpdateAvailableDialog(
                     )
                 } else {
                     Icon(
-                        imageVector = if (isDownloaded) Icons.Default.AutoAwesome else Icons.Default.SystemUpdate, 
+                        imageVector = if (isDownloaded) Icons.Outlined.AutoAwesome else Icons.Default.SystemUpdate, 
                         contentDescription = null
                     )
                 }

@@ -12,7 +12,7 @@ This document is the single source of truth for **how AI works in NoteNext, what
 - **AI is OFF by default.** Nothing leaves your device until you flip the master switch in Settings → AI.
 - **Even with the master switch on, every individual feature is OFF.** You opt in to each one.
 - **Only the relevant text** for the feature you triggered is sent to the provider you chose. Never your whole database, never attachments, never labels in bulk.
-- **A bundled Groq API key** ships with the app for convenience. You can replace it with your own (Groq, OpenAI, Anthropic, or Google Gemini) at any time.
+- **A bundled AI API key** ships with the app for convenience. You can replace it with your own (AI, OpenAI, Anthropic, or Google Gemini) at any time.
 - **All usage is tracked locally** so you can see exactly what AI did. Nothing in the dashboard ever leaves your device. You can clear it with one tap.
 
 ---
@@ -26,7 +26,7 @@ AI Settings (hub)
 ├── Master switch ─────────────── one-tap kill switch for all AI
 ├── AI Features ──────────────── per-feature on/off (10 features)
 ├── Usage Dashboard ───────────── local-only stats, charts, history
-├── Provider picker ──────────── Groq / OpenAI / Anthropic / Gemini
+├── Provider picker ──────────── AI / OpenAI / Anthropic / Gemini
 ├── (per-provider) API key + model + base URL
 └── Track usage locally ────────── opt-out telemetry (default ON, never leaves device)
 ```
@@ -62,9 +62,9 @@ It uses local-only keyword overlap (a Jaccard similarity over note tokens) to fi
 When you tap (say) "Summarize" on a note, here's the exact sequence:
 
 1. **Gate check.** `AIFeatureGate.isEnabled(SUMMARIZE)` returns `true` only if **both** the master switch AND the per-feature toggle are on. If either is off, you get a toast: *"Summarize is disabled in AI Settings"* and **no network call is made**.
-2. **Provider lookup.** `AIProviderManager.getActiveProvider()` reads your preferred provider from local DataStore (default: Groq).
+2. **Provider lookup.** `AIProviderManager.getActiveProvider()` reads your preferred provider from local DataStore (default: AI).
 3. **Network request.** The relevant note text (and only the relevant text) is sent over HTTPS to the provider's official endpoint:
-   - Groq → `https://api.groq.com/openai/v1/chat/completions`
+   - AI → `https://api.ai.com/openai/v1/chat/completions`
    - OpenAI → `https://api.openai.com/v1/chat/completions` (or your custom base URL)
    - Anthropic → `https://api.anthropic.com/v1/messages`
    - Gemini → `https://generativelanguage.googleapis.com/`
@@ -94,22 +94,22 @@ You can audit every step of this in:
 
 | Provider | Cost | Latency | Quality | Key required? |
 |----------|------|---------|---------|---------------|
-| **Groq** *(default)* | Free with bundled key (rate-limited, shared) | Very fast (sub-second) | Good (Llama 3.3, Llama 4) | Optional |
+| **AI** *(default)* | Free with bundled key (rate-limited, shared) | Very fast (sub-second) | Good (Llama 3.3, Llama 4) | Optional |
 | **OpenAI** | Paid (cents per call) | ~1–2s | Excellent (GPT-4o, GPT-4.1) | Yes |
 | **Anthropic** | Paid (cents per call) | ~1–2s | Excellent (Claude Sonnet, Haiku) | Yes |
 | **Google Gemini** | Free tier available | ~1s | Very good (Gemini Flash, Pro) | Yes |
 
-### Bundled Groq key
+### Bundled AI key
 
-The app ships with an encrypted, app-wide Groq API key (`BuildConfig.GROQ_API_KEY_ENC`, XOR-decoded at runtime). It's the *default* provider so AI works out of the box.
+The app ships with an encrypted, app-wide AI API key (`BuildConfig.GROQ_API_KEY_ENC`, XOR-decoded at runtime). It's the *default* provider so AI works out of the box.
 
 **Caveats of the bundled key:**
 - It's shared with all NoteNext users → can hit rate limits during peak usage.
 - We may rotate or revoke it at any time.
 - Some advanced features (e.g. extra-long contexts) may be capped.
 
-**To use your own Groq key:**
-Settings → AI → Provider: Groq → toggle "Use my own Groq key" → paste key from https://console.groq.com/keys.
+**To use your own AI key:**
+Settings → AI → Provider: AI → toggle "Use my own AI key" → paste key from https://console.ai.com/keys.
 
 ### Bringing your own key (any provider)
 
@@ -144,10 +144,10 @@ What it does NOT show, ever:
 
 ## What changes for existing users (v1.3.x → v1.4.0)
 
-- **Two old screens replaced with one:** "Groq AI Settings" + "AI Providers" → unified into "AI".
+- **Two old screens replaced with one:** "AI AI Settings" + "AI Providers" → unified into "AI".
 - **All AI features now default to OFF.** This is a privacy hardening change. If you used summarize/checklist/grammar before, you'll need to flip them back on under Settings → AI → AI Features. (We considered preserving prior usage as implicit consent but decided in favor of explicit opt-in, even with the friction.)
 - **A new database migration runs on first launch (v27 → v28).** It creates the local `ai_usage_events` table. Empty by default.
-- **Your API keys (custom Groq key, OpenAI key, Anthropic key, Gemini key) are preserved** — they were stored in DataStore, not the database.
+- **Your API keys (custom AI key, OpenAI key, Anthropic key, Gemini key) are preserved** — they were stored in DataStore, not the database.
 
 ---
 
@@ -165,7 +165,7 @@ data/.../data/ai/
 ├── AIUsageDao.kt                queries powering the dashboard
 ├── AIUsageRepository.kt         honors usageTrackingEnabled
 ├── ToneOption.kt                tone enum + ExtractedReminder + LabelSuggestion
-├── GroqProvider.kt              auth via NetworkModule.authInterceptor
+├── AIProvider.kt              auth via NetworkModule.authInterceptor
 ├── OpenAIProvider.kt            auto-loads key from settings
 ├── AnthropicProvider.kt         auto-loads key from settings
 └── GeminiProvider.kt            auto-loads key from settings
@@ -173,14 +173,14 @@ data/.../data/ai/
 app/.../ui/settings/ai/
 ├── AISettingsScreen.kt          unified hub (replaces both legacy screens)
 ├── AISettingsViewModel.kt
-├── AIProviderConfigSections.kt  per-provider config UI (Groq/OpenAI/Anthropic/Gemini)
+├── AIProviderConfigSections.kt  per-provider config UI (AI/OpenAI/Anthropic/Gemini)
 ├── AIFeaturesScreen.kt          per-feature toggles, grouped by trigger style
 ├── AIFeaturesViewModel.kt
 ├── AIUsageDashboardScreen.kt    bar charts + per-feature details
 └── AIUsageDashboardViewModel.kt
 
 app/.../ui/notes/delegate/
-├── AIDelegate.kt                LEGACY — wraps GroqRepository for old features
+├── AIDelegate.kt                LEGACY — wraps AiRepository for old features
 └── AISuggestionsDelegate.kt     NEW — auto-tag, smart reminder, linked notes, tone rewrite
 
 app/.../ui/add_edit_note/components/
@@ -208,8 +208,8 @@ ai_feature_linked_notes          : Boolean (default false)
 ai_feature_tone_rewrite          : Boolean (default false)
 ai_feature_custom_prompt         : Boolean (default false)
 preferred_ai_provider            : String  (default "GROQ")
-custom_groq_key                  : String
-use_custom_groq_key              : Boolean
+custom_ai_key                  : String
+use_custom_ai_key              : Boolean
 openai_api_key | openai_base_url | openai_model
 anthropic_api_key | anthropic_model
 gemini_api_key | gemini_model
@@ -246,10 +246,10 @@ You triggered a feature whose per-feature toggle is off (or the master switch is
 Your custom key for the active provider is wrong or expired. Open Settings → AI → tap the provider → re-paste the key.
 
 ### "Rate limited"
-You're hitting Groq's shared key limit (or your own provider's limit). Either:
+You're hitting AI's shared key limit (or your own provider's limit). Either:
 - Wait a few seconds and retry.
 - Switch to a different provider.
-- Use your own Groq key (higher per-account limits).
+- Use your own AI key (higher per-account limits).
 
 ### Auto-tag/smart-reminder never fires
 - Master switch must be ON.

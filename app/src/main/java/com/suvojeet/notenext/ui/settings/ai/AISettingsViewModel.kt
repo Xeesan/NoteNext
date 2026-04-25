@@ -25,7 +25,7 @@ import javax.inject.Inject
  * main Settings screen. From here they can:
  *  - flip the master kill-switch (one toggle disables every AI feature instantly)
  *  - pick which provider to use
- *  - enter API keys for any provider (Groq is bundled — optional override)
+ *  - enter API keys for any provider (AI is bundled — optional override)
  *  - jump to the per-feature toggles screen
  *  - jump to the usage dashboard
  */

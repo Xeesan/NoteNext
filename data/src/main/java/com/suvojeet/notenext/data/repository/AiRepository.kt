@@ -29,21 +29,21 @@ import javax.inject.Singleton
 /**
  * Task 3.6: Sealed class for classified AI results
  */
-sealed class GroqResult<out T> {
-    data class Success<T>(val data: T) : GroqResult<T>()
-    data class RateLimited(val retryAfterSeconds: Int) : GroqResult<Nothing>()
-    object InvalidKey : GroqResult<Nothing>()
-    data class NetworkError(val message: String) : GroqResult<Nothing>()
-    object AllModelsFailed : GroqResult<Nothing>()
+sealed class AiResult<out T> {
+    data class Success<T>(val data: T) : AiResult<T>()
+    data class RateLimited(val retryAfterSeconds: Int) : AiResult<Nothing>()
+    object InvalidKey : AiResult<Nothing>()
+    data class NetworkError(val message: String) : AiResult<Nothing>()
+    object AllModelsFailed : AiResult<Nothing>()
 }
 
-inline fun <T> GroqResult<T>.onSuccess(action: (T) -> Unit): GroqResult<T> {
-    if (this is GroqResult.Success) action(data)
+inline fun <T> AiResult<T>.onSuccess(action: (T) -> Unit): AiResult<T> {
+    if (this is AiResult.Success) action(data)
     return this
 }
 
-inline fun <T> GroqResult<T>.onFailure(action: (GroqResult<Nothing>) -> Unit): GroqResult<T> {
-    if (this !is GroqResult.Success) action(this as GroqResult<Nothing>)
+inline fun <T> AiResult<T>.onFailure(action: (AiResult<Nothing>) -> Unit): AiResult<T> {
+    if (this !is AiResult.Success) action(this as AiResult<Nothing>)
     return this
 }
 
@@ -79,7 +79,7 @@ object GroqRateLimitManager {
 }
 
 @Singleton
-class GroqRepository @Inject constructor(
+class AiRepository @Inject constructor(
     private val apiService: GroqApiService,
     private val settingsRepository: SettingsRepository,
     private val aiProviderManager: com.suvojeet.notenext.data.ai.AIProviderManager
@@ -92,7 +92,7 @@ class GroqRepository @Inject constructor(
     private val grammarCache = LruCache<String, String>(50)
 
     // Task 3.4: Request deduplication map
-    private val inFlightRequests = ConcurrentHashMap<String, Deferred<GroqResult<*>>>()
+    private val inFlightRequests = ConcurrentHashMap<String, Deferred<AiResult<*>>>()
     private val requestMutex = Mutex()
 
     /**
@@ -147,7 +147,7 @@ class GroqRepository @Inject constructor(
         messages: List<Message>,
         maxRetriesPerModel: Int = 2,
         processor: (String) -> T
-    ): GroqResult<T> {
+    ): AiResult<T> {
         val models = getTargetModels(isFast)
         var lastException: Exception? = null
 
@@ -166,7 +166,7 @@ class GroqRepository @Inject constructor(
                     val content = response.choices.firstOrNull()?.message?.content
                     
                     if (content != null) {
-                        return GroqResult.Success(processor(content))
+                        return AiResult.Success(processor(content))
                     } else {
                         lastException = Exception("Empty response from $model")
                         break
@@ -183,7 +183,7 @@ class GroqRepository @Inject constructor(
                     }
                     
                     if (message.contains("401")) {
-                        return GroqResult.InvalidKey
+                        return AiResult.InvalidKey
                     }
                     
                     if (message.contains("503") || message.contains("502") || e is IOException) {
@@ -201,15 +201,15 @@ class GroqRepository @Inject constructor(
         }
 
         return lastException?.let {
-            GroqResult.NetworkError(it.message ?: "Unknown error occurred")
-        } ?: GroqResult.AllModelsFailed
+            AiResult.NetworkError(it.message ?: "Unknown error occurred")
+        } ?: AiResult.AllModelsFailed
     }
 
     private fun executeWithRetryStream(
         isFast: Boolean,
         messages: List<Message>,
         maxRetriesPerModel: Int = 2
-    ): Flow<GroqResult<String>> = flow {
+    ): Flow<AiResult<String>> = flow {
         val models = getTargetModels(isFast)
         var lastException: Exception? = null
 
@@ -238,7 +238,7 @@ class GroqRepository @Inject constructor(
                                     val content = streamResponse.choices.firstOrNull()?.delta?.content
                                     if (content != null) {
                                         accumulated.append(content)
-                                        emit(GroqResult.Success(accumulated.toString()))
+                                        emit(AiResult.Success(accumulated.toString()))
                                     }
                                 } catch (e: Exception) {
                                     // Ignore parse errors for partial chunks
@@ -258,7 +258,7 @@ class GroqRepository @Inject constructor(
                     }
                     
                     if (message.contains("401")) {
-                        emit(GroqResult.InvalidKey)
+                        emit(AiResult.InvalidKey)
                         return@flow
                     }
                     
@@ -275,8 +275,8 @@ class GroqRepository @Inject constructor(
         }
 
         lastException?.let {
-            emit(GroqResult.NetworkError(it.message ?: "Unknown error occurred"))
-        } ?: emit(GroqResult.AllModelsFailed)
+            emit(AiResult.NetworkError(it.message ?: "Unknown error occurred"))
+        } ?: emit(AiResult.AllModelsFailed)
     }
 
     /**
@@ -285,8 +285,8 @@ class GroqRepository @Inject constructor(
     @Suppress("UNCHECKED_CAST")
     private suspend fun <T> deduplicate(
         key: String,
-        block: suspend () -> GroqResult<T>
-    ): GroqResult<T> = coroutineScope {
+        block: suspend () -> AiResult<T>
+    ): AiResult<T> = coroutineScope {
         val deferred = requestMutex.withLock {
             val existing = inFlightRequests[key]
             if (existing != null) {
@@ -303,12 +303,12 @@ class GroqRepository @Inject constructor(
                 newDeferred
             }
         }
-        deferred.await() as GroqResult<T>
+        deferred.await() as AiResult<T>
     }
 
-    fun summarizeNote(content: String): Flow<GroqResult<String>> = flow {
+    fun summarizeNote(content: String): Flow<AiResult<String>> = flow {
         summaryCache.get(content)?.let {
-            emit(GroqResult.Success(it))
+            emit(AiResult.Success(it))
             return@flow
         }
 
@@ -324,7 +324,7 @@ class GroqRepository @Inject constructor(
         emitAll(
             executeWithRetryStream(isFast, messages)
                 .onEach { result ->
-                    if (result is GroqResult.Success) {
+                    if (result is AiResult.Success) {
                         finalSummary = result.data
                     }
                 }
@@ -335,9 +335,9 @@ class GroqRepository @Inject constructor(
         }
     }
 
-    fun generateChecklist(topic: String): Flow<GroqResult<List<String>>> = flow {
+    fun generateChecklist(topic: String): Flow<AiResult<List<String>>> = flow {
         checklistCache.get(topic)?.let {
-            emit(GroqResult.Success(it))
+            emit(AiResult.Success(it))
             return@flow
         }
 
@@ -364,13 +364,13 @@ class GroqRepository @Inject constructor(
             }
         }
         
-        if (result is GroqResult.Success) {
+        if (result is AiResult.Success) {
             checklistCache.put(topic, result.data)
         }
         emit(result)
     }
 
-    fun generateTodos(input: String): Flow<GroqResult<List<Pair<String, String>>>> = flow {
+    fun generateTodos(input: String): Flow<AiResult<List<Pair<String, String>>>> = flow {
         val result = deduplicate("todos_${input.hashCode()}") {
             val messages = listOf(
                 Message(
@@ -400,9 +400,9 @@ class GroqRepository @Inject constructor(
         emit(result)
     }
 
-    fun fixGrammar(text: String): Flow<GroqResult<String>> = flow {
+    fun fixGrammar(text: String): Flow<AiResult<String>> = flow {
         grammarCache.get(text)?.let {
-            emit(GroqResult.Success(it))
+            emit(AiResult.Success(it))
             return@flow
         }
 
@@ -418,7 +418,7 @@ class GroqRepository @Inject constructor(
             executeWithRetry(true, messages) { it.trim() }
         }
         
-        if (result is GroqResult.Success) {
+        if (result is AiResult.Success) {
             grammarCache.put(text, result.data)
         }
         emit(result)

@@ -22,6 +22,10 @@ import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
+import androidx.compose.material.icons.outlined.AutoAwesome
+import androidx.compose.material.icons.outlined.Refresh
+import androidx.compose.material.icons.outlined.Add
+import androidx.compose.material.icons.outlined.Close
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -113,7 +117,7 @@ fun AiChecklistSheet(
                     ) {
                         Box(contentAlignment = Alignment.Center) {
                             Icon(
-                                imageVector = Icons.Default.AutoAwesome,
+                                imageVector = Icons.Outlined.AutoAwesome,
                                 contentDescription = null,
                                 tint = MaterialTheme.colorScheme.onPrimaryContainer,
                                 modifier = Modifier.size(24.dp)
@@ -129,14 +133,14 @@ fun AiChecklistSheet(
                             letterSpacing = (-0.5).sp
                         )
                         Text(
-                            text = "Powered by Groq AI",
+                            text = "Powered by AI",
                             style = MaterialTheme.typography.labelSmall,
                             color = MaterialTheme.colorScheme.primary,
                             fontWeight = FontWeight.Bold
                         )
                     }
                     IconButton(onClick = onDismiss, modifier = Modifier.springPress()) {
-                        Icon(Icons.Default.Close, contentDescription = "Close")
+                        Icon(Icons.Outlined.Close, contentDescription = "Close")
                     }
                 }
                 
@@ -231,7 +235,7 @@ fun AiChecklistSheet(
                                     modifier = Modifier.springPress()
                                 ) {
                                     Icon(
-                                        Icons.Default.Refresh,
+                                        Icons.Outlined.Refresh,
                                         contentDescription = "Regenerate",
                                         tint = MaterialTheme.colorScheme.primary
                                     )
@@ -389,7 +393,7 @@ fun AiChecklistSheet(
                                 .springPress(),
                             shape = CircleShape
                         ) {
-                            Icon(Icons.Default.Add, contentDescription = null)
+                            Icon(Icons.Outlined.Add, contentDescription = null)
                             Spacer(modifier = Modifier.width(8.dp))
                             Text(
                                 "Insert into Note",

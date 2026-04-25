@@ -169,12 +169,12 @@ fun AISettingsScreen(
             item {
                 ExpressiveSection(
                     title = "Provider",
-                    description = "Choose which service handles your AI requests. Groq is built in — others need an API key."
+                    description = "Choose which service handles your AI requests. Default provider is built in — others need an API key."
                 ) {
                     SettingsGroupCard {
                         Column(modifier = Modifier.padding(16.dp)) {
                             ProviderCard(
-                                name = "Groq",
+                                name = "AI Provider",
                                 description = "Fast inference, bundled with the app",
                                 icon = Icons.Rounded.Bolt,
                                 iconColor = Color(0xFFFFC107),

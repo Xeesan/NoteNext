@@ -197,11 +197,11 @@
     <!-- Backup Screen -->
     <string name="backup_title">Backup</string>
     
-    <!-- Groq Settings -->
-    <string name="groq_settings_title">Groq Settings</string>
+    <!-- AI Settings -->
+    <string name="groq_settings_title">AI Settings</string>
     <string name="use_custom_api_key">Use Custom API Key</string>
-    <string name="use_custom_api_key_subtitle">Enter your own Groq API key</string>
-    <string name="enter_groq_api_key">Enter Groq API Key</string>
+    <string name="use_custom_api_key_subtitle">Enter your own AI API key</string>
+    <string name="enter_groq_api_key">Enter AI API Key</string>
     <string name="api_key_placeholder">API Key</string>
     <string name="fetching_models">Fetching models…</string>
     <string name="fetch_models">Fetch Models</string>
@@ -210,11 +210,11 @@
     <string name="select_large_model">Select Large Model</string>
     <string name="select_large_model_subtitle">Choose a model for detailed responses</string>
     <string name="api_key_instructions_title">How to get an API Key</string>
-    <string name="api_key_step_1">1. Go to the Groq website</string>
+    <string name="api_key_step_1">1. Go to the AI provider website</string>
     <string name="api_key_step_2">2. Create an account or sign in</string>
     <string name="api_key_step_3">3. Navigate to API Keys section</string>
     <string name="api_key_step_4">4. Create a new API key</string>
-    <string name="open_groq_console">Open Groq Console</string>
+    <string name="open_groq_console">Open AI Console</string>
     
     <!-- Biometric -->
     <string name="biometric_auth_failed">Biometric authentication failed</string>

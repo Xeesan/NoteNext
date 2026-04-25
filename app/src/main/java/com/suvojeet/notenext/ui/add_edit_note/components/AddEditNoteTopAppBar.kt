@@ -94,7 +94,7 @@ fun AddEditNoteTopAppBar(
                         onClick = { onEvent(NotesEvent.SummarizeNote) },
                         modifier = Modifier.springPress()
                     ) {
-                        Icon(Icons.Default.AutoAwesome, contentDescription = "Summarize Note", tint = contentColor)
+                        Icon(Icons.Outlined.AutoAwesome, contentDescription = "Summarize Note", tint = contentColor)
                     }
                     IconButton(
                         onClick = onNavigateToToneRewrite,

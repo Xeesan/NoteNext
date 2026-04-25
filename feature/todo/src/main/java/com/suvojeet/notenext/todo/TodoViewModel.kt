@@ -7,8 +7,8 @@ import androidx.paging.cachedIn
 import com.suvojeet.notenext.data.TodoItem
 import com.suvojeet.notenext.data.TodoWithSubtasks
 import com.suvojeet.notenext.data.TodoRepository
-import com.suvojeet.notenext.data.repository.GroqRepository
-import com.suvojeet.notenext.data.repository.GroqResult
+import com.suvojeet.notenext.data.repository.AiRepository
+import com.suvojeet.notenext.data.repository.AiResult
 import com.suvojeet.notenext.data.repository.onFailure
 import com.suvojeet.notenext.data.repository.onSuccess
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -35,7 +35,7 @@ sealed class TodoUiEvent {
 class TodoViewModel @Inject constructor(
     private val repository: TodoRepository,
     private val noteRepository: com.suvojeet.notenext.data.NoteRepository,
-    private val groqRepository: GroqRepository,
+    private val aiRepository: AiRepository,
     private val alarmScheduler: com.suvojeet.notenext.data.AlarmScheduler
 ) : ViewModel() {
 
@@ -225,7 +225,7 @@ class TodoViewModel @Inject constructor(
             is TodoEvent.GenerateAiTodos -> {
                 viewModelScope.launch {
                     try {
-                        groqRepository.generateTodos(event.input)
+                        aiRepository.generateTodos(event.input)
                             .onStart { _state.value = _state.value.copy(isGenerating = true) }
                             .collect { result ->
                                 result.onSuccess { todos ->
@@ -247,10 +247,10 @@ class TodoViewModel @Inject constructor(
                                     _events.emit(TodoUiEvent.ShowToast("Successfully generated ${todos.size} tasks"))
                                 }.onFailure { failure ->
                                     val errorMessage = when (failure) {
-                                        is GroqResult.RateLimited -> "AI is busy. Please try again in ${failure.retryAfterSeconds}s."
-                                        is GroqResult.InvalidKey -> "Invalid API key. Check settings."
-                                        is GroqResult.NetworkError -> "Network error: ${failure.message}"
-                                        is GroqResult.AllModelsFailed -> "AI failed to respond. Try again later."
+                                        is AiResult.RateLimited -> "AI is busy. Please try again in ${failure.retryAfterSeconds}s."
+                                        is AiResult.InvalidKey -> "Invalid API key. Check settings."
+                                        is AiResult.NetworkError -> "Network error: ${failure.message}"
+                                        is AiResult.AllModelsFailed -> "AI failed to respond. Try again later."
                                         else -> "Failed to generate tasks."
                                     }
                                     _state.value = _state.value.copy(isGenerating = false)

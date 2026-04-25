@@ -53,8 +53,8 @@ import com.suvojeet.notenext.core.model.AttachmentType
 import com.suvojeet.notenext.core.model.NoteType
 import com.suvojeet.notenext.data.Attachment
 import com.suvojeet.notenext.data.NoteWithAttachments
-import com.suvojeet.notenext.data.repository.GroqRepository
-import com.suvojeet.notenext.data.repository.GroqResult
+import com.suvojeet.notenext.data.repository.AiRepository
+import com.suvojeet.notenext.data.repository.AiResult
 import com.suvojeet.notenext.data.repository.onFailure
 import com.suvojeet.notenext.data.repository.onSuccess
 import com.suvojeet.notenext.data.NoteVersion
@@ -84,7 +84,7 @@ class NotesViewModel @Inject constructor(
     private val linkPreviewRepository: LinkPreviewRepository,
     private val alarmScheduler: AlarmScheduler,
     private val richTextController: RichTextController,
-    private val groqRepository: GroqRepository,
+    private val aiRepository: AiRepository,
     @ApplicationContext private val context: Context,
     private val savedStateHandle: androidx.lifecycle.SavedStateHandle,
     private val editorDelegate: com.suvojeet.notenext.ui.notes.delegate.NoteEditorDelegate,
@@ -161,7 +161,7 @@ class NotesViewModel @Inject constructor(
                         return@launch
                     }
                     editorDelegate.updateState { it.copy(isGeneratingChecklist = true, generatedChecklistPreview = persistentListOf()) }
-                    groqRepository.generateChecklist(event.topic).collect { result ->
+                    aiRepository.generateChecklist(event.topic).collect { result ->
                         result.onSuccess { items ->
                             // Store preview instead of inserting directly
                             editorDelegate.updateState { it.copy(
@@ -172,10 +172,10 @@ class NotesViewModel @Inject constructor(
                             editorDelegate.updateState { it.copy(isGeneratingChecklist = false, generatedChecklistPreview = persistentListOf()) }
 
                             val errorMessage = when (failure) {
-                                is GroqResult.RateLimited -> "AI is busy. Please try again in ${failure.retryAfterSeconds}s."
-                                is GroqResult.InvalidKey -> "Invalid API key. Check your settings."
-                                is GroqResult.NetworkError -> "Network error: ${failure.message}"
-                                is GroqResult.AllModelsFailed -> "All AI models failed to respond. Try again later."
+                                is AiResult.RateLimited -> "AI is busy. Please try again in ${failure.retryAfterSeconds}s."
+                                is AiResult.InvalidKey -> "Invalid API key. Check your settings."
+                                is AiResult.NetworkError -> "Network error: ${failure.message}"
+                                is AiResult.AllModelsFailed -> "All AI models failed to respond. Try again later."
                                 else -> "Failed to generate checklist."
                             }
                             _events.emit(NotesUiEvent.ShowToast(errorMessage))

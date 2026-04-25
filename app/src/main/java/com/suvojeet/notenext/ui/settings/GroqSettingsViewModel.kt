@@ -2,7 +2,7 @@ package com.suvojeet.notenext.ui.settings
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.suvojeet.notenext.data.repository.GroqRepository
+import com.suvojeet.notenext.data.repository.AiRepository
 import com.suvojeet.notenext.data.repository.SettingsRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -12,7 +12,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class GroqSettingsViewModel @Inject constructor(
-    private val groqRepository: GroqRepository,
+    private val aiRepository: AiRepository,
     private val settingsRepository: SettingsRepository
 ) : ViewModel() {
 
@@ -38,7 +38,7 @@ class GroqSettingsViewModel @Inject constructor(
         viewModelScope.launch {
             _isLoadingModels.value = true
             _error.value = null
-            groqRepository.fetchAvailableModels()
+            aiRepository.fetchAvailableModels()
                 .onSuccess { models ->
                     _availableModels.value = models.map { it.id }.sorted()
                 }

@@ -3,8 +3,8 @@ package com.suvojeet.notenext.ui.notes.delegate
 
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.input.TextFieldValue
-import com.suvojeet.notenext.data.repository.GroqRepository
-import com.suvojeet.notenext.data.repository.GroqResult
+import com.suvojeet.notenext.data.repository.AiRepository
+import com.suvojeet.notenext.data.repository.AiResult
 import com.suvojeet.notenext.data.repository.onFailure
 import com.suvojeet.notenext.data.repository.onSuccess
 import com.suvojeet.notenext.ui.notes.NotesEditState
@@ -16,7 +16,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class AIDelegate @Inject constructor(
-    private val groqRepository: GroqRepository
+    private val aiRepository: AiRepository
 ) {
     fun summarize(
         content: String,
@@ -26,15 +26,15 @@ class AIDelegate @Inject constructor(
     ) {
         scope.launch {
             onUpdate { it.copy(isSummarizing = true, showSummaryDialog = true) }
-            groqRepository.summarizeNote(content).collect { result ->
+            aiRepository.summarizeNote(content).collect { result ->
                 result.onSuccess { summary ->
                     onUpdate { it.copy(isSummarizing = false, summaryResult = summary) }
                 }.onFailure { failure ->
                     val errorMessage = when (failure) {
-                        is GroqResult.RateLimited -> "AI is busy. Please try again in ${failure.retryAfterSeconds}s."
-                        is GroqResult.InvalidKey -> "Invalid API key. Check your settings."
-                        is GroqResult.NetworkError -> "Network error: ${failure.message}"
-                        is GroqResult.AllModelsFailed -> "All AI models failed to respond. Try again later."
+                        is AiResult.RateLimited -> "AI is busy. Please try again in ${failure.retryAfterSeconds}s."
+                        is AiResult.InvalidKey -> "Invalid API key. Check your settings."
+                        is AiResult.NetworkError -> "Network error: ${failure.message}"
+                        is AiResult.AllModelsFailed -> "All AI models failed to respond. Try again later."
                         else -> "Failed to summarize note."
                     }
                     onUpdate { it.copy(isSummarizing = false, summaryResult = "Error: $errorMessage") }
@@ -55,7 +55,7 @@ class AIDelegate @Inject constructor(
 
         scope.launch {
             onUpdate { it.copy(isFixingGrammar = true, originalContentBackup = content) }
-            groqRepository.fixGrammar(targetText).collect { result ->
+            aiRepository.fixGrammar(targetText).collect { result ->
                 result.onSuccess { fixedFragment ->
                     val finalCleanText = if (selection.start != selection.end) fullText.replaceRange(selection.start, selection.end, fixedFragment) else fixedFragment
                     val diffs = SimpleDiffUtils.computeDiff(targetText, fixedFragment)

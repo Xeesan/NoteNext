@@ -150,7 +150,7 @@ fun FormatToolbar(
             item {
                 FormatToggleButton(
                     onCheckedChange = { _ -> onGrammarFixClick() },
-                    icon = Icons.Default.AutoAwesome,
+                    icon = Icons.Outlined.AutoAwesome,
                     description = "Fix Grammar",
                     isActive = isFixingGrammar
                 )

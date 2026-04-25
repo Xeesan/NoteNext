@@ -41,10 +41,10 @@
 -dontwarn kotlin.Metadata
 -ignorewarnings
 
-# Task 1: Obfuscate NetworkModule and GroqRepository
+# Task 1: Obfuscate NetworkModule and AiRepository
 -keep class com.suvojeet.notenext.BuildConfig { *; }
 -keepclassmembers class com.suvojeet.notenext.di.NetworkModule { *; }
--keepclassmembers class com.suvojeet.notenext.data.repository.GroqRepository { *; }
+-keepclassmembers class com.suvojeet.notenext.data.repository.AiRepository { *; }
 # Allow full obfuscation of internal methods and fields
 -repackageclasses ''
 -allowaccessmodification

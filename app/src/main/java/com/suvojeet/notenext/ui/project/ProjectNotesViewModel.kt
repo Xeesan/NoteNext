@@ -40,8 +40,8 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.launch
-import com.suvojeet.notenext.data.repository.GroqRepository
-import com.suvojeet.notenext.data.repository.GroqResult
+import com.suvojeet.notenext.data.repository.AiRepository
+import com.suvojeet.notenext.data.repository.AiResult
 import com.suvojeet.notenext.data.repository.onFailure
 import com.suvojeet.notenext.data.repository.onSuccess
 import com.suvojeet.notenext.ui.theme.NoteGradients
@@ -57,7 +57,7 @@ class ProjectNotesViewModel @Inject constructor(
     private val linkPreviewRepository: LinkPreviewRepository,
     private val alarmScheduler: AlarmScheduler,
     private val richTextController: com.suvojeet.notenext.ui.notes.RichTextController,
-    private val groqRepository: GroqRepository,
+    private val aiRepository: AiRepository,
     @ApplicationContext private val context: Context,
     private val savedStateHandle: SavedStateHandle
 ) : ViewModel() {
@@ -736,15 +736,15 @@ class ProjectNotesViewModel @Inject constructor(
 
                 _state.value = state.value.copy(isSummarizing = true, showSummaryDialog = true)
                 viewModelScope.launch {
-                    groqRepository.summarizeNote(content).collect { result ->
+                    aiRepository.summarizeNote(content).collect { result ->
                         result.onSuccess { summary ->
                             _state.value = _state.value.copy(isSummarizing = false, summaryResult = summary)
                         }.onFailure { failure ->
                             val errorMessage = when (failure) {
-                                is GroqResult.RateLimited -> "AI is busy. Please try again in ${failure.retryAfterSeconds}s."
-                                is GroqResult.InvalidKey -> "Invalid API key. Check settings."
-                                is GroqResult.NetworkError -> "Network error: ${failure.message}"
-                                is GroqResult.AllModelsFailed -> "AI failed to respond. Try again later."
+                                is AiResult.RateLimited -> "AI is busy. Please try again in ${failure.retryAfterSeconds}s."
+                                is AiResult.InvalidKey -> "Invalid API key. Check settings."
+                                is AiResult.NetworkError -> "Network error: ${failure.message}"
+                                is AiResult.AllModelsFailed -> "AI failed to respond. Try again later."
                                 else -> "Summarization failed."
                             }
                             _state.value = _state.value.copy(isSummarizing = false, showSummaryDialog = false)
@@ -761,7 +761,7 @@ class ProjectNotesViewModel @Inject constructor(
 
                 _state.value = state.value.copy(isGeneratingChecklist = true)
                 viewModelScope.launch {
-                    groqRepository.generateChecklist(event.topic).collect { result ->
+                    aiRepository.generateChecklist(event.topic).collect { result ->
                         result.onSuccess { items ->
                             _state.value = _state.value.copy(
                                 isGeneratingChecklist = false,
@@ -769,10 +769,10 @@ class ProjectNotesViewModel @Inject constructor(
                             )
                         }.onFailure { failure ->
                             val errorMessage = when (failure) {
-                                is GroqResult.RateLimited -> "AI is busy. Please try again in ${failure.retryAfterSeconds}s."
-                                is GroqResult.InvalidKey -> "Invalid API key. Check settings."
-                                is GroqResult.NetworkError -> "Network error: ${failure.message}"
-                                is GroqResult.AllModelsFailed -> "AI failed to respond. Try again later."
+                                is AiResult.RateLimited -> "AI is busy. Please try again in ${failure.retryAfterSeconds}s."
+                                is AiResult.InvalidKey -> "Invalid API key. Check settings."
+                                is AiResult.NetworkError -> "Network error: ${failure.message}"
+                                is AiResult.AllModelsFailed -> "AI failed to respond. Try again later."
                                 else -> "Generation failed."
                             }
                             _state.value = _state.value.copy(isGeneratingChecklist = false)
@@ -806,7 +806,7 @@ class ProjectNotesViewModel @Inject constructor(
 
                 _state.value = state.value.copy(isFixingGrammar = true)
                 viewModelScope.launch {
-                    groqRepository.fixGrammar(targetText).collect { result ->
+                    aiRepository.fixGrammar(targetText).collect { result ->
                         result.onSuccess { fixedText ->
                             _state.value = _state.value.copy(
                                 isFixingGrammar = false,
@@ -815,10 +815,10 @@ class ProjectNotesViewModel @Inject constructor(
                             )
                         }.onFailure { failure ->
                             val errorMessage = when (failure) {
-                                is GroqResult.RateLimited -> "AI is busy. Please try again in ${failure.retryAfterSeconds}s."
-                                is GroqResult.InvalidKey -> "Invalid API key. Check settings."
-                                is GroqResult.NetworkError -> "Network error: ${failure.message}"
-                                is GroqResult.AllModelsFailed -> "AI failed to respond. Try again later."
+                                is AiResult.RateLimited -> "AI is busy. Please try again in ${failure.retryAfterSeconds}s."
+                                is AiResult.InvalidKey -> "Invalid API key. Check settings."
+                                is AiResult.NetworkError -> "Network error: ${failure.message}"
+                                is AiResult.AllModelsFailed -> "AI failed to respond. Try again later."
                                 else -> "Grammar fix failed."
                             }
                             _state.value = _state.value.copy(isFixingGrammar = false)
