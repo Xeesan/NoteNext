@@ -8,8 +8,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.Create
+import androidx.compose.material.icons.filled.CreateNewFolder
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -156,7 +155,7 @@ fun ProjectScreen(
                         ) {
                             DropdownMenuItem(
                                 text = { Text("Add Project") },
-                                leadingIcon = { Icon(Icons.Default.Add, contentDescription = null) },
+                                leadingIcon = { Icon(Icons.Default.CreateNewFolder, contentDescription = null) },
                                 onClick = {
                                     showTopMenu = false
                                     showCreateProjectDialog = true
@@ -176,7 +175,7 @@ fun ProjectScreen(
         Column(modifier = Modifier.padding(padding)) {
             if (state.projects.isEmpty()) {
                 EmptyState(
-                    icon = Icons.Default.Create,
+                    icon = Icons.Outlined.Folder,
                     message = stringResource(id = R.string.no_projects_yet),
                     description = stringResource(id = R.string.create_first_project)
                 )
@@ -230,7 +229,7 @@ private fun CreateProjectDialog(
         shape = MaterialTheme.shapes.extraLarge,
         title = {
             Row(verticalAlignment = Alignment.CenterVertically) {
-                Icon(Icons.Default.Create, contentDescription = null, tint = MaterialTheme.colorScheme.primary)
+                Icon(Icons.Outlined.Folder, contentDescription = null, tint = MaterialTheme.colorScheme.primary)
                 Spacer(modifier = Modifier.width(12.dp))
                 Text(stringResource(id = R.string.create_new_project), fontWeight = FontWeight.Bold)
             }

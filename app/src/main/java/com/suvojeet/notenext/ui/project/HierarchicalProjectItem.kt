@@ -10,9 +10,6 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
-import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.Folder
-import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.material.icons.outlined.Folder
 import androidx.compose.material3.*
@@ -31,7 +28,7 @@ import java.util.Date
 import java.util.Locale
 
 import androidx.compose.material.icons.filled.MoreVert
-import androidx.compose.material.icons.outlined.FileCopy
+import androidx.compose.material.icons.filled.CreateNewFolder
 import androidx.compose.material.icons.outlined.Home
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -90,7 +87,7 @@ fun HierarchicalProjectItem(
                 contentAlignment = Alignment.Center
             ) {
                 Icon(
-                    imageVector = Icons.Outlined.FileCopy,
+                    imageVector = Icons.Outlined.Folder,
                     contentDescription = null,
                     tint = MaterialTheme.colorScheme.onPrimaryContainer,
                     modifier = Modifier.size(24.dp)
@@ -156,7 +153,7 @@ fun HierarchicalProjectItem(
                 ) {
                     DropdownMenuItem(
                         text = { Text("Add Sub-Project") },
-                        leadingIcon = { Icon(Icons.Default.Add, contentDescription = null) },
+                        leadingIcon = { Icon(Icons.Default.CreateNewFolder, contentDescription = null) },
                         onClick = {
                             showMenu = false
                             onCreateSubProject()
