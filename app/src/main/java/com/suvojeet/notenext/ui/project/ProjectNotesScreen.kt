@@ -231,15 +231,6 @@ fun ProjectNotesScreen(
                                                 Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = stringResource(id = R.string.back))
                                             }
                                         },
-                                        actions = {
-                                            IconButton(onClick = { viewModel.onEvent(ProjectNotesEvent.SummarizeNote) }, modifier = Modifier.springPress()) {
-                                                Icon(
-                                                    imageVector = Icons.Default.AutoAwesome,
-                                                    contentDescription = "AI Analyzer",
-                                                    tint = MaterialTheme.colorScheme.primary
-                                                )
-                                            }
-                                        },
                                         colors = TopAppBarDefaults.topAppBarColors(
                                             containerColor = MaterialTheme.colorScheme.surfaceContainer,
                                             scrolledContainerColor = MaterialTheme.colorScheme.surfaceContainerHigh

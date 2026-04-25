@@ -27,6 +27,10 @@ import com.suvojeet.notenext.ui.components.ExpressiveSection
 import com.suvojeet.notenext.ui.components.springPress
 import com.suvojeet.notenext.ui.theme.ThemeMode
 
+import androidx.compose.material.icons.filled.MoreVert
+import androidx.compose.ui.platform.LocalContext
+import com.suvojeet.notenext.util.ShortcutUtils
+
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 @Composable
 fun ProjectScreen(
@@ -40,7 +44,9 @@ fun ProjectScreen(
     var showCreateProjectDialog by remember { mutableStateOf(false) }
     var showCreateSubProjectDialog by remember { mutableStateOf<Int?>(null) }
     var projectToDelete by remember { mutableStateOf<Int?>(null) }
+    var showTopMenu by remember { mutableStateOf(false) }
     val expandedProjects = remember { mutableStateMapOf<Int, Boolean>() }
+    val context = LocalContext.current
 
     // Build hierarchical project list
     val hierarchicalProjects = remember(state.projects) {
@@ -139,23 +145,32 @@ fun ProjectScreen(
                         Icon(Icons.Default.Menu, contentDescription = stringResource(id = R.string.menu))
                     }
                 },
+                actions = {
+                    Box {
+                        IconButton(onClick = { showTopMenu = true }, modifier = Modifier.springPress()) {
+                            Icon(Icons.Default.MoreVert, contentDescription = "More")
+                        }
+                        DropdownMenu(
+                            expanded = showTopMenu,
+                            onDismissRequest = { showTopMenu = false }
+                        ) {
+                            DropdownMenuItem(
+                                text = { Text("Add Project") },
+                                leadingIcon = { Icon(Icons.Default.Add, contentDescription = null) },
+                                onClick = {
+                                    showTopMenu = false
+                                    showCreateProjectDialog = true
+                                }
+                            )
+                        }
+                    }
+                },
                 scrollBehavior = scrollBehavior,
                 colors = TopAppBarDefaults.largeTopAppBarColors(
                     containerColor = MaterialTheme.colorScheme.background,
                     scrolledContainerColor = MaterialTheme.colorScheme.surfaceContainer
                 )
             )
-        },
-        floatingActionButton = {
-            FloatingActionButton(
-                onClick = { showCreateProjectDialog = true },
-                modifier = Modifier.springPress(),
-                shape = MaterialTheme.shapes.extraLarge,
-                containerColor = MaterialTheme.colorScheme.primaryContainer,
-                contentColor = MaterialTheme.colorScheme.onPrimaryContainer
-            ) {
-                Icon(Icons.Default.Add, contentDescription = stringResource(id = R.string.create_new_project))
-            }
         }
     ) { padding ->
         Column(modifier = Modifier.padding(padding)) {
@@ -188,6 +203,9 @@ fun ProjectScreen(
                                 },
                                 onCreateSubProject = {
                                     showCreateSubProjectDialog = entry.project.id
+                                },
+                                onAddToHome = {
+                                    ShortcutUtils.pinProjectToHome(context, entry.project.id, entry.project.name)
                                 },
                                 depth = entry.depth
                             )

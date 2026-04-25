@@ -271,6 +271,7 @@ class MainActivity : FragmentActivity() {
                                 LockScreen(onUnlock = { viewModel.onUnlock() })
                             } else {
                                 val startNoteId by viewModel.startNoteId.collectAsStateWithLifecycle()
+                                val startProjectId by viewModel.startProjectId.collectAsStateWithLifecycle()
                                 val startAddNote by viewModel.startAddNote.collectAsStateWithLifecycle()
                                 val sharedText by viewModel.sharedText.collectAsStateWithLifecycle()
                                 val initialTitle by viewModel.initialTitle.collectAsStateWithLifecycle()
@@ -282,6 +283,7 @@ class MainActivity : FragmentActivity() {
                                     windowSizeClass = windowSizeClass,
                                     settingsRepository = viewModel.settingsRepository, // We still need settingsRepository for NavGraph for now, or we should refactor NavGraph too.
                                     startNoteId = startNoteId,
+                                    startProjectId = startProjectId,
                                     startAddNote = startAddNote,
                                     sharedText = sharedText,
                                     initialTitle = initialTitle,

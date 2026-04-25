@@ -30,6 +30,10 @@ import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 
+import androidx.compose.material.icons.filled.MoreVert
+import androidx.compose.material.icons.outlined.FileCopy
+import androidx.compose.material.icons.outlined.Home
+
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun HierarchicalProjectItem(
@@ -39,6 +43,7 @@ fun HierarchicalProjectItem(
     onClick: () -> Unit,
     onLongClick: () -> Unit,
     onCreateSubProject: () -> Unit,
+    onAddToHome: () -> Unit,
     modifier: Modifier = Modifier,
     depth: Int = 0
 ) {
@@ -51,6 +56,8 @@ fun HierarchicalProjectItem(
         targetValue = if (isExpanded) 90f else 0f,
         label = "arrow_rotation"
     )
+
+    var showMenu by remember { mutableStateOf(false) }
 
     val indentation = (depth * 16).dp
 
@@ -82,12 +89,11 @@ fun HierarchicalProjectItem(
                     ),
                 contentAlignment = Alignment.Center
             ) {
-                val initial = project.name.firstOrNull()?.toString()?.uppercase() ?: "?"
-                Text(
-                    text = initial,
-                    style = MaterialTheme.typography.titleLarge,
-                    color = MaterialTheme.colorScheme.onPrimaryContainer,
-                    fontWeight = FontWeight.Bold
+                Icon(
+                    imageVector = Icons.Outlined.FileCopy,
+                    contentDescription = null,
+                    tint = MaterialTheme.colorScheme.onPrimaryContainer,
+                    modifier = Modifier.size(24.dp)
                 )
             }
 
@@ -132,15 +138,47 @@ fun HierarchicalProjectItem(
                 }
             }
 
-            IconButton(
-                onClick = onCreateSubProject,
-                modifier = Modifier.size(32.dp)
-            ) {
-                Icon(
-                    imageVector = Icons.Default.Add,
-                    contentDescription = "Create sub-project",
-                    tint = MaterialTheme.colorScheme.primary
-                )
+            Box {
+                IconButton(
+                    onClick = { showMenu = true },
+                    modifier = Modifier.size(32.dp)
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.MoreVert,
+                        contentDescription = "More options",
+                        tint = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
+
+                DropdownMenu(
+                    expanded = showMenu,
+                    onDismissRequest = { showMenu = false }
+                ) {
+                    DropdownMenuItem(
+                        text = { Text("Add Sub-Project") },
+                        leadingIcon = { Icon(Icons.Default.Add, contentDescription = null) },
+                        onClick = {
+                            showMenu = false
+                            onCreateSubProject()
+                        }
+                    )
+                    DropdownMenuItem(
+                        text = { Text("Add to Home") },
+                        leadingIcon = { Icon(Icons.Outlined.Home, contentDescription = null) },
+                        onClick = {
+                            showMenu = false
+                            onAddToHome()
+                        }
+                    )
+                    DropdownMenuItem(
+                        text = { Text("Delete") },
+                        leadingIcon = { Icon(Icons.Outlined.Delete, contentDescription = null) },
+                        onClick = {
+                            showMenu = false
+                            onLongClick()
+                        }
+                    )
+                }
             }
 
             IconButton(

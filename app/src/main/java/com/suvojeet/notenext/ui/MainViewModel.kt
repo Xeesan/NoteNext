@@ -49,6 +49,9 @@ class MainViewModel @Inject constructor(
     private val _startNoteId = MutableStateFlow(-1)
     val startNoteId = _startNoteId.asStateFlow()
 
+    private val _startProjectId = MutableStateFlow(-1)
+    val startProjectId = _startProjectId.asStateFlow()
+
     private val _startAddNote = MutableStateFlow(false)
     val startAddNote = _startAddNote.asStateFlow()
 
@@ -84,6 +87,9 @@ class MainViewModel @Inject constructor(
     fun handleIntent(intent: Intent) {
         val noteId = intent.getIntExtra("NOTE_ID", -1)
         _startNoteId.value = noteId
+
+        val projectId = intent.getIntExtra("PROJECT_ID", -1)
+        _startProjectId.value = projectId
 
         val isCreateNoteAction = intent.action == "android.intent.action.CREATE_NOTE"
         _startAddNote.value = intent.getBooleanExtra("START_ADD_NOTE", false) || isCreateNoteAction

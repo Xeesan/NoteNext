@@ -108,6 +108,7 @@ fun NavGraph(
     windowSizeClass: WindowSizeClass,
     settingsRepository: SettingsRepository,
     startNoteId: Int = -1,
+    startProjectId: Int = -1,
     startAddNote: Boolean = false,
     sharedText: String? = null,
     initialTitle: String? = null,
@@ -157,6 +158,18 @@ fun NavGraph(
                     }
                     launchSingleTop = true
                 }
+            }
+        }
+    }
+
+    LaunchedEffect(startProjectId) {
+        if (startProjectId != -1) {
+            navController.navigate(Destination.ProjectNotes(startProjectId)) {
+                popUpTo(navController.graph.findStartDestination().id) {
+                    saveState = true
+                }
+                launchSingleTop = true
+                restoreState = true
             }
         }
     }
