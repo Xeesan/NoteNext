@@ -58,6 +58,7 @@ class ProjectNotesViewModel @Inject constructor(
     private val alarmScheduler: AlarmScheduler,
     private val richTextController: com.suvojeet.notenext.ui.notes.RichTextController,
     private val aiRepository: AiRepository,
+    private val aiSuggestionsDelegate: com.suvojeet.notenext.ui.notes.delegate.AISuggestionsDelegate,
     @ApplicationContext private val context: Context,
     private val savedStateHandle: SavedStateHandle
 ) : ViewModel() {
@@ -844,6 +845,21 @@ class ProjectNotesViewModel @Inject constructor(
                     originalContentBackup = null
                 )
             }
+            is ProjectNotesEvent.PickToneRewrite -> {
+                runToneRewrite(event.tone)
+            }
+            is ProjectNotesEvent.RetryToneRewrite -> {
+                state.value.toneRewriteSelectedTone?.let { runToneRewrite(it) }
+            }
+            is ProjectNotesEvent.AcceptToneRewrite -> {
+                val rewritten = state.value.toneRewriteResult ?: return
+                _state.value = state.value.copy(
+                    editingContent = TextFieldValue(rewritten),
+                    toneRewriteResult = null,
+                    toneRewriteSelectedTone = null
+                )
+                scheduleAutoSave()
+            }
             is ProjectNotesEvent.ExportNote -> {
                 viewModelScope.launch {
                     try {
@@ -1415,6 +1431,40 @@ class ProjectNotesViewModel @Inject constructor(
 
     suspend fun getNoteIdByTitle(title: String): Int? {
         return repository.getNoteIdByTitle(title)
+    }
+
+    private fun runToneRewrite(tone: com.suvojeet.notenext.data.ai.ToneOption) {
+        val source = state.value.editingContent.text
+        if (source.isBlank()) {
+            viewModelScope.launch { _events.emit(ProjectNotesUiEvent.ShowToast("Nothing to rewrite")) }
+            return
+        }
+        _state.value = state.value.copy(
+            toneRewriteSelectedTone = tone,
+            isToneRewriting = true,
+            toneRewriteError = null,
+            toneRewriteResult = null
+        )
+        viewModelScope.launch {
+            when (val result = aiSuggestionsDelegate.rewriteTone(source, tone)) {
+                is com.suvojeet.notenext.data.ai.AIResult.Success -> {
+                    _state.value = state.value.copy(
+                        isToneRewriting = false,
+                        toneRewriteResult = result.data
+                    )
+                }
+                is com.suvojeet.notenext.data.ai.AIResult.AuthError ->
+                    _state.value = state.value.copy(isToneRewriting = false, toneRewriteError = result.message)
+                is com.suvojeet.notenext.data.ai.AIResult.NetworkError ->
+                    _state.value = state.value.copy(isToneRewriting = false, toneRewriteError = "Network: ${result.message}")
+                is com.suvojeet.notenext.data.ai.AIResult.RateLimited ->
+                    _state.value = state.value.copy(isToneRewriting = false, toneRewriteError = "Rate limited. Try again in ${result.retryAfterSeconds}s.")
+                is com.suvojeet.notenext.data.ai.AIResult.ProviderError ->
+                    _state.value = state.value.copy(isToneRewriting = false, toneRewriteError = result.message)
+                is com.suvojeet.notenext.data.ai.AIResult.AllProvidersFailed ->
+                    _state.value = state.value.copy(isToneRewriting = false, toneRewriteError = "All providers failed")
+            }
+        }
     }
 
     private fun commonPrefixWith(a: CharSequence, b: CharSequence): String {

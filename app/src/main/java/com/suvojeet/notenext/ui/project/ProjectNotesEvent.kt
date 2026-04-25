@@ -74,6 +74,10 @@ sealed class ProjectNotesEvent {
     object FixGrammar : ProjectNotesEvent()
     object ApplyGrammarFix : ProjectNotesEvent()
     object ClearGrammarFix : ProjectNotesEvent()
+
+    data class PickToneRewrite(val tone: com.suvojeet.notenext.data.ai.ToneOption) : ProjectNotesEvent()
+    object AcceptToneRewrite : ProjectNotesEvent()
+    object RetryToneRewrite : ProjectNotesEvent()
     
     // Utility Events
     data class ExportNote(val uri: android.net.Uri, val format: String) : ProjectNotesEvent()

@@ -74,7 +74,6 @@ fun AddEditNoteScreen(
     state: NotesEditState,
     onEvent: (NotesEvent) -> Unit,
     onDismiss: () -> Unit,
-    onNavigateToToneRewrite: () -> Unit = {},
     themeMode: ThemeMode,
     settingsRepository: SettingsRepository,
     events: SharedFlow<NotesUiEvent>,
@@ -100,6 +99,7 @@ fun AddEditNoteScreen(
     var showImageViewer by remember { mutableStateOf(false) }
     var selectedImageData by remember { mutableStateOf<ImageViewerData?>(null) }
     var isFocusMode by remember { mutableStateOf(false) }
+    var showToneRewriteSheet by remember { mutableStateOf(false) }
 
     var aiButtonOffsetX by remember { mutableStateOf(0f) }
     var aiButtonOffsetY by remember { mutableStateOf(0f) }
@@ -220,7 +220,9 @@ fun AddEditNoteScreen(
     PredictiveBackHandler { progress ->
         try {
             progress.collectLatest { /* handle progress */ }
-            if (showImageViewer) {
+            if (showToneRewriteSheet) {
+                showToneRewriteSheet = false
+            } else if (showImageViewer) {
                 showImageViewer = false
             } else if (isFocusMode) {
                 isFocusMode = false
@@ -318,7 +320,7 @@ fun AddEditNoteScreen(
                         state = state,
                         onEvent = onEvent,
                         onDismiss = onDismiss,
-                        onNavigateToToneRewrite = onNavigateToToneRewrite,
+                        onToneRewriteClick = { showToneRewriteSheet = true },
                         editingNoteType = state.editingNoteType,
                         onToggleFocusMode = { isFocusMode = !isFocusMode },
                         isFocusMode = isFocusMode,
@@ -693,6 +695,18 @@ fun AddEditNoteScreen(
             isSummarizing = state.isSummarizing,
             onDismiss = { onEvent(NotesEvent.ClearSummary) },
             onClearSummary = { onEvent(NotesEvent.ClearSummary) }
+        )
+    }
+
+    AnimatedVisibility(
+        visible = showToneRewriteSheet,
+        enter = slideInHorizontally(initialOffsetX = { it }) + fadeIn(),
+        exit = slideOutHorizontally(targetOffsetX = { it }) + fadeOut()
+    ) {
+        ToneRewriteScreen(
+            state = state,
+            onEvent = onEvent,
+            onBack = { showToneRewriteSheet = false }
         )
     }
 

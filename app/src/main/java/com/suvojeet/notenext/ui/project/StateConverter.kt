@@ -48,10 +48,13 @@ fun ProjectNotesState.toNotesEditState(): NotesEditState {
         originalContentBackup = this.originalContentBackup,
         isMentionPopupVisible = false,
         mentionSearchQuery = "",
-        mentionableNotes = persistentListOf()
-    )
-}
-
+        mentionableNotes = persistentListOf(),
+        toneRewriteSelectedTone = this.toneRewriteSelectedTone,
+        toneRewriteResult = this.toneRewriteResult,
+        isToneRewriting = this.isToneRewriting,
+        toneRewriteError = this.toneRewriteError
+        )
+        }
 fun ProjectNotesState.toNotesListState(): NotesListState {
     return NotesListState(
         notes = this.notes.toImmutableList(),

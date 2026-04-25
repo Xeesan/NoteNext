@@ -524,7 +524,6 @@ private fun NavGraphBuilder.notesRoute(
             onArchiveClick = { navController.navigate(Destination.Archive) },
             onEditLabelsClick = { navController.navigate(Destination.EditLabels) },
             onBinClick = { navController.navigate(Destination.Bin) },
-            onToneRewriteClick = { navController.navigate(Destination.ToneRewrite) },
             themeMode = themeMode,
             settingsRepository = settingsRepository,
             onMenuClick = onMenuClick,
@@ -756,18 +755,6 @@ private fun NavGraphBuilder.sharedRoutes(
                 navController.popBackStack()
             },
             onDismiss = { navController.popBackStack() }
-        )
-    }
-
-    composable<Destination.ToneRewrite>(
-        enterTransition = { slideEnter },
-        exitTransition = { slideExit }
-    ) {
-        val editState by notesViewModel.editState.collectAsState()
-        ToneRewriteScreen(
-            state = editState,
-            onEvent = notesViewModel::onEvent,
-            onBack = { navController.popBackStack() }
         )
     }
 }

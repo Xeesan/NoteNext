@@ -71,14 +71,13 @@ import com.suvojeet.notenext.navigation.Destination
 @Composable
 fun NotesScreen(
     viewModel: NotesViewModel,
-    onSettingsClick: () -> Unit,
-    onArchiveClick: () -> Unit,
-    onEditLabelsClick: () -> Unit,
-    onBinClick: () -> Unit,
-    onToneRewriteClick: () -> Unit = {},
+    onSettingsClick: () -> Unit = {},
+    onArchiveClick: () -> Unit = {},
+    onEditLabelsClick: () -> Unit = {},
+    onBinClick: () -> Unit = {},
     themeMode: ThemeMode,
     settingsRepository: SettingsRepository,
-    onMenuClick: () -> Unit,
+    onMenuClick: () -> Unit = {},
     onDrawingClick: () -> Unit = {},
     onTodoClick: () -> Unit = {},
     events: SharedFlow<NotesUiEvent>
@@ -655,7 +654,6 @@ fun NotesScreen(
                     state = editState,
                     onEvent = viewModel::onEvent,
                     onDismiss = { viewModel.onEvent(NotesEvent.CollapseNote) },
-                    onNavigateToToneRewrite = onToneRewriteClick,
                     themeMode = themeMode,
                     settingsRepository = settingsRepository,
                     events = viewModel.events,

@@ -669,7 +669,6 @@ fun ProjectNotesScreen(
                         state = state.toNotesEditState(),
                         onEvent = { viewModel.onEvent(it.toProjectNotesEvent()) },
                         onDismiss = { viewModel.onEvent(ProjectNotesEvent.CollapseNote) },
-                        onNavigateToToneRewrite = { navController.navigate(Destination.ToneRewrite) },
                         themeMode = themeMode,
                         settingsRepository = settingsRepository,
                         events = viewModel.events.map { it.toNotesUiEvent() }.shareIn(rememberCoroutineScope(), SharingStarted.WhileSubscribed()),

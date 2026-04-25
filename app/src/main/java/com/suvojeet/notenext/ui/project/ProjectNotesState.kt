@@ -65,6 +65,12 @@ data class ProjectNotesState(
     val fixedContentPreview: String? = null,
     val originalContentBackup: TextFieldValue? = null,
 
+    // AI advanced features
+    val toneRewriteSelectedTone: com.suvojeet.notenext.data.ai.ToneOption? = null,
+    val toneRewriteResult: String? = null,
+    val isToneRewriting: Boolean = false,
+    val toneRewriteError: String? = null,
+
     // Search in Note
     val isSearchingInNote: Boolean = false,
     val noteSearchQuery: String = "",
