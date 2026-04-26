@@ -554,10 +554,8 @@ class ProjectNotesViewModel @Inject constructor(
                         _state.value = state.value.copy(
                             editingContent = oldContent.copy(selection = newContent.selection)
                         )
-                        return
-                    }
-
-                    val finalContent = if (newContent.text != oldContent.text) {
+                    } else {
+                        val finalContent = if (newContent.text != oldContent.text) {
                         val oldText = oldContent.text
                         val newText = newContent.text
 
@@ -627,6 +625,7 @@ class ProjectNotesViewModel @Inject constructor(
                     scheduleAutoSave()
                 }
             }
+        }
             is ProjectNotesEvent.ApplyStyleToContent -> {
                 val selection = state.value.editingContent.selection
                 if (selection.collapsed) {

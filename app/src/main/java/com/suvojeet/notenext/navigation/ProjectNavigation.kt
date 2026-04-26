@@ -11,11 +11,15 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
+import com.suvojeet.notenext.ui.project.toNotesUiEvent
+import com.suvojeet.notenext.ui.notes.NotesUiEvent
 import com.suvojeet.notenext.ui.project.ProjectScreen
 import com.suvojeet.notenext.ui.project.ProjectNotesScreen
 import com.suvojeet.notenext.ui.project.ProjectNotesViewModel
 import com.suvojeet.notenext.ui.project.toNotesEditState
 import com.suvojeet.notenext.ui.project.toProjectNotesEvent
+import com.suvojeet.notenext.ui.project.toNotesUiEvent
+import com.suvojeet.notenext.ui.notes.NotesUiEvent
 import com.suvojeet.notenext.ui.add_edit_note.AddEditNoteScreen
 import com.suvojeet.notenext.ui.theme.ThemeMode
 import com.suvojeet.notenext.data.repository.SettingsRepository
