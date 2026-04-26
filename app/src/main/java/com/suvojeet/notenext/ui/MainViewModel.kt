@@ -43,8 +43,16 @@ class MainViewModel @Inject constructor(
         initialValue = null
     )
 
-    val disallowScreenshots = settingsRepository.disallowScreenshots
-    val language = settingsRepository.language
+    val disallowScreenshots = settingsRepository.disallowScreenshots.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(5000),
+        initialValue = false
+    )
+    val language = settingsRepository.language.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(5000),
+        initialValue = "en"
+    )
 
     private val _startNoteId = MutableStateFlow(-1)
     val startNoteId = _startNoteId.asStateFlow()
