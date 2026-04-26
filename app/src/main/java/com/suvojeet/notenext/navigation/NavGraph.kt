@@ -1,12 +1,16 @@
 @file:OptIn(ExperimentalMaterial3ExpressiveApi::class)
 package com.suvojeet.notenext.navigation
 
-import androidx.compose.animation.core.spring
-import com.suvojeet.notenext.ui.project.toNotesUiEvent
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
-import androidx.compose.animation.slideInHorizontally
-import androidx.compose.animation.slideOutHorizontally
+import androidx.compose.material3.*
+import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -24,17 +28,6 @@ import androidx.compose.material.icons.filled.PlaylistAddCheck
 import androidx.compose.material.icons.filled.CreateNewFolder
 import androidx.compose.material.icons.automirrored.filled.Label
 import androidx.compose.material.icons.automirrored.outlined.Label
-import androidx.compose.material3.*
-import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
 import androidx.compose.foundation.background
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.ui.platform.LocalContext
@@ -42,66 +35,25 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.compose.material3.windowsizeclass.WindowSizeClass
-import com.suvojeet.notenext.ui.archive.ArchiveScreen
-import com.suvojeet.notenext.ui.bin.BinScreen
-import com.suvojeet.notenext.ui.bin.BinViewModel
-import com.suvojeet.notenext.ui.labels.EditLabelsScreen
 import com.suvojeet.notenext.ui.notes.NotesEvent
-import com.suvojeet.notenext.ui.notes.NotesScreen
 import com.suvojeet.notenext.ui.notes.NotesViewModel
-
-import com.suvojeet.notenext.ui.settings.SettingsScreen
-import com.suvojeet.notenext.ui.reminder.ReminderScreen
-import com.suvojeet.notenext.ui.reminder.AddEditReminderScreen
-import com.suvojeet.notenext.ui.settings.AboutScreen
-import com.suvojeet.notenext.ui.settings.ContactScreen
-import com.suvojeet.notenext.ui.settings.CreditsScreen
-import com.suvojeet.notenext.ui.settings.ChangelogScreen
-import com.suvojeet.notenext.ui.settings.GroqSettingsScreen
-import com.suvojeet.notenext.ui.settings.AIProviderSettingsScreen
-import com.suvojeet.notenext.ui.settings.ai.AISettingsScreen
-import com.suvojeet.notenext.ui.settings.ai.AIFeaturesScreen
-import com.suvojeet.notenext.ui.settings.ai.OnDeviceFeaturesScreen
-import com.suvojeet.notenext.ui.settings.ai.AIUsageDashboardScreen
-import com.suvojeet.notenext.ui.donate.DonationScreen
-import com.suvojeet.notenext.ui.project.ProjectScreen
-import com.suvojeet.notenext.ui.project.ProjectViewModel
-import com.suvojeet.notenext.ui.project.ProjectNotesScreen
-import com.suvojeet.notenext.ui.project.ProjectNotesViewModel
-import com.suvojeet.notenext.ui.project.toNotesEditState
-import com.suvojeet.notenext.ui.project.toProjectNotesEvent
-import com.suvojeet.notenext.ui.add_edit_note.AddEditNoteScreen
-import com.suvojeet.notenext.ui.add_edit_note.ToneRewriteScreen
 import com.suvojeet.notenext.ui.theme.ThemeMode
-import com.suvojeet.notenext.data.LinkPreviewRepository
 import com.suvojeet.notenext.data.repository.SettingsRepository
-import com.suvojeet.notenext.ui.settings.BackupScreen
-import com.suvojeet.notenext.todo.TodoScreen
-
-import com.suvojeet.notenext.ui.drawing.DrawingScreen
-
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.shareIn
 import com.suvojeet.notenext.R
-import kotlinx.coroutines.flow.SharingStarted
 import com.suvojeet.notenext.util.BiometricAuthManager
 import com.suvojeet.notenext.util.findActivity
 import androidx.fragment.app.FragmentActivity
 import android.widget.Toast
-import androidx.navigation.toRoute
 import com.suvojeet.notenext.ui.components.springPress
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavDestination.Companion.hasRoute
 import com.suvojeet.notenext.ui.notes.NotesListState
-import com.suvojeet.notenext.ui.notes.NotesEditState
 
 @Composable
 fun NavGraph(
@@ -507,277 +459,8 @@ private fun AppNavHost(
         startDestination = Destination.Notes(),
         modifier = Modifier.background(MaterialTheme.colorScheme.background)
     ) {
-        notesRoute(navController, notesViewModel, themeMode, settingsRepository, onMenuClick, isCompact)
-        sharedRoutes(navController, notesViewModel, themeMode, windowSizeClass, settingsRepository, onMenuClick)
-    }
-}
-
-private fun NavGraphBuilder.notesRoute(
-    navController: NavHostController,
-    notesViewModel: NotesViewModel,
-    themeMode: ThemeMode,
-    settingsRepository: SettingsRepository,
-    onMenuClick: () -> Unit,
-    isCompact: Boolean
-) {
-    composable<Destination.Notes>(
-        enterTransition = { fadeIn(animationSpec = spring()) },
-        exitTransition = { fadeOut(animationSpec = spring()) }
-    ) { backStackEntry ->
-        if (isCompact) {
-            val route: Destination.Notes = backStackEntry.toRoute()
-            val noteId = route.noteId
-            LaunchedEffect(noteId) {
-                if (noteId != -1) {
-                    notesViewModel.onEvent(NotesEvent.ExpandNote(noteId))
-                }
-            }
-        }
-        NotesScreen(
-            viewModel = notesViewModel,
-            onSettingsClick = { navController.navigate(Destination.Settings) },
-            onArchiveClick = { navController.navigate(Destination.Archive) },
-            onEditLabelsClick = { navController.navigate(Destination.EditLabels) },
-            onBinClick = { navController.navigate(Destination.Bin) },
-            themeMode = themeMode,
-            settingsRepository = settingsRepository,
-            onMenuClick = onMenuClick,
-            onDrawingClick = { navController.navigate(Destination.Drawing) },
-            onTodoClick = { navController.navigate(Destination.Todo) },
-            events = notesViewModel.events
-        )
-    }
-}
-
-private fun NavGraphBuilder.sharedRoutes(
-    navController: NavHostController,
-    notesViewModel: NotesViewModel,
-    themeMode: ThemeMode,
-    windowSizeClass: WindowSizeClass,
-    settingsRepository: SettingsRepository,
-    onMenuClick: () -> Unit
-) {
-    val slideEnter = slideInHorizontally(initialOffsetX = { it }, animationSpec = spring()) + fadeIn(spring())
-    val slideExit = slideOutHorizontally(targetOffsetX = { it }, animationSpec = spring()) + fadeOut(spring())
-
-    composable<Destination.Settings>(
-        enterTransition = { slideEnter },
-        exitTransition = { slideExit }
-    ) {
-        SettingsScreen(
-            onBackClick = { navController.popBackStack() },
-            onNavigate = { route ->
-                when(route) {
-                    "backup" -> navController.navigate(Destination.Backup)
-                    "about" -> navController.navigate(Destination.About)
-                    "donate" -> navController.navigate(Destination.Donate)
-                    "changelog" -> navController.navigate(Destination.Changelog)
-                    "credits" -> navController.navigate(Destination.Credits)
-                    "groq" -> navController.navigate(Destination.GroqSettings)
-                    "ai_provider" -> navController.navigate(Destination.AIProviderSettings)
-                    "ai" -> navController.navigate(Destination.AISettings)
-                    else -> {}
-                }
-            }
-        )
-    }
-
-    composable<Destination.GroqSettings>(
-        enterTransition = { slideEnter },
-        exitTransition = { slideExit }
-    ) {
-        GroqSettingsScreen(onBackClick = { navController.popBackStack() })
-    }
-
-    composable<Destination.AIProviderSettings>(
-        enterTransition = { slideEnter },
-        exitTransition = { slideExit }
-    ) {
-        AIProviderSettingsScreen(onBackClick = { navController.popBackStack() })
-    }
-
-    composable<Destination.AISettings>(
-        enterTransition = { slideEnter },
-        exitTransition = { slideExit }
-    ) {
-        AISettingsScreen(
-            onBackClick = { navController.popBackStack() },
-            onOpenFeatures = { navController.navigate(Destination.AIFeatures) },
-            onOpenOnDeviceFeatures = { navController.navigate(Destination.OnDeviceFeatures) },
-            onOpenDashboard = { navController.navigate(Destination.AIUsageDashboard) }
-        )
-    }
-
-    composable<Destination.AIFeatures>(
-        enterTransition = { slideEnter },
-        exitTransition = { slideExit }
-    ) {
-        AIFeaturesScreen(onBackClick = { navController.popBackStack() })
-    }
-
-    composable<Destination.OnDeviceFeatures>(
-        enterTransition = { slideEnter },
-        exitTransition = { slideExit }
-    ) {
-        OnDeviceFeaturesScreen(onBackClick = { navController.popBackStack() })
-    }
-
-    composable<Destination.AIUsageDashboard>(
-        enterTransition = { slideEnter },
-        exitTransition = { slideExit }
-    ) {
-        AIUsageDashboardScreen(onBackClick = { navController.popBackStack() })
-    }
-
-    composable<Destination.Backup>(
-        enterTransition = { slideEnter },
-        exitTransition = { slideExit }
-    ) {
-        BackupScreen(onBackClick = { navController.popBackStack() })
-    }
-
-    composable<Destination.Archive>(
-        enterTransition = { slideEnter },
-        exitTransition = { slideExit }
-    ) {
-        ArchiveScreen(onMenuClick = onMenuClick)
-    }
-
-    composable<Destination.EditLabels>(
-        enterTransition = { slideEnter },
-        exitTransition = { slideExit }
-    ) {
-        EditLabelsScreen(onBackPressed = { navController.popBackStack() })
-    }
-
-    composable<Destination.Bin>(
-        enterTransition = { slideEnter },
-        exitTransition = { slideExit }
-    ) {
-        val binViewModel: BinViewModel = hiltViewModel()
-        BinScreen(viewModel = binViewModel, onMenuClick = onMenuClick)
-    }
-
-    composable<Destination.Reminder>(
-        enterTransition = { slideEnter },
-        exitTransition = { slideExit }
-    ) {
-        ReminderScreen(
-            onBackClick = { navController.popBackStack() },
-            onNoteClick = { note ->
-                navController.navigate(Destination.Notes(noteId = note.id)) {
-                    popUpTo<Destination.Notes> { inclusive = true }
-                }
-            }
-        )
-    }
-
-    composable<Destination.AddEditReminder>(
-        enterTransition = { slideEnter },
-        exitTransition = { slideExit }
-    ) {
-        AddEditReminderScreen(onBackClick = { navController.popBackStack() })
-    }
-
-    composable<Destination.Projects>(
-        enterTransition = { slideEnter },
-        exitTransition = { slideExit }
-    ) {
-        ProjectScreen(
-            onMenuClick = onMenuClick,
-            onProjectClick = { projectId -> navController.navigate(Destination.ProjectNotes(projectId)) },
-            navController = navController,
-            settingsRepository = settingsRepository
-        )
-    }
-
-    composable<Destination.About>(
-        enterTransition = { slideEnter },
-        exitTransition = { slideExit }
-    ) {
-        AboutScreen(
-            onBackClick = { navController.popBackStack() },
-            onDonateClick = { navController.navigate(Destination.Donate) },
-            onCreditsClick = { navController.navigate(Destination.Credits) },
-            onChangelogClick = { navController.navigate(Destination.Changelog) },
-            onContactClick = { navController.navigate(Destination.Contact) }
-        )
-    }
-
-    composable<Destination.Contact>(
-        enterTransition = { slideEnter },
-        exitTransition = { slideExit }
-    ) {
-        ContactScreen(onBackClick = { navController.popBackStack() })
-    }
-
-    composable<Destination.Credits>(
-        enterTransition = { slideEnter },
-        exitTransition = { slideExit }
-    ) {
-        CreditsScreen(onBackClick = { navController.popBackStack() })
-    }
-
-    composable<Destination.Changelog>(
-        enterTransition = { slideEnter },
-        exitTransition = { slideExit }
-    ) {
-        ChangelogScreen(onBackClick = { navController.popBackStack() })
-    }
-
-    composable<Destination.Donate>(
-        enterTransition = { slideEnter },
-        exitTransition = { slideExit }
-    ) {
-        DonationScreen(onBackClick = { navController.popBackStack() })
-    }
-
-    composable<Destination.Todo>(
-        enterTransition = { slideEnter },
-        exitTransition = { slideExit }
-    ) {
-        TodoScreen(onBackClick = { navController.popBackStack() })
-    }
-
-    composable<Destination.ProjectNotes>(
-        enterTransition = { slideEnter },
-        exitTransition = { slideExit }
-    ) {
-        ProjectNotesScreen(
-            navController = navController,
-            onBackClick = { navController.popBackStack() },
-            themeMode = themeMode,
-            settingsRepository = settingsRepository
-        )
-    }
-
-    composable<Destination.AddEditNote>(
-        enterTransition = { slideEnter },
-        exitTransition = { slideExit }
-    ) {
-        val viewModel: ProjectNotesViewModel = hiltViewModel()
-        AddEditNoteScreen(
-            state = viewModel.state.collectAsState().value.toNotesEditState(),
-            onEvent = { viewModel.onEvent(it.toProjectNotesEvent()) },
-            onDismiss = { navController.popBackStack() },
-            themeMode = themeMode,
-            settingsRepository = settingsRepository,
-            events = viewModel.events.map { it.toNotesUiEvent() }.shareIn(rememberCoroutineScope(), SharingStarted.WhileSubscribed())
-        )
-    }
-
-    composable<Destination.Drawing>(
-        enterTransition = { slideEnter },
-        exitTransition = { slideExit }
-    ) {
-        DrawingScreen(
-            windowSizeClass = windowSizeClass,
-            onSave = { uri ->
-                notesViewModel.onEvent(NotesEvent.ExpandNote(-1))
-                notesViewModel.onEvent(NotesEvent.ImportImage(uri))
-                navController.popBackStack()
-            },
-            onDismiss = { navController.popBackStack() }
-        )
+        notesGraph(navController, notesViewModel, themeMode, settingsRepository, onMenuClick, isCompact, windowSizeClass)
+        projectGraph(navController, themeMode, settingsRepository, onMenuClick)
+        settingsGraph(navController)
     }
 }
