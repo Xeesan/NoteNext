@@ -554,7 +554,7 @@ class ProjectNotesViewModel @Inject constructor(
                         _state.value = state.value.copy(
                             editingContent = oldContent.copy(selection = newContent.selection)
                         )
-                        return@launch
+                        return
                     }
 
                     val finalContent = if (newContent.text != oldContent.text) {
