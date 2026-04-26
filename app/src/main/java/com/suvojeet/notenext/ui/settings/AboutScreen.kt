@@ -43,7 +43,8 @@ fun AboutScreen(
     onBackClick: () -> Unit,
     onDonateClick: () -> Unit,
     onCreditsClick: () -> Unit,
-    onChangelogClick: () -> Unit
+    onChangelogClick: () -> Unit,
+    onContactClick: () -> Unit
 ) {
     val uriHandler = LocalUriHandler.current
     val context = LocalContext.current
@@ -164,6 +165,32 @@ fun AboutScreen(
                             isInternetAvailable = isInternetAvailable,
                             uriHandler = uriHandler
                         )
+
+                        // Contact Button
+                        Surface(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(64.dp)
+                                .springPress()
+                                .clickable(onClick = onContactClick),
+                            shape = MaterialTheme.shapes.extraLarge,
+                            color = MaterialTheme.colorScheme.primaryContainer,
+                            contentColor = MaterialTheme.colorScheme.onPrimaryContainer
+                        ) {
+                            Row(
+                                modifier = Modifier.padding(horizontal = 20.dp),
+                                verticalAlignment = Alignment.CenterVertically,
+                                horizontalArrangement = Arrangement.Center
+                            ) {
+                                Icon(Icons.Default.Contacts, contentDescription = null)
+                                Spacer(Modifier.width(12.dp))
+                                Text(
+                                    text = "Contact Me",
+                                    style = MaterialTheme.typography.titleMedium,
+                                    fontWeight = FontWeight.Bold
+                                )
+                            }
+                        }
                         
                         // Credits Button
                         Surface(

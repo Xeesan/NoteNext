@@ -40,6 +40,9 @@ sealed interface Destination {
     data object About : Destination
 
     @Serializable
+    data object Contact : Destination
+
+    @Serializable
     data object Credits : Destination
 
     @Serializable

@@ -698,8 +698,16 @@ private fun NavGraphBuilder.sharedRoutes(
             onBackClick = { navController.popBackStack() },
             onDonateClick = { navController.navigate(Destination.Donate) },
             onCreditsClick = { navController.navigate(Destination.Credits) },
-            onChangelogClick = { navController.navigate(Destination.Changelog) }
+            onChangelogClick = { navController.navigate(Destination.Changelog) },
+            onContactClick = { navController.navigate(Destination.Contact) }
         )
+    }
+
+    composable<Destination.Contact>(
+        enterTransition = { slideEnter },
+        exitTransition = { slideExit }
+    ) {
+        ContactScreen(onBackClick = { navController.popBackStack() })
     }
 
     composable<Destination.Credits>(
