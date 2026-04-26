@@ -6,6 +6,7 @@ import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.intPreferencesKey
+import androidx.datastore.preferences.core.longPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 import com.suvojeet.notenext.ui.theme.ThemeMode
@@ -26,7 +27,8 @@ object PreferencesKeys {
     val DISALLOW_SCREENSHOTS = booleanPreferencesKey("disallow_screenshots")
     val CLIPBOARD_CLEAR_TIMEOUT = longPreferencesKey("clipboard_clear_timeout")
 
-    // Groq API Settings    val USE_CUSTOM_GROQ_KEY = booleanPreferencesKey("use_custom_groq_key")
+    // Groq API Settings
+    val USE_CUSTOM_GROQ_KEY = booleanPreferencesKey("use_custom_groq_key")
     val CUSTOM_GROQ_KEY = stringPreferencesKey("custom_groq_key")
     val CUSTOM_FAST_MODEL = stringPreferencesKey("custom_fast_model")
     val CUSTOM_LARGE_MODEL = stringPreferencesKey("custom_large_model")
