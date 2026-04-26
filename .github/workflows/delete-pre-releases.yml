@@ -1,0 +1,36 @@
+name: Delete Pre-Releases
+
+on:
+  workflow_dispatch:
+
+jobs:
+  delete-pre-releases:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Delete pre-releases
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          echo "Fetching pre-releases..."
+          # List all pre-releases and get their tag names
+          gh release list --limit 100 | grep "Pre-release" | cut -f 1 > pre_releases.txt || true
+          
+          if [ ! -s pre_releases.txt ]; then
+            echo "No pre-releases found."
+            exit 0
+          fi
+          
+          echo "Found the following pre-releases to delete:"
+          cat pre_releases.txt
+          
+          while read -r tag; do
+            echo "Deleting release and tag: $tag"
+            gh release delete "$tag" --yes --cleanup-tag
+          done < pre_releases.txt
+          
+          echo "All pre-releases deleted successfully."

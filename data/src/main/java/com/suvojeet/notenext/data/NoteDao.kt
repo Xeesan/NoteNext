@@ -424,4 +424,15 @@ interface NoteDao {
  projectId = :projectId AND isBinned = 0 ORDER BY isPinned DESC, lastEdited DESC
     """)
     fun getNoteSummariesByProjectId(projectId: Int): Flow<List<NoteSummaryWithAttachments>>
+
+    @Query("SELECT id FROM notes WHERE isArchived = 0 AND isBinned = 0 AND (projectId IS :projectId)")
+    suspend fun getAllNoteIds(projectId: Int? = null): List<Int>
+
+    @Query("""
+        SELECT notes.id FROM notes
+        JOIN notes_fts ON notes.id = notes_fts.rowid
+        WHERE notes_fts MATCH :query
+        AND notes.isArchived = 0 AND notes.isBinned = 0 AND (notes.projectId IS :projectId)
+    """)
+    suspend fun searchAllNoteIds(query: String, projectId: Int? = null): List<Int>
 }

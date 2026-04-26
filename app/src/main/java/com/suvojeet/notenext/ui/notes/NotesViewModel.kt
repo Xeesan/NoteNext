@@ -454,8 +454,11 @@ class NotesViewModel @Inject constructor(
             }
             is NotesEvent.SelectAllNotes -> {
                 viewModelScope.launch {
-                    val allPinned = listState.value.pinnedNotes.map { it.note.id }.toImmutableList()
-                    listDelegate.updateState { it.copy(selectedNoteIds = allPinned) }
+                    val allIds = repository.getAllNoteIds(
+                        searchQuery = listState.value.searchQuery,
+                        projectId = listState.value.filteredProjectId
+                    )
+                    listDelegate.updateState { it.copy(selectedNoteIds = allIds.toImmutableList()) }
                 }
             }
             is NotesEvent.TogglePinForSelectedNotes -> {

@@ -129,6 +129,14 @@ class NoteRepositoryImpl @Inject constructor(
     override fun getNoteSummariesByProjectId(projectId: Int): Flow<List<NoteSummaryWithAttachments>> = 
         noteDao.getNoteSummariesByProjectId(projectId)
 
+    override suspend fun getAllNoteIds(searchQuery: String, projectId: Int?): List<Int> {
+        return if (searchQuery.isBlank()) {
+            noteDao.getAllNoteIds(projectId)
+        } else {
+            noteDao.searchAllNoteIds(searchQuery, projectId)
+        }
+    }
+
     override fun getArchivedNotes(): Flow<List<NoteWithAttachments>> = 
         noteDao.getArchivedNotes()
 

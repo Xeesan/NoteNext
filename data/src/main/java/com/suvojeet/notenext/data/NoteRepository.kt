@@ -15,6 +15,7 @@ interface NoteRepository {
     fun getArchivedNoteSummaries(): Flow<List<NoteSummaryWithAttachments>>
     fun getBinnedNoteSummaries(): Flow<List<NoteSummaryWithAttachments>>
     fun getNoteSummariesByProjectId(projectId: Int): Flow<List<NoteSummaryWithAttachments>>
+    suspend fun getAllNoteIds(searchQuery: String = "", projectId: Int? = null): List<Int>
 
     fun getArchivedNotes(): Flow<List<NoteWithAttachments>>
     fun getBinnedNotes(): Flow<List<NoteWithAttachments>>
