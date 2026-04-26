@@ -54,6 +54,19 @@ import com.suvojeet.notenext.R
  * @param onConfirm Lambda to be invoked when a label is created or selected.
  *                  The selected/created label string is passed as a parameter.
  */
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.BorderStroke
+import androidx.compose.material3.OutlinedTextFieldDefaults
+import androidx.compose.material3.Surface
+import androidx.compose.foundation.layout.ContextualFlowRow
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.FlowRow
+import androidx.compose.material.icons.rounded.Close
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.ui.text.style.TextAlign
+
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun LabelDialog(
     labels: List<String>,
@@ -65,142 +78,144 @@ fun LabelDialog(
     AlertDialog(
         onDismissRequest = onDismiss,
         title = {
-            Row(verticalAlignment = Alignment.CenterVertically) {
+            Column(horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier.fillMaxWidth()) {
                 Box(
                     modifier = Modifier
-                        .size(40.dp)
+                        .size(56.dp)
                         .clip(CircleShape)
-                        .background(MaterialTheme.colorScheme.primaryContainer),
+                        .background(MaterialTheme.colorScheme.primary.copy(alpha = 0.1f)),
                     contentAlignment = Alignment.Center
                 ) {
                     Icon(
                         imageVector = Icons.Rounded.Label,
                         contentDescription = null,
-                        tint = MaterialTheme.colorScheme.onPrimaryContainer,
-                        modifier = Modifier.size(24.dp)
+                        tint = MaterialTheme.colorScheme.primary,
+                        modifier = Modifier.size(32.dp)
                     )
                 }
-                Spacer(modifier = Modifier.width(12.dp))
+                Spacer(modifier = Modifier.height(16.dp))
                 Text(
-                    text = stringResource(id = R.string.manage_labels),
-                    style = MaterialTheme.typography.headlineSmall.copy(fontWeight = FontWeight.SemiBold)
+                    text = "Manage Labels",
+                    style = MaterialTheme.typography.headlineSmall,
+                    fontWeight = FontWeight.ExtraBold
                 )
             }
         },
         text = {
-            Column {
+            Column(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
                 Text(
-                    text = "Select an existing label or create a new one.",
+                    text = "Organize your notes with custom labels",
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    modifier = Modifier.padding(bottom = 16.dp)
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier.padding(bottom = 24.dp)
                 )
 
-                // Input field for creating a new label and a "Create" button.
-                Row(
+                // Modern Input Field
+                OutlinedTextField(
+                    value = newLabel,
+                    onValueChange = { newLabel = it },
+                    placeholder = { Text("Enter label name...") },
                     modifier = Modifier.fillMaxWidth(),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    OutlinedTextField(
-                        value = newLabel,
-                        onValueChange = { newLabel = it },
-                        label = { Text(stringResource(id = R.string.new_label)) },
-                        modifier = Modifier
-                            .weight(1f),
-                        shape = RoundedCornerShape(12.dp),
-                        singleLine = true
-                    )
-                    Spacer(modifier = Modifier.width(8.dp))
-                    IconButton(
-                        onClick = {
-                            if (newLabel.isNotBlank()) {
-                                onConfirm(newLabel)
-                                newLabel = ""
+                    shape = CircleShape,
+                    singleLine = true,
+                    trailingIcon = {
+                        if (newLabel.isNotBlank()) {
+                            IconButton(
+                                onClick = {
+                                    onConfirm(newLabel)
+                                    newLabel = ""
+                                },
+                                modifier = Modifier
+                                    .padding(end = 4.dp)
+                                    .size(40.dp)
+                                    .background(MaterialTheme.colorScheme.primary, CircleShape)
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Rounded.Add,
+                                    contentDescription = "Add",
+                                    tint = MaterialTheme.colorScheme.onPrimary,
+                                    modifier = Modifier.size(20.dp)
+                                )
                             }
-                        },
-                        modifier = Modifier
-                            .size(48.dp)
-                            .background(
-                                color = if (newLabel.isNotBlank()) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.surfaceContainerHighest,
-                                shape = CircleShape
-                            ),
-                        enabled = newLabel.isNotBlank()
-                    ) {
-                        Icon(
-                            imageVector = Icons.Rounded.Add,
-                            contentDescription = stringResource(id = R.string.create),
-                            tint = if (newLabel.isNotBlank()) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSurfaceVariant
-                        )
-                    }
-                }
-                
-                Spacer(modifier = Modifier.height(16.dp))
+                        }
+                    },
+                    colors = OutlinedTextFieldDefaults.colors(
+                        focusedContainerColor = MaterialTheme.colorScheme.surface,
+                        unfocusedContainerColor = MaterialTheme.colorScheme.surface,
+                        focusedBorderColor = MaterialTheme.colorScheme.primary,
+                        unfocusedBorderColor = MaterialTheme.colorScheme.outlineVariant
+                    )
+                )
                 
                 if (labels.isNotEmpty()) {
+                    Spacer(modifier = Modifier.height(24.dp))
+                    
                     Text(
                         text = "Existing Labels",
                         style = MaterialTheme.typography.labelLarge,
                         color = MaterialTheme.colorScheme.primary,
-                        modifier = Modifier.padding(vertical = 8.dp)
+                        fontWeight = FontWeight.Bold,
+                        modifier = Modifier.align(Alignment.Start).padding(start = 8.dp, bottom = 12.dp)
                     )
                     
-                    // List of existing labels.
-                    LazyColumn(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(200.dp) // Limit height
-                            .background(MaterialTheme.colorScheme.surfaceContainerLow, RoundedCornerShape(12.dp))
-                            .clip(RoundedCornerShape(12.dp))
+                    // Grid-like FlowRow for Labels
+                    FlowRow(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.spacedBy(8.dp),
+                        verticalArrangement = Arrangement.spacedBy(8.dp)
                     ) {
-                        items(items = labels, key = { it }) { label ->
-                            ListItem(
-                                headlineContent = { Text(text = label, fontWeight = FontWeight.Medium) },
-                                leadingContent = {
-                                    Icon(
-                                        imageVector = Icons.Rounded.Label,
-                                        contentDescription = stringResource(id = R.string.label_icon),
-                                        tint = MaterialTheme.colorScheme.secondary
-                                    )
+                        labels.forEach { label ->
+                            val springModifier = Modifier.springPress()
+                            Surface(
+                                onClick = {
+                                    onConfirm(label)
+                                    onDismiss()
                                 },
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .clickable {
-                                        onConfirm(label)
-                                        onDismiss()
-                                    },
-                                colors = ListItemDefaults.colors(
-                                    containerColor = Color.Transparent
-                                )
-                            )
+                                shape = CircleShape,
+                                color = MaterialTheme.colorScheme.secondaryContainer.copy(alpha = 0.7f),
+                                contentColor = MaterialTheme.colorScheme.onSecondaryContainer,
+                                border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.3f)),
+                                modifier = springModifier
+                            ) {
+                                Row(
+                                    modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
+                                    verticalAlignment = Alignment.CenterVertically
+                                ) {
+                                    Icon(Icons.Rounded.Label, null, modifier = Modifier.size(16.dp))
+                                    Spacer(modifier = Modifier.width(8.dp))
+                                    Text(
+                                        text = label,
+                                        style = MaterialTheme.typography.labelLarge,
+                                        fontWeight = FontWeight.Medium
+                                    )
+                                }
+                            }
                         }
                     }
                 } else {
-                     Box(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(100.dp)
-                            .background(MaterialTheme.colorScheme.surfaceContainerLow, RoundedCornerShape(12.dp)),
-                        contentAlignment = Alignment.Center
-                     ) {
-                         Text(
-                             text = "No labels yet",
-                             style = MaterialTheme.typography.bodyMedium,
-                             color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.7f)
-                         )
-                     }
+                    Spacer(modifier = Modifier.height(32.dp))
+                    Text(
+                        text = "No labels yet",
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f),
+                        fontWeight = FontWeight.Medium
+                    )
                 }
             }
         },
         confirmButton = {
              TextButton(
                 onClick = onDismiss,
-                modifier = Modifier.springPress()
+                modifier = Modifier.padding(bottom = 8.dp, end = 8.dp)
             ) {
-                Text(stringResource(id = R.string.cancel))
+                Text("Close", fontWeight = FontWeight.Bold)
             }
         },
-        shape = MaterialTheme.shapes.extraLarge,
-        containerColor = MaterialTheme.colorScheme.surfaceContainer,
-        titleContentColor = MaterialTheme.colorScheme.onSurface
+        shape = RoundedCornerShape(32.dp),
+        containerColor = MaterialTheme.colorScheme.surfaceContainerHigh
     )
 }

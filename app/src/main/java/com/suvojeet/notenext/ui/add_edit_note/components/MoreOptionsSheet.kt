@@ -32,6 +32,15 @@ import com.suvojeet.notenext.data.ChecklistItem
 import java.text.SimpleDateFormat
 import java.util.*
 
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.ui.text.style.TextOverflow
+
 @Composable
 fun MoreOptionsSheet(
     state: NotesEditState,
@@ -44,37 +53,27 @@ fun MoreOptionsSheet(
     onPrint: () -> Unit,
     onToggleLock: () -> Unit
 ) {
-    val dateFormat = remember { SimpleDateFormat("yyyy-MM-dd hh:mm a", Locale.getDefault()) }
+    val dateFormat = remember { SimpleDateFormat("MMM dd, yyyy • hh:mm a", Locale.getDefault()) }
     val context = LocalContext.current
-    val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
+    val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = false)
 
     val lockLabel = stringResource(id = if (state.editingIsLocked) R.string.unlock else R.string.lock)
     val lockIcon = if (state.editingIsLocked) Icons.Default.LockOpen else Icons.Default.Lock
-    val convertLabel = stringResource(id = if (state.editingNoteType == NoteType.TEXT) R.string.convert_to_list else R.string.convert_to_text)
-    val convertIcon = Icons.Default.Check
-
-    val searchLabel = stringResource(id = R.string.search)
-    val deleteLabel = stringResource(id = R.string.delete)
-    val copyLabel = stringResource(id = R.string.make_a_copy)
-    val shareLabel = stringResource(id = R.string.share)
-    val labelsLabel = stringResource(id = R.string.labels)
-    val printLabel = stringResource(id = R.string.print)
-    val saveAsLabel = stringResource(id = R.string.save_as)
-    val historyLabel = stringResource(id = R.string.history)
-    val convertToTodoLabel = stringResource(id = R.string.convert_to_todo)
-    val selfDestructLabel = "Self-Destruct Timer"
-
-    data class OptionItem(val label: String, val icon: ImageVector, val action: () -> Unit)
     
-    val options = remember(state.editingIsLocked, state.editingNoteType, state.editingIsNewNote, lockLabel, convertLabel, searchLabel, deleteLabel, copyLabel, shareLabel, labelsLabel, printLabel, saveAsLabel, historyLabel, convertToTodoLabel, selfDestructLabel) {
+    val primaryColor = MaterialTheme.colorScheme.primary
+    val secondaryColor = MaterialTheme.colorScheme.secondary
+    val tertiaryColor = MaterialTheme.colorScheme.tertiary
+    val errorColor = MaterialTheme.colorScheme.error
+
+    // Labels for the grid
+    val options = remember(state.editingIsLocked, state.editingNoteType, state.editingIsNewNote, primaryColor, secondaryColor, tertiaryColor, errorColor) {
         mutableListOf<OptionItem>().apply {
-            add(OptionItem(lockLabel, lockIcon) { onToggleLock() })
-            add(OptionItem(selfDestructLabel, Icons.Default.Timer) { showExpiryDialog(true) })
-            add(OptionItem(convertLabel, convertIcon) { onEvent(NotesEvent.OnToggleNoteType) })
-            add(OptionItem(searchLabel, Icons.Default.Search) { onEvent(NotesEvent.ToggleNoteSearch) })
-            add(OptionItem(deleteLabel, Icons.Default.Delete) { showDeleteDialog(true) })
-            add(OptionItem(copyLabel, Icons.Default.ContentCopy) { onEvent(NotesEvent.OnCopyCurrentNoteClick) })
-            add(OptionItem(shareLabel, Icons.Default.Share) {
+            add(OptionItem(lockLabel, lockIcon, primaryColor) { onToggleLock() })
+            add(OptionItem("Self-Destruct", Icons.Default.Timer, Color(0xFF6750A4)) { showExpiryDialog(true) })
+            add(OptionItem(if (state.editingNoteType == NoteType.TEXT) "List View" else "Text View", Icons.Default.SwapHoriz, secondaryColor) { onEvent(NotesEvent.OnToggleNoteType) })
+            add(OptionItem("Search", Icons.Default.Search, tertiaryColor) { onEvent(NotesEvent.ToggleNoteSearch) })
+            add(OptionItem("Labels", Icons.AutoMirrored.Filled.Label, Color(0xFFE91E63)) { onEvent(NotesEvent.OnAddLabelsToCurrentNoteClick) })
+            add(OptionItem("Share", Icons.Default.Share, Color(0xFF009688)) {
                 val shareContent = if (state.editingNoteType == NoteType.CHECKLIST) {
                     val sb = StringBuilder()
                     state.editingChecklist.forEach { item ->
@@ -89,20 +88,18 @@ fun MoreOptionsSheet(
                 val sendIntent: Intent = Intent().apply {
                     action = Intent.ACTION_SEND
                     putExtra(Intent.EXTRA_TEXT, state.editingTitle + "\n\n" + shareContent)
-                    putExtra(Intent.EXTRA_SUBJECT, state.editingTitle)
                     type = "text/plain"
                 }
-                val shareIntent = Intent.createChooser(sendIntent, null)
-                context.startActivity(shareIntent)
+                context.startActivity(Intent.createChooser(sendIntent, null))
             })
-            add(OptionItem(labelsLabel, Icons.AutoMirrored.Filled.Label) { onEvent(NotesEvent.OnAddLabelsToCurrentNoteClick) })
-            add(OptionItem(printLabel, Icons.Default.Print) { onPrint() })
-            add(OptionItem(saveAsLabel, Icons.Default.FileDownload) { showSaveAsDialog(true) })
-            
+            add(OptionItem("Copy", Icons.Default.ContentCopy, Color(0xFF607D8B)) { onEvent(NotesEvent.OnCopyCurrentNoteClick) })
+            add(OptionItem("Print", Icons.Default.Print, Color(0xFF795548)) { onPrint() })
+            add(OptionItem("Export", Icons.Default.FileDownload, Color(0xFFFF9800)) { showSaveAsDialog(true) })
             if (!state.editingIsNewNote) {
-                add(OptionItem(historyLabel, Icons.Default.History) { showHistoryDialog(true) })
+                add(OptionItem("History", Icons.Default.History, Color(0xFF3F51B5)) { showHistoryDialog(true) })
             }
-            add(OptionItem(convertToTodoLabel, Icons.Default.PlaylistAddCheck) { onEvent(NotesEvent.ConvertToTodo) })
+            add(OptionItem("To Todo", Icons.Default.PlaylistAddCheck, Color(0xFF4CAF50)) { onEvent(NotesEvent.ConvertToTodo) })
+            add(OptionItem("Delete", Icons.Default.Delete, errorColor) { showDeleteDialog(true) })
         }
     }
 
@@ -110,79 +107,95 @@ fun MoreOptionsSheet(
         onDismissRequest = onDismiss,
         sheetState = sheetState,
         containerColor = MaterialTheme.colorScheme.surfaceContainerHigh,
-        shape = MaterialTheme.shapes.extraLarge,
+        shape = RoundedCornerShape(topStart = 28.dp, topEnd = 28.dp),
         dragHandle = { BottomSheetDefaults.DragHandle() }
     ) {
-        LazyColumn(
+        Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(bottom = 32.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
+                .padding(bottom = 24.dp)
         ) {
             if (!state.editingIsNewNote && state.editingLastEdited != null && state.editingLastEdited != 0L) {
-                item {
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 24.dp, vertical = 8.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
                     Text(
-                        text = stringResource(id = R.string.last_edited, dateFormat.format(Date(state.editingLastEdited ?: 0L))),
-                        style = MaterialTheme.typography.bodyMedium,
-                        fontWeight = FontWeight.SemiBold,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant,
-                        modifier = Modifier.padding(vertical = 16.dp)
+                        text = "Last edited ${dateFormat.format(Date(state.editingLastEdited))}",
+                        style = MaterialTheme.typography.labelMedium,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.7f)
                     )
-                    HorizontalDivider(modifier = Modifier.padding(horizontal = 16.dp))
+                    Spacer(modifier = Modifier.height(16.dp))
+                    HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.5f))
                 }
             }
 
-            items(
-                items = options,
-                key = { it.label }
-            ) { option ->
-                MoreOptionsItem(
-                    icon = option.icon,
-                    label = option.label,
-                    onClick = {
+            LazyVerticalGrid(
+                columns = GridCells.Fixed(4),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 12.dp, vertical = 8.dp),
+                contentPadding = PaddingValues(8.dp),
+                verticalArrangement = Arrangement.spacedBy(16.dp),
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                items(options) { option ->
+                    GridOptionItem(option) {
                         onDismiss()
                         option.action()
                     }
-                )
+                }
             }
         }
     }
 }
 
+private data class OptionItem(
+    val label: String,
+    val icon: ImageVector,
+    val color: Color,
+    val action: () -> Unit
+)
+
 @Composable
-private fun MoreOptionsItem(
-    icon: ImageVector,
-    label: String,
-    onClick: () -> Unit,
-    modifier: Modifier = Modifier
+private fun GridOptionItem(
+    option: OptionItem,
+    onClick: () -> Unit
 ) {
-    Row(
-        modifier = modifier
+    Column(
+        modifier = Modifier
             .fillMaxWidth()
+            .clip(RoundedCornerShape(16.dp))
             .clickable(onClick = onClick)
             .springPress()
-            .padding(vertical = 12.dp, horizontal = 24.dp),
-        verticalAlignment = Alignment.CenterVertically
+            .padding(vertical = 12.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
     ) {
         Box(
             modifier = Modifier
-                .size(40.dp)
-                .background(MaterialTheme.colorScheme.surfaceContainerHighest, MaterialTheme.shapes.medium),
+                .size(52.dp)
+                .background(option.color.copy(alpha = 0.1f), CircleShape),
             contentAlignment = Alignment.Center
         ) {
             Icon(
-                imageVector = icon,
-                contentDescription = label,
-                modifier = Modifier.size(20.dp),
-                tint = MaterialTheme.colorScheme.onSurface
+                imageVector = option.icon,
+                contentDescription = option.label,
+                tint = option.color,
+                modifier = Modifier.size(24.dp)
             )
         }
-        Spacer(modifier = Modifier.width(16.dp))
+        Spacer(modifier = Modifier.height(8.dp))
         Text(
-            text = label,
-            style = MaterialTheme.typography.bodyLarge,
-            fontWeight = FontWeight.Medium,
-            color = MaterialTheme.colorScheme.onSurface
+            text = option.label,
+            style = MaterialTheme.typography.labelSmall,
+            fontWeight = FontWeight.Bold,
+            color = MaterialTheme.colorScheme.onSurface,
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis,
+            textAlign = TextAlign.Center
         )
     }
 }
