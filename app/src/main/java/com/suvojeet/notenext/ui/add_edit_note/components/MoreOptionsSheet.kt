@@ -45,7 +45,7 @@ fun MoreOptionsSheet(
 ) {
     val dateFormat = remember { SimpleDateFormat("yyyy-MM-dd hh:mm a", Locale.getDefault()) }
     val context = LocalContext.current
-    val sheetState = rememberModalBottomSheetState()
+    val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
 
     val lockLabel = stringResource(id = if (state.editingIsLocked) R.string.unlock else R.string.lock)
     val lockIcon = if (state.editingIsLocked) Icons.Default.LockOpen else Icons.Default.Lock

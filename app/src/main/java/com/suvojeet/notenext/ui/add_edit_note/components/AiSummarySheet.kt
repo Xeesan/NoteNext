@@ -35,8 +35,8 @@ fun AiSummarySheet(
 ) {
     val context = LocalContext.current
     val scrollState = rememberScrollState()
-    // Set skipPartiallyExpanded to false to allow the two-stage swipe behavior
-    val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = false)
+    // Set skipPartiallyExpanded to true to avoid button issues in partially expanded state
+    val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
     
     // Determine if we are in the expanded state to adjust UI elements
     val isExpanded = sheetState.targetValue == SheetValue.Expanded || sheetState.currentValue == SheetValue.Expanded
