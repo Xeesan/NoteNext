@@ -1,4 +1,3 @@
-
 package com.suvojeet.notenext.ui.project
 
 import androidx.compose.ui.text.SpanStyle
@@ -54,6 +53,7 @@ data class ProjectNotesState(
     val projectDescription: String? = null,
     val editingReminderTime: Long? = null,
     val editingRepeatOption: String? = null,
+    val editingExpiryTime: Long? = null,
     val saveStatus: SaveStatus = SaveStatus.SAVED,
 
     val isSummarizing: Boolean = false,

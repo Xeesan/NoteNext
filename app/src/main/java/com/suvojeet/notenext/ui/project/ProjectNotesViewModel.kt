@@ -733,6 +733,12 @@ class ProjectNotesViewModel @Inject constructor(
                 )
                 scheduleAutoSave()
             }
+            is ProjectNotesEvent.OnExpiryChange -> {
+                _state.value = state.value.copy(
+                    editingExpiryTime = event.expiryTime
+                )
+                scheduleAutoSave()
+            }
             is ProjectNotesEvent.AutoSaveNote -> {
                 viewModelScope.launch {
                     onEvent(ProjectNotesEvent.OnSaveNoteClick(shouldCollapse = false))
@@ -1001,7 +1007,8 @@ class ProjectNotesViewModel @Inject constructor(
                                 projectId = projectId,
                                 isLocked = state.value.editingIsLocked,
                                 reminderTime = state.value.editingReminderTime,
-                                repeatOption = state.value.editingRepeatOption
+                                repeatOption = state.value.editingRepeatOption,
+                                expiryTime = state.value.editingExpiryTime
                             )
                         } else { // Existing note
                             repository.getNoteById(noteId)?.let { existingNote ->
@@ -1019,6 +1026,8 @@ class ProjectNotesViewModel @Inject constructor(
                                     isLocked = state.value.editingIsLocked,
                                     reminderTime = state.value.editingReminderTime,
                                     repeatOption = state.value.editingRepeatOption,
+                                    expiryTime = state.value.editingExpiryTime,
+                                    aiSummary = state.value.summaryResult,
                                     isEncrypted = false,
                                     iv = null
                                 )

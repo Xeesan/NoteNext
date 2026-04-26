@@ -63,6 +63,7 @@ sealed class ProjectNotesEvent {
     data class SetInitialTitle(val title: String) : ProjectNotesEvent()
     object DismissLabelDialog : ProjectNotesEvent()
     data class OnReminderChange(val time: Long?, val repeatOption: String?) : ProjectNotesEvent()
+    data class OnExpiryChange(val expiryTime: Long?) : ProjectNotesEvent()
     object AutoSaveNote : ProjectNotesEvent()
 
     // AI Events

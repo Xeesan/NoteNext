@@ -11,11 +11,13 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.Timer
 import androidx.compose.material.icons.rounded.Delete
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -189,57 +191,9 @@ fun AddEditNoteDialogs(
     }
 
     if (showInsertLinkDialog) {
-...
-@Composable
-fun ExpiryTimerDialog(
-    currentExpiryTime: Long?,
-    onDismiss: () -> Unit,
-    onExpirySelected: (Long?) -> Unit
-) {
-    val options = listOf(
-        null to "Never",
-        (1 * 60 * 60 * 1000L) to "1 Hour",
-        (24 * 60 * 60 * 1000L) to "24 Hours",
-        (7 * 24 * 60 * 60 * 1000L) to "7 Days"
-    )
-
-    AlertDialog(
-        onDismissRequest = onDismiss,
-        shape = MaterialTheme.shapes.extraLarge,
-        title = { Text("Self-Destruct Timer") },
-        text = {
-            Column {
-                options.forEach { (duration, label) ->
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .clip(androidx.compose.ui.draw.clip(MaterialTheme.shapes.medium))
-                            .clickable { 
-                                val expiryTime = duration?.let { System.currentTimeMillis() + it }
-                                onExpirySelected(expiryTime) 
-                            }
-                            .padding(12.dp),
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        RadioButton(selected = (currentExpiryTime == null && duration == null), onClick = null)
-                        Spacer(Modifier.width(16.dp))
-                        Text(label)
-                    }
-                }
-            }
-        },
-        confirmButton = {
-            TextButton(onClick = onDismiss) {
-                Text("Cancel")
-            }
-        }
-    )
-}
         InsertLinkDialog(
             onDismiss = { onShowInsertLinkDialogChange(false) },
             onInsertLink = { text, url ->
-                // Note: NotesEvent.OnInsertLink only takes url. 
-                // Display text handling might need refinement if intended to be different.
                 onEvent(NotesEvent.OnInsertLink(url))
                 onShowInsertLinkDialogChange(false)
             }
@@ -292,4 +246,50 @@ fun ExpiryTimerDialog(
             }
         )
     }
+}
+
+@Composable
+fun ExpiryTimerDialog(
+    currentExpiryTime: Long?,
+    onDismiss: () -> Unit,
+    onExpirySelected: (Long?) -> Unit
+) {
+    val options = listOf(
+        null to "Never",
+        (1 * 60 * 60 * 1000L) to "1 Hour",
+        (24 * 60 * 60 * 1000L) to "24 Hours",
+        (7 * 24 * 60 * 60 * 1000L) to "7 Days"
+    )
+
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        shape = MaterialTheme.shapes.extraLarge,
+        title = { Text("Self-Destruct Timer") },
+        text = {
+            Column {
+                options.forEach { (duration, label) ->
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clip(MaterialTheme.shapes.medium)
+                            .clickable { 
+                                val expiryTime = duration?.let { System.currentTimeMillis() + it }
+                                onExpirySelected(expiryTime) 
+                            }
+                            .padding(12.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        RadioButton(selected = (currentExpiryTime == null && duration == null), onClick = null)
+                        Spacer(Modifier.width(16.dp))
+                        Text(label)
+                    }
+                }
+            }
+        },
+        confirmButton = {
+            TextButton(onClick = onDismiss) {
+                Text("Cancel")
+            }
+        }
+    )
 }
