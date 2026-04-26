@@ -247,9 +247,13 @@ fun NavGraph(
                         navController = navController,
                         notesState = notesState,
                         notesViewModel = notesViewModel,
-                        onCloseDrawer = { scope.launch { drawerState.close() } }
-                    )
-                }
+                        onCloseDrawer = { action ->
+                            scope.launch {
+                                drawerState.close()
+                                action()
+                            }
+                        }
+                    )                }
             }
         ) {
             AppNavHost(
@@ -272,7 +276,7 @@ private fun DrawerContent(
     navController: NavHostController,
     notesState: NotesListState,
     notesViewModel: NotesViewModel,
-    onCloseDrawer: () -> Unit
+    onCloseDrawer: (onClosed: () -> Unit) -> Unit
 ) {
     Text(
         text = stringResource(id = R.string.app_name),
@@ -292,10 +296,26 @@ private fun DrawerContent(
             Icons.AutoMirrored.Filled.Label, 
             currentDestination?.hasRoute<Destination.Notes>() == true && notesState.filteredLabel == null
         ) {
-            onCloseDrawer()
-            if (currentDestination?.hasRoute<Destination.Notes>() != true || notesState.filteredLabel != null) {
-                notesViewModel.onEvent(NotesEvent.FilterByLabel(null))
-                navController.navigate(Destination.Notes()) {
+            onCloseDrawer {
+                if (currentDestination?.hasRoute<Destination.Notes>() != true || notesState.filteredLabel != null) {
+                    notesViewModel.onEvent(NotesEvent.FilterByLabel(null))
+                    navController.navigate(Destination.Notes()) {
+                        popUpTo(navController.graph.findStartDestination().id) {
+                            saveState = true
+                        }
+                        launchSingleTop = true
+                        restoreState = true
+                    }
+                }
+            }
+        },
+        DrawerItem(
+            R.string.projects, 
+            Icons.Default.CreateNewFolder, 
+            currentDestination?.hasRoute<Destination.Projects>() == true
+        ) {
+            onCloseDrawer {
+                navController.navigate(Destination.Projects) {
                     popUpTo(navController.graph.findStartDestination().id) {
                         saveState = true
                     }
@@ -305,31 +325,18 @@ private fun DrawerContent(
             }
         },
         DrawerItem(
-            R.string.projects, 
-            Icons.Default.CreateNewFolder, 
-            currentDestination?.hasRoute<Destination.Projects>() == true
-        ) {
-            onCloseDrawer()
-            navController.navigate(Destination.Projects) {
-                popUpTo(navController.graph.findStartDestination().id) {
-                    saveState = true
-                }
-                launchSingleTop = true
-                restoreState = true
-            }
-        },
-        DrawerItem(
             R.string.archive, 
             Icons.Default.Archive, 
             currentDestination?.hasRoute<Destination.Archive>() == true
         ) {
-            onCloseDrawer()
-            navController.navigate(Destination.Archive) {
-                popUpTo(navController.graph.findStartDestination().id) {
-                    saveState = true
+            onCloseDrawer {
+                navController.navigate(Destination.Archive) {
+                    popUpTo(navController.graph.findStartDestination().id) {
+                        saveState = true
+                    }
+                    launchSingleTop = true
+                    restoreState = true
                 }
-                launchSingleTop = true
-                restoreState = true
             }
         },
         DrawerItem(
@@ -337,13 +344,14 @@ private fun DrawerContent(
             Icons.Default.Notifications, 
             currentDestination?.hasRoute<Destination.Reminder>() == true
         ) {
-            onCloseDrawer()
-            navController.navigate(Destination.Reminder) {
-                popUpTo(navController.graph.findStartDestination().id) {
-                    saveState = true
+            onCloseDrawer {
+                navController.navigate(Destination.Reminder) {
+                    popUpTo(navController.graph.findStartDestination().id) {
+                        saveState = true
+                    }
+                    launchSingleTop = true
+                    restoreState = true
                 }
-                launchSingleTop = true
-                restoreState = true
             }
         },
         DrawerItem(
@@ -351,13 +359,14 @@ private fun DrawerContent(
             Icons.Default.PlaylistAddCheck, 
             currentDestination?.hasRoute<Destination.Todo>() == true
         ) {
-            onCloseDrawer()
-            navController.navigate(Destination.Todo) {
-                popUpTo(navController.graph.findStartDestination().id) {
-                    saveState = true
+            onCloseDrawer {
+                navController.navigate(Destination.Todo) {
+                    popUpTo(navController.graph.findStartDestination().id) {
+                        saveState = true
+                    }
+                    launchSingleTop = true
+                    restoreState = true
                 }
-                launchSingleTop = true
-                restoreState = true
             }
         },
         DrawerItem(
@@ -365,13 +374,14 @@ private fun DrawerContent(
             Icons.Default.Delete, 
             currentDestination?.hasRoute<Destination.Bin>() == true
         ) {
-            onCloseDrawer()
-            navController.navigate(Destination.Bin) {
-                popUpTo(navController.graph.findStartDestination().id) {
-                    saveState = true
+            onCloseDrawer {
+                navController.navigate(Destination.Bin) {
+                    popUpTo(navController.graph.findStartDestination().id) {
+                        saveState = true
+                    }
+                    launchSingleTop = true
+                    restoreState = true
                 }
-                launchSingleTop = true
-                restoreState = true
             }
         },
         DrawerItem(
@@ -379,13 +389,14 @@ private fun DrawerContent(
             Icons.Default.Settings, 
             currentDestination?.hasRoute<Destination.Settings>() == true
         ) {
-            onCloseDrawer()
-            navController.navigate(Destination.Settings) {
-                popUpTo(navController.graph.findStartDestination().id) {
-                    saveState = true
+            onCloseDrawer {
+                navController.navigate(Destination.Settings) {
+                    popUpTo(navController.graph.findStartDestination().id) {
+                        saveState = true
+                    }
+                    launchSingleTop = true
+                    restoreState = true
                 }
-                launchSingleTop = true
-                restoreState = true
             }
         }
     )
@@ -408,13 +419,14 @@ private fun DrawerContent(
             label = { Text(stringResource(id = R.string.create_new_label), fontWeight = FontWeight.Bold) },
             selected = false,
             onClick = {
-                onCloseDrawer()
-                navController.navigate(Destination.EditLabels) {
-                    popUpTo(navController.graph.findStartDestination().id) {
-                        saveState = true
+                onCloseDrawer {
+                    navController.navigate(Destination.EditLabels) {
+                        popUpTo(navController.graph.findStartDestination().id) {
+                            saveState = true
+                        }
+                        launchSingleTop = true
+                        restoreState = true
                     }
-                    launchSingleTop = true
-                    restoreState = true
                 }
             },
             modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding).springPress()
@@ -434,13 +446,14 @@ private fun DrawerContent(
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
             IconButton(onClick = {
-                onCloseDrawer()
-                navController.navigate(Destination.EditLabels) {
-                    popUpTo(navController.graph.findStartDestination().id) {
-                        saveState = true
+                onCloseDrawer {
+                    navController.navigate(Destination.EditLabels) {
+                        popUpTo(navController.graph.findStartDestination().id) {
+                            saveState = true
+                        }
+                        launchSingleTop = true
+                        restoreState = true
                     }
-                    launchSingleTop = true
-                    restoreState = true
                 }
             }, modifier = Modifier.size(24.dp).springPress()) {
                 Icon(
@@ -457,15 +470,16 @@ private fun DrawerContent(
                 label = { Text(label, fontWeight = FontWeight.Medium) },
                 selected = notesState.filteredLabel == label,
                 onClick = {
-                    onCloseDrawer()
-                    notesViewModel.onEvent(NotesEvent.FilterByLabel(label))
-                    if (currentDestination?.hasRoute<Destination.Notes>() != true || notesState.filteredLabel != label) {
-                        navController.navigate(Destination.Notes()) {
-                            popUpTo(navController.graph.findStartDestination().id) {
-                                saveState = true
+                    onCloseDrawer {
+                        notesViewModel.onEvent(NotesEvent.FilterByLabel(label))
+                        if (currentDestination?.hasRoute<Destination.Notes>() != true) {
+                            navController.navigate(Destination.Notes()) {
+                                popUpTo(navController.graph.findStartDestination().id) {
+                                    saveState = true
+                                }
+                                launchSingleTop = true
+                                restoreState = true
                             }
-                            launchSingleTop = true
-                            restoreState = true
                         }
                     }
                 },
