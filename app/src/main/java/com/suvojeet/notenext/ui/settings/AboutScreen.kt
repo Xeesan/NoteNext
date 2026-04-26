@@ -162,6 +162,7 @@ fun AboutScreen(
                             role = stringResource(id = R.string.core_developer),
                             avatarUrl = "https://avatars.githubusercontent.com/u/107928380?v=4",
                             githubUrl = "https://github.com/suvojeet-sengupta",
+                            websiteUrl = "https://suvojeetsengupta.in",
                             isInternetAvailable = isInternetAvailable,
                             uriHandler = uriHandler
                         )
@@ -486,6 +487,7 @@ fun ModernTeamMemberCard(
     avatarUrl: String,
     githubUrl: String? = null,
     telegramUrl: String? = null,
+    websiteUrl: String? = null,
     isInternetAvailable: Boolean,
     uriHandler: androidx.compose.ui.platform.UriHandler
 ) {
@@ -494,7 +496,7 @@ fun ModernTeamMemberCard(
             .fillMaxWidth()
             .springPress()
             .clickable(onClick = { 
-                val url = telegramUrl ?: githubUrl
+                val url = websiteUrl ?: telegramUrl ?: githubUrl
                 url?.let { uriHandler.openUri(it) }
             }),
         shape = MaterialTheme.shapes.extraLarge,

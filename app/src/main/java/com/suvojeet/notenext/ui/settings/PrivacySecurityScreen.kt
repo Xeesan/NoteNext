@@ -45,6 +45,7 @@ fun PrivacySecurityScreen(
     val clipboardTimeout by settingsRepository.clipboardClearTimeout.collectAsStateWithLifecycle(initialValue = 0L)
 
     var showClipboardDialog by remember { mutableStateOf(false) }
+    var showSelfDestructInfo by remember { mutableStateOf(false) }
 
     Scaffold(
         modifier = Modifier
@@ -182,7 +183,7 @@ fun PrivacySecurityScreen(
                             title = "Self-Destructing Notes",
                             subtitle = "Set notes to automatically delete after a certain time",
                             iconColor = Color(0xFF6750A4),
-                            onClick = { /* This is enabled per-note, showing info here */ }
+                            onClick = { showSelfDestructInfo = true }
                         )
                     }
                 }
@@ -200,6 +201,22 @@ fun PrivacySecurityScreen(
                 showClipboardDialog = false
             },
             onDismiss = { showClipboardDialog = false }
+        )
+    }
+    if (showSelfDestructInfo) {
+        AlertDialog(
+            onDismissRequest = { showSelfDestructInfo = false },
+            icon = { Icon(Icons.Rounded.Timer, contentDescription = null, tint = Color(0xFF6750A4)) },
+            title = { Text("Self-Destructing Notes") },
+            text = {
+                Text("Self-destruct is a per-note feature. You can set a timer for any note by clicking the 'More' (three-dots) menu while editing a note and selecting 'Self-Destruct Timer'. Once the timer expires, the note will be permanently deleted.")
+            },
+            confirmButton = {
+                TextButton(onClick = { showSelfDestructInfo = false }) {
+                    Text("Got it")
+                }
+            },
+            shape = MaterialTheme.shapes.extraLarge
         )
     }
 }
