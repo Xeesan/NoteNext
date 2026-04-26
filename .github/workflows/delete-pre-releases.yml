@@ -17,15 +17,15 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           echo "Fetching pre-releases..."
-          # List all pre-releases and get their tag names
-          gh release list --limit 100 | grep "Pre-release" | cut -f 1 > pre_releases.txt || true
+          # Use JSON output and jq to reliably get the tagName of pre-releases
+          gh release list --limit 100 --json tagName,isPrerelease | jq -r '.[] | select(.isPrerelease == true) | .tagName' > pre_releases.txt
           
           if [ ! -s pre_releases.txt ]; then
             echo "No pre-releases found."
             exit 0
           fi
           
-          echo "Found the following pre-releases to delete:"
+          echo "Found the following pre-release tags to delete:"
           cat pre_releases.txt
           
           while read -r tag; do

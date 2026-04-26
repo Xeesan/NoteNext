@@ -169,8 +169,12 @@ class ProjectNotesViewModel @Inject constructor(
                 _state.value = state.value.copy(selectedNoteIds = emptyList())
             }
             is ProjectNotesEvent.SelectAllNotes -> {
-                val allIds = state.value.notes.map { it.note.id }
-                _state.value = state.value.copy(selectedNoteIds = allIds)
+                viewModelScope.launch {
+                    val allIds = repository.getAllNoteIds(
+                        projectId = projectId
+                    )
+                    _state.value = state.value.copy(selectedNoteIds = allIds)
+                }
             }
             is ProjectNotesEvent.TogglePinForSelectedNotes -> {
                 viewModelScope.launch {
