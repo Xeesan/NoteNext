@@ -429,6 +429,7 @@ class ProjectNotesViewModel @Inject constructor(
                 onEvent(ProjectNotesEvent.OnSaveNoteClick())
             }
             is ProjectNotesEvent.AddChecklistItem -> {
+                if (state.value.editingChecklist.size >= 500) return
                 val (updatedChecklist, newItemId) = com.suvojeet.notenext.ui.notes.ChecklistManager.addChecklistItem(state.value.editingChecklist)
                 _state.value = state.value.copy(
                     editingChecklist = updatedChecklist,
@@ -438,6 +439,7 @@ class ProjectNotesViewModel @Inject constructor(
                 scheduleAutoSave()
             }
             is ProjectNotesEvent.AddChecklistItemAfter -> {
+                if (state.value.editingChecklist.size >= 500) return
                 val (updatedChecklist, newItemId) = com.suvojeet.notenext.ui.notes.ChecklistManager.addChecklistItemAfter(state.value.editingChecklist, event.itemId)
                 _state.value = state.value.copy(
                     editingChecklist = updatedChecklist,
@@ -477,11 +479,13 @@ class ProjectNotesViewModel @Inject constructor(
                 scheduleAutoSave()
             }
             is ProjectNotesEvent.OnChecklistItemTextChange -> {
+                if (event.text.length > 2000) return
                 val updatedChecklist = com.suvojeet.notenext.ui.notes.ChecklistManager.changeItemText(state.value.editingChecklist, event.itemId, event.text)
                 _state.value = state.value.copy(editingChecklist = updatedChecklist)
                 scheduleAutoSave()
             }
             is ProjectNotesEvent.OnChecklistItemValueChange -> {
+                if (event.value.text.length > 2000) return
                 val currentValues = state.value.checklistInputValues.toMutableMap()
                 val oldContent = currentValues[event.itemId] ?: TextFieldValue("")
 
@@ -490,8 +494,7 @@ class ProjectNotesViewModel @Inject constructor(
                     newContent = event.value,
                     activeStyles = state.value.activeStyles,
                     activeHeadingStyle = state.value.activeHeadingStyle
-                )
-                
+                )                
                 currentValues[event.itemId] = finalContent
                 
                 // Sync styles with toolbar
@@ -533,9 +536,10 @@ class ProjectNotesViewModel @Inject constructor(
                 _state.value = state.value.copy(focusedChecklistItemId = event.itemId)
             }
             is ProjectNotesEvent.OnTitleChange -> {
-                val newHistory = state.value.editingHistory.take(state.value.editingHistoryIndex + 1) + (event.title to state.value.editingContent)
+                val safeTitle = if (event.title.length > 100) event.title.take(100) else event.title
+                val newHistory = state.value.editingHistory.take(state.value.editingHistoryIndex + 1) + (safeTitle to state.value.editingContent)
                 _state.value = state.value.copy(
-                    editingTitle = event.title,
+                    editingTitle = safeTitle,
                     editingHistory = newHistory,
                     editingHistoryIndex = newHistory.lastIndex
                 )
@@ -545,6 +549,13 @@ class ProjectNotesViewModel @Inject constructor(
                 if (state.value.editingNoteType == NoteType.TEXT) {
                     val newContent = event.content
                     val oldContent = state.value.editingContent
+                    
+                    if (newContent.text.length > 100_000) {
+                        _state.value = state.value.copy(
+                            editingContent = oldContent.copy(selection = newContent.selection)
+                        )
+                        return@launch
+                    }
 
                     val finalContent = if (newContent.text != oldContent.text) {
                         val oldText = oldContent.text
@@ -709,7 +720,8 @@ class ProjectNotesViewModel @Inject constructor(
                 }
             }
             is ProjectNotesEvent.SetInitialTitle -> {
-                _state.value = state.value.copy(editingTitle = event.title)
+                val safeTitle = if (event.title.length > 100) event.title.take(100) else event.title
+                _state.value = state.value.copy(editingTitle = safeTitle)
             }
             is ProjectNotesEvent.OnReminderChange -> {
                 _state.value = state.value.copy(

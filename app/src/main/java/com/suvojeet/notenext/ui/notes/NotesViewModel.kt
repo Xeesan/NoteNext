@@ -762,6 +762,7 @@ class NotesViewModel @Inject constructor(
             }
 
             is NotesEvent.AddChecklistItem -> {
+                if (editState.value.editingChecklist.size >= 500) return
                 val (updatedChecklist, newItemId) = ChecklistManager.addChecklistItem(editState.value.editingChecklist)
                 editorDelegate.updateState { it.copy(
                     editingChecklist = updatedChecklist.toImmutableList(),
@@ -771,6 +772,7 @@ class NotesViewModel @Inject constructor(
                 scheduleAutoSave()
             }
             is NotesEvent.AddChecklistItemAfter -> {
+                if (editState.value.editingChecklist.size >= 500) return
                 val (updatedChecklist, newItemId) = ChecklistManager.addChecklistItemAfter(editState.value.editingChecklist, event.itemId)
                 editorDelegate.updateState { it.copy(
                     editingChecklist = updatedChecklist.toImmutableList(),
@@ -811,6 +813,7 @@ class NotesViewModel @Inject constructor(
                 scheduleAutoSave()
             }
             is NotesEvent.OnChecklistItemTextChange -> {
+                if (event.text.length > 2000) return
                 val updatedChecklist = ChecklistManager.changeItemText(editState.value.editingChecklist, event.itemId, event.text)
                 editorDelegate.updateState { it.copy(editingChecklist = updatedChecklist.toImmutableList()) }
                 scheduleAutoSave()
@@ -825,6 +828,7 @@ class NotesViewModel @Inject constructor(
                 }
             }
             is NotesEvent.OnChecklistItemValueChange -> {
+                if (event.value.text.length > 2000) return
                 val updatedInputValues = editState.value.checklistInputValues.toMutableMap()
                 updatedInputValues[event.itemId] = event.value
 
@@ -1257,8 +1261,9 @@ class NotesViewModel @Inject constructor(
                 ) }
             }
             is NotesEvent.SetInitialTitle -> {
+                val safeTitle = if (event.title.length > 100) event.title.take(100) else event.title
                 editorDelegate.updateState { it.copy(
-                    editingTitle = event.title
+                    editingTitle = safeTitle
                 ) }
             }
             is NotesEvent.OnReminderChange -> {

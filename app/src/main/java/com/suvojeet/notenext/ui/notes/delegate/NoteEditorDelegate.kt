@@ -43,8 +43,9 @@ class NoteEditorDelegate @Inject constructor(
     private var autoSaveJob: Job? = null
 
     fun onTitleChange(newTitle: String) {
-        _editState.update { it.copy(editingTitle = newTitle, saveStatus = SaveStatus.UNSAVED) }
-        savedStateHandle[KEY_EDITING_TITLE] = newTitle
+        val safeTitle = if (newTitle.length > 100) newTitle.take(100) else newTitle
+        _editState.update { it.copy(editingTitle = safeTitle, saveStatus = SaveStatus.UNSAVED) }
+        savedStateHandle[KEY_EDITING_TITLE] = safeTitle
     }
 
     fun onContentChange(newContent: TextFieldValue, scope: CoroutineScope, onSave: suspend () -> Unit) {

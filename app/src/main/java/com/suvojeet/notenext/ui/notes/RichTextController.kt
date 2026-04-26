@@ -36,6 +36,11 @@ class RichTextController @Inject constructor() {
         activeStyles: Set<SpanStyle>,
         activeHeadingStyle: Int
     ): TextFieldValue {
+        // Safe limit for content length
+        if (newContent.text.length > 100_000) {
+            return oldContent.copy(selection = newContent.selection)
+        }
+
         if (newContent.text == oldContent.text) {
             return oldContent.copy(selection = newContent.selection)
         }

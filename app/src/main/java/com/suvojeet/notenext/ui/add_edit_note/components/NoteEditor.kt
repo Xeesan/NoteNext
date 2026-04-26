@@ -86,8 +86,8 @@ fun NoteTitleEditor(
                 fontWeight = FontWeight.Black,
                 letterSpacing = (-0.5).sp
             ),
-            singleLine = true,
-            maxLines = 1
+            singleLine = false,
+            maxLines = 3
         )
 
         ReminderDisplay(
