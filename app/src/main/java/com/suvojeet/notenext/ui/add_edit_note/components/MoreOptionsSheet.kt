@@ -40,6 +40,7 @@ fun MoreOptionsSheet(
     showDeleteDialog: (Boolean) -> Unit,
     showSaveAsDialog: (Boolean) -> Unit,
     showHistoryDialog: (Boolean) -> Unit,
+    showExpiryDialog: (Boolean) -> Unit,
     onPrint: () -> Unit,
     onToggleLock: () -> Unit
 ) {
@@ -61,12 +62,14 @@ fun MoreOptionsSheet(
     val saveAsLabel = stringResource(id = R.string.save_as)
     val historyLabel = stringResource(id = R.string.history)
     val convertToTodoLabel = stringResource(id = R.string.convert_to_todo)
+    val selfDestructLabel = "Self-Destruct Timer"
 
     data class OptionItem(val label: String, val icon: ImageVector, val action: () -> Unit)
     
-    val options = remember(state.editingIsLocked, state.editingNoteType, state.editingIsNewNote, lockLabel, convertLabel, searchLabel, deleteLabel, copyLabel, shareLabel, labelsLabel, printLabel, saveAsLabel, historyLabel, convertToTodoLabel) {
+    val options = remember(state.editingIsLocked, state.editingNoteType, state.editingIsNewNote, lockLabel, convertLabel, searchLabel, deleteLabel, copyLabel, shareLabel, labelsLabel, printLabel, saveAsLabel, historyLabel, convertToTodoLabel, selfDestructLabel) {
         mutableListOf<OptionItem>().apply {
             add(OptionItem(lockLabel, lockIcon) { onToggleLock() })
+            add(OptionItem(selfDestructLabel, Icons.Default.Timer) { showExpiryDialog(true) })
             add(OptionItem(convertLabel, convertIcon) { onEvent(NotesEvent.OnToggleNoteType) })
             add(OptionItem(searchLabel, Icons.Default.Search) { onEvent(NotesEvent.ToggleNoteSearch) })
             add(OptionItem(deleteLabel, Icons.Default.Delete) { showDeleteDialog(true) })

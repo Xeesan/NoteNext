@@ -20,7 +20,7 @@ import com.suvojeet.notenext.data.ai.AIUsageEvent
 import com.suvojeet.notenext.data.ai.AIUsageDao
 import kotlinx.serialization.builtins.ListSerializer
 
-@Database(entities = [Note::class, Label::class, Attachment::class, Project::class, NoteFts::class, ChecklistItem::class, NoteVersion::class, TodoItem::class, TodoSubtask::class, AIUsageEvent::class], version = 28, exportSchema = true)
+@Database(entities = [Note::class, Label::class, Attachment::class, Project::class, NoteFts::class, ChecklistItem::class, NoteVersion::class, TodoItem::class, TodoSubtask::class, AIUsageEvent::class], version = 29, exportSchema = true)
 @TypeConverters(Converters::class)
 abstract class NoteDatabase : RoomDatabase() {
 
@@ -32,6 +32,12 @@ abstract class NoteDatabase : RoomDatabase() {
     abstract fun aiUsageDao(): AIUsageDao
 
     companion object {
+        val MIGRATION_28_29 = object : Migration(28, 29) {
+            override fun migrate(db: SupportSQLiteDatabase) {
+                db.execSQL("ALTER TABLE notes ADD COLUMN expiryTime INTEGER")
+            }
+        }
+
         val MIGRATION_27_28 = object : Migration(27, 28) {
             override fun migrate(db: SupportSQLiteDatabase) {
                 db.execSQL("""

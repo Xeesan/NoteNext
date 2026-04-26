@@ -54,6 +54,12 @@ class MainViewModel @Inject constructor(
         initialValue = "en"
     )
 
+    val clipboardClearTimeout = settingsRepository.clipboardClearTimeout.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(5000),
+        initialValue = 0L
+    )
+
     private val _startNoteId = MutableStateFlow(-1)
     val startNoteId = _startNoteId.asStateFlow()
 
@@ -82,6 +88,7 @@ class MainViewModel @Inject constructor(
     val lockTrigger = _lockTrigger.asStateFlow()
 
     private var lastPauseTime: Long = 0
+    private var clipboardJob: kotlinx.coroutines.Job? = null
 
     val updateStatus = updateChecker.updateStatus
 
@@ -128,6 +135,7 @@ class MainViewModel @Inject constructor(
     }
 
     fun onAppStart() {
+        clipboardJob?.cancel()
         if (enableAppLock.value == true && lastPauseTime > 0) {
             val currentTime = System.currentTimeMillis()
             if (currentTime - lastPauseTime > 120_000) { // 2 minutes
@@ -137,8 +145,18 @@ class MainViewModel @Inject constructor(
         }
     }
 
-    fun onAppStop() {
+    fun onAppStop(clearClipboard: () -> Unit) {
         lastPauseTime = System.currentTimeMillis()
+        val timeout = clipboardClearTimeout.value
+        if (timeout > 0L) {
+            clipboardJob?.cancel()
+            clipboardJob = viewModelScope.launch {
+                if (timeout > 1L) {
+                    kotlinx.coroutines.delay(timeout)
+                }
+                clearClipboard()
+            }
+        }
     }
 
     fun checkForUpdate() {

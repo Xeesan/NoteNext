@@ -20,9 +20,16 @@ class AutoDeleteWorker @AssistedInject constructor(
 
     override suspend fun doWork(): Result {
         return try {
+            val now = System.currentTimeMillis()
+            
+            // Clean up binned notes
             val days = settingsRepository.autoDeleteDays.first()
-            val threshold = System.currentTimeMillis() - (days * 24 * 60 * 60 * 1000L)
+            val threshold = now - (days * 24 * 60 * 60 * 1000L)
             noteDao.deleteBinnedNotesOlderThan(threshold)
+            
+            // Clean up expired notes (self-destruct)
+            noteDao.deleteExpiredNotes(now)
+            
             Result.success()
         } catch (e: Exception) {
             e.printStackTrace()

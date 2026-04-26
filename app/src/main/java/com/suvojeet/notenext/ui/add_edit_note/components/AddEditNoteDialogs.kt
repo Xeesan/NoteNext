@@ -46,6 +46,8 @@ fun AddEditNoteDialogs(
     onShowSaveAsDialogChange: (Boolean) -> Unit,
     showHistoryDialog: Boolean,
     onShowHistoryDialogChange: (Boolean) -> Unit,
+    showExpiryDialog: Boolean,
+    onShowExpiryDialogChange: (Boolean) -> Unit,
     showInsertLinkDialog: Boolean,
     onShowInsertLinkDialogChange: (Boolean) -> Unit,
     clickedUrl: String?,
@@ -101,6 +103,7 @@ fun AddEditNoteDialogs(
             showDeleteDialog = { onShowDeleteDialogChange(it) },
             showSaveAsDialog = { onShowSaveAsDialogChange(it) },
             showHistoryDialog = { onShowHistoryDialogChange(it) },
+            showExpiryDialog = { onShowExpiryDialogChange(it) },
             onPrint = {
                 scope.launch {
                     val fullHtml = NoteHtmlGenerator.generateNoteHtml(
@@ -174,7 +177,64 @@ fun AddEditNoteDialogs(
         )
     }
 
+    if (showExpiryDialog) {
+        ExpiryTimerDialog(
+            currentExpiryTime = state.editingExpiryTime,
+            onDismiss = { onShowExpiryDialogChange(false) },
+            onExpirySelected = { expiryTime ->
+                onEvent(NotesEvent.OnExpiryChange(expiryTime))
+                onShowExpiryDialogChange(false)
+            }
+        )
+    }
+
     if (showInsertLinkDialog) {
+...
+@Composable
+fun ExpiryTimerDialog(
+    currentExpiryTime: Long?,
+    onDismiss: () -> Unit,
+    onExpirySelected: (Long?) -> Unit
+) {
+    val options = listOf(
+        null to "Never",
+        (1 * 60 * 60 * 1000L) to "1 Hour",
+        (24 * 60 * 60 * 1000L) to "24 Hours",
+        (7 * 24 * 60 * 60 * 1000L) to "7 Days"
+    )
+
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        shape = MaterialTheme.shapes.extraLarge,
+        title = { Text("Self-Destruct Timer") },
+        text = {
+            Column {
+                options.forEach { (duration, label) ->
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clip(androidx.compose.ui.draw.clip(MaterialTheme.shapes.medium))
+                            .clickable { 
+                                val expiryTime = duration?.let { System.currentTimeMillis() + it }
+                                onExpirySelected(expiryTime) 
+                            }
+                            .padding(12.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        RadioButton(selected = (currentExpiryTime == null && duration == null), onClick = null)
+                        Spacer(Modifier.width(16.dp))
+                        Text(label)
+                    }
+                }
+            }
+        },
+        confirmButton = {
+            TextButton(onClick = onDismiss) {
+                Text("Cancel")
+            }
+        }
+    )
+}
         InsertLinkDialog(
             onDismiss = { onShowInsertLinkDialogChange(false) },
             onInsertLink = { text, url ->

@@ -147,71 +147,6 @@ fun SettingsScreen(
                 )
             ),
             SettingsSectionData(
-                title = context.getString(R.string.security_section_title),
-                description = "Security and data privacy",
-                items = listOf(
-                    SettingsItemData(
-                        icon = Icons.Rounded.Security,
-                        title = context.getString(R.string.app_lock),
-                        subtitle = context.getString(R.string.app_lock_subtitle),
-                        hasSwitch = true,
-                        checked = enableAppLock,
-                        iconColor = primaryColor,
-                        onCheckedChange = { isChecked ->
-                            if (isChecked) {
-                                val biometricManager = BiometricManager.from(context)
-                                val canAuthenticate = biometricManager.canAuthenticate(
-                                    BiometricManager.Authenticators.BIOMETRIC_STRONG or 
-                                    BiometricManager.Authenticators.BIOMETRIC_WEAK or 
-                                    BiometricManager.Authenticators.DEVICE_CREDENTIAL
-                                )
-                                
-                                when (canAuthenticate) {
-                                    BiometricManager.BIOMETRIC_SUCCESS -> {
-                                        scope.launch { settingsRepository.saveEnableAppLock(true) }
-                                    }
-                                    BiometricManager.BIOMETRIC_ERROR_NONE_ENROLLED -> {
-                                        val enrollIntent = if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.R) {
-                                            android.content.Intent(android.provider.Settings.ACTION_BIOMETRIC_ENROLL).apply {
-                                                putExtra(
-                                                    android.provider.Settings.EXTRA_BIOMETRIC_AUTHENTICATORS_ALLOWED,
-                                                    BiometricManager.Authenticators.BIOMETRIC_STRONG or 
-                                                    BiometricManager.Authenticators.BIOMETRIC_WEAK or 
-                                                    BiometricManager.Authenticators.DEVICE_CREDENTIAL
-                                                )
-                                            }
-                                        } else {
-                                            android.content.Intent(android.provider.Settings.ACTION_SECURITY_SETTINGS)
-                                        }
-                                        
-                                        try {
-                                            context.startActivity(enrollIntent)
-                                            android.widget.Toast.makeText(context, context.getString(R.string.biometric_setup_required), android.widget.Toast.LENGTH_LONG).show()
-                                        } catch (e: Exception) {
-                                            android.widget.Toast.makeText(context, "Please enable a screen lock or biometrics in system settings.", android.widget.Toast.LENGTH_LONG).show()
-                                        }
-                                    }
-                                    else -> {
-                                        android.widget.Toast.makeText(context, "Biometric authentication is not available on this device.", android.widget.Toast.LENGTH_LONG).show()
-                                    }
-                                }
-                            } else {
-                                scope.launch { settingsRepository.saveEnableAppLock(false) }
-                            }
-                        }
-                    ),
-                    SettingsItemData(
-                        icon = Icons.Rounded.Lock,
-                        title = "Disallow Screenshots",
-                        subtitle = "Protect content from screen capture",
-                        hasSwitch = true,
-                        checked = disallowScreenshots,
-                        iconColor = errorColor,
-                        onCheckedChange = { scope.launch { settingsRepository.saveDisallowScreenshots(it) } }
-                    )
-                )
-            ),
-            SettingsSectionData(
                 title = "Data & Maintenance",
                 description = "Backup, imports and cleanup",
                 items = listOf(
@@ -228,6 +163,13 @@ fun SettingsScreen(
                         subtitle = "Cloud and local data management",
                         iconColor = primaryColor,
                         onClick = { onNavigate("backup") }
+                    ),
+                    SettingsItemData(
+                        icon = Icons.Rounded.Security,
+                        title = "Privacy & Security",
+                        subtitle = "App lock, screenshots, clipboard clearing",
+                        iconColor = errorColor,
+                        onClick = { onNavigate("privacy") }
                     ),
                     SettingsItemData(
                         icon = Icons.Rounded.ImportExport,
@@ -382,7 +324,7 @@ fun SettingsScreen(
                             containerColor = MaterialTheme.colorScheme.primaryContainer,
                             contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
                             modifier = Modifier.weight(1f),
-                            onClick = { /* Security section logic */ }
+                            onClick = { onNavigate("privacy") }
                         )
                         FeaturedCard(
                             title = "Sync",

@@ -14,6 +14,7 @@ import com.suvojeet.notenext.ui.settings.ContactScreen
 import com.suvojeet.notenext.ui.settings.CreditsScreen
 import com.suvojeet.notenext.ui.settings.ChangelogScreen
 import com.suvojeet.notenext.ui.settings.BackupScreen
+import com.suvojeet.notenext.ui.settings.PrivacySecurityScreen
 import com.suvojeet.notenext.ui.settings.GroqSettingsScreen
 import com.suvojeet.notenext.ui.settings.AIProviderSettingsScreen
 import com.suvojeet.notenext.ui.settings.ai.AISettingsScreen
@@ -37,6 +38,7 @@ fun NavGraphBuilder.settingsGraph(
             onNavigate = { route ->
                 when(route) {
                     "backup" -> navController.navigate(Destination.Backup)
+                    "privacy" -> navController.navigate(Destination.PrivacySecurity)
                     "about" -> navController.navigate(Destination.About)
                     "donate" -> navController.navigate(Destination.Donate)
                     "changelog" -> navController.navigate(Destination.Changelog)
@@ -48,6 +50,13 @@ fun NavGraphBuilder.settingsGraph(
                 }
             }
         )
+    }
+
+    composable<Destination.PrivacySecurity>(
+        enterTransition = { slideEnter },
+        exitTransition = { slideExit }
+    ) {
+        PrivacySecurityScreen(onBackClick = { navController.popBackStack() })
     }
 
     composable<Destination.GroqSettings>(

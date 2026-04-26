@@ -28,6 +28,7 @@ data class NoteSummary(
     val iv: String?,
     val isEncrypted: Boolean,
     val repeatOption: String?,
-    val linkPreviews: List<LinkPreview> = emptyList()
+    val linkPreviews: List<LinkPreview> = emptyList(),
+    val expiryTime: Long? = null
 )
 

@@ -44,7 +44,8 @@ data class Note(
     val position: Int = 0,
     val aiSummary: String? = null,
     val iv: String? = null,
-    val isEncrypted: Boolean = false
+    val isEncrypted: Boolean = false,
+    val expiryTime: Long? = null
 ) {
     fun toNoteSummary(): NoteSummary {
         return NoteSummary(
@@ -69,7 +70,8 @@ data class Note(
             iv = iv,
             isEncrypted = isEncrypted,
             repeatOption = repeatOption,
-            linkPreviews = linkPreviews
+            linkPreviews = linkPreviews,
+            expiryTime = expiryTime
         )
     }
 }

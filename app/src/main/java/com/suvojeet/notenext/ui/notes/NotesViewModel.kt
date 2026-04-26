@@ -1276,6 +1276,12 @@ class NotesViewModel @Inject constructor(
                 ) }
                 scheduleAutoSave()
             }
+            is NotesEvent.OnExpiryChange -> {
+                editorDelegate.updateState { it.copy(
+                    editingExpiryTime = event.expiryTime
+                ) }
+                scheduleAutoSave()
+            }
             is NotesEvent.ExportNote -> {
                 viewModelScope.launch(kotlinx.coroutines.Dispatchers.IO) {
                     try {
@@ -1519,7 +1525,8 @@ class NotesViewModel @Inject constructor(
                     noteType = editState.value.editingNoteType,
                     isLocked = editState.value.editingIsLocked,
                     reminderTime = editState.value.editingReminderTime,
-                    repeatOption = editState.value.editingRepeatOption
+                    repeatOption = editState.value.editingRepeatOption,
+                    expiryTime = editState.value.editingExpiryTime
                 )
             } else { // Existing note
                 repository.getNoteById(noteId)?.let { existingNote ->
@@ -1536,6 +1543,7 @@ class NotesViewModel @Inject constructor(
                         isLocked = editState.value.editingIsLocked,
                         reminderTime = editState.value.editingReminderTime,
                         repeatOption = editState.value.editingRepeatOption,
+                        expiryTime = editState.value.editingExpiryTime,
                         aiSummary = editState.value.summaryResult,
                         isEncrypted = false,
                         iv = null

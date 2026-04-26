@@ -264,13 +264,16 @@ interface NoteDao {
     @Query("SELECT * FROM notes WHERE title = :title AND createdAt = :createdAt LIMIT 1")
     suspend fun getNoteByTitleAndCreatedAt(title: String, createdAt: Long): Note?
 
+    @Query("DELETE FROM notes WHERE expiryTime IS NOT NULL AND expiryTime < :now")
+    suspend fun deleteExpiredNotes(now: Long)
+
     // Note Summary Queries for Optimization
 
     @Transaction
     @Query("""
         SELECT notes.id AS id, notes.title AS title, 
         CASE WHEN notes.isEncrypted = 1 THEN notes.content ELSE SUBSTR(notes.content, 1, 500) END AS content,
-        notes.createdAt AS createdAt, notes.lastEdited AS lastEdited, notes.color AS color, notes.isPinned AS isPinned, notes.isArchived AS isArchived, notes.reminderTime AS reminderTime, notes.label AS label, notes.isBinned AS isBinned, notes.binnedOn AS binnedOn, notes.isImportant AS isImportant, notes.noteType AS noteType, notes.projectId AS projectId, notes.isLocked AS isLocked, notes.position AS position, notes.aiSummary AS aiSummary, notes.iv AS iv, notes.isEncrypted AS isEncrypted, notes.repeatOption AS repeatOption, notes.linkPreviews AS linkPreviews
+        notes.createdAt AS createdAt, notes.lastEdited AS lastEdited, notes.color AS color, notes.isPinned AS isPinned, notes.isArchived AS isArchived, notes.reminderTime AS reminderTime, notes.label AS label, notes.isBinned AS isBinned, notes.binnedOn AS binnedOn, notes.isImportant AS isImportant, notes.noteType AS noteType, notes.projectId AS projectId, notes.isLocked AS isLocked, notes.position AS position, notes.aiSummary AS aiSummary, notes.iv AS iv, notes.isEncrypted AS isEncrypted, notes.repeatOption AS repeatOption, notes.linkPreviews AS linkPreviews, notes.expiryTime AS expiryTime
         FROM notes WHERE
  isArchived = 0 AND isBinned = 0 AND isPinned = 1
         AND (projectId IS :projectId)
@@ -282,7 +285,7 @@ interface NoteDao {
     @Query("""
         SELECT notes.id AS id, notes.title AS title, 
         CASE WHEN notes.isEncrypted = 1 THEN notes.content ELSE SUBSTR(notes.content, 1, 500) END AS content,
-        notes.createdAt AS createdAt, notes.lastEdited AS lastEdited, notes.color AS color, notes.isPinned AS isPinned, notes.isArchived AS isArchived, notes.reminderTime AS reminderTime, notes.label AS label, notes.isBinned AS isBinned, notes.binnedOn AS binnedOn, notes.isImportant AS isImportant, notes.noteType AS noteType, notes.projectId AS projectId, notes.isLocked AS isLocked, notes.position AS position, notes.aiSummary AS aiSummary, notes.iv AS iv, notes.isEncrypted AS isEncrypted, notes.repeatOption AS repeatOption, notes.linkPreviews AS linkPreviews
+        notes.createdAt AS createdAt, notes.lastEdited AS lastEdited, notes.color AS color, notes.isPinned AS isPinned, notes.isArchived AS isArchived, notes.reminderTime AS reminderTime, notes.label AS label, notes.isBinned AS isBinned, notes.binnedOn AS binnedOn, notes.isImportant AS isImportant, notes.noteType AS noteType, notes.projectId AS projectId, notes.isLocked AS isLocked, notes.position AS position, notes.aiSummary AS aiSummary, notes.iv AS iv, notes.isEncrypted AS isEncrypted, notes.repeatOption AS repeatOption, notes.linkPreviews AS linkPreviews, notes.expiryTime AS expiryTime
         FROM notes
         JOIN notes_fts ON notes.id = notes_fts.rowid
         WHERE notes_fts MATCH :query
@@ -296,7 +299,7 @@ interface NoteDao {
     @Query("""
         SELECT notes.id AS id, notes.title AS title, 
         CASE WHEN notes.isEncrypted = 1 THEN notes.content ELSE SUBSTR(notes.content, 1, 500) END AS content,
-        notes.createdAt AS createdAt, notes.lastEdited AS lastEdited, notes.color AS color, notes.isPinned AS isPinned, notes.isArchived AS isArchived, notes.reminderTime AS reminderTime, notes.label AS label, notes.isBinned AS isBinned, notes.binnedOn AS binnedOn, notes.isImportant AS isImportant, notes.noteType AS noteType, notes.projectId AS projectId, notes.isLocked AS isLocked, notes.position AS position, notes.aiSummary AS aiSummary, notes.iv AS iv, notes.isEncrypted AS isEncrypted, notes.repeatOption AS repeatOption, notes.linkPreviews AS linkPreviews
+        notes.createdAt AS createdAt, notes.lastEdited AS lastEdited, notes.color AS color, notes.isPinned AS isPinned, notes.isArchived AS isArchived, notes.reminderTime AS reminderTime, notes.label AS label, notes.isBinned AS isBinned, notes.binnedOn AS binnedOn, notes.isImportant AS isImportant, notes.noteType AS noteType, notes.projectId AS projectId, notes.isLocked AS isLocked, notes.position AS position, notes.aiSummary AS aiSummary, notes.iv AS iv, notes.isEncrypted AS isEncrypted, notes.repeatOption AS repeatOption, notes.linkPreviews AS linkPreviews, notes.expiryTime AS expiryTime
         FROM notes WHERE
  isArchived = 0 AND isBinned = 0 AND isPinned = 0 
         AND (projectId IS :projectId) 
@@ -308,7 +311,7 @@ interface NoteDao {
     @Query("""
         SELECT notes.id AS id, notes.title AS title, 
         CASE WHEN notes.isEncrypted = 1 THEN notes.content ELSE SUBSTR(notes.content, 1, 500) END AS content,
-        notes.createdAt AS createdAt, notes.lastEdited AS lastEdited, notes.color AS color, notes.isPinned AS isPinned, notes.isArchived AS isArchived, notes.reminderTime AS reminderTime, notes.label AS label, notes.isBinned AS isBinned, notes.binnedOn AS binnedOn, notes.isImportant AS isImportant, notes.noteType AS noteType, notes.projectId AS projectId, notes.isLocked AS isLocked, notes.position AS position, notes.aiSummary AS aiSummary, notes.iv AS iv, notes.isEncrypted AS isEncrypted, notes.repeatOption AS repeatOption, notes.linkPreviews AS linkPreviews
+        notes.createdAt AS createdAt, notes.lastEdited AS lastEdited, notes.color AS color, notes.isPinned AS isPinned, notes.isArchived AS isArchived, notes.reminderTime AS reminderTime, notes.label AS label, notes.isBinned AS isBinned, notes.binnedOn AS binnedOn, notes.isImportant AS isImportant, notes.noteType AS noteType, notes.projectId AS projectId, notes.isLocked AS isLocked, notes.position AS position, notes.aiSummary AS aiSummary, notes.iv AS iv, notes.isEncrypted AS isEncrypted, notes.repeatOption AS repeatOption, notes.linkPreviews AS linkPreviews, notes.expiryTime AS expiryTime
         FROM notes
         JOIN notes_fts ON notes.id = notes_fts.rowid
         WHERE notes_fts MATCH :query
@@ -322,7 +325,7 @@ interface NoteDao {
     @Query("""
         SELECT notes.id AS id, notes.title AS title, 
         CASE WHEN notes.isEncrypted = 1 THEN notes.content ELSE SUBSTR(notes.content, 1, 500) END AS content,
-        notes.createdAt AS createdAt, notes.lastEdited AS lastEdited, notes.color AS color, notes.isPinned AS isPinned, notes.isArchived AS isArchived, notes.reminderTime AS reminderTime, notes.label AS label, notes.isBinned AS isBinned, notes.binnedOn AS binnedOn, notes.isImportant AS isImportant, notes.noteType AS noteType, notes.projectId AS projectId, notes.isLocked AS isLocked, notes.position AS position, notes.aiSummary AS aiSummary, notes.iv AS iv, notes.isEncrypted AS isEncrypted, notes.repeatOption AS repeatOption, notes.linkPreviews AS linkPreviews
+        notes.createdAt AS createdAt, notes.lastEdited AS lastEdited, notes.color AS color, notes.isPinned AS isPinned, notes.isArchived AS isArchived, notes.reminderTime AS reminderTime, notes.label AS label, notes.isBinned AS isBinned, notes.binnedOn AS binnedOn, notes.isImportant AS isImportant, notes.noteType AS noteType, notes.projectId AS projectId, notes.isLocked AS isLocked, notes.position AS position, notes.aiSummary AS aiSummary, notes.iv AS iv, notes.isEncrypted AS isEncrypted, notes.repeatOption AS repeatOption, notes.linkPreviews AS linkPreviews, notes.expiryTime AS expiryTime
         FROM notes WHERE
  isArchived = 0 AND isBinned = 0 AND isPinned = 0 
         AND (projectId IS :projectId) 
@@ -334,7 +337,7 @@ interface NoteDao {
     @Query("""
         SELECT notes.id AS id, notes.title AS title, 
         CASE WHEN notes.isEncrypted = 1 THEN notes.content ELSE SUBSTR(notes.content, 1, 500) END AS content,
-        notes.createdAt AS createdAt, notes.lastEdited AS lastEdited, notes.color AS color, notes.isPinned AS isPinned, notes.isArchived AS isArchived, notes.reminderTime AS reminderTime, notes.label AS label, notes.isBinned AS isBinned, notes.binnedOn AS binnedOn, notes.isImportant AS isImportant, notes.noteType AS noteType, notes.projectId AS projectId, notes.isLocked AS isLocked, notes.position AS position, notes.aiSummary AS aiSummary, notes.iv AS iv, notes.isEncrypted AS isEncrypted, notes.repeatOption AS repeatOption, notes.linkPreviews AS linkPreviews
+        notes.createdAt AS createdAt, notes.lastEdited AS lastEdited, notes.color AS color, notes.isPinned AS isPinned, notes.isArchived AS isArchived, notes.reminderTime AS reminderTime, notes.label AS label, notes.isBinned AS isBinned, notes.binnedOn AS binnedOn, notes.isImportant AS isImportant, notes.noteType AS noteType, notes.projectId AS projectId, notes.isLocked AS isLocked, notes.position AS position, notes.aiSummary AS aiSummary, notes.iv AS iv, notes.isEncrypted AS isEncrypted, notes.repeatOption AS repeatOption, notes.linkPreviews AS linkPreviews, notes.expiryTime AS expiryTime
         FROM notes
         JOIN notes_fts ON notes.id = notes_fts.rowid
         WHERE notes_fts MATCH :query
@@ -348,7 +351,7 @@ interface NoteDao {
     @Query("""
         SELECT notes.id AS id, notes.title AS title, 
         CASE WHEN notes.isEncrypted = 1 THEN notes.content ELSE SUBSTR(notes.content, 1, 500) END AS content,
-        notes.createdAt AS createdAt, notes.lastEdited AS lastEdited, notes.color AS color, notes.isPinned AS isPinned, notes.isArchived AS isArchived, notes.reminderTime AS reminderTime, notes.label AS label, notes.isBinned AS isBinned, notes.binnedOn AS binnedOn, notes.isImportant AS isImportant, notes.noteType AS noteType, notes.projectId AS projectId, notes.isLocked AS isLocked, notes.position AS position, notes.aiSummary AS aiSummary, notes.iv AS iv, notes.isEncrypted AS isEncrypted, notes.repeatOption AS repeatOption, notes.linkPreviews AS linkPreviews
+        notes.createdAt AS createdAt, notes.lastEdited AS lastEdited, notes.color AS color, notes.isPinned AS isPinned, notes.isArchived AS isArchived, notes.reminderTime AS reminderTime, notes.label AS label, notes.isBinned AS isBinned, notes.binnedOn AS binnedOn, notes.isImportant AS isImportant, notes.noteType AS noteType, notes.projectId AS projectId, notes.isLocked AS isLocked, notes.position AS position, notes.aiSummary AS aiSummary, notes.iv AS iv, notes.isEncrypted AS isEncrypted, notes.repeatOption AS repeatOption, notes.linkPreviews AS linkPreviews, notes.expiryTime AS expiryTime
         FROM notes WHERE
  isArchived = 0 AND isBinned = 0 AND isPinned = 0 
         AND (projectId IS :projectId) 
@@ -360,7 +363,7 @@ interface NoteDao {
     @Query("""
         SELECT notes.id AS id, notes.title AS title, 
         CASE WHEN notes.isEncrypted = 1 THEN notes.content ELSE SUBSTR(notes.content, 1, 500) END AS content,
-        notes.createdAt AS createdAt, notes.lastEdited AS lastEdited, notes.color AS color, notes.isPinned AS isPinned, notes.isArchived AS isArchived, notes.reminderTime AS reminderTime, notes.label AS label, notes.isBinned AS isBinned, notes.binnedOn AS binnedOn, notes.isImportant AS isImportant, notes.noteType AS noteType, notes.projectId AS projectId, notes.isLocked AS isLocked, notes.position AS position, notes.aiSummary AS aiSummary, notes.iv AS iv, notes.isEncrypted AS isEncrypted, notes.repeatOption AS repeatOption, notes.linkPreviews AS linkPreviews
+        notes.createdAt AS createdAt, notes.lastEdited AS lastEdited, notes.color AS color, notes.isPinned AS isPinned, notes.isArchived AS isArchived, notes.reminderTime AS reminderTime, notes.label AS label, notes.isBinned AS isBinned, notes.binnedOn AS binnedOn, notes.isImportant AS isImportant, notes.noteType AS noteType, notes.projectId AS projectId, notes.isLocked AS isLocked, notes.position AS position, notes.aiSummary AS aiSummary, notes.iv AS iv, notes.isEncrypted AS isEncrypted, notes.repeatOption AS repeatOption, notes.linkPreviews AS linkPreviews, notes.expiryTime AS expiryTime
         FROM notes
         JOIN notes_fts ON notes.id = notes_fts.rowid
         WHERE notes_fts MATCH :query
@@ -374,7 +377,7 @@ interface NoteDao {
     @Query("""
         SELECT notes.id AS id, notes.title AS title, 
         CASE WHEN notes.isEncrypted = 1 THEN notes.content ELSE SUBSTR(notes.content, 1, 500) END AS content,
-        notes.createdAt AS createdAt, notes.lastEdited AS lastEdited, notes.color AS color, notes.isPinned AS isPinned, notes.isArchived AS isArchived, notes.reminderTime AS reminderTime, notes.label AS label, notes.isBinned AS isBinned, notes.binnedOn AS binnedOn, notes.isImportant AS isImportant, notes.noteType AS noteType, notes.projectId AS projectId, notes.isLocked AS isLocked, notes.position AS position, notes.aiSummary AS aiSummary, notes.iv AS iv, notes.isEncrypted AS isEncrypted, notes.repeatOption AS repeatOption, notes.linkPreviews AS linkPreviews
+        notes.createdAt AS createdAt, notes.lastEdited AS lastEdited, notes.color AS color, notes.isPinned AS isPinned, notes.isArchived AS isArchived, notes.reminderTime AS reminderTime, notes.label AS label, notes.isBinned AS isBinned, notes.binnedOn AS binnedOn, notes.isImportant AS isImportant, notes.noteType AS noteType, notes.projectId AS projectId, notes.isLocked AS isLocked, notes.position AS position, notes.aiSummary AS aiSummary, notes.iv AS iv, notes.isEncrypted AS isEncrypted, notes.repeatOption AS repeatOption, notes.linkPreviews AS linkPreviews, notes.expiryTime AS expiryTime
         FROM notes WHERE
  isArchived = 0 AND isBinned = 0 AND isPinned = 0 
         AND (projectId IS :projectId) 
@@ -386,7 +389,7 @@ interface NoteDao {
     @Query("""
         SELECT notes.id AS id, notes.title AS title, 
         CASE WHEN notes.isEncrypted = 1 THEN notes.content ELSE SUBSTR(notes.content, 1, 500) END AS content,
-        notes.createdAt AS createdAt, notes.lastEdited AS lastEdited, notes.color AS color, notes.isPinned AS isPinned, notes.isArchived AS isArchived, notes.reminderTime AS reminderTime, notes.label AS label, notes.isBinned AS isBinned, notes.binnedOn AS binnedOn, notes.isImportant AS isImportant, notes.noteType AS noteType, notes.projectId AS projectId, notes.isLocked AS isLocked, notes.position AS position, notes.aiSummary AS aiSummary, notes.iv AS iv, notes.isEncrypted AS isEncrypted, notes.repeatOption AS repeatOption, notes.linkPreviews AS linkPreviews
+        notes.createdAt AS createdAt, notes.lastEdited AS lastEdited, notes.color AS color, notes.isPinned AS isPinned, notes.isArchived AS isArchived, notes.reminderTime AS reminderTime, notes.label AS label, notes.isBinned AS isBinned, notes.binnedOn AS binnedOn, notes.isImportant AS isImportant, notes.noteType AS noteType, notes.projectId AS projectId, notes.isLocked AS isLocked, notes.position AS position, notes.aiSummary AS aiSummary, notes.iv AS iv, notes.isEncrypted AS isEncrypted, notes.repeatOption AS repeatOption, notes.linkPreviews AS linkPreviews, notes.expiryTime AS expiryTime
         FROM notes
         JOIN notes_fts ON notes.id = notes_fts.rowid
         WHERE notes_fts MATCH :query
@@ -400,7 +403,7 @@ interface NoteDao {
     @Query("""
         SELECT notes.id AS id, notes.title AS title, 
         CASE WHEN notes.isEncrypted = 1 THEN notes.content ELSE SUBSTR(notes.content, 1, 500) END AS content,
-        notes.createdAt AS createdAt, notes.lastEdited AS lastEdited, notes.color AS color, notes.isPinned AS isPinned, notes.isArchived AS isArchived, notes.reminderTime AS reminderTime, notes.label AS label, notes.isBinned AS isBinned, notes.binnedOn AS binnedOn, notes.isImportant AS isImportant, notes.noteType AS noteType, notes.projectId AS projectId, notes.isLocked AS isLocked, notes.position AS position, notes.aiSummary AS aiSummary, notes.iv AS iv, notes.isEncrypted AS isEncrypted, notes.repeatOption AS repeatOption, notes.linkPreviews AS linkPreviews
+        notes.createdAt AS createdAt, notes.lastEdited AS lastEdited, notes.color AS color, notes.isPinned AS isPinned, notes.isArchived AS isArchived, notes.reminderTime AS reminderTime, notes.label AS label, notes.isBinned AS isBinned, notes.binnedOn AS binnedOn, notes.isImportant AS isImportant, notes.noteType AS noteType, notes.projectId AS projectId, notes.isLocked AS isLocked, notes.position AS position, notes.aiSummary AS aiSummary, notes.iv AS iv, notes.isEncrypted AS isEncrypted, notes.repeatOption AS repeatOption, notes.linkPreviews AS linkPreviews, notes.expiryTime AS expiryTime
         FROM notes WHERE
  isArchived = 1 ORDER BY lastEdited DESC
     """)
@@ -410,7 +413,7 @@ interface NoteDao {
     @Query("""
         SELECT notes.id AS id, notes.title AS title, 
         CASE WHEN notes.isEncrypted = 1 THEN notes.content ELSE SUBSTR(notes.content, 1, 500) END AS content,
-        notes.createdAt AS createdAt, notes.lastEdited AS lastEdited, notes.color AS color, notes.isPinned AS isPinned, notes.isArchived AS isArchived, notes.reminderTime AS reminderTime, notes.label AS label, notes.isBinned AS isBinned, notes.binnedOn AS binnedOn, notes.isImportant AS isImportant, notes.noteType AS noteType, notes.projectId AS projectId, notes.isLocked AS isLocked, notes.position AS position, notes.aiSummary AS aiSummary, notes.iv AS iv, notes.isEncrypted AS isEncrypted, notes.repeatOption AS repeatOption, notes.linkPreviews AS linkPreviews
+        notes.createdAt AS createdAt, notes.lastEdited AS lastEdited, notes.color AS color, notes.isPinned AS isPinned, notes.isArchived AS isArchived, notes.reminderTime AS reminderTime, notes.label AS label, notes.isBinned AS isBinned, notes.binnedOn AS binnedOn, notes.isImportant AS isImportant, notes.noteType AS noteType, notes.projectId AS projectId, notes.isLocked AS isLocked, notes.position AS position, notes.aiSummary AS aiSummary, notes.iv AS iv, notes.isEncrypted AS isEncrypted, notes.repeatOption AS repeatOption, notes.linkPreviews AS linkPreviews, notes.expiryTime AS expiryTime
         FROM notes WHERE
  isBinned = 1 ORDER BY lastEdited DESC
     """)
@@ -419,7 +422,7 @@ interface NoteDao {
     @Query("""
         SELECT notes.id AS id, notes.title AS title, 
         CASE WHEN notes.isEncrypted = 1 THEN notes.content ELSE SUBSTR(notes.content, 1, 500) END AS content,
-        notes.createdAt AS createdAt, notes.lastEdited AS lastEdited, notes.color AS color, notes.isPinned AS isPinned, notes.isArchived AS isArchived, notes.reminderTime AS reminderTime, notes.label AS label, notes.isBinned AS isBinned, notes.binnedOn AS binnedOn, notes.isImportant AS isImportant, notes.noteType AS noteType, notes.projectId AS projectId, notes.isLocked AS isLocked, notes.position AS position, notes.aiSummary AS aiSummary, notes.iv AS iv, notes.isEncrypted AS isEncrypted, notes.repeatOption AS repeatOption, notes.linkPreviews AS linkPreviews
+        notes.createdAt AS createdAt, notes.lastEdited AS lastEdited, notes.color AS color, notes.isPinned AS isPinned, notes.isArchived AS isArchived, notes.reminderTime AS reminderTime, notes.label AS label, notes.isBinned AS isBinned, notes.binnedOn AS binnedOn, notes.isImportant AS isImportant, notes.noteType AS noteType, notes.projectId AS projectId, notes.isLocked AS isLocked, notes.position AS position, notes.aiSummary AS aiSummary, notes.iv AS iv, notes.isEncrypted AS isEncrypted, notes.repeatOption AS repeatOption, notes.linkPreviews AS linkPreviews, notes.expiryTime AS expiryTime
         FROM notes WHERE
  projectId = :projectId AND isBinned = 0 ORDER BY isPinned DESC, lastEdited DESC
     """)

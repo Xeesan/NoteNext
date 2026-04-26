@@ -24,9 +24,9 @@ object PreferencesKeys {
     val LANGUAGE = stringPreferencesKey("language")
     val LAST_SEEN_VERSION = intPreferencesKey("last_seen_version")
     val DISALLOW_SCREENSHOTS = booleanPreferencesKey("disallow_screenshots")
-    
-    // Groq API Settings
-    val USE_CUSTOM_GROQ_KEY = booleanPreferencesKey("use_custom_groq_key")
+    val CLIPBOARD_CLEAR_TIMEOUT = longPreferencesKey("clipboard_clear_timeout")
+
+    // Groq API Settings    val USE_CUSTOM_GROQ_KEY = booleanPreferencesKey("use_custom_groq_key")
     val CUSTOM_GROQ_KEY = stringPreferencesKey("custom_groq_key")
     val CUSTOM_FAST_MODEL = stringPreferencesKey("custom_fast_model")
     val CUSTOM_LARGE_MODEL = stringPreferencesKey("custom_large_model")
@@ -188,6 +188,17 @@ class SettingsRepository(private val context: Context) {
     suspend fun saveDisallowScreenshots(disallow: Boolean) {
         context.dataStore.edit { preferences ->
             preferences[PreferencesKeys.DISALLOW_SCREENSHOTS] = disallow
+        }
+    }
+
+    val clipboardClearTimeout: Flow<Long> = context.dataStore.data
+        .map { preferences ->
+            preferences[PreferencesKeys.CLIPBOARD_CLEAR_TIMEOUT] ?: 0L
+        }
+
+    suspend fun saveClipboardClearTimeout(timeout: Long) {
+        context.dataStore.edit { preferences ->
+            preferences[PreferencesKeys.CLIPBOARD_CLEAR_TIMEOUT] = timeout
         }
     }
 

@@ -70,6 +70,7 @@ sealed class NotesEvent {
     data class FilterByLabel(val label: String?) : NotesEvent()
     data class FilterByProject(val projectId: Int?) : NotesEvent()
     data class OnReminderChange(val time: Long?, val repeatOption: String?) : NotesEvent()
+    data class OnExpiryChange(val expiryTime: Long?) : NotesEvent()
 
     data class OnLinkDetected(val url: String) : NotesEvent()
     data class OnLinkPreviewFetched(val url: String, val title: String?, val description: String?, val imageUrl: String?) : NotesEvent()

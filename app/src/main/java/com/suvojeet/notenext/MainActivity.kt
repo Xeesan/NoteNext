@@ -305,7 +305,14 @@ class MainActivity : FragmentActivity() {
 
     override fun onStop() {
         super.onStop()
-        viewModel.onAppStop()
+        viewModel.onAppStop {
+            val clipboard = getSystemService(android.content.Context.CLIPBOARD_SERVICE) as android.content.ClipboardManager
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.P) {
+                clipboard.clearPrimaryClip()
+            } else {
+                clipboard.setPrimaryClip(android.content.ClipData.newPlainText("", ""))
+            }
+        }
     }
 
     override fun onResume() {

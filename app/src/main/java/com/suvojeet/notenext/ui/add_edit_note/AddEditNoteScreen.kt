@@ -94,6 +94,7 @@ fun AddEditNoteScreen(
     var showMoreOptions by remember { mutableStateOf(false) }
     var showLabelDialog by remember { mutableStateOf(false) }
     var showSaveAsDialog by remember { mutableStateOf(false) }
+    var showExpiryDialog by remember { mutableStateOf(false) }
     var showInsertLinkDialog by remember { mutableStateOf(false) }
     var showHistoryDialog by remember { mutableStateOf(false) }
     var showImageViewer by remember { mutableStateOf(false) }
@@ -652,6 +653,8 @@ fun AddEditNoteScreen(
         onShowSaveAsDialogChange = { showSaveAsDialog = it },
         showHistoryDialog = showHistoryDialog,
         onShowHistoryDialogChange = { showHistoryDialog = it },
+        showExpiryDialog = showExpiryDialog,
+        onShowExpiryDialogChange = { showExpiryDialog = it },
         showInsertLinkDialog = showInsertLinkDialog,
         onShowInsertLinkDialogChange = { showInsertLinkDialog = it },
         clickedUrl = clickedUrl,

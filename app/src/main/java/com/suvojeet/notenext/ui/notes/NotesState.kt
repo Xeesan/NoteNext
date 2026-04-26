@@ -67,6 +67,7 @@ data class NotesEditState(
     val editingNoteVersions: ImmutableList<NoteVersion> = persistentListOf(),
     val editingReminderTime: Long? = null,
     val editingRepeatOption: String? = null,
+    val editingExpiryTime: Long? = null,
     val isSummarizing: Boolean = false,
     val summaryResult: String? = null,
     val showSummaryDialog: Boolean = false,

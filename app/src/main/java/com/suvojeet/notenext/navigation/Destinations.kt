@@ -23,10 +23,12 @@ sealed interface Destination {
     
     @Serializable
     data object Settings : Destination
-    
+
     @Serializable
-    data object Backup : Destination
-    
+    data object PrivacySecurity : Destination
+
+    @Serializable
+    data object Backup : Destination    
     @Serializable
     data object EditLabels : Destination
     
