@@ -15,11 +15,8 @@ import androidx.compose.material3.FloatingActionButtonMenuItem
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.material3.ToggleFloatingActionButton
-import androidx.compose.material3.ToggleFloatingActionButtonDefaults.animateIcon
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.res.stringResource
 import com.suvojeet.notenext.R
 import com.suvojeet.notenext.ui.theme.ThemeMode
@@ -62,12 +59,8 @@ fun MultiActionFab(
                 checked = isExpanded,
                 onCheckedChange = onExpandedChange,
             ) {
-                val imageVector by animateIcon(
-                    checkedPainter = rememberVectorPainter(Icons.Filled.Close),
-                    uncheckedPainter = rememberVectorPainter(Icons.Filled.Add),
-                )
                 Icon(
-                    painter = imageVector,
+                    imageVector = if (isExpanded) Icons.Filled.Close else Icons.Filled.Add,
                     contentDescription = stringResource(id = R.string.add),
                 )
             }
