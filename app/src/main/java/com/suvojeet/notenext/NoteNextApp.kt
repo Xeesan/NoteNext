@@ -6,18 +6,16 @@ import androidx.hilt.work.HiltWorkerFactory
 import androidx.work.Configuration
 import androidx.work.Constraints
 import androidx.work.ExistingPeriodicWorkPolicy
+import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
 import com.suvojeet.notenext.worker.AutoDeleteWorker
 import dagger.hilt.android.HiltAndroidApp
 import org.acra.ACRA
 import org.acra.config.CoreConfigurationBuilder
-import org.acra.config.HttpSenderConfigurationBuilder
 import org.acra.config.ToastConfigurationBuilder
 import org.acra.config.NotificationConfigurationBuilder
 import org.acra.data.StringFormat
-import org.acra.sender.HttpSender
-import com.suvojeet.notenext.util.CrashReportSenderFactory
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 import kotlinx.coroutines.CoroutineScope
@@ -87,13 +85,20 @@ class NoteNextApp : Application(), Configuration.Provider {
             .setRequiresBatteryNotLow(true)
             .build()
 
-        val cleanupRequest = PeriodicWorkRequestBuilder<AutoDeleteWorker>(1, TimeUnit.DAYS)
+        // Run once immediately on start to catch any missed expirations
+        val oneTimeRequest = OneTimeWorkRequestBuilder<AutoDeleteWorker>()
+            .setConstraints(constraints)
+            .build()
+        WorkManager.getInstance(this).enqueue(oneTimeRequest)
+
+        // Then periodic every 1 hour (min allowed is 15 min, 1h is good for battery & 1h self-destruct)
+        val cleanupRequest = PeriodicWorkRequestBuilder<AutoDeleteWorker>(1, TimeUnit.HOURS)
             .setConstraints(constraints)
             .build()
 
         WorkManager.getInstance(this).enqueueUniquePeriodicWork(
             "AutoDeleteBinNotes",
-            ExistingPeriodicWorkPolicy.KEEP,
+            ExistingPeriodicWorkPolicy.UPDATE,
             cleanupRequest
         )
     }
