@@ -183,7 +183,7 @@ fun SettingsScreen(
                         icon = Icons.Rounded.AutoAwesome,
                         title = "AI",
                         subtitle = "Master switch, providers, features, usage dashboard",
-                        iconColor = Color(0xFF6750A4),
+                        iconColor = secondaryColor,
                         onClick = { onNavigate("ai") }
                     )
                 )

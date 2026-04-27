@@ -97,11 +97,7 @@ fun NoteItem(
         label = "Elevation"
     )
 
-    val cardShape = if (note.note.isPinned) {
-        MaterialTheme.shapes.extraLarge
-    } else {
-        MaterialTheme.shapes.medium
-    }
+    val cardShape = MaterialTheme.shapes.large
 
     val borderStroke = if (isSelected) {
         BorderStroke(2.dp, primary)

@@ -69,11 +69,11 @@ fun MoreOptionsSheet(
     val options = remember(state.editingIsLocked, state.editingNoteType, state.editingIsNewNote, primaryColor, secondaryColor, tertiaryColor, errorColor) {
         mutableListOf<OptionItem>().apply {
             add(OptionItem(lockLabel, lockIcon, primaryColor) { onToggleLock() })
-            add(OptionItem("Self-Destruct", Icons.Default.Timer, Color(0xFF6750A4)) { showExpiryDialog(true) })
+            add(OptionItem("Self-Destruct", Icons.Default.Timer, errorColor) { showExpiryDialog(true) })
             add(OptionItem(if (state.editingNoteType == NoteType.TEXT) "List View" else "Text View", Icons.Default.SwapHoriz, secondaryColor) { onEvent(NotesEvent.OnToggleNoteType) })
-            add(OptionItem("Search", Icons.Default.Search, tertiaryColor) { onEvent(NotesEvent.ToggleNoteSearch) })
-            add(OptionItem("Labels", Icons.AutoMirrored.Filled.Label, Color(0xFFE91E63)) { onEvent(NotesEvent.OnAddLabelsToCurrentNoteClick) })
-            add(OptionItem("Share", Icons.Default.Share, Color(0xFF009688)) {
+            add(OptionItem("Search", Icons.Default.Search, primaryColor) { onEvent(NotesEvent.ToggleNoteSearch) })
+            add(OptionItem("Labels", Icons.AutoMirrored.Filled.Label, tertiaryColor) { onEvent(NotesEvent.OnAddLabelsToCurrentNoteClick) })
+            add(OptionItem("Share", Icons.Default.Share, primaryColor) {
                 val shareContent = if (state.editingNoteType == NoteType.CHECKLIST) {
                     val sb = StringBuilder()
                     state.editingChecklist.forEach { item ->
@@ -92,13 +92,13 @@ fun MoreOptionsSheet(
                 }
                 context.startActivity(Intent.createChooser(sendIntent, null))
             })
-            add(OptionItem("Copy", Icons.Default.ContentCopy, Color(0xFF607D8B)) { onEvent(NotesEvent.OnCopyCurrentNoteClick) })
-            add(OptionItem("Print", Icons.Default.Print, Color(0xFF795548)) { onPrint() })
-            add(OptionItem("Export", Icons.Default.FileDownload, Color(0xFFFF9800)) { showSaveAsDialog(true) })
+            add(OptionItem("Copy", Icons.Default.ContentCopy, secondaryColor) { onEvent(NotesEvent.OnCopyCurrentNoteClick) })
+            add(OptionItem("Print", Icons.Default.Print, secondaryColor) { onPrint() })
+            add(OptionItem("Export", Icons.Default.FileDownload, tertiaryColor) { showSaveAsDialog(true) })
             if (!state.editingIsNewNote) {
-                add(OptionItem("History", Icons.Default.History, Color(0xFF3F51B5)) { showHistoryDialog(true) })
+                add(OptionItem("History", Icons.Default.History, secondaryColor) { showHistoryDialog(true) })
             }
-            add(OptionItem("To Todo", Icons.Default.PlaylistAddCheck, Color(0xFF4CAF50)) { onEvent(NotesEvent.ConvertToTodo) })
+            add(OptionItem("To Todo", Icons.Default.PlaylistAddCheck, tertiaryColor) { onEvent(NotesEvent.ConvertToTodo) })
             add(OptionItem("Delete", Icons.Default.Delete, errorColor) { showDeleteDialog(true) })
         }
     }
