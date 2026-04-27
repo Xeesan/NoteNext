@@ -1,6 +1,32 @@
 {
   "releases": [
     {
+      "version": "1.4.0",
+      "date": "April 27, 2026",
+      "items": [
+        {
+          "title": "Privacy-First AI Subsystem",
+          "description": "Introduced a comprehensive AI hub with 9 powerful features including Tone Rewriter, Auto-Tagging, Smart Reminders, and Linked Notes. Features a master kill-switch and per-feature toggles to ensure 100% user control and privacy.",
+          "type": "FEATURE"
+        },
+        {
+          "title": "AI Usage Dashboard",
+          "description": "New local-only dashboard to track AI feature usage and acceptance rates with zero data leaving your device.",
+          "type": "FEATURE"
+        },
+        {
+          "title": "Compact Editor UI",
+          "description": "Redesigned the Add/Edit note screen with reduced padding and scaled-down elements for better content visibility, mirroring the Google Keep experience.",
+          "type": "IMPROVEMENT"
+        },
+        {
+          "title": "Modernized Settings",
+          "description": "Refined the settings screen with a more modern look, improved dialogs, and better category organization.",
+          "type": "IMPROVEMENT"
+        }
+      ]
+    },
+    {
       "version": "1.3.8",
       "date": "April 21, 2026",
       "items": [
