@@ -409,6 +409,7 @@ fun NoteItem(
 
 @Composable
 private fun ChecklistPreview(checklistItems: List<ChecklistItem>, contentColor: Color, searchQuery: String = "") {
+    val colorScheme = MaterialTheme.colorScheme
     Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
         checklistItems.take(5).forEach { item ->
             Row(verticalAlignment = Alignment.CenterVertically) {
@@ -416,7 +417,7 @@ private fun ChecklistPreview(checklistItems: List<ChecklistItem>, contentColor: 
                     imageVector = if (item.isChecked) Icons.Filled.CheckBox else Icons.Filled.CheckBoxOutlineBlank,
                     contentDescription = null,
                     modifier = Modifier.size(16.dp),
-                    tint = contentColor.copy(alpha = 0.7f)
+                    tint = if (item.isChecked) colorScheme.primary else contentColor.copy(alpha = 0.7f)
                 )
                 Spacer(modifier = Modifier.width(8.dp))
                 
@@ -424,8 +425,8 @@ private fun ChecklistPreview(checklistItems: List<ChecklistItem>, contentColor: 
                     androidx.core.text.HtmlCompat.fromHtml(item.text, androidx.core.text.HtmlCompat.FROM_HTML_MODE_LEGACY).toString()
                 }
                 
-                val primaryContainer = MaterialTheme.colorScheme.primaryContainer
-                val onPrimaryContainer = MaterialTheme.colorScheme.onPrimaryContainer
+                val primaryContainer = colorScheme.primaryContainer
+                val onPrimaryContainer = colorScheme.onPrimaryContainer
 
                 val itemText = remember(unescapedItemText, searchQuery, primaryContainer, onPrimaryContainer) {
                     if (searchQuery.isNotEmpty()) {
@@ -455,7 +456,7 @@ private fun ChecklistPreview(checklistItems: List<ChecklistItem>, contentColor: 
                 Text(
                     text = itemText,
                     fontSize = 14.sp,
-                    color = contentColor.copy(alpha = 0.9f),
+                    color = if (item.isChecked) contentColor.copy(alpha = 0.6f) else contentColor.copy(alpha = 0.9f),
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
                     style = if (item.isChecked) androidx.compose.ui.text.TextStyle(textDecoration = androidx.compose.ui.text.style.TextDecoration.LineThrough) else androidx.compose.ui.text.TextStyle()
