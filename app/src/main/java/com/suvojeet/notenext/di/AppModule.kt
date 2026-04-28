@@ -61,7 +61,8 @@ object AppModule {
             NoteDatabase.MIGRATION_25_26,
             NoteDatabase.MIGRATION_26_27,
             NoteDatabase.MIGRATION_27_28,
-            NoteDatabase.MIGRATION_28_29
+            NoteDatabase.MIGRATION_28_29,
+            NoteDatabase.MIGRATION_29_30
         ).build()
     }
 
