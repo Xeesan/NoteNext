@@ -14,7 +14,7 @@ import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Timer
 import androidx.compose.material.icons.rounded.Delete
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -22,6 +22,9 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.Dialog
+import androidx.compose.ui.window.DialogProperties
+import java.time.*
 import com.suvojeet.notenext.R
 import com.suvojeet.notenext.data.repository.SettingsRepository
 import com.suvojeet.notenext.ui.components.springPress
@@ -254,8 +257,55 @@ fun ExpiryTimerDialog(
     onDismiss: () -> Unit,
     onExpirySelected: (Long?) -> Unit
 ) {
+    var showDatePicker by remember { mutableStateOf(false) }
+    var showTimePicker by remember { mutableStateOf(false) }
+    var selectedDate by remember { mutableStateOf(LocalDate.now()) }
+
+    val datePickerState = rememberDatePickerState(
+        initialSelectedDateMillis = System.currentTimeMillis()
+    )
+    val timePickerState = rememberTimePickerState()
+
+    if (showDatePicker) {
+        DatePickerDialog(
+            onDismissRequest = { showDatePicker = false },
+            confirmButton = {
+                TextButton(onClick = {
+                    datePickerState.selectedDateMillis?.let {
+                        selectedDate = Instant.ofEpochMilli(it).atZone(ZoneId.systemDefault()).toLocalDate()
+                        showDatePicker = false
+                        showTimePicker = true
+                    }
+                }) { Text("Next") }
+            },
+            dismissButton = {
+                TextButton(onClick = { showDatePicker = false }) { Text("Cancel") }
+            }
+        ) {
+            DatePicker(state = datePickerState)
+        }
+    }
+
+    if (showTimePicker) {
+        AlertDialog(
+            onDismissRequest = { showTimePicker = false },
+            confirmButton = {
+                TextButton(onClick = {
+                    val expiryDateTime = selectedDate.atTime(timePickerState.hour, timePickerState.minute)
+                    val expiryMillis = expiryDateTime.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli()
+                    onExpirySelected(expiryMillis)
+                    showTimePicker = false
+                }) { Text("Set") }
+            },
+            dismissButton = {
+                TextButton(onClick = { showTimePicker = false }) { Text("Cancel") }
+            },
+            title = { Text("Select Time") },
+            text = { TimePicker(state = timePickerState) }
+        )
+    }
+
     val options = listOf(
-        null to "Never",
         (1 * 60 * 60 * 1000L) to "1 Hour",
         (24 * 60 * 60 * 1000L) to "24 Hours",
         (7 * 24 * 60 * 60 * 1000L) to "7 Days"
@@ -273,15 +323,45 @@ fun ExpiryTimerDialog(
                             .fillMaxWidth()
                             .clip(MaterialTheme.shapes.medium)
                             .clickable { 
-                                val expiryTime = duration?.let { System.currentTimeMillis() + it }
+                                val expiryTime = System.currentTimeMillis() + duration
                                 onExpirySelected(expiryTime) 
                             }
                             .padding(12.dp),
                         verticalAlignment = Alignment.CenterVertically
                     ) {
-                        RadioButton(selected = (currentExpiryTime == null && duration == null), onClick = null)
+                        RadioButton(selected = false, onClick = null)
                         Spacer(Modifier.width(16.dp))
                         Text(label)
+                    }
+                }
+
+                // Custom Option
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clip(MaterialTheme.shapes.medium)
+                        .clickable { showDatePicker = true }
+                        .padding(12.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    RadioButton(selected = false, onClick = null)
+                    Spacer(Modifier.width(16.dp))
+                    Text("Custom...")
+                }
+
+                if (currentExpiryTime != null) {
+                    HorizontalDivider(modifier = Modifier.padding(vertical = 8.dp))
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clip(MaterialTheme.shapes.medium)
+                            .clickable { onExpirySelected(null) }
+                            .padding(12.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Icon(Icons.Default.Delete, contentDescription = null, tint = MaterialTheme.colorScheme.error)
+                        Spacer(Modifier.width(16.dp))
+                        Text("Remove Timer", color = MaterialTheme.colorScheme.error)
                     }
                 }
             }
