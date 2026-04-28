@@ -35,6 +35,7 @@ import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Alarm
+import androidx.compose.material.icons.filled.Timer
 import com.suvojeet.notenext.ui.components.springPress
 import com.suvojeet.notenext.ui.theme.*
 import kotlinx.coroutines.launch
@@ -431,7 +432,7 @@ fun ExpiryDisplay(
             AssistChip(
                 onClick = onClick,
                 label = { Text(text = "Self-destruct: $remainingText") },
-                leadingIcon = { Icon(androidx.compose.material.icons.Icons.Default.Timer, contentDescription = "Self-destruct") },
+                leadingIcon = { Icon(Icons.Default.Timer, contentDescription = "Self-destruct") },
                 shape = MaterialTheme.shapes.medium,
                 colors = AssistChipDefaults.assistChipColors(
                     labelColor = MaterialTheme.colorScheme.error,
