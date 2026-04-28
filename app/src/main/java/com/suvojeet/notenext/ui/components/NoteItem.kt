@@ -318,7 +318,7 @@ fun NoteItem(
                         )
                     }
 
-                    if (note.attachments.isNotEmpty() || !note.note.label.isNullOrEmpty() || note.note.reminderTime != null || binnedDaysRemaining != null) {
+                    if (note.attachments.isNotEmpty() || !note.note.label.isNullOrEmpty() || note.note.reminderTime != null || binnedDaysRemaining != null || note.note.expiryTime != null) {
                         Spacer(modifier = Modifier.height(16.dp))
                         Row(
                             verticalAlignment = Alignment.CenterVertically,
@@ -340,6 +340,44 @@ fun NoteItem(
                                     modifier = Modifier.size(16.dp),
                                     tint = tintColor
                                 )
+                            }
+
+                            note.note.expiryTime?.let { expiry ->
+                                Row(
+                                    verticalAlignment = Alignment.CenterVertically,
+                                    horizontalArrangement = Arrangement.spacedBy(4.dp)
+                                ) {
+                                    Icon(
+                                        imageVector = Icons.Default.Timer,
+                                        contentDescription = "Self-destruct timer",
+                                        modifier = Modifier.size(16.dp),
+                                        tint = MaterialTheme.colorScheme.error.copy(alpha = 0.8f)
+                                    )
+                                    
+                                    val remainingText = remember(expiry) {
+                                        val remaining = expiry - System.currentTimeMillis()
+                                        if (remaining <= 0) {
+                                            "Expired"
+                                        } else {
+                                            val hours = java.util.concurrent.TimeUnit.MILLISECONDS.toHours(remaining)
+                                            val minutes = java.util.concurrent.TimeUnit.MILLISECONDS.toMinutes(remaining) % 60
+                                            val days = java.util.concurrent.TimeUnit.MILLISECONDS.toDays(remaining)
+                                            
+                                            when {
+                                                days > 0 -> "${days}d"
+                                                hours > 0 -> "${hours}h"
+                                                else -> "${minutes}m"
+                                            }
+                                        }
+                                    }
+                                    
+                                    Text(
+                                        text = remainingText,
+                                        fontSize = 11.sp,
+                                        fontWeight = FontWeight.Bold,
+                                        color = MaterialTheme.colorScheme.error
+                                    )
+                                }
                             }
 
                             val label = note.note.label

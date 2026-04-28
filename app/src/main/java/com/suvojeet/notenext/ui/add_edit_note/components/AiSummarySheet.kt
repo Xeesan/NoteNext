@@ -35,6 +35,7 @@ fun AiSummarySheet(
 ) {
     val context = LocalContext.current
     val scrollState = rememberScrollState()
+    val scope = rememberCoroutineScope()
     // Set skipPartiallyExpanded to true to avoid button issues in partially expanded state
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
     
@@ -117,7 +118,16 @@ fun AiSummarySheet(
                     }
                 }
                 
-                IconButton(onClick = onDismiss, modifier = Modifier.springPress()) {
+                IconButton(
+                    onClick = {
+                        scope.launch {
+                            sheetState.hide()
+                        }.invokeOnCompletion {
+                            onDismiss()
+                        }
+                    }, 
+                    modifier = Modifier.springPress()
+                ) {
                     Icon(
                         imageVector = Icons.Default.Close,
                         contentDescription = "Close",

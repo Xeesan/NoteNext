@@ -95,6 +95,11 @@ fun NoteTitleEditor(
             repeatOption = state.editingRepeatOption,
             onClick = onReminderClick
         )
+
+        ExpiryDisplay(
+            expiryTime = state.editingExpiryTime,
+            onClick = { /* Could open expiry dialog if needed */ }
+        )
     }
 }
 
@@ -402,5 +407,40 @@ fun ReminderDisplay(
             modifier = Modifier.springPress()
         )
         Spacer(modifier = Modifier.height(12.dp))
+    }
+}
+
+@Composable
+fun ExpiryDisplay(
+    expiryTime: Long?,
+    onClick: () -> Unit
+) {
+    if (expiryTime != null) {
+        val remaining = expiryTime - System.currentTimeMillis()
+        if (remaining > 0) {
+            val hours = java.util.concurrent.TimeUnit.MILLISECONDS.toHours(remaining)
+            val minutes = java.util.concurrent.TimeUnit.MILLISECONDS.toMinutes(remaining) % 60
+            val days = java.util.concurrent.TimeUnit.MILLISECONDS.toDays(remaining)
+            
+            val remainingText = when {
+                days > 0 -> "${days}d"
+                hours > 0 -> "${hours}h ${minutes}m"
+                else -> "${minutes}m"
+            }
+
+            AssistChip(
+                onClick = onClick,
+                label = { Text(text = "Self-destruct: $remainingText") },
+                leadingIcon = { Icon(androidx.compose.material.icons.Icons.Default.Timer, contentDescription = "Self-destruct") },
+                shape = MaterialTheme.shapes.medium,
+                colors = AssistChipDefaults.assistChipColors(
+                    labelColor = MaterialTheme.colorScheme.error,
+                    leadingIconContentColor = MaterialTheme.colorScheme.error,
+                    containerColor = MaterialTheme.colorScheme.errorContainer.copy(alpha = 0.1f)
+                ),
+                modifier = Modifier.springPress()
+            )
+            Spacer(modifier = Modifier.height(12.dp))
+        }
     }
 }
