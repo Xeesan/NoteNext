@@ -143,6 +143,11 @@ class NotesViewModel @Inject constructor(
         if (restoredNoteId != null && restoredNoteId != -1) {
             onEvent(NotesEvent.ExpandNote(restoredNoteId))
         }
+
+        repository.getLabels().onEach { labels ->
+            val labelNames = labels.map { it.name }.toImmutableList()
+            editorDelegate.updateState { it.copy(labels = labelNames) }
+        }.launchIn(viewModelScope)
     }
 
     override fun onCleared() {

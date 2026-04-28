@@ -20,6 +20,7 @@ fun ProjectNotesState.toNotesEditState(): NotesEditState {
         isPinned = this.isPinned,
         isArchived = this.isArchived,
         editingLabel = this.editingLabel,
+        labels = this.labels.toImmutableList(),
         isBoldActive = this.isBoldActive,
         isItalicActive = this.isItalicActive,
         isUnderlineActive = this.isUnderlineActive,
