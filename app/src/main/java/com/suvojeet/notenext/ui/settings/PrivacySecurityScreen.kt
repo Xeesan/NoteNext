@@ -155,10 +155,17 @@ fun PrivacySecurityScreen(
                             iconColor = MaterialTheme.colorScheme.secondary,
                             checked = enableDecoyVault,
                             onCheckedChange = { 
-                                if (it && decoyPin == null) {
-                                    showDecoyPinDialog = true
+                                if (it) {
+                                    if (decoyPin == null) {
+                                        showDecoyPinDialog = true
+                                    } else {
+                                        scope.launch { 
+                                            settingsRepository.saveEnableDecoyVault(true)
+                                            settingsRepository.saveEnableAppLock(true)
+                                        }
+                                    }
                                 } else {
-                                    scope.launch { settingsRepository.saveEnableDecoyVault(it) }
+                                    scope.launch { settingsRepository.saveEnableDecoyVault(false) }
                                 }
                             }
                         )
@@ -253,6 +260,7 @@ fun PrivacySecurityScreen(
                 scope.launch { 
                     settingsRepository.saveDecoyPin(pin)
                     settingsRepository.saveEnableDecoyVault(true)
+                    settingsRepository.saveEnableAppLock(true)
                 }
                 showDecoyPinDialog = false
             },

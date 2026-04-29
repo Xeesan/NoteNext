@@ -1,6 +1,37 @@
 {
   "releases": [
     {
+      "version": "1.4.1",
+      "date": "April 30, 2026",
+      "items": [
+        {
+          "title": "Decoy Vault & Hardened Privacy",
+          "description": "Introduced the Decoy Vault—a secondary PIN system that reveals a separate set of notes. Automatically enforces App Lock when enabled for maximum security.",
+          "type": "FEATURE"
+        },
+        {
+          "title": "Custom Self-Destruct Timer",
+          "description": "Take full control of ephemeral notes with a new custom date and time picker for self-destructing content.",
+          "type": "FEATURE"
+        },
+        {
+          "title": "Material 3 Expressive Motion",
+          "description": "Enhanced the UI with fluid M3 Expressive animations, including new exit motions for AI summary sheets and polished transitions.",
+          "type": "IMPROVEMENT"
+        },
+        {
+          "title": "Modern Component Architecture",
+          "description": "Fully adopted M3 Expressive components and tokenized hardcoded colors for better theme consistency and responsiveness.",
+          "type": "IMPROVEMENT"
+        },
+        {
+          "title": "Checklist & Label Fixes",
+          "description": "Improved checklist preview visibility and fixed an issue where existing labels wouldn't populate correctly in the management dialog.",
+          "type": "FIX"
+        }
+      ]
+    },
+    {
       "version": "1.4.0",
       "date": "April 27, 2026",
       "items": [
