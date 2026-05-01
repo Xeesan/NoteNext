@@ -97,7 +97,7 @@
         <div class="header">
             <div class="app-name">NoteNext</div>
             <h1>Privacy Policy</h1>
-            <p class="last-updated">Last updated: March 12, 2026</p>
+            <p class="last-updated">Last updated: May 1, 2026</p>
         </div>
 
         <div class="section">
@@ -110,7 +110,7 @@
         </div>
 
         <div class="highlight">
-            <strong>Commitment to Privacy:</strong> NoteNext is a "Local-First" application. This means your personal notes and data never leave your device unless you explicitly choose to use cloud backup or AI features.
+            <strong>Commitment to Privacy:</strong> NoteNext is a "Local-First" application. Your notes and data never leave your device unless you explicitly choose to use an AI feature or the optional Google Drive backup. For your protection, we have explicitly disabled system-level cloud backups and device transfers to prevent accidental data exposure.
         </div>
 
         <div class="section">
@@ -127,7 +127,7 @@
                 <li>Attachments (images, audio, etc.)</li>
                 <li>Settings, including your theme preferences and app lock status.</li>
             </ul>
-            <p>This data resides solely on your device's private storage.</p>
+            <p>This data resides solely on your device's private storage. <strong>Your App Lock PIN is stored using industry-standard hashing (PBKDF2)</strong>, meaning even we cannot retrieve it.</p>
 
             <h3>b. Donations (Optional)</h3>
             <p>If you choose to support NoteNext via a donation, the transaction is processed securely through <strong>Google Play Billing</strong>. We do not collect or store your credit card, payment details, or any personal identity information during this process.</p>
@@ -154,17 +154,27 @@
         </div>
 
         <div class="section">
-            <h2>3. AI Features (Groq API)</h2>
-            <p>NoteNext includes AI-powered tools like "Note Summarization" and "Grammar Fix" powered by the Groq API:</p>
+            <h2>3. AI Features</h2>
+            <p>NoteNext includes AI-powered tools like "Note Summarization" and "Grammar Fix". We support multiple providers including <strong>Groq, OpenAI, Anthropic (Claude), and Google Gemini</strong>:</p>
             <ul>
-                <li><strong>Explicit Action:</strong> Content is only sent to Groq when you manually trigger an AI action (e.g., clicking "Summarize").</li>
+                <li><strong>Explicit Action:</strong> Content is only sent to an AI provider when you manually trigger an AI action (e.g., clicking "Summarize").</li>
                 <li><strong>Data Sent:</strong> Only the text content of the specific note you are editing is sent.</li>
-                <li><strong>Privacy:</strong> Data is processed according to <a href="https://groq.com/privacy" target="_blank">Groq's Privacy Policy</a>. We do not store your AI queries on any server.</li>
+                <li><strong>Privacy:</strong> Data is processed according to the respective provider's privacy policy. We do not store your AI queries on any server.</li>
             </ul>
         </div>
 
         <div class="section">
-            <h2>4. Crash Reporting</h2>
+            <h2>4. Advanced Privacy & Security</h2>
+            <ul>
+                <li><strong>Decoy Vault:</strong> If enabled, NoteNext allows you to set a secondary PIN that opens a separate, "decoy" set of notes. This provides plausible deniability under coercion. When active, biometric login is hidden to prevent bypass.</li>
+                <li><strong>Screenshot Protection:</strong> To prevent data leaks, NoteNext blocks screenshots and hides the app's content from the system "Recents" menu while you are on the App Lock screen.</li>
+                <li><strong>Self-Destruct:</strong> All self-destruct processing for ephemeral notes is performed entirely on your device using exact system alarms. No external service is involved in the deletion process.</li>
+                <li><strong>Forensic Hardening:</strong> We have disabled standard Android cloud extraction (Android 12+) and device-to-device transfers to ensure your sensitive notes never leave your device's hardware-bound encryption vault.</li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <h2>5. Crash Reporting</h2>
             <p>To improve app stability, NoteNext uses ACRA (Application Crash Reports for Android). If the app crashes:</p>
             <ul>
                 <li>A technical report containing device info and stack traces may be sent to the developer.</li>
