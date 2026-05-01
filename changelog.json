@@ -1,6 +1,37 @@
 {
   "releases": [
     {
+      "version": "1.4.2",
+      "date": "May 1, 2026",
+      "items": [
+        {
+          "title": "Branded Security Experience",
+          "description": "Added the NoteNext logo to the app lock screen for a more polished and professional security interface.",
+          "type": "UI"
+        },
+        {
+          "title": "Hardened PIN Security",
+          "description": "Upgraded internal PIN storage with industry-standard hashing (PBKDF2) and added screenshot protection to the lock screen for maximum privacy.",
+          "type": "IMPROVEMENT"
+        },
+        {
+          "title": "Enhanced Decoy Privacy",
+          "description": "Biometric login is now intelligently hidden when the Decoy Vault is active, preserving plausible deniability.",
+          "type": "IMPROVEMENT"
+        },
+        {
+          "title": "Pinpoint Self-Destruct",
+          "description": "Rewrote the self-destruct engine to use exact system alarms, ensuring ephemeral notes expire precisely when intended.",
+          "type": "IMPROVEMENT"
+        },
+        {
+          "title": "Security & Stability Fixes",
+          "description": "Disabled insecure cloud backups and resolved a critical bug that could lead to data loss during decryption failures.",
+          "type": "FIX"
+        }
+      ]
+    },
+    {
       "version": "1.4.1",
       "date": "April 30, 2026",
       "items": [

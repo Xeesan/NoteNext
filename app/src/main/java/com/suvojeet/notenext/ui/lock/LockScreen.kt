@@ -5,6 +5,7 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.spring
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Fingerprint
@@ -118,21 +119,13 @@ fun LockScreen(
         ) {
             Spacer(modifier = Modifier.weight(0.4f))
 
-            Surface(
-                modifier = Modifier.size(120.dp),
-                shape = MaterialTheme.shapes.extraLarge,
-                color = MaterialTheme.colorScheme.surfaceContainerHigh,
-                tonalElevation = 4.dp
-            ) {
-                Box(contentAlignment = Alignment.Center) {
-                    Icon(
-                        painter = painterResource(id = R.mipmap.ic_launcher_foreground),
-                        contentDescription = stringResource(id = R.string.app_name),
-                        modifier = Modifier.size(80.dp),
-                        tint = MaterialTheme.colorScheme.primary
-                    )
-                }
-            }
+            Image(
+                painter = painterResource(id = R.mipmap.ic_launcher),
+                contentDescription = stringResource(id = R.string.app_name),
+                modifier = Modifier
+                    .size(100.dp)
+                    .clip(MaterialTheme.shapes.extraLarge)
+            )
 
             Spacer(modifier = Modifier.height(32.dp))
 
