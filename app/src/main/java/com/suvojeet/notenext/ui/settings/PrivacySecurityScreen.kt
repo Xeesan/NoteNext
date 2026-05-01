@@ -47,7 +47,7 @@ fun PrivacySecurityScreen(
     val disallowScreenshots by settingsRepository.disallowScreenshots.collectAsStateWithLifecycle(initialValue = false)
     val clipboardTimeout by settingsRepository.clipboardClearTimeout.collectAsStateWithLifecycle(initialValue = 0L)
     val enableDecoyVault by settingsRepository.enableDecoyVault.collectAsStateWithLifecycle(initialValue = false)
-    val decoyPin by settingsRepository.decoyPin.collectAsStateWithLifecycle(initialValue = null)
+    val decoyPinSet by settingsRepository.isDecoyPinSet.collectAsStateWithLifecycle(initialValue = false)
 
     var showClipboardDialog by remember { mutableStateOf(false) }
     var showDecoyPinDialog by remember { mutableStateOf(false) }
@@ -154,17 +154,19 @@ fun PrivacySecurityScreen(
                             subtitle = "Use a secondary PIN for coercion situations",
                             iconColor = MaterialTheme.colorScheme.secondary,
                             checked = enableDecoyVault,
-                            onCheckedChange = { 
+                            onCheckedChange = {
                                 if (it) {
-                                    if (decoyPin == null) {
+                                    if (!decoyPinSet) {
                                         showDecoyPinDialog = true
                                     } else {
-                                        scope.launch { 
+                                        scope.launch {
                                             settingsRepository.saveEnableDecoyVault(true)
                                             settingsRepository.saveEnableAppLock(true)
                                         }
                                     }
                                 } else {
+                                    // saveEnableDecoyVault(false) also clears the stored PIN
+                                    // — see SettingsRepository for rationale.
                                     scope.launch { settingsRepository.saveEnableDecoyVault(false) }
                                 }
                             }
@@ -177,7 +179,7 @@ fun PrivacySecurityScreen(
                             SettingsItem(
                                 icon = Icons.Rounded.Password,
                                 title = "Set Decoy PIN",
-                                subtitle = if (decoyPin == null) "Not set" else "****",
+                                subtitle = if (!decoyPinSet) "Not set" else "****",
                                 iconColor = MaterialTheme.colorScheme.secondary,
                                 onClick = { showDecoyPinDialog = true }
                             )
@@ -232,7 +234,7 @@ fun PrivacySecurityScreen(
                             icon = Icons.Rounded.Timer,
                             title = "Self-Destructing Notes",
                             subtitle = "Set notes to automatically delete after a certain time",
-                            iconColor = Color(0xFF6750A4),
+                            iconColor = MaterialTheme.colorScheme.tertiary,
                             onClick = { showSelfDestructInfo = true }
                         )
                     }
@@ -256,8 +258,9 @@ fun PrivacySecurityScreen(
 
     if (showDecoyPinDialog) {
         DecoyPinDialog(
+            checkPinClashesWithReal = { candidate -> settingsRepository.decoyPinClashesWithReal(candidate) },
             onPinSelected = { pin ->
-                scope.launch { 
+                scope.launch {
                     settingsRepository.saveDecoyPin(pin)
                     settingsRepository.saveEnableDecoyVault(true)
                     settingsRepository.saveEnableAppLock(true)
@@ -270,7 +273,7 @@ fun PrivacySecurityScreen(
     if (showSelfDestructInfo) {
         AlertDialog(
             onDismissRequest = { showSelfDestructInfo = false },
-            icon = { Icon(Icons.Rounded.Timer, contentDescription = null, tint = Color(0xFF6750A4)) },
+            icon = { Icon(Icons.Rounded.Timer, contentDescription = null, tint = MaterialTheme.colorScheme.tertiary) },
             title = { Text("Self-Destructing Notes") },
             text = {
                 Text("Self-destruct is a per-note feature. You can set a timer for any note by clicking the 'More' (three-dots) menu while editing a note and selecting 'Self-Destruct Timer'. Once the timer expires, the note will be permanently deleted.")
@@ -369,12 +372,15 @@ private fun SettingsToggle(
 
 @Composable
 private fun DecoyPinDialog(
+    checkPinClashesWithReal: suspend (String) -> Boolean,
     onPinSelected: (String) -> Unit,
     onDismiss: () -> Unit
 ) {
     var pin by remember { mutableStateOf("") }
     var confirmPin by remember { mutableStateOf("") }
     var error by remember { mutableStateOf<String?>(null) }
+    var checking by remember { mutableStateOf(false) }
+    val dialogScope = rememberCoroutineScope()
 
     AlertDialog(
         onDismissRequest = onDismiss,
@@ -382,7 +388,7 @@ private fun DecoyPinDialog(
         text = {
             Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
                 Text("Enter a 4-digit secondary PIN. Entering this PIN on the lock screen will open a separate, decoy vault.")
-                
+
                 OutlinedTextField(
                     value = pin,
                     onValueChange = { if (it.length <= 4) pin = it },
@@ -391,7 +397,7 @@ private fun DecoyPinDialog(
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                     modifier = Modifier.fillMaxWidth()
                 )
-                
+
                 OutlinedTextField(
                     value = confirmPin,
                     onValueChange = { if (it.length <= 4) confirmPin = it },
@@ -400,7 +406,7 @@ private fun DecoyPinDialog(
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                     modifier = Modifier.fillMaxWidth()
                 )
-                
+
                 if (error != null) {
                     Text(error!!, color = MaterialTheme.colorScheme.error, style = MaterialTheme.typography.labelMedium)
                 }
@@ -408,17 +414,29 @@ private fun DecoyPinDialog(
         },
         confirmButton = {
             TextButton(
+                enabled = !checking,
                 onClick = {
-                    if (pin.length != 4) {
-                        error = "PIN must be 4 digits"
-                    } else if (pin != confirmPin) {
-                        error = "PINs do not match"
-                    } else {
-                        onPinSelected(pin)
+                    when {
+                        pin.length != 4 -> error = "PIN must be 4 digits"
+                        pin != confirmPin -> error = "PINs do not match"
+                        else -> {
+                            checking = true
+                            dialogScope.launch {
+                                // A decoy PIN equal to the real PIN silently kills the
+                                // feature: the lock screen always matches the real PIN
+                                // path first, so the decoy never triggers.
+                                if (checkPinClashesWithReal(pin)) {
+                                    error = "Decoy PIN must differ from your app PIN"
+                                    checking = false
+                                } else {
+                                    onPinSelected(pin)
+                                }
+                            }
+                        }
                     }
                 }
             ) {
-                Text("Save")
+                Text(if (checking) "Saving…" else "Save")
             }
         },
         dismissButton = {

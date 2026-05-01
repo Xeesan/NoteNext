@@ -40,7 +40,15 @@ class NoteGlanceWidget : GlanceAppWidget() {
         val repository = entryPoint.repository()
 
         val notesFlow = repository.getPinnedNoteSummaries().map { allPinned ->
-            allPinned.filter { !it.note.isArchived && !it.note.isBinned && !it.note.isLocked }
+            // Same filter as NoteWidgetService — never expose locked, encrypted, or
+            // decoy notes on the home screen.
+            allPinned.filter {
+                !it.note.isArchived &&
+                    !it.note.isBinned &&
+                    !it.note.isLocked &&
+                    !it.note.isEncrypted &&
+                    !it.note.isDecoy
+            }
         }
 
         provideContent {

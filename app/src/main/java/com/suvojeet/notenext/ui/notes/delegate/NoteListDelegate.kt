@@ -32,14 +32,14 @@ class NoteListDelegate @Inject constructor(
     private val _isDecoy = MutableStateFlow(false)
 
     fun observeNotes(scope: CoroutineScope) {
+        // Removed search-query Log.d — it leaked the user's query to logcat in release.
         val combinedFlow = combine(
             _searchQuery,
             _sortType,
             _filteredProjectId,
             _isDecoy
-        ) { query: String, sort: SortType, project: Int?, decoy: Boolean -> 
-            android.util.Log.d("NoteListDelegate", "Combined: query=$query, sort=$sort, project=$project, decoy=$decoy")
-            NoteSearchState(query, sort, project, decoy) 
+        ) { query: String, sort: SortType, project: Int?, decoy: Boolean ->
+            NoteSearchState(query, sort, project, decoy)
         }.distinctUntilChanged()
 
         combinedFlow.flatMapLatest { state: NoteSearchState ->
@@ -48,10 +48,20 @@ class NoteListDelegate @Inject constructor(
             _listState.update { it.copy(pinnedNotes = pinned.toImmutableList()) }
         }.launchIn(scope)
 
+        // The pager itself is built ONCE: a stable cachedIn flow that swaps inner sources
+        // via flatMapLatest as search/sort/project/decoy change. Previously we built a
+        // brand-new Pager + cachedIn() on every keystroke and stored the new flow inside
+        // listState — old collectors leaked for the lifetime of the ViewModel and the
+        // UI saw a fresh PagingData on each character typed.
+        val pagedFlow = combinedFlow.flatMapLatest { state: NoteSearchState ->
+            repository.getOtherNoteSummariesPaged(state.query, state.sortType, state.projectId, state.isDecoy)
+        }.cachedIn(scope)
+
+        _listState.update { it.copy(pagedNotes = pagedFlow) }
+
         combinedFlow.onEach { state: NoteSearchState ->
-            _listState.update { 
+            _listState.update {
                 it.copy(
-                    pagedNotes = repository.getOtherNoteSummariesPaged(state.query, state.sortType, state.projectId, state.isDecoy).cachedIn(scope),
                     searchQuery = state.query,
                     sortType = state.sortType,
                     filteredProjectId = state.projectId

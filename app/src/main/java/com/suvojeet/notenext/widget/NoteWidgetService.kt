@@ -40,11 +40,21 @@ class NoteWidgetRemoteViewsFactory(
     override fun onDataSetChanged() {
         runBlocking {
             try {
-                // Fetch Pinned notes first
+                // Fetch Pinned notes first.
+                // Critical: filter out locked/encrypted/decoy notes — otherwise the widget
+                // exposes raw ciphertext on the home screen, and decoy notes leak into the
+                // real session. The widget must ONLY ever show plain real-vault content.
                 val allNotesWithAttachments = repository.getNotes("", SortType.DATE_MODIFIED).first()
                 notes = allNotesWithAttachments
                         .map { it.note }
-                        .filter { it.isPinned && !it.isArchived && !it.isBinned }
+                        .filter {
+                            it.isPinned &&
+                                !it.isArchived &&
+                                !it.isBinned &&
+                                !it.isLocked &&
+                                !it.isEncrypted &&
+                                !it.isDecoy
+                        }
                 
                 // Pre-compute plain text content for all notes in parallel to avoid long runBlocking
                 val contentPairs = awaitAll(*notes.map { note ->

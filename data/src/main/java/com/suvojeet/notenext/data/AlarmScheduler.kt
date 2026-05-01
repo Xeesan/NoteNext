@@ -13,6 +13,14 @@ interface AlarmScheduler {
     fun cancel(note: Note)
     fun scheduleTodo(todo: TodoItem)
     fun cancelTodo(todo: TodoItem)
+
+    /**
+     * Per-note exact-alarm self-destruct. The hourly AutoDeleteWorker is kept as a
+     * safety net; this method ensures expiry fires precisely (within seconds) instead
+     * of up to one hour late, and never blocked by `requiresBatteryNotLow`.
+     */
+    fun scheduleExpiry(note: Note)
+    fun cancelExpiry(note: Note)
 }
 
 class AlarmSchedulerImpl(private val context: Context) : AlarmScheduler {
@@ -48,11 +56,14 @@ class AlarmSchedulerImpl(private val context: Context) : AlarmScheduler {
         val reminderTime = note.reminderTime ?: return
         if (reminderTime <= System.currentTimeMillis()) return
 
+        // Only the note ID travels in the alarm intent — the receiver re-reads the
+        // current note (title/content/lock state) from the DB. This avoids:
+        //   1. Shipping ciphertext of locked notes into PendingIntent extras.
+        //   2. Showing stale title/content if the note was edited/deleted after
+        //      scheduling but before firing.
         val intent = Intent().apply {
             component = ComponentName(context, "com.suvojeet.notenext.util.ReminderBroadcastReceiver")
             putExtra("NOTE_ID", note.id)
-            putExtra("NOTE_TITLE", note.title)
-            putExtra("NOTE_CONTENT", note.content)
         }
         val pendingIntent = PendingIntent.getBroadcast(
             context,
@@ -103,6 +114,46 @@ class AlarmSchedulerImpl(private val context: Context) : AlarmScheduler {
     // note IDs grow past a million, set the high bit to mark a Todo request code.
     // This gives a disjoint namespace for Note and Todo PendingIntents.
     private fun todoRequestCode(todoId: Int): Int = todoId or 0x4000_0000
+
+    override fun scheduleExpiry(note: Note) {
+        val expiry = note.expiryTime ?: return
+        val intent = Intent().apply {
+            component = ComponentName(context, "com.suvojeet.notenext.util.ReminderBroadcastReceiver")
+            putExtra("NOTE_ID", note.id)
+            putExtra("TYPE", "EXPIRY")
+        }
+        val pendingIntent = PendingIntent.getBroadcast(
+            context,
+            expiryRequestCode(note.id),
+            intent,
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+        )
+        if (expiry <= System.currentTimeMillis()) {
+            // Already past — fire immediately so the worker doesn't have to catch it.
+            scheduleAlarm(System.currentTimeMillis() + 1_000, pendingIntent)
+        } else {
+            scheduleAlarm(expiry, pendingIntent)
+        }
+    }
+
+    override fun cancelExpiry(note: Note) {
+        val intent = Intent().apply {
+            component = ComponentName(context, "com.suvojeet.notenext.util.ReminderBroadcastReceiver")
+            putExtra("NOTE_ID", note.id)
+            putExtra("TYPE", "EXPIRY")
+        }
+        val pendingIntent = PendingIntent.getBroadcast(
+            context,
+            expiryRequestCode(note.id),
+            intent,
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+        )
+        alarmManager.cancel(pendingIntent)
+    }
+
+    // Disjoint request-code namespace from reminders (note.id) and todos (note.id | high
+    // bit). Use a different high bit so a note's reminder and its expiry never collide.
+    private fun expiryRequestCode(noteId: Int): Int = noteId or 0x2000_0000
 
     override fun cancelTodo(todo: TodoItem) {
         val intent = Intent().apply {

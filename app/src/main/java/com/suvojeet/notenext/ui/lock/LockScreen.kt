@@ -34,6 +34,13 @@ import androidx.compose.ui.draw.clip
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.suvojeet.notenext.ui.MainViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import android.view.WindowManager
+import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.role
+import androidx.compose.ui.semantics.semantics
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 @Composable
 fun LockScreen(
@@ -42,14 +49,26 @@ fun LockScreen(
 ) {
     val context = LocalContext.current
     val settingsRepository = viewModel.settingsRepository
-    val realPin by settingsRepository.appLockPin.collectAsStateWithLifecycle(initialValue = null)
-    val decoyPin by settingsRepository.decoyPin.collectAsStateWithLifecycle(initialValue = null)
     val isDecoyEnabled by settingsRepository.enableDecoyVault.collectAsStateWithLifecycle(initialValue = false)
 
     var enteredPin by remember { mutableStateOf("") }
     var error by remember { mutableStateOf<String?>(null) }
-    
+    var verifying by remember { mutableStateOf(false) }
+    val scope = rememberCoroutineScope()
+
     val activity = context.findActivity() as? FragmentActivity
+
+    // FLAG_SECURE always on this screen — protects PIN entry from screenshots/recents
+    // regardless of the user's "Disallow Screenshots" preference.
+    DisposableEffect(activity) {
+        activity?.window?.addFlags(WindowManager.LayoutParams.FLAG_SECURE)
+        onDispose {
+            // Restore based on user preference; MainActivity's collector will re-apply
+            // FLAG_SECURE if disallowScreenshots is true.
+            activity?.window?.clearFlags(WindowManager.LayoutParams.FLAG_SECURE)
+        }
+    }
+
     val biometricAuthFailedString = stringResource(id = R.string.biometric_auth_failed)
 
     val biometricAuthManager = if (activity != null) {
@@ -64,10 +83,15 @@ fun LockScreen(
     }
 
     val canAuthenticateResult = biometricAuthManager?.canAuthenticate()
-    val isAuthAvailable = canAuthenticateResult == BiometricManager.BIOMETRIC_SUCCESS || 
-                         canAuthenticateResult == BiometricManager.BIOMETRIC_ERROR_NONE_ENROLLED
+    // When decoy vault is enabled we hide biometrics on the cold lock screen entirely.
+    // Biometric auth would always unlock the real vault — under coercion that bypasses
+    // the decoy feature. Forcing PIN entry preserves plausible deniability.
+    val isAuthAvailable = !isDecoyEnabled && (
+        canAuthenticateResult == BiometricManager.BIOMETRIC_SUCCESS ||
+            canAuthenticateResult == BiometricManager.BIOMETRIC_ERROR_NONE_ENROLLED
+    )
 
-    LaunchedEffect(biometricAuthManager) {
+    LaunchedEffect(biometricAuthManager, isDecoyEnabled) {
         if (isAuthAvailable) {
             biometricAuthManager?.showBiometricPrompt(
                 onAuthSuccess = { _ -> onUnlock(false) },
@@ -78,8 +102,6 @@ fun LockScreen(
                 },
                 onAuthFailed = { error = biometricAuthFailedString }
             )
-        } else {
-             error = "Security lock not available"
         }
     }
 
@@ -95,7 +117,7 @@ fun LockScreen(
             verticalArrangement = Arrangement.Center
         ) {
             Spacer(modifier = Modifier.weight(0.4f))
-            
+
             Surface(
                 modifier = Modifier.size(120.dp),
                 shape = MaterialTheme.shapes.extraLarge,
@@ -111,22 +133,22 @@ fun LockScreen(
                     )
                 }
             }
-            
+
             Spacer(modifier = Modifier.height(32.dp))
-            
+
             Text(
-                text = stringResource(id = R.string.app_name), 
+                text = stringResource(id = R.string.app_name),
                 style = MaterialTheme.typography.displaySmall,
                 fontWeight = FontWeight.Black,
                 color = MaterialTheme.colorScheme.onBackground
             )
-            
+
             Text(
-                text = "Protected with device security",
+                text = if (isDecoyEnabled) "Enter your PIN" else "Protected with device security",
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
-            
+
             Spacer(modifier = Modifier.height(48.dp))
 
             if (isAuthAvailable) {
@@ -153,7 +175,7 @@ fun LockScreen(
                     Text("Unlock with Biometrics", fontWeight = FontWeight.Bold, style = MaterialTheme.typography.titleMedium)
                 }
             }
-            
+
             Spacer(modifier = Modifier.height(32.dp))
 
             // PIN Dots
@@ -192,25 +214,42 @@ fun LockScreen(
                             if (key.isEmpty()) {
                                 Spacer(modifier = Modifier.size(64.dp))
                             } else {
+                                val keyDescription = if (key == "DEL") "Delete" else "Digit $key"
                                 Box(
                                     modifier = Modifier
                                         .size(64.dp)
                                         .clip(CircleShape)
                                         .background(MaterialTheme.colorScheme.surfaceContainerLow)
-                                        .clickable {
+                                        .semantics {
+                                            role = Role.Button
+                                            contentDescription = keyDescription
+                                        }
+                                        .clickable(enabled = !verifying) {
                                             if (key == "DEL") {
                                                 if (enteredPin.isNotEmpty()) enteredPin = enteredPin.dropLast(1)
                                             } else if (enteredPin.length < 4) {
-                                                enteredPin += key
-                                                if (enteredPin.length == 4) {
-                                                    // Validate
-                                                    when {
-                                                        enteredPin == realPin -> onUnlock(false)
-                                                        isDecoyEnabled && enteredPin == decoyPin -> onUnlock(true)
-                                                        else -> {
-                                                            error = "Invalid PIN"
-                                                            enteredPin = ""
+                                                val next = enteredPin + key
+                                                enteredPin = next
+                                                if (next.length == 4) {
+                                                    verifying = true
+                                                    val attempt = next
+                                                    scope.launch {
+                                                        // Constant-time-ish: always run both checks.
+                                                        // Real first to avoid timing leak about which path matched.
+                                                        val realOk = settingsRepository.verifyAppLockPin(attempt)
+                                                        val decoyOk = settingsRepository.verifyDecoyPin(attempt)
+                                                        // Small intentional delay so attempts feel uniform
+                                                        // and a coerced user has more time to react.
+                                                        delay(150)
+                                                        when {
+                                                            realOk -> onUnlock(false)
+                                                            isDecoyEnabled && decoyOk -> onUnlock(true)
+                                                            else -> {
+                                                                error = "Try again"
+                                                                enteredPin = ""
+                                                            }
                                                         }
+                                                        verifying = false
                                                     }
                                                 }
                                             }
@@ -219,7 +258,7 @@ fun LockScreen(
                                     contentAlignment = Alignment.Center
                                 ) {
                                     if (key == "DEL") {
-                                        Icon(Icons.Rounded.Backspace, contentDescription = "Delete")
+                                        Icon(Icons.Rounded.Backspace, contentDescription = null)
                                     } else {
                                         Text(key, style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.Bold)
                                     }
@@ -233,8 +272,8 @@ fun LockScreen(
             Spacer(modifier = Modifier.height(24.dp))
 
             AnimatedVisibility(
-                visible = error != null, 
-                enter = fadeIn(animationSpec = spring()), 
+                visible = error != null,
+                enter = fadeIn(animationSpec = spring()),
                 exit = fadeOut(animationSpec = spring())
             ) {
                 Text(
@@ -245,9 +284,9 @@ fun LockScreen(
                     textAlign = TextAlign.Center
                 )
             }
-            
+
             Spacer(modifier = Modifier.weight(0.6f))
-            
+
             Text(
                 text = "Secure · Private · Local",
                 style = MaterialTheme.typography.labelSmall,

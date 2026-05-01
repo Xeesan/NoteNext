@@ -150,15 +150,18 @@ class NoteRepositoryImpl @Inject constructor(
     override fun getNotesModifiedSince(timestamp: Long): Flow<List<NoteWithAttachments>> =
         noteDao.getNotesModifiedSince(timestamp)
 
-    override suspend fun getNoteById(id: Int): NoteWithAttachments? = 
-        noteDao.getNoteById(id)?.let { 
+    override suspend fun getNoteById(id: Int): NoteWithAttachments? =
+        noteDao.getNoteById(id)?.let {
             // We return it AS IS if locked, so the caller can trigger biometric auth
             if (it.note.isLocked) {
                 it
             } else {
+                // CryptoUtils.decryptNote returns the note unchanged on failure (still
+                // isEncrypted=true with original iv) so a round-trip update preserves
+                // the original ciphertext rather than overwriting it with a placeholder.
                 val decryptedNote = CryptoUtils.decryptNote(it.note)
-                val decryptedChecklist = it.checklistItems.map { item -> 
-                    CryptoUtils.decryptChecklistItem(item, isLocked = false) 
+                val decryptedChecklist = it.checklistItems.map { item ->
+                    CryptoUtils.decryptChecklistItem(item, isLocked = false)
                 }
                 it.copy(note = decryptedNote, checklistItems = decryptedChecklist)
             }

@@ -1088,6 +1088,15 @@ class ProjectNotesViewModel @Inject constructor(
                                 alarmScheduler.cancel(note.copy(id = currentNoteId.toInt()))
                             }
 
+                            // Per-note exact-alarm self-destruct. See NotesViewModel.kt
+                            // for rationale — same fix mirrored here for project notes.
+                            val withId = note.copy(id = currentNoteId.toInt())
+                            if (note.expiryTime != null) {
+                                alarmScheduler.scheduleExpiry(withId)
+                            } else if (noteId != -1) {
+                                alarmScheduler.cancelExpiry(withId)
+                            }
+
                             // Handle Checklist Items
                             if (state.value.editingNoteType == NoteType.CHECKLIST) {
                                 val checklistItems = state.value.editingChecklist.mapIndexed { index, item ->

@@ -11,7 +11,13 @@ import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 import com.suvojeet.notenext.ui.theme.ThemeMode
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
+import android.util.Base64
+import java.security.MessageDigest
+import java.security.SecureRandom
+import javax.crypto.SecretKeyFactory
+import javax.crypto.spec.PBEKeySpec
 
 val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "settings")
 
@@ -148,18 +154,46 @@ class SettingsRepository(private val context: Context) {
     suspend fun saveEnableAppLock(enable: Boolean) {
         context.dataStore.edit { preferences ->
             preferences[PreferencesKeys.ENABLE_APP_LOCK] = enable
+            // Disabling app lock also drops the stored PIN AND the decoy PIN. Without
+            // this, turning lock off and back on later silently restores the old PIN —
+            // surprising behavior and a forensic-trail concern. Decoy is meaningless
+            // without the parent app lock, so it goes too.
+            if (!enable) {
+                preferences.remove(PreferencesKeys.APP_LOCK_PIN)
+                preferences.remove(PreferencesKeys.DECOY_PIN)
+                preferences[PreferencesKeys.ENABLE_DECOY_VAULT] = false
+            }
         }
     }
 
-    val appLockPin: Flow<String?> = context.dataStore.data
-        .map { preferences ->
-            preferences[PreferencesKeys.APP_LOCK_PIN]
-        }
+    // Stored value is `salt:hash` (PBKDF2-HMAC-SHA256, 100k iterations).
+    // We never expose the stored hash — only a "is set" flag and a `verify` helper.
+    val isAppLockPinSet: Flow<Boolean> = context.dataStore.data
+        .map { preferences -> !preferences[PreferencesKeys.APP_LOCK_PIN].isNullOrEmpty() }
 
     suspend fun saveAppLockPin(pin: String) {
+        val hashed = PinHasher.hash(pin)
         context.dataStore.edit { preferences ->
-            preferences[PreferencesKeys.APP_LOCK_PIN] = pin
+            preferences[PreferencesKeys.APP_LOCK_PIN] = hashed
         }
+    }
+
+    suspend fun clearAppLockPin() {
+        context.dataStore.edit { preferences ->
+            preferences.remove(PreferencesKeys.APP_LOCK_PIN)
+        }
+    }
+
+    suspend fun verifyAppLockPin(input: String): Boolean {
+        val stored = context.dataStore.data.first()[PreferencesKeys.APP_LOCK_PIN] ?: return false
+        val ok = PinHasher.verify(input, stored)
+        // Lazy migration: if the user is verifying against a legacy plaintext PIN
+        // (saved by a pre-hash build), re-save it hashed now that we know the PIN is
+        // correct. After the next successful unlock, no plaintext PIN remains in prefs.
+        if (ok && PinHasher.isLegacyPlaintext(stored)) {
+            saveAppLockPin(input)
+        }
+        return ok
     }
 
     val isSetupComplete: Flow<Boolean> = context.dataStore.data
@@ -208,15 +242,43 @@ class SettingsRepository(private val context: Context) {
         .map { preferences -> preferences[PreferencesKeys.ENABLE_DECOY_VAULT] ?: false }
 
     suspend fun saveEnableDecoyVault(enable: Boolean) {
-        context.dataStore.edit { preferences -> preferences[PreferencesKeys.ENABLE_DECOY_VAULT] = enable }
+        context.dataStore.edit { preferences ->
+            preferences[PreferencesKeys.ENABLE_DECOY_VAULT] = enable
+            // Disabling the feature must also drop the stored decoy PIN — otherwise
+            // turning the feature off and on later silently re-enables the old PIN,
+            // and a forensic dump of prefs reveals the feature was ever configured.
+            if (!enable) {
+                preferences.remove(PreferencesKeys.DECOY_PIN)
+            }
+        }
     }
 
-    val decoyPin: Flow<String?> = context.dataStore.data
-        .map { preferences -> preferences[PreferencesKeys.DECOY_PIN] }
+    val isDecoyPinSet: Flow<Boolean> = context.dataStore.data
+        .map { preferences -> !preferences[PreferencesKeys.DECOY_PIN].isNullOrEmpty() }
 
     suspend fun saveDecoyPin(pin: String) {
-        context.dataStore.edit { preferences -> preferences[PreferencesKeys.DECOY_PIN] = pin }
+        val hashed = PinHasher.hash(pin)
+        context.dataStore.edit { preferences -> preferences[PreferencesKeys.DECOY_PIN] = hashed }
     }
+
+    suspend fun clearDecoyPin() {
+        context.dataStore.edit { preferences -> preferences.remove(PreferencesKeys.DECOY_PIN) }
+    }
+
+    suspend fun verifyDecoyPin(input: String): Boolean {
+        val stored = context.dataStore.data.first()[PreferencesKeys.DECOY_PIN] ?: return false
+        val ok = PinHasher.verify(input, stored)
+        if (ok && PinHasher.isLegacyPlaintext(stored)) {
+            saveDecoyPin(input)
+        }
+        return ok
+    }
+
+    /**
+     * True if the input would match the *real* PIN if it were saved as the decoy PIN.
+     * Used by the settings dialog to refuse a decoy PIN equal to the app lock PIN.
+     */
+    suspend fun decoyPinClashesWithReal(candidate: String): Boolean = verifyAppLockPin(candidate)
 
 
     // AI Provider Settings
@@ -347,5 +409,65 @@ class SettingsRepository(private val context: Context) {
         .map { it[PreferencesKeys.AI_FEATURE_CUSTOM_PROMPT] ?: false }
     suspend fun saveAiFeatureCustomPrompt(v: Boolean) {
         context.dataStore.edit { it[PreferencesKeys.AI_FEATURE_CUSTOM_PROMPT] = v }
+    }
+}
+
+/**
+ * Salted PBKDF2-HMAC-SHA256 PIN hashing.
+ *
+ * 4-digit PINs are inherently low-entropy — a Keystore-bound HMAC would be ideal, but
+ * adds significant complexity. Salted PBKDF2 at 100k iterations turns a stolen prefs
+ * file into a real (if not insurmountable) computational cost: roughly 100k * 10000 =
+ * 1 billion HMAC ops to brute-force a 4-digit PIN, vs. zero for the previous plaintext
+ * storage. Combined with `data_extraction_rules.xml` excluding sharedpref from cloud
+ * backup, casual exfiltration is no longer enough.
+ *
+ * Stored format: "salt_b64:hash_b64". Backwards-compatible reads handled by `verify`.
+ */
+private object PinHasher {
+    private const val ITERATIONS = 100_000
+    private const val KEY_LENGTH_BITS = 256
+    private const val SALT_BYTES = 16
+    private const val ALGO = "PBKDF2WithHmacSHA256"
+
+    fun hash(pin: String): String {
+        val salt = ByteArray(SALT_BYTES).also { SecureRandom().nextBytes(it) }
+        val derived = pbkdf2(pin, salt)
+        return Base64.encodeToString(salt, Base64.NO_WRAP) + ":" +
+            Base64.encodeToString(derived, Base64.NO_WRAP)
+    }
+
+    fun verify(input: String, stored: String): Boolean {
+        if (isLegacyPlaintext(stored)) {
+            // Legacy plaintext PIN (pre-hash migration). Constant-time compare.
+            return constantTimeEquals(input.toByteArray(Charsets.UTF_8), stored.toByteArray(Charsets.UTF_8))
+        }
+        val parts = stored.split(":")
+        return try {
+            val salt = Base64.decode(parts[0], Base64.NO_WRAP)
+            val expected = Base64.decode(parts[1], Base64.NO_WRAP)
+            val actual = pbkdf2(input, salt)
+            constantTimeEquals(expected, actual)
+        } catch (e: Exception) {
+            false
+        }
+    }
+
+    /**
+     * A plaintext PIN from before the hashing migration. Detected by the absence of
+     * the `salt:hash` separator. Verifying such a value succeeds, after which the
+     * caller should re-save the PIN through `saveAppLockPin`/`saveDecoyPin` so the
+     * plaintext is replaced on disk.
+     */
+    fun isLegacyPlaintext(stored: String): Boolean = !stored.contains(":")
+
+    private fun pbkdf2(pin: String, salt: ByteArray): ByteArray {
+        val spec = PBEKeySpec(pin.toCharArray(), salt, ITERATIONS, KEY_LENGTH_BITS)
+        return SecretKeyFactory.getInstance(ALGO).generateSecret(spec).encoded
+    }
+
+    private fun constantTimeEquals(a: ByteArray, b: ByteArray): Boolean {
+        if (a.size != b.size) return false
+        return MessageDigest.isEqual(a, b)
     }
 }

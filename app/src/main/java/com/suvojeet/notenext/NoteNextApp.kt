@@ -4,7 +4,6 @@ import android.app.Application
 import android.content.Context
 import androidx.hilt.work.HiltWorkerFactory
 import androidx.work.Configuration
-import androidx.work.Constraints
 import androidx.work.ExistingPeriodicWorkPolicy
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.PeriodicWorkRequestBuilder
@@ -81,19 +80,17 @@ class NoteNextApp : Application(), Configuration.Provider {
     }
 
     private fun setupAutoDeleteWorker() {
-        val constraints = Constraints.Builder()
-            .setRequiresBatteryNotLow(true)
-            .build()
-
-        // Run once immediately on start to catch any missed expirations
-        val oneTimeRequest = OneTimeWorkRequestBuilder<AutoDeleteWorker>()
-            .setConstraints(constraints)
-            .build()
+        // No constraints — self-destruct must happen even on low battery. The DB write
+        // is cheap; holding it back to spare 0.0001% of the battery is the wrong trade.
+        // Per-note exact alarms (AlarmScheduler.scheduleExpiry) handle the precise case;
+        // this worker is the safety-net sweeper for missed alarms (e.g. force-stop,
+        // permission revoked, alarm dropped under Doze).
+        val oneTimeRequest = OneTimeWorkRequestBuilder<AutoDeleteWorker>().build()
         WorkManager.getInstance(this).enqueue(oneTimeRequest)
 
-        // Then periodic every 1 hour (min allowed is 15 min, 1h is good for battery & 1h self-destruct)
-        val cleanupRequest = PeriodicWorkRequestBuilder<AutoDeleteWorker>(1, TimeUnit.HOURS)
-            .setConstraints(constraints)
+        // Periodic every 15 minutes (the WorkManager minimum). Down from 1 hour: a
+        // 5-minute self-destruct timer was previously up to ~1 h late.
+        val cleanupRequest = PeriodicWorkRequestBuilder<AutoDeleteWorker>(15, TimeUnit.MINUTES)
             .build()
 
         WorkManager.getInstance(this).enqueueUniquePeriodicWork(

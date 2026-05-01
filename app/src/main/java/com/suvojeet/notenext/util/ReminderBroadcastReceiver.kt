@@ -46,44 +46,66 @@ class ReminderBroadcastReceiver : BroadcastReceiver() {
                         val todoId = intent?.getIntExtra("TODO_ID", -1) ?: -1
                         val todoTitle = intent?.getStringExtra("TODO_TITLE") ?: "Todo Reminder"
                         val todoContent = intent?.getStringExtra("TODO_CONTENT") ?: ""
-                        
+
                         createNotificationChannel(context)
                         showNotification(context, todoId, todoTitle, todoContent, isTodo = true)
+                    } else if (type == "EXPIRY") {
+                        // Self-destruct: per-note exact alarm fires here. Re-check the
+                        // note's current state — if the user extended or removed the
+                        // timer, do nothing. Otherwise delete the note. The hourly
+                        // AutoDeleteWorker remains as a safety net for missed alarms.
+                        val noteId = intent?.getIntExtra("NOTE_ID", -1) ?: -1
+                        if (noteId == -1) return@launch
+                        val current = repository.getNoteById(noteId)?.note ?: return@launch
+                        val expiry = current.expiryTime
+                        if (expiry != null && expiry <= System.currentTimeMillis()) {
+                            repository.deleteNote(current)
+                        } else if (expiry != null) {
+                            // Timer was extended — re-arm.
+                            alarmScheduler.scheduleExpiry(current)
+                        }
                     } else {
                         val noteId = intent?.getIntExtra("NOTE_ID", -1) ?: -1
-                        val noteTitle = intent?.getStringExtra("NOTE_TITLE") ?: "Reminder"
-                        val noteContent = intent?.getStringExtra("NOTE_CONTENT") ?: ""
+                        if (noteId == -1) return@launch
 
-                        // Show Notification
-                        val plainTextContent = HtmlConverter.htmlToPlainText(noteContent)
-                        val truncatedContent = if (plainTextContent.length > 150) {
-                            plainTextContent.substring(0, 150) + "..."
+                        // Always re-read from DB. The alarm intent only carries the ID —
+                        // this prevents leaking ciphertext via PendingIntent extras and
+                        // ensures we never show a deleted / edited / locked note's stale
+                        // content in the notification.
+                        val noteWithAttachments = repository.getNoteById(noteId)
+                        val note = noteWithAttachments?.note ?: return@launch
+
+                        // For locked / encrypted notes, never decrypt off-screen. Show a
+                        // privacy-safe placeholder so the user is reminded without leaking
+                        // contents to the lockscreen / notification shade.
+                        val safeTitle: String
+                        val safeContent: String
+                        if (note.isLocked || note.isEncrypted) {
+                            safeTitle = "Reminder"
+                            safeContent = "You have a reminder for a locked note. Open the app to view."
                         } else {
-                            plainTextContent
+                            safeTitle = note.title.ifBlank { "Reminder" }
+                            val plain = HtmlConverter.htmlToPlainText(note.content)
+                            safeContent = if (plain.length > 150) plain.substring(0, 150) + "..." else plain
                         }
 
                         createNotificationChannel(context)
-                        showNotification(context, noteId, noteTitle, truncatedContent, isTodo = false)
+                        showNotification(context, noteId, safeTitle, safeContent, isTodo = false)
 
                         // Handle Repeat Logic
-                        if (noteId != -1) {
-                            val noteWithAttachments = repository.getNoteById(noteId)
-                            noteWithAttachments?.note?.let { note ->
-                                val repeatOptionStr = note.repeatOption
-                                if (repeatOptionStr != null && repeatOptionStr != RepeatOption.NEVER.name) {
-                                    try {
-                                        val repeatOption = RepeatOption.valueOf(repeatOptionStr)
-                                        val nextTime = calculateNextReminderTime(note.reminderTime ?: System.currentTimeMillis(), repeatOption)
-                                        
-                                        if (nextTime > System.currentTimeMillis()) {
-                                            val updatedNote = note.copy(reminderTime = nextTime)
-                                            repository.updateNote(updatedNote)
-                                            alarmScheduler.schedule(updatedNote)
-                                        }
-                                    } catch (e: Exception) {
-                                        e.printStackTrace()
-                                    }
+                        val repeatOptionStr = note.repeatOption
+                        if (repeatOptionStr != null && repeatOptionStr != RepeatOption.NEVER.name) {
+                            try {
+                                val repeatOption = RepeatOption.valueOf(repeatOptionStr)
+                                val nextTime = calculateNextReminderTime(note.reminderTime ?: System.currentTimeMillis(), repeatOption)
+
+                                if (nextTime > System.currentTimeMillis()) {
+                                    val updatedNote = note.copy(reminderTime = nextTime)
+                                    repository.updateNote(updatedNote)
+                                    alarmScheduler.schedule(updatedNote)
                                 }
+                            } catch (e: Exception) {
+                                e.printStackTrace()
                             }
                         }
                     }

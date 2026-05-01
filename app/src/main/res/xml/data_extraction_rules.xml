@@ -1,15 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+    NoteNext stores notes, attachments, and security settings (incl. hashed PIN, decoy
+    flag) entirely on-device by design. Cloud backup or device-transfer would either
+    leak sensitive data in plaintext (settings.preferences_pb) or move ciphertext that
+    can never be decrypted on the new device (the AndroidKeystore-backed AES key is
+    hardware-bound and does NOT survive transfer). Both paths are therefore disabled.
+
+    Empty <cloud-backup> / <device-transfer> blocks: nothing is included, nothing is
+    extracted. This is the explicit policy on Android 12+, where the presence of this
+    file overrides the manifest's `android:allowBackup="false"`.
+-->
 <data-extraction-rules>
-    <cloud-backup>
-        <include domain="root" />
-        <include domain="database" />
-        <include domain="sharedpref" />
-        <include domain="external" />
-    </cloud-backup>
-    <device-transfer>
-        <include domain="root" />
-        <include domain="database" />
-        <include domain="sharedpref" />
-        <include domain="external" />
-    </device-transfer>
+    <cloud-backup />
+    <device-transfer />
 </data-extraction-rules>

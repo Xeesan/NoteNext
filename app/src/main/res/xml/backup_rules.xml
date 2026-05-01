@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<full-backup-content>
-    <include domain="root" path="." />
-    <include domain="database" path="." />
-    <include domain="sharedpref" path="." />
-    <include domain="external" path="." />
-</full-backup-content>
+<!--
+    Pre-Android-12 full-backup rules. Honored only when allowBackup="true" — and the
+    manifest sets it to false. Kept empty so even ROMs that misinterpret the flag have
+    no <include> entries to act on. See data_extraction_rules.xml for the post-12 rules.
+-->
+<full-backup-content />

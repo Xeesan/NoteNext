@@ -1600,6 +1600,16 @@ class NotesViewModel @Inject constructor(
                     alarmScheduler.cancel(note.copy(id = currentNoteId.toInt()))
                 }
 
+                // Self-destruct: schedule a per-note exact alarm so expiry fires within
+                // seconds of the requested time, not "up to one hour late" via the
+                // periodic AutoDeleteWorker. The worker still runs as a safety net.
+                val withId = note.copy(id = currentNoteId.toInt())
+                if (note.expiryTime != null) {
+                    alarmScheduler.scheduleExpiry(withId)
+                } else if (noteId != -1) {
+                    alarmScheduler.cancelExpiry(withId)
+                }
+
                 // Handle Checklist Items
                 if (editState.value.editingNoteType == NoteType.CHECKLIST) {
                     val checklistItems = editState.value.editingChecklist.mapIndexed { index, item ->

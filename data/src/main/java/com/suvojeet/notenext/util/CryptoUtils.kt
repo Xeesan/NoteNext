@@ -11,6 +11,7 @@ import javax.crypto.Cipher
 import javax.crypto.KeyGenerator
 import javax.crypto.SecretKey
 import javax.crypto.spec.GCMParameterSpec
+import kotlin.text.Charsets
 
 object CryptoUtils {
 
@@ -65,14 +66,15 @@ object CryptoUtils {
         if (note.isEncrypted) return note
 
         val isLocked = note.isLocked
-        
+
         // Title is no longer encrypted as per requirement.
         val unencryptedTitle = note.title
 
-        // Encrypt content
+        // Encrypt content. Always use UTF-8 explicitly — relying on the platform default
+        // charset corrupts non-Latin content on devices/locales where it isn't UTF-8.
         val cipherContent = getEncryptionCipher(isLocked)
         val ivContent = cipherContent.iv
-        val encryptedContent = Base64.encodeToString(cipherContent.doFinal(note.content.toByteArray()), Base64.DEFAULT)
+        val encryptedContent = Base64.encodeToString(cipherContent.doFinal(note.content.toByteArray(Charsets.UTF_8)), Base64.DEFAULT)
 
         // Combine IVs: v3:ivContent (v3 prefix: title unencrypted, content encrypted)
         val combinedIv = if (isLocked) {
@@ -90,102 +92,118 @@ object CryptoUtils {
     }
 
     /**
-     * Decrypts a note. 
-     * If isLocked is true, this WILL FAIL unless called after biometric authentication 
+     * Decrypts a note.
+     * If isLocked is true, this WILL FAIL unless called after biometric authentication
      * or if the key doesn't require auth (legacy notes).
+     *
+     * On failure the ORIGINAL note is returned unchanged (still `isEncrypted=true` with
+     * its `iv`). Callers should check `result.isEncrypted` and treat it as "still
+     * locked / failed to decrypt" rather than substituting placeholder content. This
+     * prevents the previous bug where a placeholder string ("Unable to decrypt…") could
+     * be persisted back to the DB on round-trip updates, destroying the ciphertext.
      */
     fun decryptNote(note: Note, authenticatedCipherTitle: Cipher? = null, authenticatedCipherContent: Cipher? = null): Note {
-        val decrypted = decryptNoteInternal(
-            note.id, note.title, note.content, note.iv, note.isEncrypted, note.isLocked,
-            authenticatedCipherTitle, authenticatedCipherContent
-        )
-        return note.copy(
-            title = decrypted.first,
-            content = decrypted.second,
-            iv = null,
-            isEncrypted = false
-        )
+        return try {
+            val decrypted = decryptNoteInternal(
+                note.id, note.title, note.content, note.iv, note.isEncrypted, note.isLocked,
+                authenticatedCipherTitle, authenticatedCipherContent
+            )
+            note.copy(
+                title = decrypted.first,
+                content = decrypted.second,
+                iv = null,
+                isEncrypted = false
+            )
+        } catch (e: Exception) {
+            e.printStackTrace()
+            note
+        }
     }
 
     fun decryptNote(summary: NoteSummary, authenticatedCipherTitle: Cipher? = null, authenticatedCipherContent: Cipher? = null): NoteSummary {
-        val decrypted = decryptNoteInternal(
-            summary.id, summary.title, summary.content, summary.iv, summary.isEncrypted, summary.isLocked,
-            authenticatedCipherTitle, authenticatedCipherContent
-        )
-        return summary.copy(
-            title = decrypted.first,
-            content = decrypted.second,
-            iv = null,
-            isEncrypted = false
-        )
+        return try {
+            val decrypted = decryptNoteInternal(
+                summary.id, summary.title, summary.content, summary.iv, summary.isEncrypted, summary.isLocked,
+                authenticatedCipherTitle, authenticatedCipherContent
+            )
+            summary.copy(
+                title = decrypted.first,
+                content = decrypted.second,
+                iv = null,
+                isEncrypted = false
+            )
+        } catch (e: Exception) {
+            e.printStackTrace()
+            summary
+        }
     }
 
+    /**
+     * Throws on failure. The two `decryptNote(...)` wrappers above catch and return the
+     * original encrypted note, so the placeholder-string-as-content data-loss bug can
+     * no longer happen on a round-trip update.
+     */
     private fun decryptNoteInternal(
         id: Int, title: String, content: String, iv: String?, isEncrypted: Boolean, isLocked: Boolean,
         authenticatedCipherTitle: Cipher? = null, authenticatedCipherContent: Cipher? = null
     ): Pair<String, String> {
         if (!isEncrypted || iv == null) return Pair(title, content)
 
-        return try {
-            val rawIv = iv
-            val isV3 = rawIv.startsWith("v3:") || rawIv.startsWith("v3-plain:")
-            val isV2 = rawIv.startsWith("v2:")
-            
-            val cleanIv = if (isV3) {
-                if (rawIv.startsWith("v3:")) rawIv.substring(3) else rawIv.substring(9)
-            } else if (isV2) {
-                rawIv.substring(3)
-            } else {
-                rawIv
-            }
-            
-            val ivs = cleanIv.split(":")
-            val effectiveIsLocked = if (isV3) rawIv.startsWith("v3:") else (isLocked && cleanIv.contains(":"))
+        val rawIv = iv
+        val isV3 = rawIv.startsWith("v3:") || rawIv.startsWith("v3-plain:")
+        val isV2 = rawIv.startsWith("v2:")
 
-            if (isV3) {
-                // v3 format: title is already unencrypted
-                val ivContent = Base64.decode(cleanIv, Base64.DEFAULT)
-                val decryptedContent = if (authenticatedCipherContent != null) {
-                    String(authenticatedCipherContent.doFinal(Base64.decode(content, Base64.DEFAULT)))
-                } else {
-                    val cipherContent = getDecryptionCipher(ivContent, effectiveIsLocked, useV1 = false)
-                    String(cipherContent.doFinal(Base64.decode(content, Base64.DEFAULT)))
-                }
-                Pair(title, decryptedContent)
-            } else if (ivs.size == 2) {
-                // v2 or v1 format with two IVs
-                val ivTitle = Base64.decode(ivs[0], Base64.DEFAULT)
-                val ivContent = Base64.decode(ivs[1], Base64.DEFAULT)
-                
-                val decryptedTitle = if (authenticatedCipherTitle != null) {
-                    String(authenticatedCipherTitle.doFinal(Base64.decode(title, Base64.DEFAULT)))
-                } else {
-                    val cipherTitle = getDecryptionCipher(ivTitle, effectiveIsLocked, useV1 = !isV2)
-                    String(cipherTitle.doFinal(Base64.decode(title, Base64.DEFAULT)))
-                }
-                
-                val decryptedContent = if (authenticatedCipherContent != null) {
-                    String(authenticatedCipherContent.doFinal(Base64.decode(content, Base64.DEFAULT)))
-                } else {
-                    val cipherContent = getDecryptionCipher(ivContent, effectiveIsLocked, useV1 = !isV2)
-                    String(cipherContent.doFinal(Base64.decode(content, Base64.DEFAULT)))
-                }
-                
-                Pair(decryptedTitle, decryptedContent)
+        val cleanIv = if (isV3) {
+            if (rawIv.startsWith("v3:")) rawIv.substring(3) else rawIv.substring(9)
+        } else if (isV2) {
+            rawIv.substring(3)
+        } else {
+            rawIv
+        }
+
+        val ivs = cleanIv.split(":")
+        val effectiveIsLocked = if (isV3) rawIv.startsWith("v3:") else (isLocked && cleanIv.contains(":"))
+
+        return if (isV3) {
+            // v3 format: title is already unencrypted
+            val ivContent = Base64.decode(cleanIv, Base64.DEFAULT)
+            val decryptedContent = if (authenticatedCipherContent != null) {
+                String(authenticatedCipherContent.doFinal(Base64.decode(content, Base64.DEFAULT)), Charsets.UTF_8)
             } else {
-                // Legacy format with single IV for both
-                val ivBytes = Base64.decode(cleanIv, Base64.DEFAULT)
-                val cipher = getDecryptionCipher(ivBytes, effectiveIsLocked, useV1 = !isV2)
-                val decryptedTitle = String(cipher.doFinal(Base64.decode(title, Base64.DEFAULT)))
-                
-                // Re-init for content
-                cipher.init(Cipher.DECRYPT_MODE, getSecretKey(if (effectiveIsLocked) (if (isV2) AUTH_KEY_ALIAS_V2 else AUTH_KEY_ALIAS_V1) else KEY_ALIAS, effectiveIsLocked), GCMParameterSpec(128, ivBytes))
-                val decryptedContent = String(cipher.doFinal(Base64.decode(content, Base64.DEFAULT)))
-                Pair(decryptedTitle, decryptedContent)
+                val cipherContent = getDecryptionCipher(ivContent, effectiveIsLocked, useV1 = false)
+                String(cipherContent.doFinal(Base64.decode(content, Base64.DEFAULT)), Charsets.UTF_8)
             }
-        } catch (e: Exception) {
-            e.printStackTrace()
-            Pair(title, "Unable to decrypt this note. It may require biometric authentication or the key was lost.")
+            Pair(title, decryptedContent)
+        } else if (ivs.size == 2) {
+            // v2 or v1 format with two IVs
+            val ivTitle = Base64.decode(ivs[0], Base64.DEFAULT)
+            val ivContent = Base64.decode(ivs[1], Base64.DEFAULT)
+
+            val decryptedTitle = if (authenticatedCipherTitle != null) {
+                String(authenticatedCipherTitle.doFinal(Base64.decode(title, Base64.DEFAULT)), Charsets.UTF_8)
+            } else {
+                val cipherTitle = getDecryptionCipher(ivTitle, effectiveIsLocked, useV1 = !isV2)
+                String(cipherTitle.doFinal(Base64.decode(title, Base64.DEFAULT)), Charsets.UTF_8)
+            }
+
+            val decryptedContent = if (authenticatedCipherContent != null) {
+                String(authenticatedCipherContent.doFinal(Base64.decode(content, Base64.DEFAULT)), Charsets.UTF_8)
+            } else {
+                val cipherContent = getDecryptionCipher(ivContent, effectiveIsLocked, useV1 = !isV2)
+                String(cipherContent.doFinal(Base64.decode(content, Base64.DEFAULT)), Charsets.UTF_8)
+            }
+
+            Pair(decryptedTitle, decryptedContent)
+        } else {
+            // Legacy format with single IV for both
+            val ivBytes = Base64.decode(cleanIv, Base64.DEFAULT)
+            val cipher = getDecryptionCipher(ivBytes, effectiveIsLocked, useV1 = !isV2)
+            val decryptedTitle = String(cipher.doFinal(Base64.decode(title, Base64.DEFAULT)), Charsets.UTF_8)
+
+            // Re-init for content
+            cipher.init(Cipher.DECRYPT_MODE, getSecretKey(if (effectiveIsLocked) (if (isV2) AUTH_KEY_ALIAS_V2 else AUTH_KEY_ALIAS_V1) else KEY_ALIAS, effectiveIsLocked), GCMParameterSpec(128, ivBytes))
+            val decryptedContent = String(cipher.doFinal(Base64.decode(content, Base64.DEFAULT)), Charsets.UTF_8)
+            Pair(decryptedTitle, decryptedContent)
         }
     }
 
@@ -194,7 +212,7 @@ object CryptoUtils {
 
         val cipher = getEncryptionCipher(isLocked)
         val iv = cipher.iv
-        val encryptedText = Base64.encodeToString(cipher.doFinal(item.text.toByteArray()), Base64.DEFAULT)
+        val encryptedText = Base64.encodeToString(cipher.doFinal(item.text.toByteArray(Charsets.UTF_8)), Base64.DEFAULT)
 
         val combinedIv = if (isLocked) "v2:" + Base64.encodeToString(iv, Base64.DEFAULT) else Base64.encodeToString(iv, Base64.DEFAULT)
 
@@ -215,7 +233,7 @@ object CryptoUtils {
             val iv = Base64.decode(cleanIv, Base64.DEFAULT)
             
             val cipher = getDecryptionCipher(iv, isLocked, useV1 = !isV2)
-            val decryptedText = String(cipher.doFinal(Base64.decode(item.text, Base64.DEFAULT)))
+            val decryptedText = String(cipher.doFinal(Base64.decode(item.text, Base64.DEFAULT)), Charsets.UTF_8)
 
             item.copy(
                 text = decryptedText,
@@ -224,10 +242,9 @@ object CryptoUtils {
             )
         } catch (e: Exception) {
             e.printStackTrace()
-            item.copy(
-                text = "⚠ Decryption Failed",
-                isEncrypted = true
-            )
+            // Preserve original ciphertext + iv. Caller checks `isEncrypted` and shows
+            // a "locked" UI rather than persisting a placeholder.
+            item
         }
     }
 
@@ -237,12 +254,12 @@ object CryptoUtils {
         // Encrypt title
         val cipherTitle = getEncryptionCipher(isLocked)
         val ivTitle = cipherTitle.iv
-        val encryptedTitle = Base64.encodeToString(cipherTitle.doFinal(version.title.toByteArray()), Base64.DEFAULT)
+        val encryptedTitle = Base64.encodeToString(cipherTitle.doFinal(version.title.toByteArray(Charsets.UTF_8)), Base64.DEFAULT)
 
         // Encrypt content
         val cipherContent = getEncryptionCipher(isLocked)
         val ivContent = cipherContent.iv
-        val encryptedContent = Base64.encodeToString(cipherContent.doFinal(version.content.toByteArray()), Base64.DEFAULT)
+        val encryptedContent = Base64.encodeToString(cipherContent.doFinal(version.content.toByteArray(Charsets.UTF_8)), Base64.DEFAULT)
 
         val combinedIv = if (isLocked) {
             "v2:" + Base64.encodeToString(ivTitle, Base64.DEFAULT) + ":" + Base64.encodeToString(ivContent, Base64.DEFAULT)
@@ -272,19 +289,19 @@ object CryptoUtils {
                 val ivContent = Base64.decode(ivs[1], Base64.DEFAULT)
                 
                 val cipherTitle = getDecryptionCipher(ivTitle, isLocked, useV1 = !isV2)
-                val title = String(cipherTitle.doFinal(Base64.decode(version.title, Base64.DEFAULT)))
-                
+                val title = String(cipherTitle.doFinal(Base64.decode(version.title, Base64.DEFAULT)), Charsets.UTF_8)
+
                 val cipherContent = getDecryptionCipher(ivContent, isLocked, useV1 = !isV2)
-                val content = String(cipherContent.doFinal(Base64.decode(version.content, Base64.DEFAULT)))
+                val content = String(cipherContent.doFinal(Base64.decode(version.content, Base64.DEFAULT)), Charsets.UTF_8)
                 
                 Pair(title, content)
             } else {
                 val iv = Base64.decode(cleanIv, Base64.DEFAULT)
                 val cipher = getDecryptionCipher(iv, isLocked, useV1 = !isV2)
-                val title = String(cipher.doFinal(Base64.decode(version.title, Base64.DEFAULT)))
-                
+                val title = String(cipher.doFinal(Base64.decode(version.title, Base64.DEFAULT)), Charsets.UTF_8)
+
                 cipher.init(Cipher.DECRYPT_MODE, getSecretKey(if (isLocked) (if (isV2) AUTH_KEY_ALIAS_V2 else AUTH_KEY_ALIAS_V1) else KEY_ALIAS, isLocked), GCMParameterSpec(128, iv))
-                val content = String(cipher.doFinal(Base64.decode(version.content, Base64.DEFAULT)))
+                val content = String(cipher.doFinal(Base64.decode(version.content, Base64.DEFAULT)), Charsets.UTF_8)
                 Pair(title, content)
             }
 
@@ -296,11 +313,9 @@ object CryptoUtils {
             )
         } catch (e: Exception) {
             e.printStackTrace()
-            version.copy(
-                title = if (version.title.length > 20) "⚠ Decryption Failed" else version.title,
-                content = "Unable to decrypt this version.",
-                isEncrypted = true
-            )
+            // Preserve the original encrypted version unchanged. Caller should treat
+            // `isEncrypted=true` as the failure signal — never persist a placeholder.
+            version
         }
     }
 }
