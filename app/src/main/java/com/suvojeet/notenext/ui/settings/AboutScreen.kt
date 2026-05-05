@@ -237,6 +237,15 @@ fun AboutScreen(
                             onClick = { uriHandler.openUri("https://notenext.suvojeetsengupta.in") }
                         )
 
+                        ActionCard(
+                            icon = Icons.Default.PrivacyTip,
+                            title = stringResource(id = R.string.privacy_policy),
+                            description = stringResource(id = R.string.privacy_policy_description),
+                            containerColor = MaterialTheme.colorScheme.surfaceContainerHighest,
+                            contentColor = MaterialTheme.colorScheme.onSurface,
+                            onClick = { uriHandler.openUri("https://notenext.suvojeetsengupta.in/privacy-policy") }
+                        )
+
                         Surface(
                             modifier = Modifier
                                 .fillMaxWidth()

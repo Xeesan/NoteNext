@@ -220,6 +220,20 @@ fun PrivacySecurityScreen(
                             iconColor = MaterialTheme.colorScheme.tertiary,
                             onClick = { showClipboardDialog = true }
                         )
+                        HorizontalDivider(
+                            modifier = Modifier.padding(horizontal = 16.dp),
+                            color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.5f)
+                        )
+                        SettingsItem(
+                            icon = Icons.Rounded.Article,
+                            title = context.getString(R.string.privacy_policy),
+                            subtitle = context.getString(R.string.privacy_policy_description),
+                            iconColor = MaterialTheme.colorScheme.primary,
+                            onClick = { 
+                                val intent = android.content.Intent(android.content.Intent.ACTION_VIEW, android.net.Uri.parse("https://notenext.suvojeetsengupta.in/privacy-policy"))
+                                context.startActivity(intent)
+                            }
+                        )
                     }
                 }
             }

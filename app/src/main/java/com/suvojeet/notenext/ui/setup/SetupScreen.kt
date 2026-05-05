@@ -328,6 +328,24 @@ private fun WelcomePage() {
                 }
             }
         }
+
+        Spacer(modifier = Modifier.weight(1f))
+
+        AnimatedSetupStep(visible = visible, delay = 900) {
+            val uriHandler = androidx.compose.ui.platform.LocalUriHandler.current
+            androidx.compose.material3.Text(
+                text = "By continuing, you agree to our Privacy Policy",
+                style = MaterialTheme.typography.labelSmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.7f),
+                textAlign = TextAlign.Center,
+                modifier = Modifier
+                    .clip(CircleShape)
+                    .clickable { 
+                        uriHandler.openUri("https://notenext.suvojeetsengupta.in/privacy-policy")
+                    }
+                    .padding(horizontal = 12.dp, vertical = 8.dp)
+            )
+        }
     }
 }
 
