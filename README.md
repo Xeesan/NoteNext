@@ -63,6 +63,6 @@ This project is distributed under the MIT License. Detailed information can be f
 ## Contact
 
 **Suvojeet Sengupta**  
-[Email](mailto:suvojeetsengupta@zohomail.in) | [GitHub](https://github.com/suvojeet-sengupta)
+[Email](mailto:support@suvojeetsengupta.in) | [GitHub](https://github.com/suvojeet-sengupta)
 
 Project Repository: [https://github.com/suvojeet-sengupta/NoteNext](https://github.com/suvojeet-sengupta/NoteNext)

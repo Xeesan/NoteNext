@@ -8,7 +8,7 @@ export const SITE = {
     'Private, local-first note-taking for Android. Beautifully designed. Quietly powerful.',
   author: 'Suvojeet Sengupta',
   authorUrl: 'https://suvojeetsengupta.in',
-  email: 'suvojeetsengupta@zohomail.in',
+  email: 'support@suvojeetsengupta.in',
   github: 'https://github.com/suvojeet-sengupta/NoteNext',
   githubReleaseUrl: 'https://github.com/suvojeet-sengupta/NoteNext/releases/latest',
   playStoreUrl: 'https://play.google.com/store/apps/details?id=com.suvojeet.notenext',
