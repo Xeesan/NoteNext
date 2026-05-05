@@ -11,9 +11,9 @@ import Icon from '@/components/Icon.astro';
 >
   <section class="mesh-bg pt-20 pb-14">
     <Container size="narrow" class="text-center">
-      <p class="text-sm font-semibold text-[--color-brand] mb-3 uppercase tracking-wider">Security</p>
+      <p class="text-sm font-semibold text-[#6200ee] mb-3 uppercase tracking-wider">Security</p>
       <h1 class="text-4xl md:text-5xl font-extrabold mb-5">Defense in depth, by default.</h1>
-      <p class="text-lg text-[--color-muted]">
+      <p class="text-lg text-[#6b7280]">
         Industry-standard cryptography, hardware-bound storage, and a deliberately minimal
         threat surface. Here's the technical breakdown.
       </p>
@@ -24,31 +24,31 @@ import Icon from '@/components/Icon.astro';
     <Container size="narrow">
       <div class="grid sm:grid-cols-2 gap-5 mb-14">
         <div class="card p-6">
-          <Icon name="key" size={24} class="text-[--color-brand] mb-3" />
+          <Icon name="key" size={24} class="text-[#6200ee] mb-3" />
           <p class="text-3xl font-extrabold mb-1">AES-256</p>
-          <p class="text-sm text-[--color-muted]">Encrypted Drive backups</p>
+          <p class="text-sm text-[#6b7280]">Encrypted Drive backups</p>
         </div>
         <div class="card p-6">
-          <Icon name="fingerprint" size={24} class="text-[--color-accent-dark] mb-3" />
+          <Icon name="fingerprint" size={24} class="text-[#00964c] mb-3" />
           <p class="text-3xl font-extrabold mb-1">PBKDF2</p>
-          <p class="text-sm text-[--color-muted]">PIN hashing (irreversible)</p>
+          <p class="text-sm text-[#6b7280]">PIN hashing (irreversible)</p>
         </div>
         <div class="card p-6">
           <Icon name="lock" size={24} class="text-pink-700 mb-3" />
           <p class="text-3xl font-extrabold mb-1">Hardware</p>
-          <p class="text-sm text-[--color-muted]">Bound to your device's keystore</p>
+          <p class="text-sm text-[#6b7280]">Bound to your device's keystore</p>
         </div>
         <div class="card p-6">
           <Icon name="shield" size={24} class="text-amber-700 mb-3" />
           <p class="text-3xl font-extrabold mb-1">Zero</p>
-          <p class="text-sm text-[--color-muted]">Trackers, analytics SDKs, ad networks</p>
+          <p class="text-sm text-[#6b7280]">Trackers, analytics SDKs, ad networks</p>
         </div>
       </div>
 
       <div class="space-y-12">
         <article>
           <h2 class="text-2xl font-bold mb-3">PIN storage — PBKDF2, not plain text</h2>
-          <p class="text-[--color-muted] leading-relaxed">
+          <p class="text-[#6b7280] leading-relaxed">
             Your App Lock PIN is never stored as written. It's run through
             <strong>PBKDF2</strong> with a per-device salt and a high iteration count, then only
             the derived hash is persisted. We can't recover your PIN — and neither can anyone who
@@ -59,7 +59,7 @@ import Icon from '@/components/Icon.astro';
 
         <article>
           <h2 class="text-2xl font-bold mb-3">Backup encryption — AES-256-GCM</h2>
-          <p class="text-[--color-muted] leading-relaxed">
+          <p class="text-[#6b7280] leading-relaxed">
             When you enable encrypted Google Drive backups, your data is bundled, compressed, and
             encrypted with <strong>AES-256</strong> using a key derived from a password you set.
             The encrypted blob is uploaded to <em>your</em> Drive — we don't have a server in the
@@ -70,9 +70,9 @@ import Icon from '@/components/Icon.astro';
 
         <article>
           <h2 class="text-2xl font-bold mb-3">Drive scopes — minimum-privilege</h2>
-          <p class="text-[--color-muted] leading-relaxed mb-3">
+          <p class="text-[#6b7280] leading-relaxed mb-3">
             NoteNext requests the
-            <code class="bg-[--color-surface-2] px-1.5 py-0.5 rounded text-sm">drive.file</code>
+            <code class="bg-[#f4f4f7] px-1.5 py-0.5 rounded text-sm">drive.file</code>
             scope, which limits the app to files it created itself. NoteNext literally <em>cannot</em>
             see your other Drive content — it's a platform-enforced boundary, not a promise.
           </p>
@@ -80,9 +80,9 @@ import Icon from '@/components/Icon.astro';
 
         <article>
           <h2 class="text-2xl font-bold mb-3">Biometric authentication — BiometricPrompt</h2>
-          <p class="text-[--color-muted] leading-relaxed">
+          <p class="text-[#6b7280] leading-relaxed">
             Fingerprint and face unlock use Android's
-            <code class="bg-[--color-surface-2] px-1.5 py-0.5 rounded text-sm">BiometricPrompt</code>
+            <code class="bg-[#f4f4f7] px-1.5 py-0.5 rounded text-sm">BiometricPrompt</code>
             API. Your biometric template never reaches the app — it stays inside the secure
             element / TEE on your device. NoteNext only receives a "yes" or "no" from the OS.
             When the Decoy Vault is active, biometric is suppressed so attackers can't bypass the
@@ -92,29 +92,29 @@ import Icon from '@/components/Icon.astro';
 
         <article>
           <h2 class="text-2xl font-bold mb-3">Forensic hardening</h2>
-          <p class="text-[--color-muted] leading-relaxed mb-3">
+          <p class="text-[#6b7280] leading-relaxed mb-3">
             The Android manifest explicitly disables the OS features that would otherwise leak
             your data outside the app sandbox:
           </p>
-          <ul class="space-y-2 text-[--color-muted] text-sm">
+          <ul class="space-y-2 text-[#6b7280] text-sm">
             <li class="flex gap-3">
-              <Icon name="check" size={18} class="text-[--color-accent-dark] flex-shrink-0 mt-0.5" />
-              <span><code class="bg-[--color-surface-2] px-1.5 py-0.5 rounded text-xs">android:allowBackup="false"</code> — no Auto Backup to Google</span>
+              <Icon name="check" size={18} class="text-[#00964c] flex-shrink-0 mt-0.5" />
+              <span><code class="bg-[#f4f4f7] px-1.5 py-0.5 rounded text-xs">android:allowBackup="false"</code> — no Auto Backup to Google</span>
             </li>
             <li class="flex gap-3">
-              <Icon name="check" size={18} class="text-[--color-accent-dark] flex-shrink-0 mt-0.5" />
-              <span><code class="bg-[--color-surface-2] px-1.5 py-0.5 rounded text-xs">dataExtractionRules</code> — opt out of cloud + device transfer (Android 12+)</span>
+              <Icon name="check" size={18} class="text-[#00964c] flex-shrink-0 mt-0.5" />
+              <span><code class="bg-[#f4f4f7] px-1.5 py-0.5 rounded text-xs">dataExtractionRules</code> — opt out of cloud + device transfer (Android 12+)</span>
             </li>
             <li class="flex gap-3">
-              <Icon name="check" size={18} class="text-[--color-accent-dark] flex-shrink-0 mt-0.5" />
-              <span><code class="bg-[--color-surface-2] px-1.5 py-0.5 rounded text-xs">FLAG_SECURE</code> on the lock screen — block screenshots & Recents previews</span>
+              <Icon name="check" size={18} class="text-[#00964c] flex-shrink-0 mt-0.5" />
+              <span><code class="bg-[#f4f4f7] px-1.5 py-0.5 rounded text-xs">FLAG_SECURE</code> on the lock screen — block screenshots & Recents previews</span>
             </li>
           </ul>
         </article>
 
         <article>
           <h2 class="text-2xl font-bold mb-3">Crash reporting — opt-in, content-free</h2>
-          <p class="text-[--color-muted] leading-relaxed">
+          <p class="text-[#6b7280] leading-relaxed">
             Optional ACRA-based crash reports include device info and stack traces only. Note
             content is never included. Depending on your settings, you'll be prompted before any
             report leaves your device.
@@ -123,9 +123,9 @@ import Icon from '@/components/Icon.astro';
 
         <article>
           <h2 class="text-2xl font-bold mb-3">Responsible disclosure</h2>
-          <p class="text-[--color-muted] leading-relaxed">
+          <p class="text-[#6b7280] leading-relaxed">
             Found a security issue? Please email
-            <a href="mailto:suvojeetsengupta@zohomail.in" class="text-[--color-brand] underline underline-offset-2">suvojeetsengupta@zohomail.in</a>
+            <a href="mailto:suvojeetsengupta@zohomail.in" class="text-[#6200ee] underline underline-offset-2">suvojeetsengupta@zohomail.in</a>
             with details. We'll acknowledge within 72 hours and credit you (with permission) when
             the fix ships. Do not file public GitHub issues for security vulnerabilities.
           </p>

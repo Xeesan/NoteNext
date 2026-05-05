@@ -14,17 +14,17 @@ import { SITE } from '@/consts';
       <div class="grid lg:grid-cols-2 gap-12 items-center">
         <div>
           <span
-            class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white border border-[--color-border] text-xs font-medium mb-6"
+            class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white border border-[#e5e7eb] text-xs font-medium mb-6"
           >
-            <span class="w-1.5 h-1.5 rounded-full bg-[--color-accent] animate-pulse"></span>
+            <span class="w-1.5 h-1.5 rounded-full bg-[#00c853] animate-pulse"></span>
             v{SITE.version} · Material 3 Expressive
           </span>
 
-          <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold leading-[1.05] mb-6">
+          <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold leading-[1.05] mb-6 text-[#0b0b0d]">
             Notes that <span class="gradient-text">never leave</span> your device.
           </h1>
 
-          <p class="text-lg text-[--color-muted] max-w-xl mb-8 leading-relaxed">
+          <p class="text-lg text-[#6b7280] max-w-xl mb-8 leading-relaxed">
             NoteNext is a premium, privacy-first note-taking app for Android. Local-first storage,
             biometric vault, AES-256 encrypted backups, and optional AI assistance — without selling
             your data.
@@ -33,23 +33,23 @@ import { SITE } from '@/consts';
           <DownloadButtons />
 
           <ul class="mt-10 grid grid-cols-2 sm:grid-cols-3 gap-3 text-sm">
-            <li class="flex items-center gap-2 text-[--color-muted]">
-              <Icon name="check" size={16} class="text-[--color-accent-dark]" />
+            <li class="flex items-center gap-2 text-[#6b7280]">
+              <Icon name="check" size={16} class="text-[#00964c]" />
               100% offline-capable
             </li>
-            <li class="flex items-center gap-2 text-[--color-muted]">
-              <Icon name="check" size={16} class="text-[--color-accent-dark]" />
+            <li class="flex items-center gap-2 text-[#6b7280]">
+              <Icon name="check" size={16} class="text-[#00964c]" />
               No accounts
             </li>
-            <li class="flex items-center gap-2 text-[--color-muted]">
-              <Icon name="check" size={16} class="text-[--color-accent-dark]" />
+            <li class="flex items-center gap-2 text-[#6b7280]">
+              <Icon name="check" size={16} class="text-[#00964c]" />
               Open source · MIT
             </li>
           </ul>
         </div>
 
         <div class="relative">
-          <div class="relative aspect-[9/19] max-w-[320px] mx-auto rounded-[2.5rem] border-8 border-[--color-ink] bg-[--color-ink] shadow-2xl overflow-hidden float">
+          <div class="relative aspect-[9/19] max-w-[320px] mx-auto rounded-[2.5rem] border-8 border-[#0b0b0d] bg-[#0b0b0d] shadow-2xl overflow-hidden float">
             <div class="absolute inset-0 gradient-bg opacity-90"></div>
             <div class="absolute inset-0 p-5 flex flex-col text-white">
               <div class="flex items-center justify-between text-[10px] mb-3 opacity-80">
@@ -61,7 +61,7 @@ import { SITE } from '@/consts';
               <div class="space-y-2">
                 <div class="bg-white/15 backdrop-blur rounded-2xl p-3 border border-white/20">
                   <div class="flex items-center gap-2 mb-1">
-                    <span class="w-2 h-2 rounded-full bg-[--color-accent]"></span>
+                    <span class="w-2 h-2 rounded-full bg-[#00c853]"></span>
                     <p class="text-[11px] opacity-70">Project · Studio</p>
                   </div>
                   <p class="font-semibold text-sm">Album launch checklist</p>
@@ -83,26 +83,26 @@ import { SITE } from '@/consts';
           </div>
 
           <div
-            class="absolute -bottom-4 -left-4 sm:-left-6 bg-white rounded-2xl shadow-xl border border-[--color-border] p-4 flex items-center gap-3 max-w-[240px]"
+            class="absolute -bottom-4 -left-4 sm:-left-6 bg-white rounded-2xl shadow-xl border border-[#e5e7eb] p-4 flex items-center gap-3 max-w-[240px]"
           >
-            <div class="w-10 h-10 rounded-xl bg-[--color-accent]/15 text-[--color-accent-dark] flex items-center justify-center flex-shrink-0">
+            <div class="w-10 h-10 rounded-xl bg-[#00c853]/15 text-[#00964c] flex items-center justify-center flex-shrink-0">
               <Icon name="lock" size={20} />
             </div>
             <div>
               <p class="text-xs font-semibold">Decoy Vault</p>
-              <p class="text-[10px] text-[--color-muted]">Plausible deniability</p>
+              <p class="text-[10px] text-[#6b7280]">Plausible deniability</p>
             </div>
           </div>
 
           <div
-            class="absolute -top-4 -right-2 sm:-right-6 bg-white rounded-2xl shadow-xl border border-[--color-border] p-4 flex items-center gap-3 max-w-[220px]"
+            class="absolute -top-4 -right-2 sm:-right-6 bg-white rounded-2xl shadow-xl border border-[#e5e7eb] p-4 flex items-center gap-3 max-w-[220px]"
           >
-            <div class="w-10 h-10 rounded-xl bg-[--color-brand]/10 text-[--color-brand] flex items-center justify-center flex-shrink-0">
+            <div class="w-10 h-10 rounded-xl bg-[#6200ee]/10 text-[#6200ee] flex items-center justify-center flex-shrink-0">
               <Icon name="key" size={20} />
             </div>
             <div>
               <p class="text-xs font-semibold">AES-256</p>
-              <p class="text-[10px] text-[--color-muted]">Encrypted backups</p>
+              <p class="text-[10px] text-[#6b7280]">Encrypted backups</p>
             </div>
           </div>
         </div>
@@ -113,11 +113,11 @@ import { SITE } from '@/consts';
   <section class="py-20 md:py-28">
     <Container>
       <div class="max-w-2xl mb-14">
-        <p class="text-sm font-semibold text-[--color-brand] mb-3 uppercase tracking-wider">Why NoteNext</p>
+        <p class="text-sm font-semibold text-[#6200ee] mb-3 uppercase tracking-wider">Why NoteNext</p>
         <h2 class="text-3xl md:text-4xl font-bold mb-4">
           Beautifully designed. Quietly powerful.
         </h2>
-        <p class="text-lg text-[--color-muted]">
+        <p class="text-lg text-[#6b7280]">
           Every detail is engineered for speed, privacy, and a tactile feel — from spring-physics
           animations to hardware-bound encryption.
         </p>
@@ -178,11 +178,11 @@ import { SITE } from '@/consts';
 
   <Screenshots />
 
-  <section class="py-20 md:py-28 bg-[--color-ink] text-white">
+  <section class="py-20 md:py-28 bg-[#0b0b0d] text-white">
     <Container>
       <div class="grid md:grid-cols-2 gap-12 items-center">
         <div>
-          <p class="text-sm font-semibold text-[--color-accent] mb-3 uppercase tracking-wider">Privacy</p>
+          <p class="text-sm font-semibold text-[#00c853] mb-3 uppercase tracking-wider">Privacy</p>
           <h2 class="text-3xl md:text-4xl font-bold mb-5">Your notes are not the product.</h2>
           <p class="text-white/70 mb-6 leading-relaxed">
             Most note apps mine your thoughts to feed ad networks or train models. NoteNext does
@@ -191,45 +191,45 @@ import { SITE } from '@/consts';
           </p>
           <ul class="space-y-3 text-sm text-white/80">
             <li class="flex gap-3">
-              <Icon name="check" size={18} class="text-[--color-accent] flex-shrink-0 mt-0.5" />
+              <Icon name="check" size={18} class="text-[#00c853] flex-shrink-0 mt-0.5" />
               <span>Forensic hardening: cloud extraction & device-transfer disabled</span>
             </li>
             <li class="flex gap-3">
-              <Icon name="check" size={18} class="text-[--color-accent] flex-shrink-0 mt-0.5" />
+              <Icon name="check" size={18} class="text-[#00c853] flex-shrink-0 mt-0.5" />
               <span>Screenshot protection on the lock screen</span>
             </li>
             <li class="flex gap-3">
-              <Icon name="check" size={18} class="text-[--color-accent] flex-shrink-0 mt-0.5" />
+              <Icon name="check" size={18} class="text-[#00c853] flex-shrink-0 mt-0.5" />
               <span>Drive backup uses scoped, app-only Drive permissions</span>
             </li>
             <li class="flex gap-3">
-              <Icon name="check" size={18} class="text-[--color-accent] flex-shrink-0 mt-0.5" />
+              <Icon name="check" size={18} class="text-[#00c853] flex-shrink-0 mt-0.5" />
               <span>Open source — every claim is auditable on GitHub</span>
             </li>
           </ul>
-          <a href="/privacy" class="inline-flex items-center gap-2 mt-8 text-[--color-accent] font-semibold hover:gap-3 transition-all">
+          <a href="/privacy" class="inline-flex items-center gap-2 mt-8 text-[#00c853] font-semibold hover:gap-3 transition-all">
             Read the privacy story
             <Icon name="arrowRight" size={18} />
           </a>
         </div>
         <div class="grid grid-cols-2 gap-4">
           <div class="bg-white/5 border border-white/10 rounded-2xl p-5">
-            <Icon name="key" size={28} class="text-[--color-accent] mb-3" />
+            <Icon name="key" size={28} class="text-[#00c853] mb-3" />
             <p class="text-2xl font-bold">AES-256</p>
             <p class="text-xs text-white/60 mt-1">Backup encryption</p>
           </div>
           <div class="bg-white/5 border border-white/10 rounded-2xl p-5">
-            <Icon name="fingerprint" size={28} class="text-[--color-accent] mb-3" />
+            <Icon name="fingerprint" size={28} class="text-[#00c853] mb-3" />
             <p class="text-2xl font-bold">PBKDF2</p>
             <p class="text-xs text-white/60 mt-1">PIN hashing</p>
           </div>
           <div class="bg-white/5 border border-white/10 rounded-2xl p-5">
-            <Icon name="eye" size={28} class="text-[--color-accent] mb-3" />
+            <Icon name="eye" size={28} class="text-[#00c853] mb-3" />
             <p class="text-2xl font-bold">0</p>
             <p class="text-xs text-white/60 mt-1">Trackers</p>
           </div>
           <div class="bg-white/5 border border-white/10 rounded-2xl p-5">
-            <Icon name="layers" size={28} class="text-[--color-accent] mb-3" />
+            <Icon name="layers" size={28} class="text-[#00c853] mb-3" />
             <p class="text-2xl font-bold">100%</p>
             <p class="text-xs text-white/60 mt-1">Open source</p>
           </div>
@@ -241,7 +241,7 @@ import { SITE } from '@/consts';
   <section class="py-20 md:py-28">
     <Container size="narrow" class="text-center">
       <h2 class="text-3xl md:text-4xl font-bold mb-5">Try NoteNext today.</h2>
-      <p class="text-lg text-[--color-muted] mb-8">
+      <p class="text-lg text-[#6b7280] mb-8">
         Free. No signup. No tracking. Just open the app and start writing.
       </p>
       <DownloadButtons class="justify-center" />

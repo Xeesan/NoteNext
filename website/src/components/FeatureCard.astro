@@ -11,8 +11,8 @@ interface Props {
 const { icon, title, description, accent = 'brand' } = Astro.props;
 
 const accentColors: Record<string, string> = {
-  brand: 'bg-[--color-brand]/10 text-[--color-brand]',
-  accent: 'bg-[--color-accent]/10 text-[--color-accent-dark]',
+  brand: 'bg-[#6200ee]/10 text-[#6200ee]',
+  accent: 'bg-[#00c853]/10 text-[#00964c]',
   pink: 'bg-pink-50 text-pink-700',
   amber: 'bg-amber-50 text-amber-700',
 };
@@ -23,5 +23,5 @@ const accentColors: Record<string, string> = {
     <Icon name={icon} size={22} />
   </div>
   <h3 class="font-semibold text-lg mb-2">{title}</h3>
-  <p class="text-sm text-[--color-muted] leading-relaxed">{description}</p>
+  <p class="text-sm text-[#6b7280] leading-relaxed">{description}</p>
 </article>

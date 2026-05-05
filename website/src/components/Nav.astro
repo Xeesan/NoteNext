@@ -6,7 +6,7 @@ import Logo from './Logo.astro';
 const pathname = Astro.url.pathname.replace(/\/$/, '') || '/';
 ---
 
-<header class="sticky top-0 z-50 backdrop-blur-md bg-white/75 border-b border-[--color-border]">
+<header class="sticky top-0 z-50 backdrop-blur-md bg-white/75 border-b border-[#e5e7eb]">
   <Container>
     <nav class="flex items-center justify-between h-16" aria-label="Main">
       <a href="/" class="flex items-center gap-2.5 font-bold text-lg" aria-label={`${SITE.name} home`}>
@@ -23,7 +23,7 @@ const pathname = Astro.url.pathname.replace(/\/$/, '') || '/';
                 <a
                   href={item.href}
                   class={`px-3 py-2 rounded-full transition-colors ${
-                    active ? 'bg-[--color-ink] text-white' : 'hover:bg-[--color-surface-2]'
+                    active ? 'bg-[#0b0b0d] text-white' : 'hover:bg-[#f4f4f7]'
                   }`}
                 >
                   {item.label}
@@ -46,17 +46,17 @@ const pathname = Astro.url.pathname.replace(/\/$/, '') || '/';
             <line x1="3" y1="18" x2="21" y2="18" />
           </svg>
         </summary>
-        <ul class="absolute right-0 top-full mt-2 w-56 bg-white rounded-2xl border border-[--color-border] shadow-xl py-2">
+        <ul class="absolute right-0 top-full mt-2 w-56 bg-white rounded-2xl border border-[#e5e7eb] shadow-xl py-2">
           {
             NAV.map((item) => (
               <li>
-                <a href={item.href} class="block px-4 py-2.5 text-sm hover:bg-[--color-surface-2]">
+                <a href={item.href} class="block px-4 py-2.5 text-sm hover:bg-[#f4f4f7]">
                   {item.label}
                 </a>
               </li>
             ))
           }
-          <li class="border-t border-[--color-border] mt-2 pt-2 px-2">
+          <li class="border-t border-[#e5e7eb] mt-2 pt-2 px-2">
             <a href="/download" class="btn btn-primary w-full text-sm">Get NoteNext</a>
           </li>
         </ul>

@@ -6,7 +6,7 @@ import Logo from './Logo.astro';
 const year = new Date().getFullYear();
 ---
 
-<footer class="border-t border-[--color-border] bg-white mt-24">
+<footer class="border-t border-[#e5e7eb] bg-white mt-24">
   <Container class="py-14">
     <div class="grid grid-cols-2 md:grid-cols-4 gap-10">
       <div class="col-span-2 md:col-span-1">
@@ -14,7 +14,7 @@ const year = new Date().getFullYear();
           <Logo size={32} class="rounded-lg" />
           <span>{SITE.name}</span>
         </a>
-        <p class="text-sm text-[--color-muted] max-w-xs">
+        <p class="text-sm text-[#6b7280] max-w-xs">
           Private, local-first note-taking for Android. Beautifully designed. Quietly powerful.
         </p>
       </div>
@@ -29,7 +29,7 @@ const year = new Date().getFullYear();
                   <a
                     href={item.href}
                     {...(item.external ? { target: '_blank', rel: 'noopener' } : {})}
-                    class="text-[--color-muted] hover:text-[--color-ink] transition-colors"
+                    class="text-[#6b7280] hover:text-[#0b0b0d] transition-colors"
                   >
                     {item.label}
                   </a>
@@ -41,11 +41,11 @@ const year = new Date().getFullYear();
       }
     </div>
 
-    <div class="mt-12 pt-6 border-t border-[--color-border] flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-sm text-[--color-muted]">
+    <div class="mt-12 pt-6 border-t border-[#e5e7eb] flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-sm text-[#6b7280]">
       <p>© {year} {SITE.author}. NoteNext is open source under the MIT License.</p>
       <p>
         v{SITE.version} ·
-        <a href={`mailto:${SITE.email}`} class="hover:text-[--color-ink]">{SITE.email}</a>
+        <a href={`mailto:${SITE.email}`} class="hover:text-[#0b0b0d]">{SITE.email}</a>
       </p>
     </div>
   </Container>
