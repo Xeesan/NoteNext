@@ -3,6 +3,10 @@ name: Development Build (Pre-release)
 on:
   push:
     branches: [ "main" ]
+    paths-ignore:
+      - 'website/**'
+      - '.github/workflows/website.yml'
+      - '**/*.md'
   workflow_dispatch:
 
 jobs:

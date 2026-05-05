@@ -1,0 +1,70 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import Container from '@/components/Container.astro';
+import Icon from '@/components/Icon.astro';
+import { SITE } from '@/consts';
+---
+
+<BaseLayout
+  title="Contact"
+  description="Get in touch about NoteNext — feedback, feature requests, security disclosures, partnerships."
+  pageTitle="Contact"
+>
+  <section class="mesh-bg pt-20 pb-14">
+    <Container size="narrow" class="text-center">
+      <p class="text-sm font-semibold text-[--color-brand] mb-3 uppercase tracking-wider">Contact</p>
+      <h1 class="text-4xl md:text-5xl font-extrabold mb-5">Let's talk.</h1>
+      <p class="text-lg text-[--color-muted]">
+        Bug reports, feature ideas, partnerships, or just hello — pick whichever channel fits.
+      </p>
+    </Container>
+  </section>
+
+  <section class="py-14">
+    <Container size="narrow">
+      <div class="grid sm:grid-cols-2 gap-5">
+        <a href={`mailto:${SITE.email}`} class="card p-7">
+          <div class="w-12 h-12 rounded-xl bg-[--color-brand]/10 text-[--color-brand] flex items-center justify-center mb-4">
+            <Icon name="share" size={22} />
+          </div>
+          <h2 class="text-lg font-bold mb-1">Email</h2>
+          <p class="text-sm text-[--color-muted] mb-3">For everything else — usually replied within a day.</p>
+          <span class="text-sm font-semibold text-[--color-brand] break-all">{SITE.email}</span>
+        </a>
+
+        <a href={`${SITE.github}/issues/new`} target="_blank" rel="noopener" class="card p-7">
+          <div class="w-12 h-12 rounded-xl bg-[--color-ink] text-white flex items-center justify-center mb-4">
+            <Icon name="github" size={22} />
+          </div>
+          <h2 class="text-lg font-bold mb-1">GitHub Issues</h2>
+          <p class="text-sm text-[--color-muted] mb-3">Bug reports, feature requests, public discussion.</p>
+          <span class="text-sm font-semibold text-[--color-brand]">Open an issue →</span>
+        </a>
+
+        <div class="card p-7">
+          <div class="w-12 h-12 rounded-xl bg-amber-100 text-amber-700 flex items-center justify-center mb-4">
+            <Icon name="shield" size={22} />
+          </div>
+          <h2 class="text-lg font-bold mb-1">Security disclosures</h2>
+          <p class="text-sm text-[--color-muted] mb-3">
+            Found a vulnerability? Email privately — please don't file a public issue.
+          </p>
+          <a href={`mailto:${SITE.email}?subject=Security%20Disclosure`} class="text-sm font-semibold text-[--color-brand]">
+            Email security@ →
+          </a>
+        </div>
+
+        <a href={SITE.authorUrl} target="_blank" rel="noopener" class="card p-7">
+          <div class="w-12 h-12 rounded-xl bg-pink-100 text-pink-700 flex items-center justify-center mb-4">
+            <Icon name="sparkle" size={22} />
+          </div>
+          <h2 class="text-lg font-bold mb-1">About the maker</h2>
+          <p class="text-sm text-[--color-muted] mb-3">
+            NoteNext is built by Suvojeet Sengupta — see other projects.
+          </p>
+          <span class="text-sm font-semibold text-[--color-brand]">suvojeetsengupta.in →</span>
+        </a>
+      </div>
+    </Container>
+  </section>
+</BaseLayout>

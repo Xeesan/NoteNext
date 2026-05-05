@@ -1,0 +1,98 @@
+---
+import { SITE } from '@/consts';
+
+interface Props {
+  type?: 'home' | 'page';
+  pageTitle?: string;
+  pageUrl?: string;
+}
+
+const { type = 'page', pageTitle, pageUrl } = Astro.props;
+
+const softwareApp = {
+  '@context': 'https://schema.org',
+  '@type': 'MobileApplication',
+  name: SITE.name,
+  description: SITE.description,
+  applicationCategory: 'ProductivityApplication',
+  operatingSystem: 'Android',
+  url: SITE.url,
+  downloadUrl: SITE.githubReleaseUrl,
+  softwareVersion: SITE.version,
+  datePublished: SITE.releaseDate,
+  inLanguage: 'en',
+  offers: {
+    '@type': 'Offer',
+    price: '0',
+    priceCurrency: 'USD',
+  },
+  author: {
+    '@type': 'Person',
+    name: SITE.author,
+    url: SITE.authorUrl,
+  },
+  publisher: {
+    '@type': 'Person',
+    name: SITE.author,
+    url: SITE.authorUrl,
+  },
+  aggregateRating: {
+    '@type': 'AggregateRating',
+    ratingValue: '5',
+    ratingCount: '1',
+    bestRating: '5',
+    worstRating: '1',
+  },
+  featureList: [
+    'Local-first storage',
+    'Material 3 Expressive design',
+    'Biometric app lock',
+    'Decoy Vault for plausible deniability',
+    'AES-256 encrypted Google Drive backups',
+    'AI summarization (Groq, OpenAI, Claude, Gemini)',
+    'Self-destructing notes',
+    'Rich text editor with checklists',
+    'Reminders with exact alarms',
+    'Color labels and projects',
+  ],
+};
+
+const organization = {
+  '@context': 'https://schema.org',
+  '@type': 'WebSite',
+  url: SITE.url,
+  name: SITE.name,
+  description: SITE.description,
+  inLanguage: 'en',
+  publisher: {
+    '@type': 'Person',
+    name: SITE.author,
+    email: SITE.email,
+  },
+};
+
+const breadcrumb = pageTitle && pageUrl
+  ? {
+      '@context': 'https://schema.org',
+      '@type': 'BreadcrumbList',
+      itemListElement: [
+        {
+          '@type': 'ListItem',
+          position: 1,
+          name: 'Home',
+          item: SITE.url,
+        },
+        {
+          '@type': 'ListItem',
+          position: 2,
+          name: pageTitle,
+          item: pageUrl,
+        },
+      ],
+    }
+  : null;
+---
+
+{type === 'home' && <script type="application/ld+json" set:html={JSON.stringify(softwareApp)} />}
+<script type="application/ld+json" set:html={JSON.stringify(organization)} />
+{breadcrumb && <script type="application/ld+json" set:html={JSON.stringify(breadcrumb)} />}

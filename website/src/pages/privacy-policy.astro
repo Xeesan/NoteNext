@@ -1,0 +1,150 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import Container from '@/components/Container.astro';
+import { SITE } from '@/consts';
+---
+
+<BaseLayout
+  title="Privacy Policy"
+  description="The full Privacy Policy for the NoteNext Android application."
+  pageTitle="Privacy Policy"
+>
+  <section class="mesh-bg pt-20 pb-10">
+    <Container size="narrow" class="text-center">
+      <p class="text-sm font-semibold text-[--color-brand] mb-3 uppercase tracking-wider">Legal</p>
+      <h1 class="text-4xl md:text-5xl font-extrabold mb-3">Privacy Policy</h1>
+      <p class="text-sm text-[--color-muted]">Last updated: May 1, 2026</p>
+    </Container>
+  </section>
+
+  <section class="py-12">
+    <Container size="narrow">
+      <div class="prose-content">
+        <p>
+          Suvojeet Sengupta ("I," "me," or "my") built the NoteNext app as an Open Source app. This
+          Privacy Policy is used to inform you regarding my policies with the collection, use, and
+          disclosure of personal information if anyone decided to use my Service.
+        </p>
+        <p>
+          By using NoteNext, you agree to the collection and use of information in relation to this
+          policy. The information that I collect is used for providing and improving the Service. I
+          will not use or share your information with anyone except as described in this Privacy
+          Policy.
+        </p>
+
+        <div class="card p-5 my-8 bg-[--color-brand]/5 border-[--color-brand]/20">
+          <p class="text-sm">
+            <strong>Commitment to Privacy:</strong> NoteNext is a "Local-First" application. Your
+            notes and data never leave your device unless you explicitly choose to use an AI
+            feature or the optional Google Drive backup. For your protection, we have explicitly
+            disabled system-level cloud backups and device transfers to prevent accidental data
+            exposure.
+          </p>
+        </div>
+
+        <h2>1. Information Collection and Use</h2>
+        <p>
+          NoteNext is designed with your privacy as a top priority. All of your primary data is
+          stored locally on your device.
+        </p>
+
+        <h3>a. Information You Provide</h3>
+        <p>We collect the content you create and store within the app, which includes:</p>
+        <ul>
+          <li>Notes (titles and content)</li>
+          <li>Checklists and Todo items</li>
+          <li>Labels and Projects</li>
+          <li>Reminders</li>
+          <li>Attachments (images, audio, etc.)</li>
+          <li>Settings, including your theme preferences and app lock status.</li>
+        </ul>
+        <p>
+          This data resides solely on your device's private storage.
+          <strong>Your App Lock PIN is stored using industry-standard hashing (PBKDF2)</strong>,
+          meaning even we cannot retrieve it.
+        </p>
+
+        <h3>b. Donations (Optional)</h3>
+        <p>
+          If you choose to support NoteNext via a donation, the transaction is processed securely
+          through <strong>Google Play Billing</strong>. We do not collect or store your credit
+          card, payment details, or any personal identity information during this process.
+        </p>
+
+        <h3>c. Permissions</h3>
+        <p>NoteNext requests certain permissions to enable its features:</p>
+        <ul>
+          <li><strong>READ_MEDIA_IMAGES:</strong> To allow you to attach images from your gallery to your notes.</li>
+          <li><strong>INTERNET & ACCESS_NETWORK_STATE:</strong> To fetch link previews, download expressive Google Fonts, and perform Google Drive backups (if enabled).</li>
+          <li><strong>USE_BIOMETRIC:</strong> To secure the app with your fingerprint or face unlock.</li>
+          <li><strong>SCHEDULE_EXACT_ALARM:</strong> To ensure your note reminders trigger precisely at the time you set.</li>
+          <li><strong>POST_NOTIFICATIONS:</strong> To show notifications for your reminders.</li>
+        </ul>
+
+        <h2>2. Cloud Backup (Google Drive)</h2>
+        <p>
+          NoteNext offers an <strong>optional</strong> feature to backup your notes to Google
+          Drive. If you choose to use this feature:
+        </p>
+        <ul>
+          <li>The app requests access <em>only</em> to the files it creates (using restricted scopes). It cannot read your other Drive files.</li>
+          <li>Your data is compressed and uploaded directly to <strong>your personal</strong> Google Drive. We do not have a private server and never see your files.</li>
+          <li><strong>Encryption:</strong> You can set a password to encrypt your backups using <strong>AES-256 encryption</strong> before they are uploaded.</li>
+        </ul>
+
+        <h2>3. AI Features</h2>
+        <p>
+          NoteNext includes AI-powered tools like "Note Summarization" and "Grammar Fix". We
+          support multiple providers including
+          <strong>Groq, OpenAI, Anthropic (Claude), and Google Gemini</strong>:
+        </p>
+        <ul>
+          <li><strong>Explicit Action:</strong> Content is only sent to an AI provider when you manually trigger an AI action (e.g., clicking "Summarize").</li>
+          <li><strong>Data Sent:</strong> Only the text content of the specific note you are editing is sent.</li>
+          <li><strong>Privacy:</strong> Data is processed according to the respective provider's privacy policy. We do not store your AI queries on any server.</li>
+        </ul>
+
+        <h2>4. Advanced Privacy & Security</h2>
+        <ul>
+          <li><strong>Decoy Vault:</strong> If enabled, NoteNext allows you to set a secondary PIN that opens a separate, "decoy" set of notes. This provides plausible deniability under coercion. When active, biometric login is hidden to prevent bypass.</li>
+          <li><strong>Screenshot Protection:</strong> To prevent data leaks, NoteNext blocks screenshots and hides the app's content from the system "Recents" menu while you are on the App Lock screen.</li>
+          <li><strong>Self-Destruct:</strong> All self-destruct processing for ephemeral notes is performed entirely on your device using exact system alarms. No external service is involved in the deletion process.</li>
+          <li><strong>Forensic Hardening:</strong> We have disabled standard Android cloud extraction (Android 12+) and device-to-device transfers to ensure your sensitive notes never leave your device's hardware-bound encryption vault.</li>
+        </ul>
+
+        <h2>5. Crash Reporting</h2>
+        <p>To improve app stability, NoteNext uses ACRA (Application Crash Reports for Android). If the app crashes:</p>
+        <ul>
+          <li>A technical report containing device info and stack traces may be sent to the developer.</li>
+          <li><strong>User Consent:</strong> Depending on your settings, you may be prompted before a report is sent.</li>
+          <li>These reports do <strong>not</strong> include your personal note content.</li>
+        </ul>
+
+        <h2>6. Data Retention and Deletion</h2>
+        <p>Your data is yours. You can:</p>
+        <ul>
+          <li>Delete individual notes (moved to Bin).</li>
+          <li>Empty the Bin to permanently delete data.</li>
+          <li>Uninstall the app to wipe all local data from your device.</li>
+          <li>Delete your Google Drive backups via the app settings or Google Drive directly.</li>
+        </ul>
+
+        <h2>7. Third-Party Services</h2>
+        <p>NoteNext uses these services:</p>
+        <ul>
+          <li><strong>Google Drive API:</strong> For optional backups.</li>
+          <li><strong>Google Fonts:</strong> For typography.</li>
+          <li><strong>Groq / OpenAI / Anthropic / Google AI APIs:</strong> For optional AI features (BYOK).</li>
+          <li><strong>Jsoup:</strong> For local generation of link previews (fetches metadata from URLs you type).</li>
+        </ul>
+
+        <h2>8. Contact</h2>
+        <p>
+          If you have any questions or suggestions about my Privacy Policy, do not hesitate to
+          contact me at
+          <a href={`mailto:${SITE.email}`}>{SITE.email}</a>.
+        </p>
+      </div>
+    </Container>
+  </section>
+</BaseLayout>

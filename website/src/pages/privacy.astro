@@ -1,0 +1,163 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import Container from '@/components/Container.astro';
+import Icon from '@/components/Icon.astro';
+---
+
+<BaseLayout
+  title="Privacy"
+  description="NoteNext is local-first by architecture. Your notes never leave your device unless you explicitly choose otherwise. Decoy Vault, screenshot protection, self-destruct, and forensic hardening explained."
+  pageTitle="Privacy"
+>
+  <section class="mesh-bg pt-20 pb-14">
+    <Container size="narrow" class="text-center">
+      <p class="text-sm font-semibold text-[--color-brand] mb-3 uppercase tracking-wider">Privacy</p>
+      <h1 class="text-4xl md:text-5xl font-extrabold mb-5">Your notes are not the product.</h1>
+      <p class="text-lg text-[--color-muted]">
+        NoteNext is built on a simple promise: what you write stays on your device, full stop.
+        No accounts, no telemetry, no behavioral tracking. Here's exactly how that promise is kept.
+      </p>
+    </Container>
+  </section>
+
+  <section class="py-14">
+    <Container size="narrow">
+      <div class="space-y-12">
+        <article>
+          <h2 class="text-2xl font-bold mb-3 flex items-center gap-3">
+            <span class="w-9 h-9 rounded-xl bg-[--color-brand]/10 text-[--color-brand] flex items-center justify-center">
+              <Icon name="shield" size={20} />
+            </span>
+            Local-first by architecture
+          </h2>
+          <p class="text-[--color-muted] leading-relaxed">
+            All notes, checklists, projects, labels, attachments, and settings live in your device's
+            private storage. There is no NoteNext server. There is no NoteNext account. The
+            <code class="bg-[--color-surface-2] px-1.5 py-0.5 rounded text-sm">INTERNET</code>
+            permission exists only to fetch link previews, download Google Fonts, and — if you opt
+            in — back up to your personal Google Drive. It is never used to upload note content
+            anywhere we can see.
+          </p>
+        </article>
+
+        <article>
+          <h2 class="text-2xl font-bold mb-3 flex items-center gap-3">
+            <span class="w-9 h-9 rounded-xl bg-pink-100 text-pink-700 flex items-center justify-center">
+              <Icon name="mask" size={20} />
+            </span>
+            Decoy Vault — plausible deniability
+          </h2>
+          <p class="text-[--color-muted] leading-relaxed mb-3">
+            If someone forces you to unlock the app, you can quietly enter a secondary PIN. NoteNext
+            opens a separate, innocent-looking set of notes — your real notes remain hidden. When
+            the Decoy Vault is enabled, biometric login is automatically suppressed so attackers
+            can't bypass the choice with your finger or face.
+          </p>
+          <p class="text-sm text-[--color-muted]">
+            App Lock is enforced automatically when Decoy Vault is active.
+          </p>
+        </article>
+
+        <article>
+          <h2 class="text-2xl font-bold mb-3 flex items-center gap-3">
+            <span class="w-9 h-9 rounded-xl bg-amber-100 text-amber-700 flex items-center justify-center">
+              <Icon name="bomb" size={20} />
+            </span>
+            Self-destructing notes
+          </h2>
+          <p class="text-[--color-muted] leading-relaxed">
+            Set any note to vanish at a chosen date and time. Deletion is scheduled with Android
+            exact alarms — fully on-device, no external service involved. When the alarm fires, the
+            note is wiped from local storage and from any in-memory cache.
+          </p>
+        </article>
+
+        <article>
+          <h2 class="text-2xl font-bold mb-3 flex items-center gap-3">
+            <span class="w-9 h-9 rounded-xl bg-[--color-accent]/15 text-[--color-accent-dark] flex items-center justify-center">
+              <Icon name="eye" size={20} />
+            </span>
+            Screenshot & recents protection
+          </h2>
+          <p class="text-[--color-muted] leading-relaxed">
+            On the App Lock screen, NoteNext sets the
+            <code class="bg-[--color-surface-2] px-1.5 py-0.5 rounded text-sm">FLAG_SECURE</code>
+            window flag — Android blocks screenshots and hides app content from the system Recents
+            menu. Your notes can't be leaked through screen recordings or task switchers.
+          </p>
+        </article>
+
+        <article>
+          <h2 class="text-2xl font-bold mb-3 flex items-center gap-3">
+            <span class="w-9 h-9 rounded-xl bg-[--color-brand]/10 text-[--color-brand] flex items-center justify-center">
+              <Icon name="layers" size={20} />
+            </span>
+            Forensic hardening
+          </h2>
+          <p class="text-[--color-muted] leading-relaxed mb-3">
+            We've explicitly disabled the Android features that exfiltrate app data:
+          </p>
+          <ul class="space-y-2 text-[--color-muted] text-sm">
+            <li class="flex gap-3">
+              <Icon name="check" size={18} class="text-[--color-accent-dark] flex-shrink-0 mt-0.5" />
+              <span><strong class="text-[--color-ink]">Auto Backup disabled</strong> — Google won't sync your notes to its servers in the background.</span>
+            </li>
+            <li class="flex gap-3">
+              <Icon name="check" size={18} class="text-[--color-accent-dark] flex-shrink-0 mt-0.5" />
+              <span><strong class="text-[--color-ink]">Cloud extraction disabled (Android 12+)</strong> — your notes are excluded from the platform's cloud-restore pipeline.</span>
+            </li>
+            <li class="flex gap-3">
+              <Icon name="check" size={18} class="text-[--color-accent-dark] flex-shrink-0 mt-0.5" />
+              <span><strong class="text-[--color-ink]">Device-to-device transfer disabled</strong> — when you switch phones, NoteNext data does not migrate via Google's transfer tool.</span>
+            </li>
+          </ul>
+          <p class="text-[--color-muted] leading-relaxed mt-4">
+            The result: your notes stay inside your device's hardware-bound encryption vault, not
+            scattered across cloud caches.
+          </p>
+        </article>
+
+        <article>
+          <h2 class="text-2xl font-bold mb-3 flex items-center gap-3">
+            <span class="w-9 h-9 rounded-xl bg-[--color-brand]/10 text-[--color-brand] flex items-center justify-center">
+              <Icon name="bot" size={20} />
+            </span>
+            AI is opt-in, transparent, and minimal
+          </h2>
+          <p class="text-[--color-muted] leading-relaxed">
+            NoteNext supports Groq, OpenAI, Anthropic Claude, and Google Gemini for optional
+            summarization and grammar fixes. Content is sent <strong>only</strong> when you tap an
+            AI action — and only the text of the specific note you're editing. Nothing is logged on
+            our side, because there is no "our side" — requests go from your device directly to the
+            provider you chose.
+          </p>
+        </article>
+
+        <article>
+          <h2 class="text-2xl font-bold mb-3 flex items-center gap-3">
+            <span class="w-9 h-9 rounded-xl bg-[--color-accent]/15 text-[--color-accent-dark] flex items-center justify-center">
+              <Icon name="github" size={20} />
+            </span>
+            Open source — every claim is auditable
+          </h2>
+          <p class="text-[--color-muted] leading-relaxed">
+            NoteNext is MIT-licensed and developed in the open. Every privacy claim on this page is
+            verifiable in the source code. If you find something we missed, we'd genuinely like to
+            hear from you — open an issue or pull request on GitHub.
+          </p>
+        </article>
+      </div>
+
+      <div class="mt-14 card p-8 bg-[--color-surface-2] text-center">
+        <h3 class="text-xl font-bold mb-2">Read the formal Privacy Policy</h3>
+        <p class="text-[--color-muted] mb-5 text-sm">
+          The complete legal text covering data collection, third-party services, and your rights.
+        </p>
+        <a href="/privacy-policy" class="btn btn-primary">
+          View Privacy Policy
+          <Icon name="arrowRight" size={18} />
+        </a>
+      </div>
+    </Container>
+  </section>
+</BaseLayout>

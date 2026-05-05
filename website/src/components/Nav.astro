@@ -1,0 +1,66 @@
+---
+import { NAV, SITE } from '@/consts';
+import Container from './Container.astro';
+import Logo from './Logo.astro';
+
+const pathname = Astro.url.pathname.replace(/\/$/, '') || '/';
+---
+
+<header class="sticky top-0 z-50 backdrop-blur-md bg-white/75 border-b border-[--color-border]">
+  <Container>
+    <nav class="flex items-center justify-between h-16" aria-label="Main">
+      <a href="/" class="flex items-center gap-2.5 font-bold text-lg" aria-label={`${SITE.name} home`}>
+        <Logo size={32} class="rounded-lg" />
+        <span>{SITE.name}</span>
+      </a>
+
+      <ul class="hidden md:flex items-center gap-1 text-sm">
+        {
+          NAV.map((item) => {
+            const active = pathname === item.href || (item.href !== '/' && pathname.startsWith(item.href));
+            return (
+              <li>
+                <a
+                  href={item.href}
+                  class={`px-3 py-2 rounded-full transition-colors ${
+                    active ? 'bg-[--color-ink] text-white' : 'hover:bg-[--color-surface-2]'
+                  }`}
+                >
+                  {item.label}
+                </a>
+              </li>
+            );
+          })
+        }
+      </ul>
+
+      <a href="/download" class="btn btn-primary text-sm hidden sm:inline-flex">
+        Get NoteNext
+      </a>
+
+      <details class="md:hidden relative">
+        <summary class="list-none cursor-pointer p-2 -mr-2" aria-label="Open menu">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <line x1="3" y1="6" x2="21" y2="6" />
+            <line x1="3" y1="12" x2="21" y2="12" />
+            <line x1="3" y1="18" x2="21" y2="18" />
+          </svg>
+        </summary>
+        <ul class="absolute right-0 top-full mt-2 w-56 bg-white rounded-2xl border border-[--color-border] shadow-xl py-2">
+          {
+            NAV.map((item) => (
+              <li>
+                <a href={item.href} class="block px-4 py-2.5 text-sm hover:bg-[--color-surface-2]">
+                  {item.label}
+                </a>
+              </li>
+            ))
+          }
+          <li class="border-t border-[--color-border] mt-2 pt-2 px-2">
+            <a href="/download" class="btn btn-primary w-full text-sm">Get NoteNext</a>
+          </li>
+        </ul>
+      </details>
+    </nav>
+  </Container>
+</header>

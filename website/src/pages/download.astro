@@ -1,0 +1,113 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import Container from '@/components/Container.astro';
+import Icon from '@/components/Icon.astro';
+import { SITE } from '@/consts';
+
+const hasPlay = SITE.playStoreUrl && SITE.playStoreUrl.length > 0;
+---
+
+<BaseLayout
+  title="Download"
+  description={`Download NoteNext v${SITE.version} for Android. Free, open source, MIT licensed. Available via GitHub releases${hasPlay ? ' and Google Play' : ' — Google Play coming soon'}.`}
+  pageTitle="Download"
+>
+  <section class="mesh-bg pt-20 pb-14">
+    <Container size="narrow" class="text-center">
+      <p class="text-sm font-semibold text-[--color-brand] mb-3 uppercase tracking-wider">Download</p>
+      <h1 class="text-4xl md:text-5xl font-extrabold mb-5">Get NoteNext on Android</h1>
+      <p class="text-lg text-[--color-muted]">
+        Free. Open source. No accounts. v{SITE.version}, released {SITE.releaseDate}.
+      </p>
+    </Container>
+  </section>
+
+  <section class="py-14">
+    <Container size="narrow">
+      <div class="grid sm:grid-cols-2 gap-5 mb-12">
+        <a
+          href={hasPlay ? SITE.playStoreUrl : '#'}
+          aria-disabled={!hasPlay}
+          class={`card p-7 ${hasPlay ? '' : 'opacity-60 pointer-events-none'}`}
+          target={hasPlay ? '_blank' : undefined}
+          rel={hasPlay ? 'noopener' : undefined}
+        >
+          <div class="w-12 h-12 rounded-xl bg-[--color-brand]/10 text-[--color-brand] flex items-center justify-center mb-4">
+            <Icon name="download" size={24} />
+          </div>
+          <h2 class="text-xl font-bold mb-1">Google Play</h2>
+          <p class="text-sm text-[--color-muted] mb-3">
+            {hasPlay ? 'Auto-updates, easiest install' : 'Coming soon — submission in progress'}
+          </p>
+          <span class="text-sm font-semibold text-[--color-brand]">
+            {hasPlay ? 'Install →' : 'Notify on launch'}
+          </span>
+        </a>
+
+        <a
+          href={SITE.githubReleaseUrl}
+          target="_blank"
+          rel="noopener"
+          class="card p-7"
+        >
+          <div class="w-12 h-12 rounded-xl bg-[--color-ink] text-white flex items-center justify-center mb-4">
+            <Icon name="github" size={24} />
+          </div>
+          <h2 class="text-xl font-bold mb-1">GitHub Release</h2>
+          <p class="text-sm text-[--color-muted] mb-3">
+            Signed APK · v{SITE.version} · for sideloading
+          </p>
+          <span class="text-sm font-semibold text-[--color-brand]">Download APK →</span>
+        </a>
+      </div>
+
+      <div class="card p-7 mb-10">
+        <h2 class="text-xl font-bold mb-4 flex items-center gap-2">
+          <Icon name="zap" size={22} class="text-[--color-brand]" />
+          Sideloading the APK
+        </h2>
+        <p class="text-sm text-[--color-muted] mb-4">
+          If you grabbed the APK from GitHub, here's how to install it:
+        </p>
+        <ol class="space-y-3 text-sm">
+          <li class="flex gap-3">
+            <span class="w-6 h-6 rounded-full bg-[--color-brand] text-white text-xs font-bold flex items-center justify-center flex-shrink-0">1</span>
+            <span>Open the downloaded <code class="bg-[--color-surface-2] px-1.5 py-0.5 rounded text-xs">notenext-{SITE.version}.apk</code> file in your file manager.</span>
+          </li>
+          <li class="flex gap-3">
+            <span class="w-6 h-6 rounded-full bg-[--color-brand] text-white text-xs font-bold flex items-center justify-center flex-shrink-0">2</span>
+            <span>If prompted, enable <strong>"Install unknown apps"</strong> for your file manager or browser. (Settings → Apps → Special access)</span>
+          </li>
+          <li class="flex gap-3">
+            <span class="w-6 h-6 rounded-full bg-[--color-brand] text-white text-xs font-bold flex items-center justify-center flex-shrink-0">3</span>
+            <span>Tap <strong>Install</strong>. Android may show a Play Protect warning since the APK isn't from the Play Store — tap <strong>Install anyway</strong>.</span>
+          </li>
+          <li class="flex gap-3">
+            <span class="w-6 h-6 rounded-full bg-[--color-brand] text-white text-xs font-bold flex items-center justify-center flex-shrink-0">4</span>
+            <span>Open NoteNext and start writing. No signup, no permissions you didn't ask for.</span>
+          </li>
+        </ol>
+      </div>
+
+      <div class="grid sm:grid-cols-2 gap-5">
+        <div class="card p-6">
+          <h3 class="font-semibold mb-2">System requirements</h3>
+          <ul class="text-sm text-[--color-muted] space-y-1.5">
+            <li>· Android 8.0 (Oreo) or later</li>
+            <li>· ~25 MB install size</li>
+            <li>· Biometric hardware (optional)</li>
+          </ul>
+        </div>
+        <div class="card p-6">
+          <h3 class="font-semibold mb-2">Build from source</h3>
+          <p class="text-sm text-[--color-muted] mb-2">
+            Prefer to compile yourself? The repo has a complete Android Studio project.
+          </p>
+          <a href={SITE.github} target="_blank" rel="noopener" class="text-sm font-semibold text-[--color-brand]">
+            View on GitHub →
+          </a>
+        </div>
+      </div>
+    </Container>
+  </section>
+</BaseLayout>

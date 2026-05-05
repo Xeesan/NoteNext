@@ -1,0 +1,250 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import Container from '@/components/Container.astro';
+import FeatureCard from '@/components/FeatureCard.astro';
+import DownloadButtons from '@/components/DownloadButtons.astro';
+import Screenshots from '@/components/Screenshots.astro';
+import Icon from '@/components/Icon.astro';
+import { SITE } from '@/consts';
+---
+
+<BaseLayout jsonLdType="home">
+  <section class="mesh-bg pt-16 pb-24 md:pt-24 md:pb-32 relative overflow-hidden">
+    <Container>
+      <div class="grid lg:grid-cols-2 gap-12 items-center">
+        <div>
+          <span
+            class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white border border-[--color-border] text-xs font-medium mb-6"
+          >
+            <span class="w-1.5 h-1.5 rounded-full bg-[--color-accent] animate-pulse"></span>
+            v{SITE.version} · Material 3 Expressive
+          </span>
+
+          <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold leading-[1.05] mb-6">
+            Notes that <span class="gradient-text">never leave</span> your device.
+          </h1>
+
+          <p class="text-lg text-[--color-muted] max-w-xl mb-8 leading-relaxed">
+            NoteNext is a premium, privacy-first note-taking app for Android. Local-first storage,
+            biometric vault, AES-256 encrypted backups, and optional AI assistance — without selling
+            your data.
+          </p>
+
+          <DownloadButtons />
+
+          <ul class="mt-10 grid grid-cols-2 sm:grid-cols-3 gap-3 text-sm">
+            <li class="flex items-center gap-2 text-[--color-muted]">
+              <Icon name="check" size={16} class="text-[--color-accent-dark]" />
+              100% offline-capable
+            </li>
+            <li class="flex items-center gap-2 text-[--color-muted]">
+              <Icon name="check" size={16} class="text-[--color-accent-dark]" />
+              No accounts
+            </li>
+            <li class="flex items-center gap-2 text-[--color-muted]">
+              <Icon name="check" size={16} class="text-[--color-accent-dark]" />
+              Open source · MIT
+            </li>
+          </ul>
+        </div>
+
+        <div class="relative">
+          <div class="relative aspect-[9/19] max-w-[320px] mx-auto rounded-[2.5rem] border-8 border-[--color-ink] bg-[--color-ink] shadow-2xl overflow-hidden float">
+            <div class="absolute inset-0 gradient-bg opacity-90"></div>
+            <div class="absolute inset-0 p-5 flex flex-col text-white">
+              <div class="flex items-center justify-between text-[10px] mb-3 opacity-80">
+                <span>9:41</span>
+                <span>NoteNext</span>
+              </div>
+              <h2 class="text-xl font-bold mb-1">Your Notes</h2>
+              <p class="text-xs opacity-80 mb-4">12 notes · 3 projects</p>
+              <div class="space-y-2">
+                <div class="bg-white/15 backdrop-blur rounded-2xl p-3 border border-white/20">
+                  <div class="flex items-center gap-2 mb-1">
+                    <span class="w-2 h-2 rounded-full bg-[--color-accent]"></span>
+                    <p class="text-[11px] opacity-70">Project · Studio</p>
+                  </div>
+                  <p class="font-semibold text-sm">Album launch checklist</p>
+                  <p class="text-[10px] opacity-70 mt-1">3 of 7 tasks done · 🔔 Tomorrow</p>
+                </div>
+                <div class="bg-white/15 backdrop-blur rounded-2xl p-3 border border-white/20">
+                  <p class="font-semibold text-sm">🔒 Locked note</p>
+                  <p class="text-[10px] opacity-70 mt-1">Biometric required</p>
+                </div>
+                <div class="bg-white/15 backdrop-blur rounded-2xl p-3 border border-white/20">
+                  <p class="font-semibold text-sm">Tour ideas</p>
+                  <p class="text-[10px] opacity-70 mt-1">Edited 2h ago</p>
+                </div>
+                <div class="bg-white/15 backdrop-blur rounded-2xl p-3 border border-white/20">
+                  <p class="font-semibold text-sm">💡 Lyric: "neon nights"</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div
+            class="absolute -bottom-4 -left-4 sm:-left-6 bg-white rounded-2xl shadow-xl border border-[--color-border] p-4 flex items-center gap-3 max-w-[240px]"
+          >
+            <div class="w-10 h-10 rounded-xl bg-[--color-accent]/15 text-[--color-accent-dark] flex items-center justify-center flex-shrink-0">
+              <Icon name="lock" size={20} />
+            </div>
+            <div>
+              <p class="text-xs font-semibold">Decoy Vault</p>
+              <p class="text-[10px] text-[--color-muted]">Plausible deniability</p>
+            </div>
+          </div>
+
+          <div
+            class="absolute -top-4 -right-2 sm:-right-6 bg-white rounded-2xl shadow-xl border border-[--color-border] p-4 flex items-center gap-3 max-w-[220px]"
+          >
+            <div class="w-10 h-10 rounded-xl bg-[--color-brand]/10 text-[--color-brand] flex items-center justify-center flex-shrink-0">
+              <Icon name="key" size={20} />
+            </div>
+            <div>
+              <p class="text-xs font-semibold">AES-256</p>
+              <p class="text-[10px] text-[--color-muted]">Encrypted backups</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </Container>
+  </section>
+
+  <section class="py-20 md:py-28">
+    <Container>
+      <div class="max-w-2xl mb-14">
+        <p class="text-sm font-semibold text-[--color-brand] mb-3 uppercase tracking-wider">Why NoteNext</p>
+        <h2 class="text-3xl md:text-4xl font-bold mb-4">
+          Beautifully designed. Quietly powerful.
+        </h2>
+        <p class="text-lg text-[--color-muted]">
+          Every detail is engineered for speed, privacy, and a tactile feel — from spring-physics
+          animations to hardware-bound encryption.
+        </p>
+      </div>
+
+      <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
+        <FeatureCard
+          icon="shield"
+          title="Local-first storage"
+          description="Notes live on your device. No accounts, no servers, no telemetry. The internet permission only fetches link previews."
+          accent="brand"
+        />
+        <FeatureCard
+          icon="fingerprint"
+          title="Biometric vault"
+          description="Lock the app with fingerprint, face unlock, or a PBKDF2-hashed PIN. Even we can't recover it."
+          accent="accent"
+        />
+        <FeatureCard
+          icon="mask"
+          title="Decoy Vault"
+          description="A secondary PIN reveals a separate, innocent set of notes. Biometric auto-hides for plausible deniability."
+          accent="pink"
+        />
+        <FeatureCard
+          icon="bomb"
+          title="Self-destruct"
+          description="Set ephemeral notes to vanish at exact times via on-device system alarms. Nothing sent externally."
+          accent="amber"
+        />
+        <FeatureCard
+          icon="cloud"
+          title="Encrypted Drive backup"
+          description="Optional AES-256 backups to your personal Drive, scoped to app-only files. We never see them."
+          accent="brand"
+        />
+        <FeatureCard
+          icon="bot"
+          title="Optional AI assist"
+          description="Summarize and grammar-fix notes with Groq, OpenAI, Claude, or Gemini — only when you tap."
+          accent="accent"
+        />
+        <FeatureCard
+          icon="palette"
+          title="Material 3 Expressive"
+          description="Spring-physics motion, dynamic shapes, Roboto Flex typography. The newest M3 design language, polished."
+          accent="pink"
+        />
+        <FeatureCard
+          icon="zap"
+          title="Instant everything"
+          description="Auto-save, full-text search, rich text, checklists, link previews. Built native with Jetpack Compose."
+          accent="amber"
+        />
+      </div>
+    </Container>
+  </section>
+
+  <Screenshots />
+
+  <section class="py-20 md:py-28 bg-[--color-ink] text-white">
+    <Container>
+      <div class="grid md:grid-cols-2 gap-12 items-center">
+        <div>
+          <p class="text-sm font-semibold text-[--color-accent] mb-3 uppercase tracking-wider">Privacy</p>
+          <h2 class="text-3xl md:text-4xl font-bold mb-5">Your notes are not the product.</h2>
+          <p class="text-white/70 mb-6 leading-relaxed">
+            Most note apps mine your thoughts to feed ad networks or train models. NoteNext does
+            none of that. There is no signup, no cloud account, no analytics SDK, no behavioral
+            tracking, no third-party servers in the loop.
+          </p>
+          <ul class="space-y-3 text-sm text-white/80">
+            <li class="flex gap-3">
+              <Icon name="check" size={18} class="text-[--color-accent] flex-shrink-0 mt-0.5" />
+              <span>Forensic hardening: cloud extraction & device-transfer disabled</span>
+            </li>
+            <li class="flex gap-3">
+              <Icon name="check" size={18} class="text-[--color-accent] flex-shrink-0 mt-0.5" />
+              <span>Screenshot protection on the lock screen</span>
+            </li>
+            <li class="flex gap-3">
+              <Icon name="check" size={18} class="text-[--color-accent] flex-shrink-0 mt-0.5" />
+              <span>Drive backup uses scoped, app-only Drive permissions</span>
+            </li>
+            <li class="flex gap-3">
+              <Icon name="check" size={18} class="text-[--color-accent] flex-shrink-0 mt-0.5" />
+              <span>Open source — every claim is auditable on GitHub</span>
+            </li>
+          </ul>
+          <a href="/privacy" class="inline-flex items-center gap-2 mt-8 text-[--color-accent] font-semibold hover:gap-3 transition-all">
+            Read the privacy story
+            <Icon name="arrowRight" size={18} />
+          </a>
+        </div>
+        <div class="grid grid-cols-2 gap-4">
+          <div class="bg-white/5 border border-white/10 rounded-2xl p-5">
+            <Icon name="key" size={28} class="text-[--color-accent] mb-3" />
+            <p class="text-2xl font-bold">AES-256</p>
+            <p class="text-xs text-white/60 mt-1">Backup encryption</p>
+          </div>
+          <div class="bg-white/5 border border-white/10 rounded-2xl p-5">
+            <Icon name="fingerprint" size={28} class="text-[--color-accent] mb-3" />
+            <p class="text-2xl font-bold">PBKDF2</p>
+            <p class="text-xs text-white/60 mt-1">PIN hashing</p>
+          </div>
+          <div class="bg-white/5 border border-white/10 rounded-2xl p-5">
+            <Icon name="eye" size={28} class="text-[--color-accent] mb-3" />
+            <p class="text-2xl font-bold">0</p>
+            <p class="text-xs text-white/60 mt-1">Trackers</p>
+          </div>
+          <div class="bg-white/5 border border-white/10 rounded-2xl p-5">
+            <Icon name="layers" size={28} class="text-[--color-accent] mb-3" />
+            <p class="text-2xl font-bold">100%</p>
+            <p class="text-xs text-white/60 mt-1">Open source</p>
+          </div>
+        </div>
+      </div>
+    </Container>
+  </section>
+
+  <section class="py-20 md:py-28">
+    <Container size="narrow" class="text-center">
+      <h2 class="text-3xl md:text-4xl font-bold mb-5">Try NoteNext today.</h2>
+      <p class="text-lg text-[--color-muted] mb-8">
+        Free. No signup. No tracking. Just open the app and start writing.
+      </p>
+      <DownloadButtons class="justify-center" />
+    </Container>
+  </section>
+</BaseLayout>

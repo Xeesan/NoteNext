@@ -1,0 +1,27 @@
+---
+import Icon from './Icon.astro';
+
+interface Props {
+  icon: string;
+  title: string;
+  description: string;
+  accent?: 'brand' | 'accent' | 'pink' | 'amber';
+}
+
+const { icon, title, description, accent = 'brand' } = Astro.props;
+
+const accentColors: Record<string, string> = {
+  brand: 'bg-[--color-brand]/10 text-[--color-brand]',
+  accent: 'bg-[--color-accent]/10 text-[--color-accent-dark]',
+  pink: 'bg-pink-50 text-pink-700',
+  amber: 'bg-amber-50 text-amber-700',
+};
+---
+
+<article class="card p-6">
+  <div class={`w-11 h-11 rounded-xl flex items-center justify-center mb-4 ${accentColors[accent]}`}>
+    <Icon name={icon} size={22} />
+  </div>
+  <h3 class="font-semibold text-lg mb-2">{title}</h3>
+  <p class="text-sm text-[--color-muted] leading-relaxed">{description}</p>
+</article>

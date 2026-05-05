@@ -1,0 +1,10 @@
+# Cloudflare Pages redirects
+# https://developers.cloudflare.com/pages/configuration/redirects/
+
+/privacy.html        /privacy-policy            301
+/policy              /privacy-policy            301
+/legal               /privacy-policy            301
+/terms               /privacy-policy            301
+/github              https://github.com/suvojeet-sengupta/NoteNext  302
+/releases            https://github.com/suvojeet-sengupta/NoteNext/releases  302
+/apk                 https://github.com/suvojeet-sengupta/NoteNext/releases/latest  302

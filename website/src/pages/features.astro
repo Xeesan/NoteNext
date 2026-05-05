@@ -1,0 +1,199 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import Container from '@/components/Container.astro';
+import FeatureCard from '@/components/FeatureCard.astro';
+import Icon from '@/components/Icon.astro';
+
+const sections = [
+  {
+    eyebrow: 'Capture',
+    title: 'A rich editor that gets out of your way',
+    description:
+      'Format with bold, italics, underline, and structured headings. Build interactive checklists with seamless state tracking. Auto-save kicks in as you type — no save buttons, no surprises.',
+    bullets: [
+      'Rich text formatting (bold, italic, underline, headings)',
+      'Interactive checklists with completion states',
+      'Auto-save with optimistic UI',
+      'Color-coded notes for instant visual recognition',
+      'Pin important notes to the top',
+    ],
+    icon: 'sparkle',
+    accent: 'brand',
+  },
+  {
+    eyebrow: 'Organize',
+    title: 'Find anything in milliseconds',
+    description:
+      'Group notes into Projects, tag with custom Labels, and run full-text search across every note, checklist, and attachment caption. Built for thousands of notes without slowdown.',
+    bullets: [
+      'Projects to group related thinking',
+      'Custom Labels with color coding',
+      'Instant full-text search',
+      'Bin with restore for accidental deletes',
+      'Smart sort by date, title, or color',
+    ],
+    icon: 'folder',
+    accent: 'accent',
+  },
+  {
+    eyebrow: 'Remember',
+    title: 'Reminders that actually fire on time',
+    description:
+      'Set one-time or recurring reminders (daily, weekly, monthly) using Android exact alarms — they trigger to the second, even on aggressive battery-saver OEMs.',
+    bullets: [
+      'Exact-alarm precision (SCHEDULE_EXACT_ALARM)',
+      'One-time, daily, weekly, monthly recurrence',
+      'System notifications with action buttons',
+      'Snooze and reschedule from the lock screen',
+    ],
+    icon: 'bell',
+    accent: 'pink',
+  },
+  {
+    eyebrow: 'Secure',
+    title: 'Privacy you can verify',
+    description:
+      'Lock the app with fingerprint, face unlock, or a PBKDF2-hashed PIN. Activate the Decoy Vault for a secondary PIN that opens an innocent-looking set of notes. Set self-destruct timers on sensitive content.',
+    bullets: [
+      'Biometric + PIN with PBKDF2 hashing',
+      'Decoy Vault for plausible deniability',
+      'Screenshot protection on lock screen',
+      'Self-destructing notes with exact alarms',
+      'Forensic hardening (no cloud extraction, no device transfer)',
+    ],
+    icon: 'shield',
+    accent: 'amber',
+  },
+  {
+    eyebrow: 'Backup',
+    title: 'Your data, your control',
+    description:
+      'Optional encrypted backups to your personal Google Drive — using AES-256 with a password only you know. Or export everything as TXT or PDF locally, anytime.',
+    bullets: [
+      'AES-256 encrypted Google Drive backups',
+      'Drive scope restricted to app-created files',
+      'Export to TXT or PDF',
+      'One-tap share via the native Android share sheet',
+      'Restore from any backup in seconds',
+    ],
+    icon: 'cloud',
+    accent: 'brand',
+  },
+  {
+    eyebrow: 'Assist',
+    title: 'AI on your terms — or not at all',
+    description:
+      'Summarize long notes or fix grammar with your choice of Groq, OpenAI, Anthropic Claude, or Google Gemini. Bring your own key. Nothing is sent unless you tap the button.',
+    bullets: [
+      'Multi-provider: Groq, OpenAI, Claude, Gemini',
+      'Bring your own API key (BYOK)',
+      'Only the selected note is sent — only on tap',
+      'No queries stored on any server',
+      'Disable AI entirely with one toggle',
+    ],
+    icon: 'bot',
+    accent: 'accent',
+  },
+  {
+    eyebrow: 'Design',
+    title: 'Material 3 Expressive — the latest, polished',
+    description:
+      'Spring-physics motion that responds to intent. Dynamic shapes with adaptive corners. Roboto Flex typography. Light, dark, and system themes with custom shape families.',
+    bullets: [
+      'Spring-based physics for every interaction',
+      'Adaptive corner rounding & morphing shapes',
+      'Roboto Flex variable typography',
+      'Light / Dark / System themes',
+      'Customizable shape families',
+    ],
+    icon: 'palette',
+    accent: 'pink',
+  },
+  {
+    eyebrow: 'Capture more',
+    title: 'Beyond text — attachments and previews',
+    description:
+      'Attach images straight from your gallery. Paste a URL and watch it bloom into a rich preview with title, description, and thumbnail. Both are fully optional.',
+    bullets: [
+      'Image attachments from gallery',
+      'Rich link previews via local Jsoup parsing',
+      'Optional — disable previews in one tap',
+      'Image thumbnails inline in the editor',
+    ],
+    icon: 'image',
+    accent: 'amber',
+  },
+];
+---
+
+<BaseLayout
+  title="Features"
+  description="Explore every feature in NoteNext: rich editor, projects, labels, reminders, biometric vault, decoy vault, encrypted Drive backups, optional AI, and Material 3 Expressive design."
+  pageTitle="Features"
+>
+  <section class="mesh-bg pt-20 pb-14">
+    <Container size="narrow" class="text-center">
+      <p class="text-sm font-semibold text-[--color-brand] mb-3 uppercase tracking-wider">Features</p>
+      <h1 class="text-4xl md:text-5xl font-extrabold mb-5">Everything you need. Nothing you don't.</h1>
+      <p class="text-lg text-[--color-muted]">
+        A guided tour through what NoteNext can do — from the editor to the encryption stack.
+      </p>
+    </Container>
+  </section>
+
+  <section class="py-12">
+    <Container>
+      <div class="space-y-20">
+        {
+          sections.map((s, i) => (
+            <div class={`grid md:grid-cols-2 gap-10 items-center ${i % 2 === 1 ? 'md:[&>div:first-child]:order-2' : ''}`}>
+              <div>
+                <p class="text-sm font-semibold text-[--color-brand] mb-3 uppercase tracking-wider">
+                  {s.eyebrow}
+                </p>
+                <h2 class="text-3xl font-bold mb-4">{s.title}</h2>
+                <p class="text-[--color-muted] leading-relaxed mb-6">{s.description}</p>
+                <ul class="space-y-2.5">
+                  {s.bullets.map((b) => (
+                    <li class="flex gap-3 text-sm">
+                      <Icon name="check" size={18} class="text-[--color-accent-dark] flex-shrink-0 mt-0.5" />
+                      <span>{b}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+              <div class="card p-10 aspect-square flex items-center justify-center bg-gradient-to-br from-[--color-surface-2] to-white">
+                <div class={`w-24 h-24 rounded-3xl flex items-center justify-center ${
+                  s.accent === 'brand'
+                    ? 'bg-[--color-brand]/10 text-[--color-brand]'
+                    : s.accent === 'accent'
+                    ? 'bg-[--color-accent]/15 text-[--color-accent-dark]'
+                    : s.accent === 'pink'
+                    ? 'bg-pink-100 text-pink-700'
+                    : 'bg-amber-100 text-amber-700'
+                }`}>
+                  <Icon name={s.icon} size={48} />
+                </div>
+              </div>
+            </div>
+          ))
+        }
+      </div>
+    </Container>
+  </section>
+
+  <section class="py-20">
+    <Container>
+      <div class="card p-10 md:p-14 text-center bg-gradient-to-br from-[--color-brand]/5 to-[--color-accent]/5">
+        <h2 class="text-3xl font-bold mb-4">Ready to take notes that stay yours?</h2>
+        <p class="text-[--color-muted] mb-7 max-w-xl mx-auto">
+          Free, open source, MIT licensed. No accounts, no analytics, no ads.
+        </p>
+        <a href="/download" class="btn btn-primary">
+          <Icon name="download" size={18} />
+          Download NoteNext
+        </a>
+      </div>
+    </Container>
+  </section>
+</BaseLayout>

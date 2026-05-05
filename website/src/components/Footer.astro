@@ -1,0 +1,52 @@
+---
+import { FOOTER_LINKS, SITE } from '@/consts';
+import Container from './Container.astro';
+import Logo from './Logo.astro';
+
+const year = new Date().getFullYear();
+---
+
+<footer class="border-t border-[--color-border] bg-white mt-24">
+  <Container class="py-14">
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-10">
+      <div class="col-span-2 md:col-span-1">
+        <a href="/" class="flex items-center gap-2.5 font-bold text-lg mb-3">
+          <Logo size={32} class="rounded-lg" />
+          <span>{SITE.name}</span>
+        </a>
+        <p class="text-sm text-[--color-muted] max-w-xs">
+          Private, local-first note-taking for Android. Beautifully designed. Quietly powerful.
+        </p>
+      </div>
+
+      {
+        FOOTER_LINKS.map((group) => (
+          <div>
+            <h3 class="text-sm font-semibold mb-3">{group.title}</h3>
+            <ul class="space-y-2 text-sm">
+              {group.items.map((item) => (
+                <li>
+                  <a
+                    href={item.href}
+                    {...(item.external ? { target: '_blank', rel: 'noopener' } : {})}
+                    class="text-[--color-muted] hover:text-[--color-ink] transition-colors"
+                  >
+                    {item.label}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
+        ))
+      }
+    </div>
+
+    <div class="mt-12 pt-6 border-t border-[--color-border] flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-sm text-[--color-muted]">
+      <p>© {year} {SITE.author}. NoteNext is open source under the MIT License.</p>
+      <p>
+        v{SITE.version} ·
+        <a href={`mailto:${SITE.email}`} class="hover:text-[--color-ink]">{SITE.email}</a>
+      </p>
+    </div>
+  </Container>
+</footer>

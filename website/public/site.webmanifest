@@ -1,0 +1,17 @@
+{
+  "name": "NoteNext",
+  "short_name": "NoteNext",
+  "description": "Private, local-first note-taking for Android.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#fafafa",
+  "theme_color": "#6200ee",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "type": "image/svg+xml",
+      "sizes": "any",
+      "purpose": "any"
+    }
+  ]
+}

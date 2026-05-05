@@ -1,0 +1,92 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import Container from '@/components/Container.astro';
+import changelog from '../../../changelog.json';
+
+interface ChangeItem {
+  title: string;
+  description: string;
+  type: 'FEATURE' | 'IMPROVEMENT' | 'FIX' | 'UI' | string;
+}
+
+interface Release {
+  version: string;
+  date: string;
+  items: ChangeItem[];
+}
+
+const releases = (changelog.releases as Release[]) || [];
+
+const typeStyles: Record<string, string> = {
+  FEATURE: 'bg-[--color-brand]/10 text-[--color-brand]',
+  IMPROVEMENT: 'bg-[--color-accent]/15 text-[--color-accent-dark]',
+  FIX: 'bg-amber-100 text-amber-800',
+  UI: 'bg-pink-100 text-pink-700',
+};
+
+const typeLabel: Record<string, string> = {
+  FEATURE: 'New',
+  IMPROVEMENT: 'Improved',
+  FIX: 'Fix',
+  UI: 'UI',
+};
+---
+
+<BaseLayout
+  title="Changelog"
+  description="Release history of NoteNext — every new feature, improvement, and fix since launch."
+  pageTitle="Changelog"
+>
+  <section class="mesh-bg pt-20 pb-14">
+    <Container size="narrow" class="text-center">
+      <p class="text-sm font-semibold text-[--color-brand] mb-3 uppercase tracking-wider">Changelog</p>
+      <h1 class="text-4xl md:text-5xl font-extrabold mb-5">What's new in NoteNext</h1>
+      <p class="text-lg text-[--color-muted]">
+        Every release, in chronological order. Subscribe to GitHub releases to be the first to know.
+      </p>
+    </Container>
+  </section>
+
+  <section class="py-14">
+    <Container size="narrow">
+      <div class="space-y-12">
+        {
+          releases.map((release, idx) => (
+            <article class="relative pl-8 md:pl-0 md:grid md:grid-cols-[180px_1fr] md:gap-10">
+              <div class="md:sticky md:top-24 md:self-start mb-4 md:mb-0">
+                <div class="absolute left-0 top-1.5 md:hidden w-3 h-3 rounded-full bg-[--color-brand]"></div>
+                <p class="text-2xl font-extrabold tracking-tight">v{release.version}</p>
+                <p class="text-sm text-[--color-muted] mt-1">{release.date}</p>
+                {idx === 0 && (
+                  <span class="inline-block mt-2 px-2 py-0.5 rounded-full bg-[--color-accent]/15 text-[--color-accent-dark] text-[11px] font-semibold">
+                    Latest
+                  </span>
+                )}
+              </div>
+
+              <div class="card p-6 md:p-7">
+                <ul class="space-y-5">
+                  {release.items.map((item) => (
+                    <li>
+                      <div class="flex items-start gap-3 flex-wrap">
+                        <span class={`text-[10px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wide flex-shrink-0 ${typeStyles[item.type] ?? 'bg-[--color-surface-2] text-[--color-muted]'}`}>
+                          {typeLabel[item.type] ?? item.type}
+                        </span>
+                        <h3 class="font-semibold flex-1 min-w-0">{item.title}</h3>
+                      </div>
+                      <p class="text-sm text-[--color-muted] mt-2 ml-0 leading-relaxed">{item.description}</p>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </article>
+          ))
+        }
+      </div>
+
+      {releases.length === 0 && (
+        <p class="text-center text-[--color-muted] py-10">Changelog is being prepared.</p>
+      )}
+    </Container>
+  </section>
+</BaseLayout>

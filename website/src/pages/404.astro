@@ -1,0 +1,21 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import Container from '@/components/Container.astro';
+---
+
+<BaseLayout title="Page not found" description="That page doesn't exist." noindex>
+  <section class="py-24 mesh-bg min-h-[60vh] flex items-center">
+    <Container size="narrow" class="text-center">
+      <p class="text-7xl font-extrabold gradient-text mb-4">404</p>
+      <h1 class="text-3xl font-bold mb-3">Page not found</h1>
+      <p class="text-[--color-muted] mb-8">
+        The page you're looking for doesn't exist — but here are some options.
+      </p>
+      <div class="flex flex-wrap gap-3 justify-center">
+        <a href="/" class="btn btn-primary">Go home</a>
+        <a href="/features" class="btn btn-secondary">Features</a>
+        <a href="/download" class="btn btn-secondary">Download</a>
+      </div>
+    </Container>
+  </section>
+</BaseLayout>

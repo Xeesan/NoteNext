@@ -1,0 +1,118 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import Container from '@/components/Container.astro';
+import { SITE } from '@/consts';
+
+const faqs = [
+  {
+    q: 'Is NoteNext really free?',
+    a: 'Yes. Free, MIT-licensed, no in-app subscriptions. Optional donations via Google Play Billing, but you can use every feature without paying anything.',
+  },
+  {
+    q: 'Do my notes ever leave my device?',
+    a: 'No — unless you explicitly choose to. The only exceptions: (1) you tap an AI button, in which case the text of that one note is sent to your chosen provider, (2) you enable Google Drive backup, in which case encrypted blobs go to your personal Drive, or (3) you tap a link, which fetches a preview from that link\'s domain. Default state is fully offline.',
+  },
+  {
+    q: 'How is NoteNext different from Google Keep?',
+    a: 'Google Keep stores your notes on Google servers and uses them as part of your Google account. NoteNext is the opposite: notes live exclusively on your device, there\'s no NoteNext account, and you can audit every line of code on GitHub.',
+  },
+  {
+    q: 'What happens if I lose my PIN?',
+    a: 'It\'s unrecoverable — by design. PINs are stored as PBKDF2 hashes, not as text we can decrypt. If you forget it, you\'ll need to reset App Lock, which will require re-authenticating. Notes themselves remain accessible if you set up cloud backup with a separate password you remember.',
+  },
+  {
+    q: 'What is the Decoy Vault?',
+    a: 'A secondary PIN that opens an entirely separate set of notes. If you\'re forced to unlock the app, you can reveal the decoy and your real notes stay hidden. When the Decoy Vault is enabled, biometric login is automatically disabled to prevent bypass.',
+  },
+  {
+    q: 'Why do you support multiple AI providers?',
+    a: 'Because no single provider should hold your data hostage. NoteNext supports Groq, OpenAI, Anthropic Claude, and Google Gemini. You bring your own API key (BYOK), so the provider relationship is between you and them — not us.',
+  },
+  {
+    q: 'Is the Google Drive backup encrypted?',
+    a: 'Yes. Backups use AES-256 with a key derived from a password you set. Google sees only ciphertext. The Drive scope is restricted to app-only files, so NoteNext literally cannot read your other Drive content.',
+  },
+  {
+    q: 'Why is the app not on Google Play yet?',
+    a: SITE.playStoreUrl ? 'It is — see the Download page.' : 'Submission is in progress. In the meantime, install via the signed APK on GitHub Releases — it\'s the same build that will ship to Play.',
+  },
+  {
+    q: 'Does NoteNext work on iOS?',
+    a: 'Not yet. NoteNext is built natively with Kotlin and Jetpack Compose for Android. An iOS port would be a major rewrite, and isn\'t on the roadmap right now.',
+  },
+  {
+    q: 'How do I export my notes?',
+    a: 'Settings → Export. You can export individual notes or your entire library to TXT or PDF, saved to your device\'s Documents folder. You can also share notes via Android\'s native share sheet to any app.',
+  },
+  {
+    q: 'Are crashes reported anywhere?',
+    a: 'NoteNext uses ACRA (Application Crash Reports for Android). Reports include device info and stack traces — never note content. Depending on your settings, you may be prompted before any report is sent.',
+  },
+  {
+    q: 'How do I report a security issue?',
+    a: `Email ${SITE.email} with details. We acknowledge within 72 hours. Please don't file public GitHub issues for security vulnerabilities.`,
+  },
+];
+---
+
+<BaseLayout
+  title="FAQ"
+  description="Frequently asked questions about NoteNext — privacy, encryption, AI providers, sideloading, exports, and more."
+  pageTitle="FAQ"
+>
+  <section class="mesh-bg pt-20 pb-14">
+    <Container size="narrow" class="text-center">
+      <p class="text-sm font-semibold text-[--color-brand] mb-3 uppercase tracking-wider">FAQ</p>
+      <h1 class="text-4xl md:text-5xl font-extrabold mb-5">Frequently asked questions</h1>
+      <p class="text-lg text-[--color-muted]">
+        Quick answers to the things people ask most. If yours isn't here, write to us.
+      </p>
+    </Container>
+  </section>
+
+  <section class="py-14">
+    <Container size="narrow">
+      <div class="space-y-3">
+        {
+          faqs.map((f, idx) => (
+            <details class="card p-0 overflow-hidden group" open={idx < 2 ? true : undefined}>
+              <summary class="cursor-pointer list-none p-5 flex items-center justify-between gap-3 font-semibold">
+                <span>{f.q}</span>
+                <svg
+                  class="w-5 h-5 text-[--color-muted] transition-transform group-open:rotate-45 flex-shrink-0"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                >
+                  <line x1="12" y1="5" x2="12" y2="19" />
+                  <line x1="5" y1="12" x2="19" y2="12" />
+                </svg>
+              </summary>
+              <div class="px-5 pb-5 text-[--color-muted] leading-relaxed border-t border-[--color-border]">
+                <p class="pt-4">{f.a}</p>
+              </div>
+            </details>
+          ))
+        }
+      </div>
+
+      <script
+        type="application/ld+json"
+        set:html={JSON.stringify({
+          '@context': 'https://schema.org',
+          '@type': 'FAQPage',
+          mainEntity: faqs.map((f) => ({
+            '@type': 'Question',
+            name: f.q,
+            acceptedAnswer: {
+              '@type': 'Answer',
+              text: f.a,
+            },
+          })),
+        })}
+      />
+    </Container>
+  </section>
+</BaseLayout>

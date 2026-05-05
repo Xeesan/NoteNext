@@ -1,0 +1,37 @@
+---
+import { SITE } from '@/consts';
+import Icon from './Icon.astro';
+
+interface Props {
+  variant?: 'primary' | 'inverted';
+  class?: string;
+}
+
+const { variant = 'primary', class: className = '' } = Astro.props;
+const hasPlay = SITE.playStoreUrl && SITE.playStoreUrl.length > 0;
+---
+
+<div class={`flex flex-wrap gap-3 ${className}`}>
+  {
+    hasPlay ? (
+      <a href={SITE.playStoreUrl} class="btn btn-primary" target="_blank" rel="noopener">
+        <Icon name="download" size={18} />
+        Get on Google Play
+      </a>
+    ) : (
+      <a href="/download" class="btn btn-primary">
+        <Icon name="download" size={18} />
+        Download v{SITE.version}
+      </a>
+    )}
+
+  <a
+    href={SITE.githubReleaseUrl}
+    class={variant === 'inverted' ? 'btn btn-secondary' : 'btn btn-secondary'}
+    target="_blank"
+    rel="noopener"
+  >
+    <Icon name="github" size={18} />
+    GitHub Releases
+  </a>
+</div>
