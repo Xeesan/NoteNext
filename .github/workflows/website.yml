@@ -71,12 +71,12 @@ jobs:
     environment:
       name: production
       url: https://notenext.suvojeetsengupta.in
-    defaults:
-      run:
-        working-directory: website
+    # No defaults.run.working-directory here — the credential check runs before
+    # any checkout so the workspace is empty; let each step declare its own cwd.
     steps:
       - name: Check for Cloudflare credentials
         id: check
+        # runs in the repo root (always exists on the runner)
         env:
           CF_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           CF_ACCOUNT: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
