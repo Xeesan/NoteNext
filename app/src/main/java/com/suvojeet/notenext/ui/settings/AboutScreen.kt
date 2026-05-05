@@ -246,6 +246,15 @@ fun AboutScreen(
                             onClick = { uriHandler.openUri("https://notenext.suvojeetsengupta.in/privacy-policy") }
                         )
 
+                        ActionCard(
+                            icon = Icons.Default.Security,
+                            title = stringResource(id = R.string.security_details),
+                            description = stringResource(id = R.string.security_details_description),
+                            containerColor = MaterialTheme.colorScheme.surfaceContainerHighest,
+                            contentColor = MaterialTheme.colorScheme.onSurface,
+                            onClick = { uriHandler.openUri("https://notenext.suvojeetsengupta.in/security") }
+                        )
+
                         Surface(
                             modifier = Modifier
                                 .fillMaxWidth()
@@ -325,6 +334,24 @@ fun AboutScreen(
                     description = "Get involved and spread the word"
                 ) {
                     Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+                        ActionCard(
+                            icon = Icons.Default.HelpCenter,
+                            title = stringResource(id = R.string.faq),
+                            description = stringResource(id = R.string.faq_description),
+                            containerColor = MaterialTheme.colorScheme.surfaceContainerHigh,
+                            contentColor = MaterialTheme.colorScheme.onSurface,
+                            onClick = { uriHandler.openUri("https://notenext.suvojeetsengupta.in/faq") }
+                        )
+
+                        ActionCard(
+                            icon = Icons.Default.AutoAwesome,
+                            title = stringResource(id = R.string.features_title),
+                            description = stringResource(id = R.string.features_description),
+                            containerColor = MaterialTheme.colorScheme.surfaceContainerHigh,
+                            contentColor = MaterialTheme.colorScheme.onSurface,
+                            onClick = { uriHandler.openUri("https://notenext.suvojeetsengupta.in/features") }
+                        )
+
                         ActionCard(
                             icon = Icons.Default.Share,
                             title = "Share NoteNext",

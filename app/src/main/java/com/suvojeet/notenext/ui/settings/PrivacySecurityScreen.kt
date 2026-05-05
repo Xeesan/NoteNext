@@ -234,6 +234,20 @@ fun PrivacySecurityScreen(
                                 context.startActivity(intent)
                             }
                         )
+                        HorizontalDivider(
+                            modifier = Modifier.padding(horizontal = 16.dp),
+                            color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.5f)
+                        )
+                        SettingsItem(
+                            icon = Icons.Rounded.Security,
+                            title = context.getString(R.string.security_details),
+                            subtitle = context.getString(R.string.security_details_description),
+                            iconColor = MaterialTheme.colorScheme.primary,
+                            onClick = { 
+                                val intent = android.content.Intent(android.content.Intent.ACTION_VIEW, android.net.Uri.parse("https://notenext.suvojeetsengupta.in/security"))
+                                context.startActivity(intent)
+                            }
+                        )
                     }
                 }
             }

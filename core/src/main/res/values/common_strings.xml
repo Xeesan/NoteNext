@@ -188,6 +188,12 @@
     <string name="privacy_policy">Privacy Policy</string>
     <string name="view_privacy_policy">View Privacy Policy</string>
     <string name="privacy_policy_description">Learn how we protect your notes and data</string>
+    <string name="faq">FAQ</string>
+    <string name="faq_description">Frequently asked questions about NoteNext</string>
+    <string name="features_title">Features</string>
+    <string name="features_description">Explore everything NoteNext can do</string>
+    <string name="security_details">Security Details</string>
+    <string name="security_details_description">Technical breakdown of our security stack</string>
     <string name="no_notes_found">No notes found matching your search.</string>
     <string name="no_notes_found_label">No notes found with label \'%1$s\'.</string>
     <string name="create_your_first_note">Tap the + button to create your first note.</string>
