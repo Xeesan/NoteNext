@@ -126,7 +126,14 @@ fun ContactScreen(
 
                     ContactInfoCard(
                         icon = Icons.Default.Language,
-                        label = "Website",
+                        label = stringResource(id = R.string.official_website),
+                        value = "notenext.suvojeetsengupta.in",
+                        onClick = { uriHandler.openUri("https://notenext.suvojeetsengupta.in") }
+                    )
+
+                    ContactInfoCard(
+                        icon = Icons.Default.Language,
+                        label = stringResource(id = R.string.developer_website),
                         value = "suvojeetsengupta.in",
                         onClick = { uriHandler.openUri("https://suvojeetsengupta.in") }
                     )

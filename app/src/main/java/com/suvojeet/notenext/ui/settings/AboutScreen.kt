@@ -228,6 +228,15 @@ fun AboutScreen(
                     description = "NoteNext is fully Open Source"
                 ) {
                     Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+                        ActionCard(
+                            icon = Icons.Default.Language,
+                            title = stringResource(id = R.string.official_website),
+                            description = "Visit our official website",
+                            containerColor = MaterialTheme.colorScheme.surfaceContainerHighest,
+                            contentColor = MaterialTheme.colorScheme.onSurface,
+                            onClick = { uriHandler.openUri("https://notenext.suvojeetsengupta.in") }
+                        )
+
                         Surface(
                             modifier = Modifier
                                 .fillMaxWidth()
@@ -316,9 +325,10 @@ fun AboutScreen(
                             onClick = {
                                 val playStoreUrl = "https://play.google.com/store/apps/details?id=com.suvojeet.notenext"
                                 val githubUrl = "https://github.com/suvojeet-sengupta/notenext"
+                                val websiteUrl = "https://notenext.suvojeetsengupta.in"
                                 val sendIntent = android.content.Intent().apply {
                                     action = android.content.Intent.ACTION_SEND
-                                    putExtra(android.content.Intent.EXTRA_TEXT, "Check out NoteNext, an amazing open-source local-first note app!\n\nGet it on Play Store: $playStoreUrl\n\nGitHub: $githubUrl")
+                                    putExtra(android.content.Intent.EXTRA_TEXT, "Check out NoteNext, an amazing open-source local-first note app!\n\nWebsite: $websiteUrl\n\nGet it on Play Store: $playStoreUrl\n\nGitHub: $githubUrl")
                                     type = "text/plain"
                                 }
                                 val shareIntent = android.content.Intent.createChooser(sendIntent, "Share NoteNext via")
