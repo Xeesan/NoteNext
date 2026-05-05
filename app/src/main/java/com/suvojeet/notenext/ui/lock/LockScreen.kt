@@ -119,13 +119,26 @@ fun LockScreen(
         ) {
             Spacer(modifier = Modifier.weight(0.4f))
 
-            Image(
-                painter = painterResource(id = R.mipmap.ic_launcher),
-                contentDescription = stringResource(id = R.string.app_name),
+            Box(
                 modifier = Modifier
                     .size(100.dp)
                     .clip(MaterialTheme.shapes.extraLarge)
-            )
+                    .background(
+                        androidx.compose.ui.graphics.Brush.linearGradient(
+                            listOf(
+                                MaterialTheme.colorScheme.primary,
+                                MaterialTheme.colorScheme.tertiary
+                            )
+                        )
+                    ),
+                contentAlignment = Alignment.Center
+            ) {
+                Image(
+                    painter = painterResource(id = R.drawable.ic_launcher_foreground),
+                    contentDescription = stringResource(id = R.string.app_name),
+                    modifier = Modifier.size(80.dp)
+                )
+            }
 
             Spacer(modifier = Modifier.height(32.dp))
 

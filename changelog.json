@@ -1,6 +1,32 @@
 {
   "releases": [
     {
+      "version": "1.4.3",
+      "date": "May 6, 2026",
+      "items": [
+        {
+          "title": "Critical App Lock Fix",
+          "description": "Resolved a critical crash when enabling App Lock on devices with modern adaptive icons. Fixed the underlying drawable compatibility issue for a more robust security experience.",
+          "type": "FIX"
+        },
+        {
+          "title": "Official Website Integration",
+          "description": "Added direct links to the official product website in About and Contact screens for easier access to support and documentation.",
+          "type": "FEATURE"
+        },
+        {
+          "title": "Improved Share Experience",
+          "description": "Sharing NoteNext now includes the official website link alongside the Play Store and GitHub links for better discoverability.",
+          "type": "IMPROVEMENT"
+        },
+        {
+          "title": "Notification Icon Compatibility",
+          "description": "Updated system notification icons to ensure perfect visibility in the status bar across all Android versions.",
+          "type": "IMPROVEMENT"
+        }
+      ]
+    },
+    {
       "version": "1.4.2",
       "date": "May 1, 2026",
       "items": [

@@ -161,7 +161,7 @@ class ReminderBroadcastReceiver : BroadcastReceiver() {
         )
 
         val builder = NotificationCompat.Builder(context, "reminder_channel_id")
-            .setSmallIcon(R.mipmap.ic_launcher)
+            .setSmallIcon(R.drawable.ic_launcher_foreground)
             .setContentTitle(title)
             .setContentText(content)
             .setPriority(NotificationCompat.PRIORITY_HIGH)
