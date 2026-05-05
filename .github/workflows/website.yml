@@ -109,6 +109,15 @@ jobs:
           name: website-dist
           path: website/dist
 
+      - name: Create Pages project (first run only)
+        if: steps.check.outputs.deploy == 'true'
+        continue-on-error: true   # fails with "already exists" on subsequent runs — that's fine
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: pages project create notenext --production-branch=main
+
       - name: Deploy to Cloudflare Pages
         if: steps.check.outputs.deploy == 'true'
         uses: cloudflare/wrangler-action@v3
@@ -116,4 +125,4 @@ jobs:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           workingDirectory: website
-          command: pages deploy dist --project-name=notenext-website --branch=main
+          command: pages deploy dist --project-name=notenext --branch=main --commit-dirty=true
