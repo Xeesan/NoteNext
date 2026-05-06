@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="drawing_close_cd">बंद करें</string>
+    <string name="drawing_undo_cd">पूर्ववत करें</string>
+    <string name="drawing_redo_cd">फिर से करें</string>
+    <string name="drawing_clear_all_cd">सब साफ़ करें</string>
+    <string name="drawing_settings_cd">सेटिंग्स</string>
+    <string name="drawing_stroke_width_cd">स्ट्रोक चौड़ाई</string>
+    <string name="drawing_placeholder">यहाँ चित्रकारी शुरू करें…</string>
+    <string name="drawing_stroke_size_label">%1$dpx</string>
+    <string name="drawing_tool_brush">ब्रश</string>
+    <string name="drawing_tool_eraser">इरेज़र</string>
+</resources>

@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Tamil (ta) translations for the Settings screen. Native review recommended. -->
+<resources>
+    <string name="settings_title">அமைப்புகள்</string>
+    <string name="display_section_title">காட்சி</string>
+    <string name="theme">தீம்</string>
+    <string name="rich_link_preview">ரிச் இணைப்பு மாதிரிக்காட்சி</string>
+    <string name="rich_link_preview_subtitle">குறிப்புகளில் உள்ள இணைப்புகளுக்கு மாதிரிக்காட்சி காட்டு</string>
+    <string name="shape_family">வடிவ குடும்பம் (சோதனை)</string>
+    <string name="bin_section_title">குப்பைத் தொட்டி</string>
+    <string name="auto_delete_binned_notes">குப்பைத் தொட்டியில் உள்ள குறிப்புகளை தானாக நீக்கு</string>
+    <string name="auto_delete_subtitle">%1$d நாட்களுக்குப் பிறகு</string>
+    <string name="security_section_title">பாதுகாப்பு</string>
+    <string name="app_lock">ஆப் பூட்டு</string>
+    <string name="app_lock_subtitle">PIN அல்லது பயோமெட்ரிக் பூட்டுடன் ஆப்-ஐ பாதுகாக்கவும்</string>
+    <string name="backup_restore_section_title">காப்புப் பிரதி &amp; மீட்டமைப்பு</string>
+    <string name="backup">காப்புப் பிரதி</string>
+    <string name="restore">மீட்டமை</string>
+    <string name="about">பற்றி</string>
+    <string name="choose_theme">தீம் தேர்ந்தெடு</string>
+    <string name="theme_amoled">ட்ரூ AMOLED (AMOLED திரைக்கு உகந்தது)</string>
+    <string name="auto_delete_after">இதன் பிறகு தானாக நீக்கு</string>
+    <string name="days">%1$d நாட்கள்</string>
+    <string name="choose_shape_family">வடிவ குடும்பம் தேர்ந்தெடு</string>
+    <string name="language">மொழி</string>
+    <string name="language_subtitle">பயன்பாட்டு மொழியை மாற்று</string>
+    <string name="choose_language">மொழியைத் தேர்ந்தெடு</string>
+    <string name="language_english">ஆங்கிலம்</string>
+    <string name="language_hindi">இந்தி</string>
+
+    <string name="privacy_policy">தனியுரிமைக் கொள்கை</string>
+    <string name="privacy_policy_description">உங்கள் குறிப்புகள் மற்றும் தரவை எப்படி பாதுகாக்கிறோம் என்பதை அறியவும்</string>
+    <string name="security_details">பாதுகாப்பு விவரங்கள்</string>
+    <string name="security_details_description">எங்கள் பாதுகாப்பு அடுக்கின் தொழில்நுட்ப விவரம்</string>
+    <string name="faq">அடிக்கடி கேட்கப்படும் கேள்விகள்</string>
+    <string name="faq_description">NoteNext பற்றி அடிக்கடி கேட்கப்படும் கேள்விகள்</string>
+    <string name="features_title">அம்சங்கள்</string>
+    <string name="features_description">NoteNext-ஆல் என்னவெல்லாம் செய்ய முடியும் என்பதை ஆராயவும்</string>
+
+    <string name="settings_section_display_subtitle">காட்சிகள் மற்றும் மொழி விருப்பங்கள்</string>
+    <string name="settings_section_data">தரவு &amp; பராமரிப்பு</string>
+    <string name="settings_section_data_subtitle">காப்புப் பிரதி, இறக்குமதி மற்றும் சுத்தம்</string>
+    <string name="settings_section_support_logging">ஆதரவு &amp; லாகிங்</string>
+    <string name="settings_section_support_logging_subtitle">தகவல் மற்றும் பிழை மறுஉருவாக்கம்</string>
+    <string name="settings_section_support_updates">ஆதரவு &amp; புதுப்பிப்புகள்</string>
+    <string name="settings_section_support_updates_subtitle">NoteNext-ஐ சுமூகமாக இயக்கி வைக்கவும்</string>
+
+    <string name="settings_auto_cleanup">தானியங்கி சுத்தம்</string>
+    <string name="settings_auto_cleanup_subtitle">%1$d நாட்களுக்குப் பிறகு குப்பைத் தொட்டியை சுத்தம் செய்</string>
+    <string name="settings_backup_restore_subtitle">க்ளவுட் மற்றும் உள்ளக தரவு நிர்வாகம்</string>
+    <string name="settings_privacy_security">தனியுரிமை &amp; பாதுகாப்பு</string>
+    <string name="settings_privacy_security_subtitle">ஆப் பூட்டு, ஸ்கிரீன்ஷாட்கள், கிளிப்போர்டு சுத்தம்</string>
+    <string name="settings_import_notes">குறிப்புகளை இறக்குமதி செய்</string>
+    <string name="settings_import_notes_subtitle">Google Keep ZIP-இலிருந்து இறக்குமதி</string>
+    <string name="settings_ai_label">AI</string>
+    <string name="settings_ai_subtitle">முதன்மை சுவிட்ச், வழங்குநர்கள், அம்சங்கள், பயன்பாட்டு டாஷ்போர்டு</string>
+    <string name="settings_app_info">ஆப் தகவல்</string>
+    <string name="settings_app_info_subtitle">v%1$s நிலையான பதிப்பு</string>
+    <string name="settings_stop_logging">லாகிங் நிறுத்து</string>
+    <string name="settings_start_logging">லாகிங் தொடங்கு</string>
+    <string name="settings_logging_active_subtitle">லாகிங் செயலில் உள்ளது. பிழையை இப்போது மறு உருவாக்கம் செய்யவும்.</string>
+    <string name="settings_start_logging_subtitle">பிழைகளைப் புகாரளிக்க ஆப் பதிவுகளைப் பதிவுசெய்</string>
+    <string name="settings_source_code">மூல குறியீடு</string>
+    <string name="settings_source_code_subtitle">எங்கள் GitHub களஞ்சியத்தைப் பார்க்கவும்</string>
+    <string name="settings_log_saved_toast">லாக் சேமிக்கப்பட்டது மற்றும் பகிர தயாராக உள்ளது</string>
+    <string name="settings_logging_started_toast">லாகிங் தொடங்கப்பட்டது. பிழையை இப்போது மறு உருவாக்கம் செய்யவும்.</string>
+    <string name="settings_search_placeholder">அமைப்புகளைத் தேடு…</string>
+
+    <string name="settings_card_privacy">தனியுரிமை</string>
+    <string name="settings_card_protected">பாதுகாக்கப்பட்டது</string>
+    <string name="settings_card_secure_now">இப்போது பாதுகாப்பாக்கு</string>
+    <string name="settings_card_sync">ஒத்திசை</string>
+    <string name="settings_card_sync_subtitle">தரவு காப்புப் பிரதி</string>
+
+    <string name="settings_rate_app">NoteNext-ஐ மதிப்பிடவும்</string>
+    <string name="settings_rate_app_subtitle">Play Store-இல் சிறிது அன்பு காட்டுங்கள்</string>
+    <string name="settings_whats_new">புதிது என்ன</string>
+    <string name="settings_whats_new_subtitle">சமீபத்திய மாற்றப் பதிவைப் பார்க்கவும்</string>
+    <string name="settings_current_version">தற்போது: v%1$s</string>
+
+    <string name="settings_auto_delete_explanation">குப்பைத் தொட்டியில் உள்ள குறிப்புகள் இந்தக் காலத்திற்குப் பிறகு நிரந்தரமாக நீக்கப்படும்.</string>
+    <string name="settings_import_from_title">இங்கிருந்து இறக்குமதி…</string>
+    <string name="settings_coming_soon">விரைவில் வருகிறது</string>
+    <string name="settings_keep_import_title">Google Keep இறக்குமதி</string>
+    <string name="settings_keep_import_message">உங்கள் Keep குறிப்புகளை இறக்குமதி செய்ய உங்கள் Google Takeout ZIP கோப்பைத் தேர்ந்தெடுக்கவும். உங்கள் உரை குறிப்புகள் மற்றும் சரிபார்ப்புப் பட்டியல்களை நாங்கள் பிரித்தெடுப்போம்.</string>
+    <string name="settings_select_zip">ZIP தேர்ந்தெடு</string>
+    <string name="settings_bug_report_title">பிழை அறிக்கை</string>
+    <string name="settings_bug_report_message">நீங்கள் எதிர்கொள்ளும் சிக்கலை விவரிக்கவும். கணினி பதிவுகள் தானாகவே இணைக்கப்படும்.</string>
+    <string name="settings_bug_report_placeholder">சிக்கல் விளக்கம்…</string>
+    <string name="settings_send_report">அறிக்கை அனுப்பு</string>
+    <string name="settings_rate_dialog_message">ஆப் பிடிக்கிறதா? Play Store-இல் மதிப்பிட்டு வளர எங்களுக்கு உதவுங்கள்! ஒரு நிமிடம் தான் ஆகும்.</string>
+    <string name="settings_rate_now">இப்போதே மதிப்பிடு</string>
+    <string name="settings_later">பிறகு</string>
+
+    <string name="settings_lang_subtitle_en">ஆங்கிலம் (US)</string>
+    <string name="settings_lang_subtitle_hi">இந்தி (இந்தியா)</string>
+</resources>

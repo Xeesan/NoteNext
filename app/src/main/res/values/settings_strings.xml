@@ -26,7 +26,7 @@
     <string name="language_english">English</string>
     <string name="language_hindi">Hindi</string>
 
-    <!-- About & Privacy -->
+    <!-- About &amp; Privacy -->
     <string name="privacy_policy">Privacy Policy</string>
     <string name="privacy_policy_description">Learn how we protect your notes and data</string>
     <string name="security_details">Security Details</string>
@@ -36,4 +36,67 @@
     <string name="features_title">Features</string>
     <string name="features_description">Explore everything NoteNext can do</string>
 
+    <!-- SettingsScreen sections -->
+    <string name="settings_section_display_subtitle">Visuals and language preferences</string>
+    <string name="settings_section_data">Data &amp; Maintenance</string>
+    <string name="settings_section_data_subtitle">Backup, imports and cleanup</string>
+    <string name="settings_section_support_logging">Support &amp; Logging</string>
+    <string name="settings_section_support_logging_subtitle">Information and bug reproduction</string>
+    <string name="settings_section_support_updates">Support &amp; Updates</string>
+    <string name="settings_section_support_updates_subtitle">Keep NoteNext running smoothly</string>
+
+    <!-- SettingsScreen items -->
+    <string name="settings_auto_cleanup">Auto Cleanup</string>
+    <string name="settings_auto_cleanup_subtitle">Clean bin after %1$d days</string>
+    <string name="settings_backup_restore_subtitle">Cloud and local data management</string>
+    <string name="settings_privacy_security">Privacy &amp; Security</string>
+    <string name="settings_privacy_security_subtitle">App lock, screenshots, clipboard clearing</string>
+    <string name="settings_import_notes">Import Notes</string>
+    <string name="settings_import_notes_subtitle">Import from Google Keep ZIP</string>
+    <string name="settings_ai_label">AI</string>
+    <string name="settings_ai_subtitle">Master switch, providers, features, usage dashboard</string>
+    <string name="settings_app_info">App Info</string>
+    <string name="settings_app_info_subtitle">v%1$s Stable Build</string>
+    <string name="settings_stop_logging">Stop Logging</string>
+    <string name="settings_start_logging">Start Logging</string>
+    <string name="settings_logging_active_subtitle">Logging active. Reproduce bug now.</string>
+    <string name="settings_start_logging_subtitle">Record app logs to report bugs</string>
+    <string name="settings_source_code">Source Code</string>
+    <string name="settings_source_code_subtitle">Check out our GitHub repository</string>
+    <string name="settings_log_saved_toast">Log saved and ready to share</string>
+    <string name="settings_logging_started_toast">Logging started. Reproduce the bug now.</string>
+    <string name="settings_search_placeholder">Search settings…</string>
+
+    <!-- SettingsScreen featured cards -->
+    <string name="settings_card_privacy">Privacy</string>
+    <string name="settings_card_protected">Protected</string>
+    <string name="settings_card_secure_now">Secure now</string>
+    <string name="settings_card_sync">Sync</string>
+    <string name="settings_card_sync_subtitle">Backup Data</string>
+
+    <!-- SettingsScreen support &amp; updates -->
+    <string name="settings_rate_app">Rate NoteNext</string>
+    <string name="settings_rate_app_subtitle">Show some love on Play Store</string>
+    <string name="settings_whats_new">What\'s New</string>
+    <string name="settings_whats_new_subtitle">View latest changelog</string>
+    <string name="settings_current_version">Current: v%1$s</string>
+
+    <!-- SettingsScreen dialogs -->
+    <string name="settings_auto_delete_explanation">Notes in trash will be permanently deleted after this period.</string>
+    <string name="settings_import_from_title">Import from…</string>
+    <string name="settings_coming_soon">Coming Soon</string>
+    <string name="settings_keep_import_title">Google Keep Import</string>
+    <string name="settings_keep_import_message">Please select your Google Takeout ZIP file to import your Keep notes. We\'ll extract your text notes and checklists.</string>
+    <string name="settings_select_zip">Select ZIP</string>
+    <string name="settings_bug_report_title">Bug Report</string>
+    <string name="settings_bug_report_message">Describe the issue you\'re facing. System logs will be attached automatically.</string>
+    <string name="settings_bug_report_placeholder">Issue description…</string>
+    <string name="settings_send_report">Send Report</string>
+    <string name="settings_rate_dialog_message">Loving the app? Help us grow by rating it on the Play Store! It only takes a minute.</string>
+    <string name="settings_rate_now">Rate Now</string>
+    <string name="settings_later">Later</string>
+
+    <!-- Language display labels (kept in source script) -->
+    <string name="settings_lang_subtitle_en">English (US)</string>
+    <string name="settings_lang_subtitle_hi">Hindi (भारत)</string>
 </resources>

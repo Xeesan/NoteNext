@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="setup_back">वापस</string>
+    <string name="setup_next">आगे</string>
+    <string name="setup_get_started">शुरू करें</string>
+
+    <string name="setup_welcome_title">NoteNext में आपका स्वागत है</string>
+    <string name="setup_welcome_subtitle">सबके लिए डिज़ाइन किया गया आपका सुरक्षित, अभिव्यंजक और स्थानीय नोटपैड।</string>
+    <string name="setup_feature_private">🔒 निजी और स्थानीय</string>
+    <string name="setup_feature_cloud">☁️ क्लाउड बैकअप</string>
+    <string name="setup_feature_reminders">🔔 स्मार्ट रिमाइंडर</string>
+    <string name="setup_privacy_consent">जारी रखने पर, आप हमारी गोपनीयता नीति से सहमत हैं</string>
+
+    <string name="setup_cloud_sync_title">क्लाउड सिंक</string>
+    <string name="setup_cloud_sync_subtitle">सुरक्षित Google Drive बैकअप</string>
+    <string name="setup_connected_to">%1$s से कनेक्ट किया गया</string>
+    <string name="setup_cloud_sync_pitch">सुरक्षित क्लाउड स्टोरेज के साथ अपने नोट्स को सभी डिवाइस पर सिंक रखें।</string>
+    <string name="setup_connect_google">Google खाता कनेक्ट करें</string>
+    <string name="setup_daily_auto_backup">दैनिक ऑटो बैकअप</string>
+    <string name="setup_highly_recommended">अत्यधिक अनुशंसित</string>
+    <string name="setup_data_restored">डेटा सफलतापूर्वक पुनर्स्थापित किया गया</string>
+    <string name="setup_restore_previous">पिछले नोट्स पुनर्स्थापित करें</string>
+
+    <string name="setup_permissions_title">सिस्टम एक्सेस</string>
+    <string name="setup_perm_notifications_title">सूचनाएं</string>
+    <string name="setup_perm_notifications_desc">रिमाइंडर और सिंक स्थिति के लिए आवश्यक।</string>
+    <string name="setup_perm_exact_alarms_title">सटीक अलार्म</string>
+    <string name="setup_perm_exact_alarms_desc">सुनिश्चित करता है कि रिमाइंडर ठीक समय पर ट्रिगर हों।</string>
+    <string name="setup_progress">प्रगति: %1$d/%2$d</string>
+    <string name="setup_all_ready">सब तैयार है!</string>
+</resources>

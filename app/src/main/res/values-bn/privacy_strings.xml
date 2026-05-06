@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Bengali (bn) translations for PrivacySecurityScreen. Native review recommended. -->
+<resources>
+    <string name="priv_section_app_access">অ্যাপ অ্যাক্সেস</string>
+    <string name="priv_section_app_access_desc">আপনি ও অন্যরা আপনার নোট কীভাবে অ্যাক্সেস করেন তা নিয়ন্ত্রণ করুন</string>
+    <string name="priv_section_decoy">ডিকয় ভল্ট</string>
+    <string name="priv_section_decoy_desc">একটি দ্বিতীয় PIN যা একটি নকল নোটের সেট প্রকাশ করে</string>
+    <string name="priv_section_data">ডেটা গোপনীয়তা</string>
+    <string name="priv_section_data_desc">আপনার নোটের বিষয়বস্তু বাইরের চোখ থেকে রক্ষা করুন</string>
+    <string name="priv_section_ephemeral">ক্ষণস্থায়ী বিষয়বস্তু</string>
+    <string name="priv_section_ephemeral_desc">যে নোটগুলি স্থায়ী হয় না</string>
+
+    <string name="priv_toast_enroll_fallback">অনুগ্রহ করে সিস্টেম সেটিংসে স্ক্রিন লক বা বায়োমেট্রিক্স সক্ষম করুন।</string>
+    <string name="priv_toast_biometric_unavailable">এই ডিভাইসে বায়োমেট্রিক প্রমাণীকরণ উপলব্ধ নেই।</string>
+
+    <string name="priv_enable_decoy">ডিকয় ভল্ট সক্ষম করুন</string>
+    <string name="priv_enable_decoy_subtitle">জবরদস্তির পরিস্থিতিতে একটি দ্বিতীয় PIN ব্যবহার করুন</string>
+    <string name="priv_set_decoy_pin">ডিকয় PIN সেট করুন</string>
+    <string name="priv_decoy_pin_not_set">সেট করা নেই</string>
+    <string name="priv_decoy_pin_masked">****</string>
+
+    <string name="priv_disallow_screenshots">স্ক্রিনশট অস্বীকার করুন</string>
+    <string name="priv_disallow_screenshots_subtitle">স্ক্রিন ক্যাপচার প্রতিরোধ করুন এবং সাম্প্রতিকগুলিতে বিষয়বস্তু লুকান</string>
+    <string name="priv_clipboard_clear_title">স্মার্ট ক্লিপবোর্ড ক্লিয়ার</string>
+    <string name="priv_clipboard_disabled">নিষ্ক্রিয়</string>
+    <string name="priv_clipboard_immediately_bg">পটভূমিতে অবিলম্বে</string>
+    <string name="priv_clipboard_30s">30 সেকেন্ড পরে</string>
+    <string name="priv_clipboard_1m">1 মিনিট পরে</string>
+    <string name="priv_clipboard_5m">5 মিনিট পরে</string>
+    <string name="priv_clipboard_custom">কাস্টম টাইমআউট</string>
+
+    <string name="priv_clipboard_dialog_title">ক্লিপবোর্ড ক্লিয়ার টাইমআউট</string>
+    <string name="priv_clipboard_opt_disabled">নিষ্ক্রিয়</string>
+    <string name="priv_clipboard_opt_immediate">অবিলম্বে</string>
+    <string name="priv_clipboard_opt_30s">30 সেকেন্ড</string>
+    <string name="priv_clipboard_opt_1m">1 মিনিট</string>
+    <string name="priv_clipboard_opt_5m">5 মিনিট</string>
+
+    <string name="priv_self_destruct_title">স্ব-ধ্বংসকারী নোট</string>
+    <string name="priv_self_destruct_subtitle">নির্দিষ্ট সময় পরে নোটগুলি স্বয়ংক্রিয়ভাবে মুছে ফেলার জন্য সেট করুন</string>
+    <string name="priv_self_destruct_message">স্ব-ধ্বংস হল প্রতি-নোট বৈশিষ্ট্য। নোট সম্পাদনা করার সময় \'আরও\' (তিন-বিন্দু) মেনুতে ক্লিক করে এবং \'Self-Destruct Timer\' নির্বাচন করে যেকোনো নোটের জন্য টাইমার সেট করতে পারেন। টাইমার শেষ হলে, নোটটি স্থায়ীভাবে মুছে ফেলা হবে।</string>
+
+    <string name="priv_decoy_dialog_title">ডিকয় PIN সেট করুন</string>
+    <string name="priv_decoy_dialog_message">একটি 4-অঙ্কের দ্বিতীয় PIN লিখুন। লক স্ক্রিনে এই PIN লিখলে একটি আলাদা, ডিকয় ভল্ট খুলবে।</string>
+    <string name="priv_decoy_pin_label">দ্বিতীয় PIN</string>
+    <string name="priv_decoy_pin_confirm_label">দ্বিতীয় PIN নিশ্চিত করুন</string>
+    <string name="priv_err_pin_length">PIN অবশ্যই 4 অঙ্কের হতে হবে</string>
+    <string name="priv_err_pin_mismatch">PIN মেলে না</string>
+    <string name="priv_err_pin_clash">ডিকয় PIN আপনার অ্যাপ PIN থেকে আলাদা হতে হবে</string>
+    <string name="priv_saving">সংরক্ষণ করছে…</string>
+</resources>

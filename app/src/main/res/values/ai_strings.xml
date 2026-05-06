@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- AIProviderSettingsScreen -->
+    <string name="ai_providers_title">AI Providers</string>
+    <string name="ai_select_provider_title">Select AI Provider</string>
+    <string name="ai_select_provider_description">Choose your preferred AI service for summarization, checklists, and more</string>
+
+    <string name="ai_provider_groq_desc">Fast inference with Llama &amp; Qwen models</string>
+    <string name="ai_provider_openai_desc">GPT-4o and GPT-4 Turbo models</string>
+    <string name="ai_provider_anthropic_name">Anthropic (Claude)</string>
+    <string name="ai_provider_anthropic_desc">Claude 3.5 Sonnet and Opus models</string>
+    <string name="ai_provider_gemini_name">Google Gemini</string>
+    <string name="ai_provider_gemini_desc">Gemini 3.1 Pro and Flash models</string>
+
+    <string name="ai_groq_config_title">Groq Configuration</string>
+    <string name="ai_groq_config_description">Configure your Groq API key (optional)</string>
+    <string name="ai_groq_key_label">Groq API Key (Optional)</string>
+    <string name="ai_groq_key_help">Leave empty to use the app\'s built-in key. Get your key at console.groq.com</string>
+    <string name="ai_groq_advanced_settings">Advanced Groq Settings</string>
+
+    <string name="ai_openai_config_title">OpenAI Configuration</string>
+    <string name="ai_openai_config_description">Enter your OpenAI API key</string>
+    <string name="ai_openai_base_url_label">Base URL (Optional)</string>
+    <string name="ai_openai_key_label">OpenAI API Key</string>
+    <string name="ai_openai_key_help">Your API key is stored locally and never sent to any server except OpenAI</string>
+    <string name="ai_select_openai_model">Select OpenAI Model</string>
+
+    <string name="ai_anthropic_config_title">Anthropic Configuration</string>
+    <string name="ai_anthropic_config_description">Enter your Anthropic API key</string>
+    <string name="ai_anthropic_key_label">Anthropic API Key</string>
+    <string name="ai_anthropic_key_help">Your API key is stored locally and never sent to any server except Anthropic</string>
+    <string name="ai_select_anthropic_model">Select Anthropic Model</string>
+
+    <string name="ai_gemini_config_title">Gemini Configuration</string>
+    <string name="ai_gemini_config_description">Enter your Google Gemini API key</string>
+    <string name="ai_gemini_key_label">Gemini API Key</string>
+    <string name="ai_gemini_key_help">Your API key is stored locally and never sent to any server except Google</string>
+    <string name="ai_select_gemini_model">Select Gemini Model</string>
+
+    <string name="ai_model_selector_subtitle">Choose which model to use for AI tasks</string>
+    <string name="ai_fetching_models">Fetching Models…</string>
+    <string name="ai_refresh_models">Refresh Models</string>
+
+    <!-- AIProviderConfigSections -->
+    <string name="ai_config_section_groq">Groq configuration</string>
+    <string name="ai_config_section_groq_desc">The app ships with a built-in Groq key. Use your own for higher rate limits.</string>
+    <string name="ai_config_use_own_groq">Use my own Groq key</string>
+    <string name="ai_config_groq_custom_active">Custom key will be sent with every Groq request</string>
+    <string name="ai_config_groq_bundled_active">Bundled key is used (rate-limited, shared)</string>
+    <string name="ai_config_groq_key_label">Groq API key</string>
+    <string name="ai_config_groq_key_help">Stored locally with the rest of your settings. Only sent to api.groq.com.</string>
+    <string name="ai_config_get_key">Get key</string>
+    <string name="ai_config_refresh">Refresh</string>
+    <string name="ai_config_fast_model">Fast model (short tasks)</string>
+    <string name="ai_config_large_model">Large model (complex tasks)</string>
+
+    <string name="ai_config_section_openai">OpenAI configuration</string>
+    <string name="ai_config_section_openai_desc">Bring your own key. Compatible with self-hosted endpoints via base URL override.</string>
+    <string name="ai_config_openai_base_url">Base URL (advanced)</string>
+    <string name="ai_config_openai_key_label">OpenAI API key</string>
+    <string name="ai_config_openai_key_help">Stored locally. Sent only to the URL above.</string>
+    <string name="ai_config_model">Model</string>
+
+    <string name="ai_config_section_anthropic">Anthropic (Claude) configuration</string>
+    <string name="ai_config_section_anthropic_desc">Bring your own Anthropic API key. Sent only to api.anthropic.com.</string>
+    <string name="ai_config_anthropic_key_label">Anthropic API key</string>
+    <string name="ai_config_get_a_key">Get a key</string>
+
+    <string name="ai_config_section_gemini">Google Gemini configuration</string>
+    <string name="ai_config_section_gemini_desc">Bring your own Gemini API key. Sent only to generativelanguage.googleapis.com.</string>
+    <string name="ai_config_gemini_key_label">Gemini API key</string>
+
+    <string name="ai_config_select_model">Select model</string>
+
+    <!-- AiChecklistDialog -->
+    <string name="ai_checklist_no_internet">No internet connection. Please check your network.</string>
+    <string name="ai_checklist_title">Smart List Creator</string>
+    <string name="ai_checklist_powered_by">Powered by AI</string>
+    <string name="ai_checklist_recent_prompts">Recent prompts</string>
+    <string name="ai_checklist_prompt_label">What list should I create?</string>
+    <string name="ai_checklist_prompt_placeholder">e.g. Packing list for hiking trip</string>
+    <string name="ai_checklist_regenerate_cd">Regenerate</string>
+    <string name="ai_checklist_thinking">Thinking…</string>
+    <string name="ai_checklist_proposed_items">Proposed Items</string>
+    <string name="ai_checklist_items_count">%1$d items</string>
+    <string name="ai_checklist_disclaimer">AI might provide inaccurate info. Please verify.</string>
+    <string name="ai_checklist_generate">Generate List</string>
+    <string name="ai_checklist_insert">Insert into Note</string>
+    <string name="ai_checklist_remove_item_cd">Remove item</string>
+    <string name="ai_checklist_close_cd">Close</string>
+
+    <!-- AIUsageDashboardScreen -->
+    <string name="ai_usage_title">Usage</string>
+    <string name="ai_usage_clear_cd">Clear</string>
+    <string name="ai_usage_section_features">By feature</string>
+    <string name="ai_usage_section_features_desc">How often each AI feature has run on this device</string>
+    <string name="ai_usage_section_details">Details</string>
+    <string name="ai_usage_section_details_desc">Success rate, average latency, acceptance</string>
+    <string name="ai_usage_section_provider">By provider</string>
+    <string name="ai_usage_section_provider_desc">Which AI service handled your requests</string>
+    <string name="ai_usage_clear_dialog_title">Clear AI usage history?</string>
+    <string name="ai_usage_clear_dialog_message">This permanently deletes the local usage stats shown on this dashboard. Your notes and AI feature settings are unaffected.</string>
+    <string name="ai_usage_clear_action">Clear</string>
+    <string name="ai_usage_empty_title">No AI activity yet</string>
+    <string name="ai_usage_empty_subtitle">Once you enable an AI feature and use it, you\'ll see how often it ran, how fast it was, and how often you accepted its suggestions — all stored locally on this device.</string>
+    <string name="ai_usage_hero_label">AI invocations</string>
+    <string name="ai_usage_pill_success">Success</string>
+    <string name="ai_usage_pill_success_rate">Success rate</string>
+    <string name="ai_usage_helpfulness_label">Suggestions you accepted</string>
+    <string name="ai_usage_helpfulness_value">%1$d%%  ·  %2$d of %3$d</string>
+    <string name="ai_usage_no_data">No data yet</string>
+    <string name="ai_usage_runs">%1$d runs</string>
+    <string name="ai_usage_avg_latency">Avg latency</string>
+    <string name="ai_usage_accepted_label">Accepted</string>
+    <string name="ai_usage_accepted_value">%1$d%% accepted (%2$d/%3$d)</string>
+</resources>

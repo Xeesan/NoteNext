@@ -94,4 +94,34 @@
     <string name="backup_current_edits">वर्तमान संपादने: %1$d</string>
     <string name="backup_charging_only">फक्त चार्जिंग दरम्यान बॅकअप</string>
     <string name="backup_charging_only_subtitle">फक्त प्लग-इन असताना बॅकअप करून बॅटरी वाचवा.</string>
+
+    <string name="backup_password_set_title">बॅकअप पासवर्ड सेट करा</string>
+    <string name="backup_password_set_confirm">एन्क्रिप्ट &amp; जतन करा</string>
+    <string name="backup_password_aes_badge">AES-256 एन्क्रिप्शनने सुरक्षित</string>
+    <string name="backup_password_set_message">तुमच्या बॅकअपला एन्क्रिप्ट करण्यासाठी पासवर्ड प्रविष्ट करा. पुनर्संचयित करण्यासाठी तुम्हाला हा पासवर्ड लागेल.</string>
+    <string name="backup_password_label">पासवर्ड</string>
+    <string name="backup_password_confirm_label">पासवर्डची पुष्टी करा</string>
+    <string name="backup_password_strength_label">शक्ती: %1$s</string>
+    <string name="backup_password_strength_weak">कमकुवत</string>
+    <string name="backup_password_strength_medium">मध्यम</string>
+    <string name="backup_password_strength_strong">मजबूत</string>
+    <string name="backup_password_error_empty">पासवर्ड रिक्त असू शकत नाही</string>
+    <string name="backup_password_error_short">पासवर्ड किमान %1$d वर्णांचा असावा</string>
+    <string name="backup_password_error_weak">पासवर्ड खूप कमकुवत आहे. अंक, मोठ्या अक्षरे किंवा चिन्हे जोडा.</string>
+    <string name="backup_password_error_mismatch">पासवर्ड जुळत नाहीत</string>
+
+    <string name="backup_password_input_title">पासवर्ड प्रविष्ट करा</string>
+    <string name="backup_password_input_aes_badge">बॅकअप AES-256 ने एन्क्रिप्टेड</string>
+    <string name="backup_password_input_message">तुमचा बॅकअप डेटा अनलॉक करण्यासाठी आणि पुनर्संचयित करण्यासाठी कृपया पासवर्ड प्रविष्ट करा.</string>
+    <string name="backup_password_unlock">अनलॉक &amp; पुनर्संचयित करा</string>
+
+    <string name="backup_encryption_info_title">एन्क्रिप्टेड बॅकअपबद्दल</string>
+    <string name="backup_encryption_info_intro">एन्क्रिप्टेड बॅकअप तुमच्या डेटासाठी सुरक्षेचा अतिरिक्त स्तर प्रदान करतात.</string>
+    <string name="backup_encryption_info_how_title">हे कसे कार्य करते</string>
+    <string name="backup_encryption_info_how_desc">तुमचा डेटा तुमचे डिव्हाइस सोडण्याआधी AES-256 मानक वापरून एन्क्रिप्ट केला जातो. याचा अर्थ तुमच्या नोट्स आणि संलग्नक एका वाचण्यास अशक्य स्वरूपात स्क्रॅम्बल केल्या जातात.</string>
+    <string name="backup_encryption_info_security_title">सुरक्षा</string>
+    <string name="backup_encryption_info_security_desc">कोणीतरी तुमच्या बॅकअप फाईलवर (Google Drive किंवा तुमच्या SD कार्डवर) प्रवेश मिळवला तरीही, योग्य पासवर्डशिवाय ते तुमचा डेटा वाचू शकत नाहीत. फक्त तुमच्याकडे key आहे.</string>
+    <string name="backup_encryption_info_important_title">महत्त्वाचे</string>
+    <string name="backup_encryption_info_important_desc">आम्ही तुमचा बॅकअप पासवर्ड संग्रहित करत नाही. तो हरवल्यास, तुम्ही त्या बॅकअपवरून तुमचा डेटा पुनर्संचयित करू शकणार नाही. कृपया तुमचा पासवर्ड सुरक्षित ठेवा.</string>
+    <string name="backup_encryption_info_got_it">समजले</string>
 </resources>

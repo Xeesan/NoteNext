@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Bengali (bn) translations for AI screens. Native review recommended. -->
+<resources>
+    <string name="ai_providers_title">AI প্রোভাইডার</string>
+    <string name="ai_select_provider_title">AI প্রোভাইডার নির্বাচন করুন</string>
+    <string name="ai_select_provider_description">সারসংক্ষেপ, চেকলিস্ট এবং আরও অনেক কিছুর জন্য আপনার পছন্দের AI পরিষেবা বেছে নিন</string>
+
+    <string name="ai_provider_groq_desc">Llama ও Qwen মডেলগুলির সাথে দ্রুত ইনফারেন্স</string>
+    <string name="ai_provider_openai_desc">GPT-4o এবং GPT-4 Turbo মডেল</string>
+    <string name="ai_provider_anthropic_name">Anthropic (Claude)</string>
+    <string name="ai_provider_anthropic_desc">Claude 3.5 Sonnet এবং Opus মডেল</string>
+    <string name="ai_provider_gemini_name">Google Gemini</string>
+    <string name="ai_provider_gemini_desc">Gemini 3.1 Pro এবং Flash মডেল</string>
+
+    <string name="ai_groq_config_title">Groq কনফিগারেশন</string>
+    <string name="ai_groq_config_description">আপনার Groq API key কনফিগার করুন (ঐচ্ছিক)</string>
+    <string name="ai_groq_key_label">Groq API Key (ঐচ্ছিক)</string>
+    <string name="ai_groq_key_help">অ্যাপের বিল্ট-ইন key ব্যবহার করতে খালি রাখুন। আপনার key পান console.groq.com-এ</string>
+    <string name="ai_groq_advanced_settings">Groq উন্নত সেটিংস</string>
+
+    <string name="ai_openai_config_title">OpenAI কনফিগারেশন</string>
+    <string name="ai_openai_config_description">আপনার OpenAI API key লিখুন</string>
+    <string name="ai_openai_base_url_label">Base URL (ঐচ্ছিক)</string>
+    <string name="ai_openai_key_label">OpenAI API Key</string>
+    <string name="ai_openai_key_help">আপনার API key স্থানীয়ভাবে সংরক্ষিত এবং OpenAI ছাড়া অন্য কোনো সার্ভারে পাঠানো হয় না</string>
+    <string name="ai_select_openai_model">OpenAI মডেল নির্বাচন করুন</string>
+
+    <string name="ai_anthropic_config_title">Anthropic কনফিগারেশন</string>
+    <string name="ai_anthropic_config_description">আপনার Anthropic API key লিখুন</string>
+    <string name="ai_anthropic_key_label">Anthropic API Key</string>
+    <string name="ai_anthropic_key_help">আপনার API key স্থানীয়ভাবে সংরক্ষিত এবং Anthropic ছাড়া অন্য কোনো সার্ভারে পাঠানো হয় না</string>
+    <string name="ai_select_anthropic_model">Anthropic মডেল নির্বাচন করুন</string>
+
+    <string name="ai_gemini_config_title">Gemini কনফিগারেশন</string>
+    <string name="ai_gemini_config_description">আপনার Google Gemini API key লিখুন</string>
+    <string name="ai_gemini_key_label">Gemini API Key</string>
+    <string name="ai_gemini_key_help">আপনার API key স্থানীয়ভাবে সংরক্ষিত এবং Google ছাড়া অন্য কোনো সার্ভারে পাঠানো হয় না</string>
+    <string name="ai_select_gemini_model">Gemini মডেল নির্বাচন করুন</string>
+
+    <string name="ai_model_selector_subtitle">AI কাজের জন্য কোন মডেল ব্যবহার করবেন তা নির্বাচন করুন</string>
+    <string name="ai_fetching_models">মডেল আনা হচ্ছে…</string>
+    <string name="ai_refresh_models">মডেল রিফ্রেশ করুন</string>
+
+    <string name="ai_config_section_groq">Groq কনফিগারেশন</string>
+    <string name="ai_config_section_groq_desc">অ্যাপ একটি বিল্ট-ইন Groq key সহ আসে। বেশি rate limits-এর জন্য আপনার নিজের key ব্যবহার করুন।</string>
+    <string name="ai_config_use_own_groq">আমার নিজের Groq key ব্যবহার করুন</string>
+    <string name="ai_config_groq_custom_active">প্রতিটি Groq অনুরোধের সাথে কাস্টম key পাঠানো হবে</string>
+    <string name="ai_config_groq_bundled_active">বান্ডিল করা key ব্যবহৃত হচ্ছে (rate-limited, ভাগ করা)</string>
+    <string name="ai_config_groq_key_label">Groq API key</string>
+    <string name="ai_config_groq_key_help">আপনার বাকি সেটিংসের সাথে স্থানীয়ভাবে সংরক্ষিত। শুধুমাত্র api.groq.com-এ পাঠানো হয়।</string>
+    <string name="ai_config_get_key">Key পান</string>
+    <string name="ai_config_refresh">রিফ্রেশ</string>
+    <string name="ai_config_fast_model">দ্রুত মডেল (ছোট কাজ)</string>
+    <string name="ai_config_large_model">বড় মডেল (জটিল কাজ)</string>
+
+    <string name="ai_config_section_openai">OpenAI কনফিগারেশন</string>
+    <string name="ai_config_section_openai_desc">আপনার নিজের key আনুন। base URL ওভাররাইডের মাধ্যমে self-hosted endpoint-এর সাথে সামঞ্জস্যপূর্ণ।</string>
+    <string name="ai_config_openai_base_url">Base URL (উন্নত)</string>
+    <string name="ai_config_openai_key_label">OpenAI API key</string>
+    <string name="ai_config_openai_key_help">স্থানীয়ভাবে সংরক্ষিত। শুধুমাত্র উপরের URL-এ পাঠানো হয়।</string>
+    <string name="ai_config_model">মডেল</string>
+
+    <string name="ai_config_section_anthropic">Anthropic (Claude) কনফিগারেশন</string>
+    <string name="ai_config_section_anthropic_desc">আপনার নিজের Anthropic API key আনুন। শুধুমাত্র api.anthropic.com-এ পাঠানো হয়।</string>
+    <string name="ai_config_anthropic_key_label">Anthropic API key</string>
+    <string name="ai_config_get_a_key">একটি key পান</string>
+
+    <string name="ai_config_section_gemini">Google Gemini কনফিগারেশন</string>
+    <string name="ai_config_section_gemini_desc">আপনার নিজের Gemini API key আনুন। শুধুমাত্র generativelanguage.googleapis.com-এ পাঠানো হয়।</string>
+    <string name="ai_config_gemini_key_label">Gemini API key</string>
+
+    <string name="ai_config_select_model">মডেল নির্বাচন করুন</string>
+
+    <string name="ai_checklist_no_internet">ইন্টারনেট সংযোগ নেই। অনুগ্রহ করে আপনার নেটওয়ার্ক পরীক্ষা করুন।</string>
+    <string name="ai_checklist_title">স্মার্ট লিস্ট ক্রিয়েটর</string>
+    <string name="ai_checklist_powered_by">AI দ্বারা চালিত</string>
+    <string name="ai_checklist_recent_prompts">সাম্প্রতিক প্রম্পট</string>
+    <string name="ai_checklist_prompt_label">আমি কোন তালিকা তৈরি করব?</string>
+    <string name="ai_checklist_prompt_placeholder">উদা. ট্রেকিং ট্রিপের জন্য প্যাকিং তালিকা</string>
+    <string name="ai_checklist_regenerate_cd">পুনরায় তৈরি করুন</string>
+    <string name="ai_checklist_thinking">ভাবছে…</string>
+    <string name="ai_checklist_proposed_items">প্রস্তাবিত আইটেম</string>
+    <string name="ai_checklist_items_count">%1$d আইটেম</string>
+    <string name="ai_checklist_disclaimer">AI ভুল তথ্য দিতে পারে। অনুগ্রহ করে যাচাই করুন।</string>
+    <string name="ai_checklist_generate">তালিকা তৈরি করুন</string>
+    <string name="ai_checklist_insert">নোটে যুক্ত করুন</string>
+    <string name="ai_checklist_remove_item_cd">আইটেম সরান</string>
+    <string name="ai_checklist_close_cd">বন্ধ করুন</string>
+
+    <string name="ai_usage_title">ব্যবহার</string>
+    <string name="ai_usage_clear_cd">সাফ করুন</string>
+    <string name="ai_usage_section_features">বৈশিষ্ট্য অনুযায়ী</string>
+    <string name="ai_usage_section_features_desc">এই ডিভাইসে প্রতিটি AI বৈশিষ্ট্য কতবার চলেছে</string>
+    <string name="ai_usage_section_details">বিবরণ</string>
+    <string name="ai_usage_section_details_desc">সাফল্যের হার, গড় ল্যাটেন্সি, গ্রহণযোগ্যতা</string>
+    <string name="ai_usage_section_provider">প্রোভাইডার অনুযায়ী</string>
+    <string name="ai_usage_section_provider_desc">কোন AI পরিষেবা আপনার অনুরোধগুলি পরিচালনা করেছে</string>
+    <string name="ai_usage_clear_dialog_title">AI ব্যবহারের ইতিহাস সাফ করবেন?</string>
+    <string name="ai_usage_clear_dialog_message">এটি এই ড্যাশবোর্ডে দেখানো স্থানীয় ব্যবহারের পরিসংখ্যান স্থায়ীভাবে মুছে ফেলে। আপনার নোট এবং AI বৈশিষ্ট্য সেটিংস প্রভাবিত হবে না।</string>
+    <string name="ai_usage_clear_action">সাফ করুন</string>
+    <string name="ai_usage_empty_title">এখনও কোনো AI কার্যকলাপ নেই</string>
+    <string name="ai_usage_empty_subtitle">একবার আপনি একটি AI বৈশিষ্ট্য সক্ষম করে এটি ব্যবহার করলে, আপনি দেখতে পাবেন এটি কতবার চলেছে, কতটা দ্রুত ছিল এবং আপনি কতবার এর পরামর্শ গ্রহণ করেছেন — সব এই ডিভাইসে স্থানীয়ভাবে সংরক্ষিত।</string>
+    <string name="ai_usage_hero_label">AI invocations</string>
+    <string name="ai_usage_pill_success">সাফল্য</string>
+    <string name="ai_usage_pill_success_rate">সাফল্যের হার</string>
+    <string name="ai_usage_helpfulness_label">আপনি যে পরামর্শগুলি গ্রহণ করেছেন</string>
+    <string name="ai_usage_helpfulness_value">%1$d%%  ·  %3$d-এর মধ্যে %2$d</string>
+    <string name="ai_usage_no_data">এখনও কোনো ডেটা নেই</string>
+    <string name="ai_usage_runs">%1$d রান</string>
+    <string name="ai_usage_avg_latency">গড় ল্যাটেন্সি</string>
+    <string name="ai_usage_accepted_label">গৃহীত</string>
+    <string name="ai_usage_accepted_value">%1$d%% গৃহীত (%2$d/%3$d)</string>
+</resources>

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Tamil (ta) translations for SetupScreen. Native review recommended. -->
+<resources>
+    <string name="setup_back">பின்</string>
+    <string name="setup_next">அடுத்து</string>
+    <string name="setup_get_started">தொடங்குங்கள்</string>
+
+    <string name="setup_welcome_title">NoteNext-க்கு வரவேற்கிறோம்</string>
+    <string name="setup_welcome_subtitle">அனைவருக்கும் வடிவமைக்கப்பட்ட உங்கள் பாதுகாப்பான, வெளிப்படையான மற்றும் உள்ளக நோட்பேட்.</string>
+    <string name="setup_feature_private">🔒 தனிப்பட்ட &amp; உள்ளக</string>
+    <string name="setup_feature_cloud">☁️ க்ளவுட் காப்புப் பிரதி</string>
+    <string name="setup_feature_reminders">🔔 ஸ்மார்ட் நினைவூட்டல்கள்</string>
+    <string name="setup_privacy_consent">தொடர்வதன் மூலம், எங்கள் தனியுரிமைக் கொள்கையை ஏற்கிறீர்கள்</string>
+
+    <string name="setup_cloud_sync_title">க்ளவுட் ஒத்திசைவு</string>
+    <string name="setup_cloud_sync_subtitle">பாதுகாப்பான Google Drive காப்புப் பிரதி</string>
+    <string name="setup_connected_to">%1$s உடன் இணைக்கப்பட்டது</string>
+    <string name="setup_cloud_sync_pitch">பாதுகாப்பான க்ளவுட் சேமிப்பகத்துடன் உங்கள் குறிப்புகளை அனைத்து சாதனங்களிலும் ஒத்திசைத்து வைக்கவும்.</string>
+    <string name="setup_connect_google">Google கணக்கை இணை</string>
+    <string name="setup_daily_auto_backup">தினசரி தானியங்கி காப்புப் பிரதி</string>
+    <string name="setup_highly_recommended">மிகவும் பரிந்துரைக்கப்படுகிறது</string>
+    <string name="setup_data_restored">தரவு வெற்றிகரமாக மீட்டெடுக்கப்பட்டது</string>
+    <string name="setup_restore_previous">முந்தைய குறிப்புகளை மீட்டெடு</string>
+
+    <string name="setup_permissions_title">கணினி அணுகல்</string>
+    <string name="setup_perm_notifications_title">அறிவிப்புகள்</string>
+    <string name="setup_perm_notifications_desc">நினைவூட்டல்கள் மற்றும் ஒத்திசைவு நிலைக்குத் தேவை.</string>
+    <string name="setup_perm_exact_alarms_title">துல்லியமான அலாரங்கள்</string>
+    <string name="setup_perm_exact_alarms_desc">நினைவூட்டல்கள் சரியாக தூண்டப்படுவதை உறுதி செய்கிறது.</string>
+    <string name="setup_progress">முன்னேற்றம்: %1$d/%2$d</string>
+    <string name="setup_all_ready">அனைத்தும் தயார்!</string>
+</resources>

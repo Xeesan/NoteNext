@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Bengali (bn) translations for SetupScreen. Native review recommended. -->
+<resources>
+    <string name="setup_back">পিছনে</string>
+    <string name="setup_next">পরবর্তী</string>
+    <string name="setup_get_started">শুরু করুন</string>
+
+    <string name="setup_welcome_title">NoteNext-এ স্বাগতম</string>
+    <string name="setup_welcome_subtitle">সবার জন্য ডিজাইন করা আপনার সুরক্ষিত, প্রকাশক ও স্থানীয় নোটপ্যাড।</string>
+    <string name="setup_feature_private">🔒 ব্যক্তিগত ও স্থানীয়</string>
+    <string name="setup_feature_cloud">☁️ ক্লাউড ব্যাকআপ</string>
+    <string name="setup_feature_reminders">🔔 স্মার্ট রিমাইন্ডার</string>
+    <string name="setup_privacy_consent">চালিয়ে যাওয়ার মাধ্যমে, আপনি আমাদের গোপনীয়তা নীতিতে সম্মত হন</string>
+
+    <string name="setup_cloud_sync_title">ক্লাউড সিঙ্ক</string>
+    <string name="setup_cloud_sync_subtitle">সুরক্ষিত Google Drive ব্যাকআপ</string>
+    <string name="setup_connected_to">%1$s-এ সংযুক্ত</string>
+    <string name="setup_cloud_sync_pitch">সুরক্ষিত ক্লাউড স্টোরেজের সাথে আপনার নোটগুলি সমস্ত ডিভাইস জুড়ে সিঙ্ক রাখুন।</string>
+    <string name="setup_connect_google">Google অ্যাকাউন্ট সংযোগ করুন</string>
+    <string name="setup_daily_auto_backup">দৈনিক অটো ব্যাকআপ</string>
+    <string name="setup_highly_recommended">অত্যন্ত প্রস্তাবিত</string>
+    <string name="setup_data_restored">ডেটা সফলভাবে পুনরুদ্ধার করা হয়েছে</string>
+    <string name="setup_restore_previous">পূর্ববর্তী নোট পুনরুদ্ধার করুন</string>
+
+    <string name="setup_permissions_title">সিস্টেম অ্যাক্সেস</string>
+    <string name="setup_perm_notifications_title">বিজ্ঞপ্তি</string>
+    <string name="setup_perm_notifications_desc">রিমাইন্ডার ও সিঙ্ক স্ট্যাটাসের জন্য প্রয়োজনীয়।</string>
+    <string name="setup_perm_exact_alarms_title">সঠিক অ্যালার্ম</string>
+    <string name="setup_perm_exact_alarms_desc">রিমাইন্ডারগুলি সঠিকভাবে ট্রিগার হওয়া নিশ্চিত করে।</string>
+    <string name="setup_progress">অগ্রগতি: %1$d/%2$d</string>
+    <string name="setup_all_ready">সব প্রস্তুত!</string>
+</resources>

@@ -105,4 +105,35 @@
     <string name="backup_current_edits">Current edits: %1$d</string>
     <string name="backup_charging_only">Backup while Charging Only</string>
     <string name="backup_charging_only_subtitle">Conserve battery by only backing up when plugged in.</string>
+
+    <!-- Password dialogs -->
+    <string name="backup_password_set_title">Set Backup Password</string>
+    <string name="backup_password_set_confirm">Encrypt &amp; Save</string>
+    <string name="backup_password_aes_badge">Secured with AES-256 Encryption</string>
+    <string name="backup_password_set_message">Enter a password to encrypt your backup. You will need this password to restore it.</string>
+    <string name="backup_password_label">Password</string>
+    <string name="backup_password_confirm_label">Confirm Password</string>
+    <string name="backup_password_strength_label">Strength: %1$s</string>
+    <string name="backup_password_strength_weak">Weak</string>
+    <string name="backup_password_strength_medium">Medium</string>
+    <string name="backup_password_strength_strong">Strong</string>
+    <string name="backup_password_error_empty">Password cannot be empty</string>
+    <string name="backup_password_error_short">Password must be at least %1$d characters</string>
+    <string name="backup_password_error_weak">Password is too weak. Add digits, uppercase, or symbols.</string>
+    <string name="backup_password_error_mismatch">Passwords do not match</string>
+
+    <string name="backup_password_input_title">Enter Password</string>
+    <string name="backup_password_input_aes_badge">Backup encrypted with AES-256</string>
+    <string name="backup_password_input_message">Please enter the password to unlock and restore your backup data.</string>
+    <string name="backup_password_unlock">Unlock &amp; Restore</string>
+
+    <string name="backup_encryption_info_title">About Encrypted Backups</string>
+    <string name="backup_encryption_info_intro">Encrypted backups provide an extra layer of security for your data.</string>
+    <string name="backup_encryption_info_how_title">How it works</string>
+    <string name="backup_encryption_info_how_desc">Your data is encrypted using the AES-256 standard before it leaves your device. This means your notes and attachments are scrambled into an unreadable format.</string>
+    <string name="backup_encryption_info_security_title">Security</string>
+    <string name="backup_encryption_info_security_desc">Even if someone gains access to your backup file (on Google Drive or your SD card), they cannot read your data without the correct password. Only you hold the key.</string>
+    <string name="backup_encryption_info_important_title">Important</string>
+    <string name="backup_encryption_info_important_desc">We do not store your backup password. If you lose it, you will not be able to restore your data from that backup. Please keep your password safe.</string>
+    <string name="backup_encryption_info_got_it">Got it</string>
 </resources>

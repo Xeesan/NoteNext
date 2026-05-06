@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Tamil (ta) translations for AI screens. Native review recommended. -->
+<resources>
+    <string name="ai_providers_title">AI வழங்குநர்கள்</string>
+    <string name="ai_select_provider_title">AI வழங்குநரைத் தேர்ந்தெடு</string>
+    <string name="ai_select_provider_description">சுருக்கம், சரிபார்ப்புப் பட்டியல் மற்றும் பலவற்றுக்கு உங்கள் விருப்ப AI சேவையைத் தேர்ந்தெடுக்கவும்</string>
+
+    <string name="ai_provider_groq_desc">Llama &amp; Qwen மாதிரிகளுடன் வேகமான அனுமானம்</string>
+    <string name="ai_provider_openai_desc">GPT-4o மற்றும் GPT-4 Turbo மாதிரிகள்</string>
+    <string name="ai_provider_anthropic_name">Anthropic (Claude)</string>
+    <string name="ai_provider_anthropic_desc">Claude 3.5 Sonnet மற்றும் Opus மாதிரிகள்</string>
+    <string name="ai_provider_gemini_name">Google Gemini</string>
+    <string name="ai_provider_gemini_desc">Gemini 3.1 Pro மற்றும் Flash மாதிரிகள்</string>
+
+    <string name="ai_groq_config_title">Groq கட்டமைப்பு</string>
+    <string name="ai_groq_config_description">உங்கள் Groq API key-ஐ கட்டமைக்கவும் (விருப்பம்)</string>
+    <string name="ai_groq_key_label">Groq API Key (விருப்பம்)</string>
+    <string name="ai_groq_key_help">ஆப்பின் உள்ளமைந்த key-ஐப் பயன்படுத்த காலியாக விடவும். console.groq.com-இல் உங்கள் key-ஐப் பெறவும்</string>
+    <string name="ai_groq_advanced_settings">Groq மேம்பட்ட அமைப்புகள்</string>
+
+    <string name="ai_openai_config_title">OpenAI கட்டமைப்பு</string>
+    <string name="ai_openai_config_description">உங்கள் OpenAI API key-ஐ உள்ளிடவும்</string>
+    <string name="ai_openai_base_url_label">Base URL (விருப்பம்)</string>
+    <string name="ai_openai_key_label">OpenAI API Key</string>
+    <string name="ai_openai_key_help">உங்கள் API key உள்ளூரில் சேமிக்கப்படுகிறது மற்றும் OpenAI தவிர வேறு எந்த சேவையகத்துக்கும் அனுப்பப்படாது</string>
+    <string name="ai_select_openai_model">OpenAI மாதிரியைத் தேர்ந்தெடு</string>
+
+    <string name="ai_anthropic_config_title">Anthropic கட்டமைப்பு</string>
+    <string name="ai_anthropic_config_description">உங்கள் Anthropic API key-ஐ உள்ளிடவும்</string>
+    <string name="ai_anthropic_key_label">Anthropic API Key</string>
+    <string name="ai_anthropic_key_help">உங்கள் API key உள்ளூரில் சேமிக்கப்படுகிறது மற்றும் Anthropic தவிர வேறு எந்த சேவையகத்துக்கும் அனுப்பப்படாது</string>
+    <string name="ai_select_anthropic_model">Anthropic மாதிரியைத் தேர்ந்தெடு</string>
+
+    <string name="ai_gemini_config_title">Gemini கட்டமைப்பு</string>
+    <string name="ai_gemini_config_description">உங்கள் Google Gemini API key-ஐ உள்ளிடவும்</string>
+    <string name="ai_gemini_key_label">Gemini API Key</string>
+    <string name="ai_gemini_key_help">உங்கள் API key உள்ளூரில் சேமிக்கப்படுகிறது மற்றும் Google தவிர வேறு எந்த சேவையகத்துக்கும் அனுப்பப்படாது</string>
+    <string name="ai_select_gemini_model">Gemini மாதிரியைத் தேர்ந்தெடு</string>
+
+    <string name="ai_model_selector_subtitle">AI பணிகளுக்கு எந்த மாதிரியைப் பயன்படுத்த வேண்டும் என்பதைத் தேர்ந்தெடு</string>
+    <string name="ai_fetching_models">மாதிரிகளைப் பெறுகிறது…</string>
+    <string name="ai_refresh_models">மாதிரிகளைப் புதுப்பி</string>
+
+    <string name="ai_config_section_groq">Groq கட்டமைப்பு</string>
+    <string name="ai_config_section_groq_desc">ஆப் ஒரு உள்ளமைந்த Groq key உடன் வருகிறது. அதிக rate limits-க்காக உங்கள் சொந்த key-ஐப் பயன்படுத்தவும்.</string>
+    <string name="ai_config_use_own_groq">என் சொந்த Groq key-ஐப் பயன்படுத்து</string>
+    <string name="ai_config_groq_custom_active">ஒவ்வொரு Groq கோரிக்கையுடன் தனிப்பயன் key அனுப்பப்படும்</string>
+    <string name="ai_config_groq_bundled_active">தொகுப்புக்கான key பயன்பாட்டில் (rate-limited, பகிரப்பட்டது)</string>
+    <string name="ai_config_groq_key_label">Groq API key</string>
+    <string name="ai_config_groq_key_help">உங்கள் மீதமுள்ள அமைப்புகளுடன் உள்ளூரில் சேமிக்கப்பட்டது. api.groq.com-க்கு மட்டும் அனுப்பப்படுகிறது.</string>
+    <string name="ai_config_get_key">Key பெறு</string>
+    <string name="ai_config_refresh">புதுப்பி</string>
+    <string name="ai_config_fast_model">வேகமான மாதிரி (சிறு பணிகள்)</string>
+    <string name="ai_config_large_model">பெரிய மாதிரி (சிக்கலான பணிகள்)</string>
+
+    <string name="ai_config_section_openai">OpenAI கட்டமைப்பு</string>
+    <string name="ai_config_section_openai_desc">உங்கள் சொந்த key-ஐக் கொண்டுவாருங்கள். base URL மீறல் மூலம் self-hosted முனைகளுடன் இணக்கமானது.</string>
+    <string name="ai_config_openai_base_url">Base URL (மேம்பட்டது)</string>
+    <string name="ai_config_openai_key_label">OpenAI API key</string>
+    <string name="ai_config_openai_key_help">உள்ளூரில் சேமிக்கப்பட்டது. மேலே உள்ள URL-க்கு மட்டும் அனுப்பப்படுகிறது.</string>
+    <string name="ai_config_model">மாதிரி</string>
+
+    <string name="ai_config_section_anthropic">Anthropic (Claude) கட்டமைப்பு</string>
+    <string name="ai_config_section_anthropic_desc">உங்கள் சொந்த Anthropic API key-ஐக் கொண்டுவாருங்கள். api.anthropic.com-க்கு மட்டும் அனுப்பப்படுகிறது.</string>
+    <string name="ai_config_anthropic_key_label">Anthropic API key</string>
+    <string name="ai_config_get_a_key">Key பெறுங்கள்</string>
+
+    <string name="ai_config_section_gemini">Google Gemini கட்டமைப்பு</string>
+    <string name="ai_config_section_gemini_desc">உங்கள் சொந்த Gemini API key-ஐக் கொண்டுவாருங்கள். generativelanguage.googleapis.com-க்கு மட்டும் அனுப்பப்படுகிறது.</string>
+    <string name="ai_config_gemini_key_label">Gemini API key</string>
+
+    <string name="ai_config_select_model">மாதிரியைத் தேர்ந்தெடு</string>
+
+    <string name="ai_checklist_no_internet">இணைய இணைப்பு இல்லை. தயவுசெய்து உங்கள் நெட்வொர்க்கை சரிபார்க்கவும்.</string>
+    <string name="ai_checklist_title">ஸ்மார்ட் பட்டியல் உருவாக்கி</string>
+    <string name="ai_checklist_powered_by">AI ஆல் இயக்கப்படுகிறது</string>
+    <string name="ai_checklist_recent_prompts">சமீபத்திய ப்ராம்ப்ட்கள்</string>
+    <string name="ai_checklist_prompt_label">நான் என்ன பட்டியலை உருவாக்க வேண்டும்?</string>
+    <string name="ai_checklist_prompt_placeholder">எ.கா. ட்ரெக்கிங் பயணத்திற்கான பேக்கிங் பட்டியல்</string>
+    <string name="ai_checklist_regenerate_cd">மீண்டும் உருவாக்கு</string>
+    <string name="ai_checklist_thinking">யோசிக்கிறது…</string>
+    <string name="ai_checklist_proposed_items">முன்மொழியப்பட்ட உருப்படிகள்</string>
+    <string name="ai_checklist_items_count">%1$d உருப்படிகள்</string>
+    <string name="ai_checklist_disclaimer">AI தவறான தகவலை வழங்கலாம். தயவுசெய்து சரிபார்க்கவும்.</string>
+    <string name="ai_checklist_generate">பட்டியலை உருவாக்கு</string>
+    <string name="ai_checklist_insert">குறிப்பில் செருகு</string>
+    <string name="ai_checklist_remove_item_cd">உருப்படியை அகற்று</string>
+    <string name="ai_checklist_close_cd">மூடு</string>
+
+    <string name="ai_usage_title">பயன்பாடு</string>
+    <string name="ai_usage_clear_cd">துடை</string>
+    <string name="ai_usage_section_features">அம்சம் வாரியாக</string>
+    <string name="ai_usage_section_features_desc">இந்த சாதனத்தில் ஒவ்வொரு AI அம்சமும் எத்தனை முறை இயங்கியது</string>
+    <string name="ai_usage_section_details">விவரங்கள்</string>
+    <string name="ai_usage_section_details_desc">வெற்றி விகிதம், சராசரி தாமதம், ஏற்பு</string>
+    <string name="ai_usage_section_provider">வழங்குநர் வாரியாக</string>
+    <string name="ai_usage_section_provider_desc">எந்த AI சேவை உங்கள் கோரிக்கைகளைக் கையாண்டது</string>
+    <string name="ai_usage_clear_dialog_title">AI பயன்பாட்டு வரலாற்றைத் துடைக்கவா?</string>
+    <string name="ai_usage_clear_dialog_message">இது இந்த டாஷ்போர்டில் காட்டப்படும் உள்ளக பயன்பாட்டு புள்ளிவிவரங்களை நிரந்தரமாக நீக்குகிறது. உங்கள் குறிப்புகள் மற்றும் AI அம்ச அமைப்புகள் பாதிக்கப்படாது.</string>
+    <string name="ai_usage_clear_action">துடை</string>
+    <string name="ai_usage_empty_title">இன்னும் AI செயல்பாடு இல்லை</string>
+    <string name="ai_usage_empty_subtitle">நீங்கள் ஒரு AI அம்சத்தை இயக்கி அதைப் பயன்படுத்தியதும், அது எத்தனை முறை இயங்கியது, எவ்வளவு வேகமாக இருந்தது, மற்றும் அதன் பரிந்துரைகளை நீங்கள் எத்தனை முறை ஏற்றீர்கள் என்பதைப் பார்ப்பீர்கள் — அனைத்தும் இந்த சாதனத்தில் உள்ளூரில் சேமிக்கப்பட்டது.</string>
+    <string name="ai_usage_hero_label">AI invocations</string>
+    <string name="ai_usage_pill_success">வெற்றி</string>
+    <string name="ai_usage_pill_success_rate">வெற்றி விகிதம்</string>
+    <string name="ai_usage_helpfulness_label">நீங்கள் ஏற்ற பரிந்துரைகள்</string>
+    <string name="ai_usage_helpfulness_value">%1$d%%  ·  %3$d-இல் %2$d</string>
+    <string name="ai_usage_no_data">இன்னும் தரவு இல்லை</string>
+    <string name="ai_usage_runs">%1$d இயக்கங்கள்</string>
+    <string name="ai_usage_avg_latency">சராசரி தாமதம்</string>
+    <string name="ai_usage_accepted_label">ஏற்றுக்கொள்ளப்பட்டது</string>
+    <string name="ai_usage_accepted_value">%1$d%% ஏற்றுக்கொள்ளப்பட்டது (%2$d/%3$d)</string>
+</resources>

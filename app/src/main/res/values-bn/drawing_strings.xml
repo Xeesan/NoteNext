@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Bengali (bn) translations for DrawingScreen. Native review recommended. -->
+<resources>
+    <string name="drawing_close_cd">বন্ধ করুন</string>
+    <string name="drawing_undo_cd">পূর্বাবস্থায় ফেরান</string>
+    <string name="drawing_redo_cd">পুনরায় করুন</string>
+    <string name="drawing_clear_all_cd">সব মুছুন</string>
+    <string name="drawing_settings_cd">সেটিংস</string>
+    <string name="drawing_stroke_width_cd">স্ট্রোক প্রস্থ</string>
+    <string name="drawing_placeholder">এখানে আঁকা শুরু করুন…</string>
+    <string name="drawing_stroke_size_label">%1$dpx</string>
+    <string name="drawing_tool_brush">ব্রাশ</string>
+    <string name="drawing_tool_eraser">ইরেজার</string>
+</resources>

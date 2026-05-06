@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Marathi (mr) translations for PrivacySecurityScreen. Native review recommended. -->
+<resources>
+    <string name="priv_section_app_access">ॲप प्रवेश</string>
+    <string name="priv_section_app_access_desc">तुम्ही आणि इतर तुमच्या नोट्समध्ये कसे प्रवेश करता ते नियंत्रित करा</string>
+    <string name="priv_section_decoy">डिकॉय व्हॉल्ट</string>
+    <string name="priv_section_decoy_desc">एक दुय्यम PIN जो नोट्सचा बनावट संच प्रकट करतो</string>
+    <string name="priv_section_data">डेटा गोपनीयता</string>
+    <string name="priv_section_data_desc">तुमच्या नोट सामग्रीचे बाहेरच्या डोळ्यांपासून संरक्षण करा</string>
+    <string name="priv_section_ephemeral">अल्पकालिक सामग्री</string>
+    <string name="priv_section_ephemeral_desc">टिकत नसलेल्या नोट्स</string>
+
+    <string name="priv_toast_enroll_fallback">कृपया सिस्टम सेटिंग्जमध्ये स्क्रीन लॉक किंवा बायोमेट्रिक्स सक्षम करा.</string>
+    <string name="priv_toast_biometric_unavailable">या डिव्हाइसवर बायोमेट्रिक प्रमाणीकरण उपलब्ध नाही.</string>
+
+    <string name="priv_enable_decoy">डिकॉय व्हॉल्ट सक्षम करा</string>
+    <string name="priv_enable_decoy_subtitle">सक्तीच्या परिस्थितीसाठी दुय्यम PIN वापरा</string>
+    <string name="priv_set_decoy_pin">डिकॉय PIN सेट करा</string>
+    <string name="priv_decoy_pin_not_set">सेट केलेले नाही</string>
+    <string name="priv_decoy_pin_masked">****</string>
+
+    <string name="priv_disallow_screenshots">स्क्रीनशॉट नाकारा</string>
+    <string name="priv_disallow_screenshots_subtitle">स्क्रीन कॅप्चर प्रतिबंधित करा आणि अलीकडीलमध्ये सामग्री लपवा</string>
+    <string name="priv_clipboard_clear_title">स्मार्ट क्लिपबोर्ड साफ</string>
+    <string name="priv_clipboard_disabled">अक्षम</string>
+    <string name="priv_clipboard_immediately_bg">पार्श्वभूमीत त्वरित</string>
+    <string name="priv_clipboard_30s">30 सेकंदांनंतर</string>
+    <string name="priv_clipboard_1m">1 मिनिटानंतर</string>
+    <string name="priv_clipboard_5m">5 मिनिटांनंतर</string>
+    <string name="priv_clipboard_custom">सानुकूल टाइमआउट</string>
+
+    <string name="priv_clipboard_dialog_title">क्लिपबोर्ड साफ टाइमआउट</string>
+    <string name="priv_clipboard_opt_disabled">अक्षम</string>
+    <string name="priv_clipboard_opt_immediate">त्वरित</string>
+    <string name="priv_clipboard_opt_30s">30 सेकंद</string>
+    <string name="priv_clipboard_opt_1m">1 मिनिट</string>
+    <string name="priv_clipboard_opt_5m">5 मिनिटे</string>
+
+    <string name="priv_self_destruct_title">स्व-नष्ट होणाऱ्या नोट्स</string>
+    <string name="priv_self_destruct_subtitle">ठराविक वेळेनंतर नोट्स स्वयंचलितपणे हटवण्यासाठी सेट करा</string>
+    <string name="priv_self_destruct_message">स्व-नष्ट हे प्रति-नोट वैशिष्ट्य आहे. नोट संपादित करताना \'अधिक\' (तीन-बिंदू) मेनूवर क्लिक करून आणि \'Self-Destruct Timer\' निवडून कोणत्याही नोटसाठी टायमर सेट करू शकता. टायमर संपल्यानंतर, नोट कायमची हटवली जाईल.</string>
+
+    <string name="priv_decoy_dialog_title">डिकॉय PIN सेट करा</string>
+    <string name="priv_decoy_dialog_message">4-अंकी दुय्यम PIN प्रविष्ट करा. लॉक स्क्रीनवर हा PIN प्रविष्ट केल्याने एक स्वतंत्र, डिकॉय व्हॉल्ट उघडेल.</string>
+    <string name="priv_decoy_pin_label">दुय्यम PIN</string>
+    <string name="priv_decoy_pin_confirm_label">दुय्यम PIN ची पुष्टी करा</string>
+    <string name="priv_err_pin_length">PIN 4 अंकी असावा</string>
+    <string name="priv_err_pin_mismatch">PIN जुळत नाहीत</string>
+    <string name="priv_err_pin_clash">डिकॉय PIN तुमच्या ॲप PIN पेक्षा वेगळा असावा</string>
+    <string name="priv_saving">जतन करत आहे…</string>
+</resources>

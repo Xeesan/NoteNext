@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Sections -->
+    <string name="priv_section_app_access">App Access</string>
+    <string name="priv_section_app_access_desc">Control how you and others access your notes</string>
+    <string name="priv_section_decoy">Decoy Vault</string>
+    <string name="priv_section_decoy_desc">A secondary PIN that reveals a fake set of notes</string>
+    <string name="priv_section_data">Data Privacy</string>
+    <string name="priv_section_data_desc">Protect your note content from outside eyes</string>
+    <string name="priv_section_ephemeral">Ephemeral Content</string>
+    <string name="priv_section_ephemeral_desc">Notes that don\'t stick around</string>
+
+    <!-- Toast errors -->
+    <string name="priv_toast_enroll_fallback">Please enable a screen lock or biometrics in system settings.</string>
+    <string name="priv_toast_biometric_unavailable">Biometric authentication is not available on this device.</string>
+
+    <!-- Decoy Vault -->
+    <string name="priv_enable_decoy">Enable Decoy Vault</string>
+    <string name="priv_enable_decoy_subtitle">Use a secondary PIN for coercion situations</string>
+    <string name="priv_set_decoy_pin">Set Decoy PIN</string>
+    <string name="priv_decoy_pin_not_set">Not set</string>
+    <string name="priv_decoy_pin_masked">****</string>
+
+    <!-- Data Privacy -->
+    <string name="priv_disallow_screenshots">Disallow Screenshots</string>
+    <string name="priv_disallow_screenshots_subtitle">Prevent screen capture and hide content in recents</string>
+    <string name="priv_clipboard_clear_title">Smart Clipboard Clear</string>
+    <string name="priv_clipboard_disabled">Disabled</string>
+    <string name="priv_clipboard_immediately_bg">Immediately on background</string>
+    <string name="priv_clipboard_30s">After 30 seconds</string>
+    <string name="priv_clipboard_1m">After 1 minute</string>
+    <string name="priv_clipboard_5m">After 5 minutes</string>
+    <string name="priv_clipboard_custom">Custom timeout</string>
+
+    <!-- Clipboard timeout dialog -->
+    <string name="priv_clipboard_dialog_title">Clipboard Clear Timeout</string>
+    <string name="priv_clipboard_opt_disabled">Disabled</string>
+    <string name="priv_clipboard_opt_immediate">Immediately</string>
+    <string name="priv_clipboard_opt_30s">30 Seconds</string>
+    <string name="priv_clipboard_opt_1m">1 Minute</string>
+    <string name="priv_clipboard_opt_5m">5 Minutes</string>
+
+    <!-- Self-destruct -->
+    <string name="priv_self_destruct_title">Self-Destructing Notes</string>
+    <string name="priv_self_destruct_subtitle">Set notes to automatically delete after a certain time</string>
+    <string name="priv_self_destruct_message">Self-destruct is a per-note feature. You can set a timer for any note by clicking the \'More\' (three-dots) menu while editing a note and selecting \'Self-Destruct Timer\'. Once the timer expires, the note will be permanently deleted.</string>
+
+    <!-- Decoy PIN dialog -->
+    <string name="priv_decoy_dialog_title">Set Decoy PIN</string>
+    <string name="priv_decoy_dialog_message">Enter a 4-digit secondary PIN. Entering this PIN on the lock screen will open a separate, decoy vault.</string>
+    <string name="priv_decoy_pin_label">Secondary PIN</string>
+    <string name="priv_decoy_pin_confirm_label">Confirm Secondary PIN</string>
+    <string name="priv_err_pin_length">PIN must be 4 digits</string>
+    <string name="priv_err_pin_mismatch">PINs do not match</string>
+    <string name="priv_err_pin_clash">Decoy PIN must differ from your app PIN</string>
+    <string name="priv_saving">Saving…</string>
+</resources>

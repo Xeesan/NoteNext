@@ -94,4 +94,34 @@
     <string name="backup_current_edits">বর্তমান সম্পাদনা: %1$d</string>
     <string name="backup_charging_only">শুধু চার্জিং অবস্থায় ব্যাকআপ</string>
     <string name="backup_charging_only_subtitle">শুধু প্লাগ-ইন থাকা অবস্থায় ব্যাকআপ করে ব্যাটারি বাঁচান।</string>
+
+    <string name="backup_password_set_title">ব্যাকআপ পাসওয়ার্ড সেট করুন</string>
+    <string name="backup_password_set_confirm">এনক্রিপ্ট &amp; সংরক্ষণ করুন</string>
+    <string name="backup_password_aes_badge">AES-256 এনক্রিপশন দিয়ে সুরক্ষিত</string>
+    <string name="backup_password_set_message">আপনার ব্যাকআপ এনক্রিপ্ট করতে একটি পাসওয়ার্ড লিখুন। পুনরুদ্ধারের জন্য আপনার এই পাসওয়ার্ড প্রয়োজন হবে।</string>
+    <string name="backup_password_label">পাসওয়ার্ড</string>
+    <string name="backup_password_confirm_label">পাসওয়ার্ড নিশ্চিত করুন</string>
+    <string name="backup_password_strength_label">শক্তি: %1$s</string>
+    <string name="backup_password_strength_weak">দুর্বল</string>
+    <string name="backup_password_strength_medium">মাঝারি</string>
+    <string name="backup_password_strength_strong">শক্তিশালী</string>
+    <string name="backup_password_error_empty">পাসওয়ার্ড খালি হতে পারে না</string>
+    <string name="backup_password_error_short">পাসওয়ার্ড কমপক্ষে %1$d অক্ষরের হতে হবে</string>
+    <string name="backup_password_error_weak">পাসওয়ার্ড খুব দুর্বল। অঙ্ক, বড় হাতের অক্ষর বা প্রতীক যোগ করুন।</string>
+    <string name="backup_password_error_mismatch">পাসওয়ার্ড মেলে না</string>
+
+    <string name="backup_password_input_title">পাসওয়ার্ড লিখুন</string>
+    <string name="backup_password_input_aes_badge">ব্যাকআপ AES-256 দিয়ে এনক্রিপ্টেড</string>
+    <string name="backup_password_input_message">আপনার ব্যাকআপ ডেটা আনলক করতে এবং পুনরুদ্ধার করতে অনুগ্রহ করে পাসওয়ার্ড লিখুন।</string>
+    <string name="backup_password_unlock">আনলক &amp; পুনরুদ্ধার করুন</string>
+
+    <string name="backup_encryption_info_title">এনক্রিপ্টেড ব্যাকআপ সম্পর্কে</string>
+    <string name="backup_encryption_info_intro">এনক্রিপ্টেড ব্যাকআপ আপনার ডেটার জন্য নিরাপত্তার একটি অতিরিক্ত স্তর প্রদান করে।</string>
+    <string name="backup_encryption_info_how_title">এটি কীভাবে কাজ করে</string>
+    <string name="backup_encryption_info_how_desc">আপনার ডেটা আপনার ডিভাইস ছেড়ে যাওয়ার আগে AES-256 মান ব্যবহার করে এনক্রিপ্ট করা হয়। এর অর্থ হল আপনার নোট ও সংযুক্তিগুলি একটি অপাঠ্য বিন্যাসে স্ক্র্যাম্বল করা হয়।</string>
+    <string name="backup_encryption_info_security_title">নিরাপত্তা</string>
+    <string name="backup_encryption_info_security_desc">কেউ যদি আপনার ব্যাকআপ ফাইল (Google Drive বা আপনার SD কার্ডে) অ্যাক্সেস পেয়েও যায়, সঠিক পাসওয়ার্ড ছাড়া তারা আপনার ডেটা পড়তে পারবে না। শুধু আপনার কাছেই key আছে।</string>
+    <string name="backup_encryption_info_important_title">গুরুত্বপূর্ণ</string>
+    <string name="backup_encryption_info_important_desc">আমরা আপনার ব্যাকআপ পাসওয়ার্ড সংরক্ষণ করি না। আপনি এটি হারালে, আপনি সেই ব্যাকআপ থেকে আপনার ডেটা পুনরুদ্ধার করতে পারবেন না। অনুগ্রহ করে আপনার পাসওয়ার্ড নিরাপদে রাখুন।</string>
+    <string name="backup_encryption_info_got_it">বুঝেছি</string>
 </resources>

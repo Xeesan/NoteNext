@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Bengali (bn) translations for the Settings screen. Native review recommended. -->
+<resources>
+    <string name="settings_title">সেটিংস</string>
+    <string name="display_section_title">ডিসপ্লে</string>
+    <string name="theme">থিম</string>
+    <string name="rich_link_preview">রিচ লিঙ্ক প্রিভিউ</string>
+    <string name="rich_link_preview_subtitle">নোটে লিঙ্কের জন্য প্রিভিউ দেখান</string>
+    <string name="shape_family">শেপ ফ্যামিলি (পরীক্ষামূলক)</string>
+    <string name="bin_section_title">বিন</string>
+    <string name="auto_delete_binned_notes">বিন করা নোট স্বয়ংক্রিয়ভাবে মুছুন</string>
+    <string name="auto_delete_subtitle">%1$d দিন পর</string>
+    <string name="security_section_title">নিরাপত্তা</string>
+    <string name="app_lock">অ্যাপ লক</string>
+    <string name="app_lock_subtitle">PIN বা বায়োমেট্রিক লক দিয়ে অ্যাপ সুরক্ষিত করুন</string>
+    <string name="backup_restore_section_title">ব্যাকআপ &amp; রিস্টোর</string>
+    <string name="backup">ব্যাকআপ</string>
+    <string name="restore">রিস্টোর</string>
+    <string name="about">সম্পর্কে</string>
+    <string name="choose_theme">থিম নির্বাচন করুন</string>
+    <string name="theme_amoled">ট্রু AMOLED (AMOLED ডিসপ্লের জন্য অপ্টিমাইজড)</string>
+    <string name="auto_delete_after">এর পরে স্বয়ংক্রিয়ভাবে মুছুন</string>
+    <string name="days">%1$d দিন</string>
+    <string name="choose_shape_family">শেপ ফ্যামিলি নির্বাচন করুন</string>
+    <string name="language">ভাষা</string>
+    <string name="language_subtitle">অ্যাপ্লিকেশনের ভাষা পরিবর্তন করুন</string>
+    <string name="choose_language">ভাষা নির্বাচন করুন</string>
+    <string name="language_english">ইংরেজি</string>
+    <string name="language_hindi">হিন্দি</string>
+
+    <string name="privacy_policy">গোপনীয়তা নীতি</string>
+    <string name="privacy_policy_description">জানুন আমরা কীভাবে আপনার নোট ও ডেটা সুরক্ষিত রাখি</string>
+    <string name="security_details">নিরাপত্তা বিবরণ</string>
+    <string name="security_details_description">আমাদের নিরাপত্তা স্ট্যাকের প্রযুক্তিগত বিবরণ</string>
+    <string name="faq">সচরাচর জিজ্ঞাসিত প্রশ্ন</string>
+    <string name="faq_description">NoteNext সম্পর্কে সচরাচর জিজ্ঞাসিত প্রশ্ন</string>
+    <string name="features_title">বৈশিষ্ট্য</string>
+    <string name="features_description">NoteNext কী কী করতে পারে দেখুন</string>
+
+    <string name="settings_section_display_subtitle">ভিজ্যুয়াল ও ভাষা পছন্দ</string>
+    <string name="settings_section_data">ডেটা &amp; রক্ষণাবেক্ষণ</string>
+    <string name="settings_section_data_subtitle">ব্যাকআপ, ইম্পোর্ট ও ক্লিনআপ</string>
+    <string name="settings_section_support_logging">সাপোর্ট &amp; লগিং</string>
+    <string name="settings_section_support_logging_subtitle">তথ্য ও বাগ পুনরুৎপাদন</string>
+    <string name="settings_section_support_updates">সাপোর্ট &amp; আপডেট</string>
+    <string name="settings_section_support_updates_subtitle">NoteNext মসৃণভাবে চালান</string>
+
+    <string name="settings_auto_cleanup">অটো ক্লিনআপ</string>
+    <string name="settings_auto_cleanup_subtitle">%1$d দিন পর বিন পরিষ্কার করুন</string>
+    <string name="settings_backup_restore_subtitle">ক্লাউড ও স্থানীয় ডেটা ব্যবস্থাপনা</string>
+    <string name="settings_privacy_security">গোপনীয়তা &amp; নিরাপত্তা</string>
+    <string name="settings_privacy_security_subtitle">অ্যাপ লক, স্ক্রিনশট, ক্লিপবোর্ড পরিষ্কার</string>
+    <string name="settings_import_notes">নোট ইম্পোর্ট করুন</string>
+    <string name="settings_import_notes_subtitle">Google Keep ZIP থেকে ইম্পোর্ট</string>
+    <string name="settings_ai_label">AI</string>
+    <string name="settings_ai_subtitle">মাস্টার সুইচ, প্রোভাইডার, বৈশিষ্ট্য, ব্যবহার ড্যাশবোর্ড</string>
+    <string name="settings_app_info">অ্যাপ তথ্য</string>
+    <string name="settings_app_info_subtitle">v%1$s স্টেবল বিল্ড</string>
+    <string name="settings_stop_logging">লগিং বন্ধ করুন</string>
+    <string name="settings_start_logging">লগিং শুরু করুন</string>
+    <string name="settings_logging_active_subtitle">লগিং সক্রিয়। এখন বাগটি পুনরুৎপাদন করুন।</string>
+    <string name="settings_start_logging_subtitle">বাগ রিপোর্ট করতে অ্যাপ লগ রেকর্ড করুন</string>
+    <string name="settings_source_code">সোর্স কোড</string>
+    <string name="settings_source_code_subtitle">আমাদের GitHub রিপোজিটরি দেখুন</string>
+    <string name="settings_log_saved_toast">লগ সংরক্ষিত এবং শেয়ার করার জন্য প্রস্তুত</string>
+    <string name="settings_logging_started_toast">লগিং শুরু হয়েছে। এখন বাগটি পুনরুৎপাদন করুন।</string>
+    <string name="settings_search_placeholder">সেটিংস খুঁজুন…</string>
+
+    <string name="settings_card_privacy">গোপনীয়তা</string>
+    <string name="settings_card_protected">সুরক্ষিত</string>
+    <string name="settings_card_secure_now">এখনই সুরক্ষিত করুন</string>
+    <string name="settings_card_sync">সিঙ্ক</string>
+    <string name="settings_card_sync_subtitle">ডেটা ব্যাকআপ</string>
+
+    <string name="settings_rate_app">NoteNext রেট করুন</string>
+    <string name="settings_rate_app_subtitle">Play Store-এ একটু ভালোবাসা দেখান</string>
+    <string name="settings_whats_new">নতুন কী</string>
+    <string name="settings_whats_new_subtitle">সর্বশেষ চেঞ্জলগ দেখুন</string>
+    <string name="settings_current_version">বর্তমান: v%1$s</string>
+
+    <string name="settings_auto_delete_explanation">ট্র্যাশের নোটগুলি এই সময়ের পরে স্থায়ীভাবে মুছে ফেলা হবে।</string>
+    <string name="settings_import_from_title">এখান থেকে ইম্পোর্ট…</string>
+    <string name="settings_coming_soon">শীঘ্রই আসছে</string>
+    <string name="settings_keep_import_title">Google Keep ইম্পোর্ট</string>
+    <string name="settings_keep_import_message">আপনার Keep নোট ইম্পোর্ট করতে অনুগ্রহ করে আপনার Google Takeout ZIP ফাইল নির্বাচন করুন। আমরা আপনার টেক্সট নোট ও চেকলিস্ট বের করে নেব।</string>
+    <string name="settings_select_zip">ZIP নির্বাচন করুন</string>
+    <string name="settings_bug_report_title">বাগ রিপোর্ট</string>
+    <string name="settings_bug_report_message">আপনি যে সমস্যার সম্মুখীন হচ্ছেন তা বর্ণনা করুন। সিস্টেম লগ স্বয়ংক্রিয়ভাবে সংযুক্ত হবে।</string>
+    <string name="settings_bug_report_placeholder">সমস্যার বিবরণ…</string>
+    <string name="settings_send_report">রিপোর্ট পাঠান</string>
+    <string name="settings_rate_dialog_message">অ্যাপ ভালো লাগছে? Play Store-এ রেট করে আমাদের বাড়তে সাহায্য করুন! মাত্র এক মিনিট লাগবে।</string>
+    <string name="settings_rate_now">এখনই রেট করুন</string>
+    <string name="settings_later">পরে</string>
+
+    <string name="settings_lang_subtitle_en">ইংরেজি (US)</string>
+    <string name="settings_lang_subtitle_hi">হিন্দি (ভারত)</string>
+</resources>

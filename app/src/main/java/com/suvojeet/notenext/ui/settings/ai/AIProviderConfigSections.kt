@@ -18,10 +18,12 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
+import com.suvojeet.notenext.R
 import com.suvojeet.notenext.ui.components.ExpressiveSection
 import com.suvojeet.notenext.ui.components.SettingsGroupCard
 import com.suvojeet.notenext.ui.components.springPress
@@ -44,18 +46,18 @@ internal fun GroqConfigSection(
     var keyVisible by remember { mutableStateOf(false) }
 
     ExpressiveSection(
-        title = "Groq configuration",
-        description = "The app ships with a built-in Groq key. Use your own for higher rate limits."
+        title = stringResource(id = R.string.ai_config_section_groq),
+        description = stringResource(id = R.string.ai_config_section_groq_desc)
     ) {
         SettingsGroupCard {
             Column(modifier = Modifier.padding(16.dp)) {
                 SettingsToggle(
                     icon = Icons.Rounded.VpnKey,
-                    title = "Use my own Groq key",
+                    title = stringResource(id = R.string.ai_config_use_own_groq),
                     subtitle = if (useCustomKey)
-                        "Custom key will be sent with every Groq request"
+                        stringResource(id = R.string.ai_config_groq_custom_active)
                     else
-                        "Bundled key is used (rate-limited, shared)",
+                        stringResource(id = R.string.ai_config_groq_bundled_active),
                     iconColor = MaterialTheme.colorScheme.primary,
                     checked = useCustomKey,
                     onCheckedChange = onSetUseCustomKey
@@ -66,7 +68,7 @@ internal fun GroqConfigSection(
                     OutlinedTextField(
                         value = customKey,
                         onValueChange = onSaveKey,
-                        label = { Text("Groq API key") },
+                        label = { Text(stringResource(id = R.string.ai_config_groq_key_label)) },
                         placeholder = { Text("gsk_...") },
                         singleLine = true,
                         modifier = Modifier.fillMaxWidth(),
@@ -84,7 +86,7 @@ internal fun GroqConfigSection(
 
                     Spacer(Modifier.height(8.dp))
                     Text(
-                        text = "Stored locally with the rest of your settings. Only sent to api.groq.com.",
+                        text = stringResource(id = R.string.ai_config_groq_key_help),
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
@@ -100,7 +102,7 @@ internal fun GroqConfigSection(
                         ) {
                             Icon(Icons.Rounded.OpenInNew, contentDescription = null, modifier = Modifier.size(18.dp))
                             Spacer(Modifier.width(8.dp))
-                            Text("Get key")
+                            Text(stringResource(id = R.string.ai_config_get_key))
                         }
                         Button(
                             onClick = onRefreshModels,
@@ -114,21 +116,21 @@ internal fun GroqConfigSection(
                                 Icon(Icons.Rounded.Refresh, contentDescription = null, modifier = Modifier.size(18.dp))
                             }
                             Spacer(Modifier.width(8.dp))
-                            Text("Refresh")
+                            Text(stringResource(id = R.string.ai_config_refresh))
                         }
                     }
 
                     if (availableModels.isNotEmpty()) {
                         Spacer(Modifier.height(16.dp))
                         ModelPicker(
-                            label = "Fast model (short tasks)",
+                            label = stringResource(id = R.string.ai_config_fast_model),
                             selected = fastModel,
                             options = availableModels,
                             onSelect = onSetFastModel
                         )
                         Spacer(Modifier.height(8.dp))
                         ModelPicker(
-                            label = "Large model (complex tasks)",
+                            label = stringResource(id = R.string.ai_config_large_model),
                             selected = largeModel,
                             options = availableModels,
                             onSelect = onSetLargeModel
@@ -156,15 +158,15 @@ internal fun OpenAIConfigSection(
     var keyVisible by remember { mutableStateOf(false) }
 
     ExpressiveSection(
-        title = "OpenAI configuration",
-        description = "Bring your own key. Compatible with self-hosted endpoints via base URL override."
+        title = stringResource(id = R.string.ai_config_section_openai),
+        description = stringResource(id = R.string.ai_config_section_openai_desc)
     ) {
         SettingsGroupCard {
             Column(modifier = Modifier.padding(16.dp)) {
                 OutlinedTextField(
                     value = baseUrl,
                     onValueChange = onSaveBaseUrl,
-                    label = { Text("Base URL (advanced)") },
+                    label = { Text(stringResource(id = R.string.ai_config_openai_base_url)) },
                     placeholder = { Text("https://api.openai.com/") },
                     singleLine = true,
                     modifier = Modifier.fillMaxWidth(),
@@ -174,7 +176,7 @@ internal fun OpenAIConfigSection(
                 OutlinedTextField(
                     value = apiKey,
                     onValueChange = onSaveKey,
-                    label = { Text("OpenAI API key") },
+                    label = { Text(stringResource(id = R.string.ai_config_openai_key_label)) },
                     placeholder = { Text("sk-...") },
                     singleLine = true,
                     modifier = Modifier.fillMaxWidth(),
@@ -191,7 +193,7 @@ internal fun OpenAIConfigSection(
                 )
                 Spacer(Modifier.height(8.dp))
                 Text(
-                    text = "Stored locally. Sent only to the URL above.",
+                    text = stringResource(id = R.string.ai_config_openai_key_help),
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
@@ -207,7 +209,7 @@ internal fun OpenAIConfigSection(
                     ) {
                         Icon(Icons.Rounded.OpenInNew, contentDescription = null, modifier = Modifier.size(18.dp))
                         Spacer(Modifier.width(8.dp))
-                        Text("Get key")
+                        Text(stringResource(id = R.string.ai_config_get_key))
                     }
                     Button(
                         onClick = onRefreshModels,
@@ -221,14 +223,14 @@ internal fun OpenAIConfigSection(
                             Icon(Icons.Rounded.Refresh, contentDescription = null, modifier = Modifier.size(18.dp))
                         }
                         Spacer(Modifier.width(8.dp))
-                        Text("Refresh")
+                        Text(stringResource(id = R.string.ai_config_refresh))
                     }
                 }
 
                 if (availableModels.isNotEmpty()) {
                     Spacer(Modifier.height(16.dp))
                     ModelPicker(
-                        label = "Model",
+                        label = stringResource(id = R.string.ai_config_model),
                         selected = selectedModel,
                         options = availableModels,
                         onSelect = onSelectModel
@@ -251,15 +253,15 @@ internal fun AnthropicConfigSection(
     var keyVisible by remember { mutableStateOf(false) }
 
     ExpressiveSection(
-        title = "Anthropic (Claude) configuration",
-        description = "Bring your own Anthropic API key. Sent only to api.anthropic.com."
+        title = stringResource(id = R.string.ai_config_section_anthropic),
+        description = stringResource(id = R.string.ai_config_section_anthropic_desc)
     ) {
         SettingsGroupCard {
             Column(modifier = Modifier.padding(16.dp)) {
                 OutlinedTextField(
                     value = apiKey,
                     onValueChange = onSaveKey,
-                    label = { Text("Anthropic API key") },
+                    label = { Text(stringResource(id = R.string.ai_config_anthropic_key_label)) },
                     placeholder = { Text("sk-ant-...") },
                     singleLine = true,
                     modifier = Modifier.fillMaxWidth(),
@@ -285,13 +287,13 @@ internal fun AnthropicConfigSection(
                 ) {
                     Icon(Icons.Rounded.OpenInNew, contentDescription = null, modifier = Modifier.size(18.dp))
                     Spacer(Modifier.width(8.dp))
-                    Text("Get a key")
+                    Text(stringResource(id = R.string.ai_config_get_a_key))
                 }
 
                 if (availableModels.isNotEmpty()) {
                     Spacer(Modifier.height(16.dp))
                     ModelPicker(
-                        label = "Model",
+                        label = stringResource(id = R.string.ai_config_model),
                         selected = selectedModel,
                         options = availableModels,
                         onSelect = onSelectModel
@@ -314,15 +316,15 @@ internal fun GeminiConfigSection(
     var keyVisible by remember { mutableStateOf(false) }
 
     ExpressiveSection(
-        title = "Google Gemini configuration",
-        description = "Bring your own Gemini API key. Sent only to generativelanguage.googleapis.com."
+        title = stringResource(id = R.string.ai_config_section_gemini),
+        description = stringResource(id = R.string.ai_config_section_gemini_desc)
     ) {
         SettingsGroupCard {
             Column(modifier = Modifier.padding(16.dp)) {
                 OutlinedTextField(
                     value = apiKey,
                     onValueChange = onSaveKey,
-                    label = { Text("Gemini API key") },
+                    label = { Text(stringResource(id = R.string.ai_config_gemini_key_label)) },
                     placeholder = { Text("AIza...") },
                     singleLine = true,
                     modifier = Modifier.fillMaxWidth(),
@@ -348,13 +350,13 @@ internal fun GeminiConfigSection(
                 ) {
                     Icon(Icons.Rounded.OpenInNew, contentDescription = null, modifier = Modifier.size(18.dp))
                     Spacer(Modifier.width(8.dp))
-                    Text("Get a key")
+                    Text(stringResource(id = R.string.ai_config_get_a_key))
                 }
 
                 if (availableModels.isNotEmpty()) {
                     Spacer(Modifier.height(16.dp))
                     ModelPicker(
-                        label = "Model",
+                        label = stringResource(id = R.string.ai_config_model),
                         selected = selectedModel,
                         options = availableModels,
                         onSelect = onSelectModel
@@ -373,6 +375,7 @@ private fun ModelPicker(
     onSelect: (String) -> Unit
 ) {
     var expanded by remember { mutableStateOf(false) }
+    val selectModelText = stringResource(id = R.string.ai_config_select_model)
 
     Column {
         Text(label, style = MaterialTheme.typography.labelLarge, fontWeight = FontWeight.SemiBold)
@@ -387,7 +390,7 @@ private fun ModelPicker(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    selected.ifBlank { "Select model" },
+                    selected.ifBlank { selectModelText },
                     modifier = Modifier.weight(1f),
                     style = MaterialTheme.typography.bodyLarge
                 )

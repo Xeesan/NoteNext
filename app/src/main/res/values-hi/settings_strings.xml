@@ -26,5 +26,70 @@
     <string name="language_english">अंग्रेजी</string>
     <string name="language_hindi">हिंदी</string>
 
+    <string name="privacy_policy">गोपनीयता नीति</string>
+    <string name="privacy_policy_description">जानें हम आपके नोट्स और डेटा को कैसे सुरक्षित रखते हैं</string>
+    <string name="security_details">सुरक्षा विवरण</string>
+    <string name="security_details_description">हमारे सुरक्षा स्टैक का तकनीकी विवरण</string>
+    <string name="faq">अक्सर पूछे जाने वाले प्रश्न</string>
+    <string name="faq_description">NoteNext के बारे में अक्सर पूछे जाने वाले प्रश्न</string>
+    <string name="features_title">सुविधाएं</string>
+    <string name="features_description">देखें NoteNext क्या-क्या कर सकता है</string>
 
+    <string name="settings_section_display_subtitle">विज़ुअल और भाषा प्राथमिकताएं</string>
+    <string name="settings_section_data">डेटा और मेंटेनेंस</string>
+    <string name="settings_section_data_subtitle">बैकअप, इम्पोर्ट और क्लीनअप</string>
+    <string name="settings_section_support_logging">सपोर्ट और लॉगिंग</string>
+    <string name="settings_section_support_logging_subtitle">जानकारी और बग रिप्रोडक्शन</string>
+    <string name="settings_section_support_updates">सपोर्ट और अपडेट्स</string>
+    <string name="settings_section_support_updates_subtitle">NoteNext को सुचारू रूप से चलाते रहें</string>
+
+    <string name="settings_auto_cleanup">ऑटो क्लीनअप</string>
+    <string name="settings_auto_cleanup_subtitle">%1$d दिन बाद बिन साफ करें</string>
+    <string name="settings_backup_restore_subtitle">क्लाउड और लोकल डेटा प्रबंधन</string>
+    <string name="settings_privacy_security">गोपनीयता और सुरक्षा</string>
+    <string name="settings_privacy_security_subtitle">ऐप लॉक, स्क्रीनशॉट, क्लिपबोर्ड क्लियरिंग</string>
+    <string name="settings_import_notes">नोट्स इम्पोर्ट करें</string>
+    <string name="settings_import_notes_subtitle">Google Keep ZIP से इम्पोर्ट करें</string>
+    <string name="settings_ai_label">AI</string>
+    <string name="settings_ai_subtitle">मास्टर स्विच, प्रोवाइडर, फीचर्स, यूसेज डैशबोर्ड</string>
+    <string name="settings_app_info">ऐप जानकारी</string>
+    <string name="settings_app_info_subtitle">v%1$s स्टेबल बिल्ड</string>
+    <string name="settings_stop_logging">लॉगिंग बंद करें</string>
+    <string name="settings_start_logging">लॉगिंग शुरू करें</string>
+    <string name="settings_logging_active_subtitle">लॉगिंग सक्रिय है। अब बग को रिप्रोड्यूस करें।</string>
+    <string name="settings_start_logging_subtitle">बग रिपोर्ट करने के लिए ऐप लॉग्स रिकॉर्ड करें</string>
+    <string name="settings_source_code">सोर्स कोड</string>
+    <string name="settings_source_code_subtitle">हमारी GitHub रिपोजिटरी देखें</string>
+    <string name="settings_log_saved_toast">लॉग सेव और शेयर करने के लिए तैयार है</string>
+    <string name="settings_logging_started_toast">लॉगिंग शुरू हो गई। अब बग को रिप्रोड्यूस करें।</string>
+    <string name="settings_search_placeholder">सेटिंग्स खोजें…</string>
+
+    <string name="settings_card_privacy">गोपनीयता</string>
+    <string name="settings_card_protected">सुरक्षित</string>
+    <string name="settings_card_secure_now">अभी सुरक्षित करें</string>
+    <string name="settings_card_sync">सिंक</string>
+    <string name="settings_card_sync_subtitle">डेटा बैकअप</string>
+
+    <string name="settings_rate_app">NoteNext को रेट करें</string>
+    <string name="settings_rate_app_subtitle">Play Store पर थोड़ा प्यार दिखाएं</string>
+    <string name="settings_whats_new">क्या नया है</string>
+    <string name="settings_whats_new_subtitle">नवीनतम चेंजलॉग देखें</string>
+    <string name="settings_current_version">वर्तमान: v%1$s</string>
+
+    <string name="settings_auto_delete_explanation">ट्रैश में नोट्स इस अवधि के बाद स्थायी रूप से हटा दिए जाएंगे।</string>
+    <string name="settings_import_from_title">यहां से इम्पोर्ट करें…</string>
+    <string name="settings_coming_soon">जल्द आ रहा है</string>
+    <string name="settings_keep_import_title">Google Keep इम्पोर्ट</string>
+    <string name="settings_keep_import_message">अपने Keep नोट्स इम्पोर्ट करने के लिए कृपया अपनी Google Takeout ZIP फ़ाइल चुनें। हम आपके टेक्स्ट नोट्स और चेकलिस्ट निकाल लेंगे।</string>
+    <string name="settings_select_zip">ZIP चुनें</string>
+    <string name="settings_bug_report_title">बग रिपोर्ट</string>
+    <string name="settings_bug_report_message">जिस समस्या का सामना कर रहे हैं उसका विवरण दें। सिस्टम लॉग्स स्वचालित रूप से जोड़े जाएंगे।</string>
+    <string name="settings_bug_report_placeholder">समस्या का विवरण…</string>
+    <string name="settings_send_report">रिपोर्ट भेजें</string>
+    <string name="settings_rate_dialog_message">ऐप पसंद आ रहा है? Play Store पर रेट करके हमें बढ़ने में मदद करें! बस एक मिनट लगेगा।</string>
+    <string name="settings_rate_now">अभी रेट करें</string>
+    <string name="settings_later">बाद में</string>
+
+    <string name="settings_lang_subtitle_en">अंग्रेज़ी (US)</string>
+    <string name="settings_lang_subtitle_hi">हिंदी (भारत)</string>
 </resources>

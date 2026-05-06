@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Marathi (mr) translations for the Settings screen. Native review recommended. -->
+<resources>
+    <string name="settings_title">सेटिंग्ज</string>
+    <string name="display_section_title">डिस्प्ले</string>
+    <string name="theme">थीम</string>
+    <string name="rich_link_preview">रिच लिंक प्रिव्ह्यू</string>
+    <string name="rich_link_preview_subtitle">नोट्समधील लिंक्ससाठी प्रिव्ह्यू दाखवा</string>
+    <string name="shape_family">शेप फॅमिली (प्रायोगिक)</string>
+    <string name="bin_section_title">बिन</string>
+    <string name="auto_delete_binned_notes">बिनमधील नोट्स स्वयंचलितपणे हटवा</string>
+    <string name="auto_delete_subtitle">%1$d दिवसांनंतर</string>
+    <string name="security_section_title">सुरक्षा</string>
+    <string name="app_lock">ॲप लॉक</string>
+    <string name="app_lock_subtitle">PIN किंवा बायोमेट्रिक लॉकने ॲप सुरक्षित करा</string>
+    <string name="backup_restore_section_title">बॅकअप &amp; रीस्टोर</string>
+    <string name="backup">बॅकअप</string>
+    <string name="restore">रीस्टोर</string>
+    <string name="about">बद्दल</string>
+    <string name="choose_theme">थीम निवडा</string>
+    <string name="theme_amoled">ट्रू AMOLED (AMOLED डिस्प्लेसाठी ऑप्टिमाइज्ड)</string>
+    <string name="auto_delete_after">यानंतर स्वयंचलितपणे हटवा</string>
+    <string name="days">%1$d दिवस</string>
+    <string name="choose_shape_family">शेप फॅमिली निवडा</string>
+    <string name="language">भाषा</string>
+    <string name="language_subtitle">अनुप्रयोगाची भाषा बदला</string>
+    <string name="choose_language">भाषा निवडा</string>
+    <string name="language_english">इंग्रजी</string>
+    <string name="language_hindi">हिंदी</string>
+
+    <string name="privacy_policy">गोपनीयता धोरण</string>
+    <string name="privacy_policy_description">आम्ही तुमच्या नोट्स आणि डेटाचे संरक्षण कसे करतो ते जाणून घ्या</string>
+    <string name="security_details">सुरक्षा तपशील</string>
+    <string name="security_details_description">आमच्या सुरक्षा स्टॅकचा तांत्रिक तपशील</string>
+    <string name="faq">वारंवार विचारले जाणारे प्रश्न</string>
+    <string name="faq_description">NoteNext बद्दल वारंवार विचारले जाणारे प्रश्न</string>
+    <string name="features_title">वैशिष्ट्ये</string>
+    <string name="features_description">NoteNext काय करू शकते ते एक्सप्लोर करा</string>
+
+    <string name="settings_section_display_subtitle">व्हिज्युअल आणि भाषा प्राधान्ये</string>
+    <string name="settings_section_data">डेटा &amp; देखभाल</string>
+    <string name="settings_section_data_subtitle">बॅकअप, इम्पोर्ट आणि क्लीनअप</string>
+    <string name="settings_section_support_logging">सपोर्ट &amp; लॉगिंग</string>
+    <string name="settings_section_support_logging_subtitle">माहिती आणि बग पुनरुत्पादन</string>
+    <string name="settings_section_support_updates">सपोर्ट &amp; अद्यतने</string>
+    <string name="settings_section_support_updates_subtitle">NoteNext सुरळीत चालू ठेवा</string>
+
+    <string name="settings_auto_cleanup">ऑटो क्लीनअप</string>
+    <string name="settings_auto_cleanup_subtitle">%1$d दिवसांनंतर बिन साफ करा</string>
+    <string name="settings_backup_restore_subtitle">क्लाउड आणि लोकल डेटा व्यवस्थापन</string>
+    <string name="settings_privacy_security">गोपनीयता &amp; सुरक्षा</string>
+    <string name="settings_privacy_security_subtitle">ॲप लॉक, स्क्रीनशॉट, क्लिपबोर्ड साफ करणे</string>
+    <string name="settings_import_notes">नोट्स इम्पोर्ट करा</string>
+    <string name="settings_import_notes_subtitle">Google Keep ZIP वरून इम्पोर्ट करा</string>
+    <string name="settings_ai_label">AI</string>
+    <string name="settings_ai_subtitle">मास्टर स्विच, प्रदाते, वैशिष्ट्ये, वापर डॅशबोर्ड</string>
+    <string name="settings_app_info">ॲप माहिती</string>
+    <string name="settings_app_info_subtitle">v%1$s स्थिर बिल्ड</string>
+    <string name="settings_stop_logging">लॉगिंग थांबवा</string>
+    <string name="settings_start_logging">लॉगिंग सुरू करा</string>
+    <string name="settings_logging_active_subtitle">लॉगिंग सक्रिय आहे. आता बग पुनरुत्पादित करा.</string>
+    <string name="settings_start_logging_subtitle">बग्सची तक्रार करण्यासाठी ॲप लॉग रेकॉर्ड करा</string>
+    <string name="settings_source_code">सोर्स कोड</string>
+    <string name="settings_source_code_subtitle">आमचा GitHub भांडार पहा</string>
+    <string name="settings_log_saved_toast">लॉग जतन झाला आणि शेअर करण्यास तयार आहे</string>
+    <string name="settings_logging_started_toast">लॉगिंग सुरू झाले. आता बग पुनरुत्पादित करा.</string>
+    <string name="settings_search_placeholder">सेटिंग्ज शोधा…</string>
+
+    <string name="settings_card_privacy">गोपनीयता</string>
+    <string name="settings_card_protected">संरक्षित</string>
+    <string name="settings_card_secure_now">आता सुरक्षित करा</string>
+    <string name="settings_card_sync">सिंक</string>
+    <string name="settings_card_sync_subtitle">डेटा बॅकअप</string>
+
+    <string name="settings_rate_app">NoteNext रेट करा</string>
+    <string name="settings_rate_app_subtitle">Play Store वर थोडे प्रेम दाखवा</string>
+    <string name="settings_whats_new">नवीन काय आहे</string>
+    <string name="settings_whats_new_subtitle">नवीनतम बदलनोंदी पहा</string>
+    <string name="settings_current_version">सध्या: v%1$s</string>
+
+    <string name="settings_auto_delete_explanation">ट्रॅशमधील नोट्स या कालावधीनंतर कायमचे हटवल्या जातील.</string>
+    <string name="settings_import_from_title">येथून इम्पोर्ट…</string>
+    <string name="settings_coming_soon">लवकरच येत आहे</string>
+    <string name="settings_keep_import_title">Google Keep इम्पोर्ट</string>
+    <string name="settings_keep_import_message">तुमच्या Keep नोट्स इम्पोर्ट करण्यासाठी कृपया तुमची Google Takeout ZIP फाइल निवडा. आम्ही तुमच्या टेक्स्ट नोट्स आणि चेकलिस्ट काढून घेऊ.</string>
+    <string name="settings_select_zip">ZIP निवडा</string>
+    <string name="settings_bug_report_title">बग रिपोर्ट</string>
+    <string name="settings_bug_report_message">तुम्हाला येणारी समस्या वर्णन करा. सिस्टम लॉग्ज स्वयंचलितपणे जोडले जातील.</string>
+    <string name="settings_bug_report_placeholder">समस्येचे वर्णन…</string>
+    <string name="settings_send_report">अहवाल पाठवा</string>
+    <string name="settings_rate_dialog_message">ॲप आवडले? Play Store वर रेट करून आम्हाला वाढायला मदत करा! फक्त एक मिनिट लागेल.</string>
+    <string name="settings_rate_now">आता रेट करा</string>
+    <string name="settings_later">नंतर</string>
+
+    <string name="settings_lang_subtitle_en">इंग्रजी (US)</string>
+    <string name="settings_lang_subtitle_hi">हिंदी (भारत)</string>
+</resources>

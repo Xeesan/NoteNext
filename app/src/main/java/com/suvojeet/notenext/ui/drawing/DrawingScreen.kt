@@ -73,7 +73,7 @@ fun DrawingScreen(
                 },
                 navigationIcon = {
                     IconButton(onClick = onDismiss, modifier = Modifier.springPress()) {
-                        Icon(Icons.Default.Close, contentDescription = "Close")
+                        Icon(Icons.Default.Close, contentDescription = stringResource(id = R.string.drawing_close_cd))
                     }
                 },
                 actions = {
@@ -82,21 +82,21 @@ fun DrawingScreen(
                         enabled = state.paths.isNotEmpty(),
                         modifier = Modifier.springPress()
                     ) {
-                        Icon(Icons.AutoMirrored.Filled.Undo, contentDescription = "Undo")
+                        Icon(Icons.AutoMirrored.Filled.Undo, contentDescription = stringResource(id = R.string.drawing_undo_cd))
                     }
                     IconButton(
                         onClick = { viewModel.onEvent(DrawingEvent.Redo) },
                         enabled = state.undonePaths.isNotEmpty(),
                         modifier = Modifier.springPress()
                     ) {
-                        Icon(Icons.AutoMirrored.Filled.Redo, contentDescription = "Redo")
+                        Icon(Icons.AutoMirrored.Filled.Redo, contentDescription = stringResource(id = R.string.drawing_redo_cd))
                     }
                     IconButton(
                         onClick = { viewModel.onEvent(DrawingEvent.ClearAll) },
                         enabled = state.paths.isNotEmpty(),
                         modifier = Modifier.springPress()
                     ) {
-                        Icon(Icons.Default.DeleteSweep, contentDescription = "Clear All")
+                        Icon(Icons.Default.DeleteSweep, contentDescription = stringResource(id = R.string.drawing_clear_all_cd))
                     }
                     
                     Spacer(Modifier.width(8.dp))
@@ -118,7 +118,7 @@ fun DrawingScreen(
                         ) {
                             Icon(Icons.Default.Check, contentDescription = null, modifier = Modifier.size(18.dp))
                             Spacer(Modifier.width(8.dp))
-                            Text("Save")
+                            Text(stringResource(id = R.string.save))
                         }
                     }
                 },
@@ -210,7 +210,7 @@ fun DrawingScreen(
                     if (state.paths.isEmpty() && currentPath == null) {
                         Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                             Text(
-                                "Start drawing here...",
+                                stringResource(id = R.string.drawing_placeholder),
                                 style = MaterialTheme.typography.bodyLarge.copy(
                                     color = Color.LightGray.copy(alpha = 0.6f),
                                     fontWeight = FontWeight.Medium,
@@ -258,7 +258,7 @@ private fun DrawingBottomBar(
                         )
                         Spacer(Modifier.width(12.dp))
                         Text(
-                            "${state.currentStrokeWidth.toInt()}px",
+                            stringResource(id = R.string.drawing_stroke_size_label, state.currentStrokeWidth.toInt()),
                             style = MaterialTheme.typography.labelLarge,
                             modifier = Modifier.width(45.dp)
                         )
@@ -279,7 +279,7 @@ private fun DrawingBottomBar(
                         shape = SegmentedButtonDefaults.itemShape(index = 0, count = 2),
                         icon = { Icon(Icons.Default.Brush, contentDescription = null) }
                     ) {
-                        Text("Brush", style = MaterialTheme.typography.labelSmall)
+                        Text(stringResource(id = R.string.drawing_tool_brush), style = MaterialTheme.typography.labelSmall)
                     }
                     SegmentedButton(
                         selected = state.isEraserMode,
@@ -287,7 +287,7 @@ private fun DrawingBottomBar(
                         shape = SegmentedButtonDefaults.itemShape(index = 1, count = 2),
                         icon = { Icon(Icons.Default.AutoFixHigh, contentDescription = null) }
                     ) {
-                        Text("Eraser", style = MaterialTheme.typography.labelSmall)
+                        Text(stringResource(id = R.string.drawing_tool_eraser), style = MaterialTheme.typography.labelSmall)
                     }
                 }
 
@@ -317,7 +317,7 @@ private fun DrawingBottomBar(
                 ) {
                     Icon(
                         if (state.showBrushSettings) Icons.Default.KeyboardArrowDown else Icons.Default.Settings,
-                        contentDescription = "Settings"
+                        contentDescription = stringResource(id = R.string.drawing_settings_cd)
                     )
                 }
             }
@@ -352,9 +352,9 @@ private fun DrawingSideBar(
                     onCheckedChange = { viewModel.onEvent(DrawingEvent.ToggleEraserMode(false)) },
                     modifier = Modifier.size(56.dp).springPress()
                 ) {
-                    Icon(Icons.Default.Brush, contentDescription = "Brush")
+                    Icon(Icons.Default.Brush, contentDescription = stringResource(id = R.string.drawing_tool_brush))
                 }
-                Text("Brush", style = MaterialTheme.typography.labelSmall)
+                Text(stringResource(id = R.string.drawing_tool_brush), style = MaterialTheme.typography.labelSmall)
                 
                 Spacer(Modifier.height(8.dp))
                 
@@ -363,9 +363,9 @@ private fun DrawingSideBar(
                     onCheckedChange = { viewModel.onEvent(DrawingEvent.ToggleEraserMode(true)) },
                     modifier = Modifier.size(56.dp).springPress()
                 ) {
-                    Icon(Icons.Default.AutoFixHigh, contentDescription = "Eraser")
+                    Icon(Icons.Default.AutoFixHigh, contentDescription = stringResource(id = R.string.drawing_tool_eraser))
                 }
-                Text("Eraser", style = MaterialTheme.typography.labelSmall)
+                Text(stringResource(id = R.string.drawing_tool_eraser), style = MaterialTheme.typography.labelSmall)
             }
 
             HorizontalDivider()
@@ -373,7 +373,7 @@ private fun DrawingSideBar(
             // Settings Toggle & Width
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
                 IconButton(onClick = { viewModel.onEvent(DrawingEvent.ToggleBrushSettings) }) {
-                    Icon(Icons.Default.LineWeight, contentDescription = "Stroke Width")
+                    Icon(Icons.Default.LineWeight, contentDescription = stringResource(id = R.string.drawing_stroke_width_cd))
                 }
                 if (state.showBrushSettings) {
                     Slider(

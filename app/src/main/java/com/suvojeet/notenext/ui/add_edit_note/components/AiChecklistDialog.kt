@@ -36,12 +36,14 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.suvojeet.notenext.R
 import com.suvojeet.notenext.ui.components.springPress
 import kotlinx.coroutines.delay
 
@@ -82,7 +84,7 @@ fun AiChecklistSheet(
     fun saveAndGenerate(prompt: String) {
         if (prompt.isNotBlank()) {
             if (!isNetworkAvailable()) {
-                Toast.makeText(context, "No internet connection. Please check your network.", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, context.getString(R.string.ai_checklist_no_internet), Toast.LENGTH_SHORT).show()
                 return
             }
             promptHistory = savePromptToHistory(context, prompt, promptHistory)
@@ -127,20 +129,20 @@ fun AiChecklistSheet(
                     Spacer(modifier = Modifier.width(16.dp))
                     Column(modifier = Modifier.weight(1f)) {
                         Text(
-                            text = "Smart List Creator",
+                            text = stringResource(id = R.string.ai_checklist_title),
                             style = MaterialTheme.typography.headlineSmall,
                             fontWeight = FontWeight.Black,
                             letterSpacing = (-0.5).sp
                         )
                         Text(
-                            text = "Powered by AI",
+                            text = stringResource(id = R.string.ai_checklist_powered_by),
                             style = MaterialTheme.typography.labelSmall,
                             color = MaterialTheme.colorScheme.primary,
                             fontWeight = FontWeight.Bold
                         )
                     }
                     IconButton(onClick = onDismiss, modifier = Modifier.springPress()) {
-                        Icon(Icons.Outlined.Close, contentDescription = "Close")
+                        Icon(Icons.Outlined.Close, contentDescription = stringResource(id = R.string.ai_checklist_close_cd))
                     }
                 }
                 
@@ -154,7 +156,7 @@ fun AiChecklistSheet(
                 ) {
                     Column {
                         Text(
-                            text = "Recent prompts",
+                            text = stringResource(id = R.string.ai_checklist_recent_prompts),
                             style = MaterialTheme.typography.labelLarge,
                             color = MaterialTheme.colorScheme.onSurfaceVariant,
                             modifier = Modifier.padding(bottom = 8.dp)
@@ -196,7 +198,7 @@ fun AiChecklistSheet(
                 ) {
                     Column(modifier = Modifier.padding(16.dp)) {
                         Text(
-                            text = "What list should I create?",
+                            text = stringResource(id = R.string.ai_checklist_prompt_label),
                             style = MaterialTheme.typography.labelMedium,
                             color = MaterialTheme.colorScheme.primary,
                             fontWeight = FontWeight.Bold,
@@ -215,7 +217,7 @@ fun AiChecklistSheet(
                                 decorationBox = { innerTextField ->
                                     if (topic.isEmpty()) {
                                         Text(
-                                            text = "e.g. Packing list for hiking trip",
+                                            text = stringResource(id = R.string.ai_checklist_prompt_placeholder),
                                             style = MaterialTheme.typography.bodyLarge,
                                             color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f)
                                         )
@@ -236,7 +238,7 @@ fun AiChecklistSheet(
                                 ) {
                                     Icon(
                                         Icons.Outlined.Refresh,
-                                        contentDescription = "Regenerate",
+                                        contentDescription = stringResource(id = R.string.ai_checklist_regenerate_cd),
                                         tint = MaterialTheme.colorScheme.primary
                                     )
                                 }
@@ -269,7 +271,7 @@ fun AiChecklistSheet(
                                         )
                                         Spacer(modifier = Modifier.height(16.dp))
                                         Text(
-                                            "Thinking...",
+                                            stringResource(id = R.string.ai_checklist_thinking),
                                             style = MaterialTheme.typography.titleMedium,
                                             fontWeight = FontWeight.Bold
                                         )
@@ -282,12 +284,12 @@ fun AiChecklistSheet(
                                     verticalAlignment = Alignment.CenterVertically
                                 ) {
                                     Text(
-                                        text = "Proposed Items",
+                                        text = stringResource(id = R.string.ai_checklist_proposed_items),
                                         style = MaterialTheme.typography.titleMedium,
                                         fontWeight = FontWeight.Bold
                                     )
                                     Text(
-                                        text = "${editableItems.size} items",
+                                        text = stringResource(id = R.string.ai_checklist_items_count, editableItems.size),
                                         style = MaterialTheme.typography.labelMedium,
                                         color = MaterialTheme.colorScheme.primary
                                     )
@@ -345,7 +347,7 @@ fun AiChecklistSheet(
                                         )
                                         Spacer(modifier = Modifier.width(8.dp))
                                         Text(
-                                            text = "AI might provide inaccurate info. Please verify.",
+                                            text = stringResource(id = R.string.ai_checklist_disclaimer),
                                             style = MaterialTheme.typography.bodySmall,
                                             color = MaterialTheme.colorScheme.onErrorContainer
                                         )
@@ -375,7 +377,7 @@ fun AiChecklistSheet(
                             )
                         ) {
                             Text(
-                                "Generate List",
+                                stringResource(id = R.string.ai_checklist_generate),
                                 style = MaterialTheme.typography.titleMedium,
                                 fontWeight = FontWeight.Bold
                             )
@@ -396,7 +398,7 @@ fun AiChecklistSheet(
                             Icon(Icons.Outlined.Add, contentDescription = null)
                             Spacer(modifier = Modifier.width(8.dp))
                             Text(
-                                "Insert into Note",
+                                stringResource(id = R.string.ai_checklist_insert),
                                 style = MaterialTheme.typography.titleMedium,
                                 fontWeight = FontWeight.Bold
                             )
@@ -470,7 +472,7 @@ private fun EditableItemRow(
                 ) {
                     Icon(
                         Icons.Default.Delete,
-                        contentDescription = "Remove item",
+                        contentDescription = stringResource(id = R.string.ai_checklist_remove_item_cd),
                         modifier = Modifier.size(18.dp),
                         tint = MaterialTheme.colorScheme.error.copy(alpha = 0.7f)
                     )

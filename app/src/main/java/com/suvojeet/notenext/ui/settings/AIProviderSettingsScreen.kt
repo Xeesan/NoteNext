@@ -23,8 +23,10 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.suvojeet.notenext.R
 import com.suvojeet.notenext.data.ai.AIProvider
 import com.suvojeet.notenext.ui.components.ExpressiveSection
 import com.suvojeet.notenext.ui.components.SettingsGroupCard
@@ -65,7 +67,7 @@ fun AIProviderSettingsScreen(
             LargeTopAppBar(
                 title = {
                     Text(
-                        text = "AI Providers",
+                        text = stringResource(id = R.string.ai_providers_title),
                         style = MaterialTheme.typography.headlineLarge,
                         fontWeight = FontWeight.Black,
                         letterSpacing = (-1.0).sp
@@ -73,7 +75,7 @@ fun AIProviderSettingsScreen(
                 },
                 navigationIcon = {
                     IconButton(onClick = onBackClick, modifier = Modifier.springPress()) {
-                        Icon(Icons.AutoMirrored.Rounded.ArrowBack, contentDescription = "Back")
+                        Icon(Icons.AutoMirrored.Rounded.ArrowBack, contentDescription = stringResource(id = R.string.back))
                     }
                 },
                 scrollBehavior = scrollBehavior
@@ -89,15 +91,15 @@ fun AIProviderSettingsScreen(
         ) {
             item {
                 ExpressiveSection(
-                    title = "Select AI Provider",
-                    description = "Choose your preferred AI service for summarization, checklists, and more"
+                    title = stringResource(id = R.string.ai_select_provider_title),
+                    description = stringResource(id = R.string.ai_select_provider_description)
                 ) {
                     SettingsGroupCard {
                         Column(modifier = Modifier.padding(16.dp)) {
                             AIProviderCard(
                                 provider = AIProvider.GROQ,
                                 name = "Groq",
-                                description = "Fast inference with Llama & Qwen models",
+                                description = stringResource(id = R.string.ai_provider_groq_desc),
                                 icon = Icons.Rounded.Bolt,
                                 iconColor = Color(0xFFFFC107),
                                 isSelected = selectedProvider == AIProvider.GROQ,
@@ -109,7 +111,7 @@ fun AIProviderSettingsScreen(
                             AIProviderCard(
                                 provider = AIProvider.OPENAI,
                                 name = "OpenAI",
-                                description = "GPT-4o and GPT-4 Turbo models",
+                                description = stringResource(id = R.string.ai_provider_openai_desc),
                                 icon = Icons.Rounded.AutoAwesome,
                                 iconColor = Color(0xFF10A37A),
                                 isSelected = selectedProvider == AIProvider.OPENAI,
@@ -120,8 +122,8 @@ fun AIProviderSettingsScreen(
 
                             AIProviderCard(
                                 provider = AIProvider.ANTHROPIC,
-                                name = "Anthropic (Claude)",
-                                description = "Claude 3.5 Sonnet and Opus models",
+                                name = stringResource(id = R.string.ai_provider_anthropic_name),
+                                description = stringResource(id = R.string.ai_provider_anthropic_desc),
                                 icon = Icons.Rounded.Psychology,
                                 iconColor = Color(0xFFFF5722),
                                 isSelected = selectedProvider == AIProvider.ANTHROPIC,
@@ -132,8 +134,8 @@ fun AIProviderSettingsScreen(
 
                             AIProviderCard(
                                 provider = AIProvider.GEMINI,
-                                name = "Google Gemini",
-                                description = "Gemini 3.1 Pro and Flash models",
+                                name = stringResource(id = R.string.ai_provider_gemini_name),
+                                description = stringResource(id = R.string.ai_provider_gemini_desc),
                                 icon = Icons.Rounded.ModelTraining,
                                 iconColor = Color(0xFF4285F4),
                                 isSelected = selectedProvider == AIProvider.GEMINI,
@@ -148,15 +150,15 @@ fun AIProviderSettingsScreen(
             if (selectedProvider == AIProvider.GROQ) {
                 item {
                     ExpressiveSection(
-                        title = "Groq Configuration",
-                        description = "Configure your Groq API key (optional)"
+                        title = stringResource(id = R.string.ai_groq_config_title),
+                        description = stringResource(id = R.string.ai_groq_config_description)
                     ) {
                         SettingsGroupCard {
                             Column(modifier = Modifier.padding(16.dp)) {
                                 OutlinedTextField(
                                     value = groqKey,
                                     onValueChange = { viewModel.saveGroqKey(it) },
-                                    label = { Text("Groq API Key (Optional)") },
+                                    label = { Text(stringResource(id = R.string.ai_groq_key_label)) },
                                     placeholder = { Text("gsk_...") },
                                     modifier = Modifier.fillMaxWidth(),
                                     visualTransformation = if (showGroqKeyVisible) VisualTransformation.None else PasswordVisualTransformation(),
@@ -174,7 +176,7 @@ fun AIProviderSettingsScreen(
                                 Spacer(modifier = Modifier.height(8.dp))
 
                                 Text(
-                                    text = "Leave empty to use the app's built-in key. Get your key at console.groq.com",
+                                    text = stringResource(id = R.string.ai_groq_key_help),
                                     style = MaterialTheme.typography.bodySmall,
                                     color = MaterialTheme.colorScheme.onSurfaceVariant
                                 )
@@ -187,7 +189,7 @@ fun AIProviderSettingsScreen(
                                 ) {
                                     Icon(Icons.Rounded.Settings, contentDescription = null)
                                     Spacer(modifier = Modifier.width(8.dp))
-                                    Text("Advanced Groq Settings")
+                                    Text(stringResource(id = R.string.ai_groq_advanced_settings))
                                 }
                             }
                         }
@@ -199,15 +201,15 @@ fun AIProviderSettingsScreen(
             if (selectedProvider == AIProvider.OPENAI) {
                 item {
                     ExpressiveSection(
-                        title = "OpenAI Configuration",
-                        description = "Enter your OpenAI API key"
+                        title = stringResource(id = R.string.ai_openai_config_title),
+                        description = stringResource(id = R.string.ai_openai_config_description)
                     ) {
                         SettingsGroupCard {
                             Column(modifier = Modifier.padding(16.dp)) {
                                 OutlinedTextField(
                                     value = openaiBaseUrl,
                                     onValueChange = { viewModel.saveOpenaiBaseUrl(it) },
-                                    label = { Text("Base URL (Optional)") },
+                                    label = { Text(stringResource(id = R.string.ai_openai_base_url_label)) },
                                     placeholder = { Text("https://api.openai.com/") },
                                     modifier = Modifier.fillMaxWidth(),
                                     shape = MaterialTheme.shapes.medium
@@ -218,7 +220,7 @@ fun AIProviderSettingsScreen(
                                 OutlinedTextField(
                                     value = openaiKey,
                                     onValueChange = { viewModel.saveOpenaiKey(it) },
-                                    label = { Text("OpenAI API Key") },
+                                    label = { Text(stringResource(id = R.string.ai_openai_key_label)) },
                                     placeholder = { Text("sk-...") },
                                     modifier = Modifier.fillMaxWidth(),
                                     visualTransformation = if (showOpenaiKeyVisible) VisualTransformation.None else PasswordVisualTransformation(),
@@ -236,7 +238,7 @@ fun AIProviderSettingsScreen(
                                 Spacer(modifier = Modifier.height(8.dp))
 
                                 Text(
-                                    text = "Your API key is stored locally and never sent to any server except OpenAI",
+                                    text = stringResource(id = R.string.ai_openai_key_help),
                                     style = MaterialTheme.typography.bodySmall,
                                     color = MaterialTheme.colorScheme.onSurfaceVariant
                                 )
@@ -252,11 +254,11 @@ fun AIProviderSettingsScreen(
                                         if (isLoadingModels) {
                                             LoadingIndicator(modifier = Modifier.size(20.dp), color = MaterialTheme.colorScheme.onPrimary)
                                             Spacer(modifier = Modifier.width(8.dp))
-                                            Text("Fetching Models...")
+                                            Text(stringResource(id = R.string.ai_fetching_models))
                                         } else {
                                             Icon(Icons.Rounded.Refresh, contentDescription = null)
                                             Spacer(modifier = Modifier.width(8.dp))
-                                            Text("Refresh Models")
+                                            Text(stringResource(id = R.string.ai_refresh_models))
                                         }
                                     }
                                 }
@@ -265,8 +267,8 @@ fun AIProviderSettingsScreen(
                             HorizontalDivider(modifier = Modifier.padding(horizontal = 16.dp), color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.5f))
 
                             ModelSelector(
-                                title = "Select OpenAI Model",
-                                subtitle = "Choose which model to use for AI tasks",
+                                title = stringResource(id = R.string.ai_select_openai_model),
+                                subtitle = stringResource(id = R.string.ai_model_selector_subtitle),
                                 selectedModel = selectedOpenAIModel,
                                 availableModels = openaiModels,
                                 onModelSelected = { viewModel.selectOpenAIModel(it) },
@@ -282,15 +284,15 @@ fun AIProviderSettingsScreen(
             if (selectedProvider == AIProvider.ANTHROPIC) {
                 item {
                     ExpressiveSection(
-                        title = "Anthropic Configuration",
-                        description = "Enter your Anthropic API key"
+                        title = stringResource(id = R.string.ai_anthropic_config_title),
+                        description = stringResource(id = R.string.ai_anthropic_config_description)
                     ) {
                         SettingsGroupCard {
                             Column(modifier = Modifier.padding(16.dp)) {
                                 OutlinedTextField(
                                     value = anthropicKey,
                                     onValueChange = { viewModel.saveAnthropicKey(it) },
-                                    label = { Text("Anthropic API Key") },
+                                    label = { Text(stringResource(id = R.string.ai_anthropic_key_label)) },
                                     placeholder = { Text("sk-ant-...") },
                                     modifier = Modifier.fillMaxWidth(),
                                     visualTransformation = if (showAnthropicKeyVisible) VisualTransformation.None else PasswordVisualTransformation(),
@@ -308,7 +310,7 @@ fun AIProviderSettingsScreen(
                                 Spacer(modifier = Modifier.height(8.dp))
 
                                 Text(
-                                    text = "Your API key is stored locally and never sent to any server except Anthropic",
+                                    text = stringResource(id = R.string.ai_anthropic_key_help),
                                     style = MaterialTheme.typography.bodySmall,
                                     color = MaterialTheme.colorScheme.onSurfaceVariant
                                 )
@@ -317,8 +319,8 @@ fun AIProviderSettingsScreen(
                             HorizontalDivider(modifier = Modifier.padding(horizontal = 16.dp), color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.5f))
 
                             ModelSelector(
-                                title = "Select Anthropic Model",
-                                subtitle = "Choose which model to use for AI tasks",
+                                title = stringResource(id = R.string.ai_select_anthropic_model),
+                                subtitle = stringResource(id = R.string.ai_model_selector_subtitle),
                                 selectedModel = selectedAnthropicModel,
                                 availableModels = anthropicModels,
                                 onModelSelected = { viewModel.selectAnthropicModel(it) },
@@ -335,15 +337,15 @@ fun AIProviderSettingsScreen(
             if (selectedProvider == AIProvider.GEMINI) {
                 item {
                     ExpressiveSection(
-                        title = "Gemini Configuration",
-                        description = "Enter your Google Gemini API key"
+                        title = stringResource(id = R.string.ai_gemini_config_title),
+                        description = stringResource(id = R.string.ai_gemini_config_description)
                     ) {
                         SettingsGroupCard {
                             Column(modifier = Modifier.padding(16.dp)) {
                                 OutlinedTextField(
                                     value = geminiKey,
                                     onValueChange = { viewModel.saveGeminiKey(it) },
-                                    label = { Text("Gemini API Key") },
+                                    label = { Text(stringResource(id = R.string.ai_gemini_key_label)) },
                                     placeholder = { Text("AIza...") },
                                     modifier = Modifier.fillMaxWidth(),
                                     visualTransformation = if (showGeminiKeyVisible) VisualTransformation.None else PasswordVisualTransformation(),
@@ -361,7 +363,7 @@ fun AIProviderSettingsScreen(
                                 Spacer(modifier = Modifier.height(8.dp))
 
                                 Text(
-                                    text = "Your API key is stored locally and never sent to any server except Google",
+                                    text = stringResource(id = R.string.ai_gemini_key_help),
                                     style = MaterialTheme.typography.bodySmall,
                                     color = MaterialTheme.colorScheme.onSurfaceVariant
                                 )
@@ -370,8 +372,8 @@ fun AIProviderSettingsScreen(
                             HorizontalDivider(modifier = Modifier.padding(horizontal = 16.dp), color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.5f))
 
                             ModelSelector(
-                                title = "Select Gemini Model",
-                                subtitle = "Choose which model to use for AI tasks",
+                                title = stringResource(id = R.string.ai_select_gemini_model),
+                                subtitle = stringResource(id = R.string.ai_model_selector_subtitle),
                                 selectedModel = selectedGeminiModel,
                                 availableModels = geminiModels,
                                 onModelSelected = { viewModel.selectGeminiModel(it) },

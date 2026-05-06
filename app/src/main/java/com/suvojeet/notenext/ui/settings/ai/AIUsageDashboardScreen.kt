@@ -20,9 +20,11 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.suvojeet.notenext.R
 import com.suvojeet.notenext.data.ai.AIFeature
 import com.suvojeet.notenext.ui.components.ExpressiveSection
 import com.suvojeet.notenext.ui.components.SettingsGroupCard
@@ -65,7 +67,7 @@ fun AIUsageDashboardScreen(
             LargeTopAppBar(
                 title = {
                     Text(
-                        text = "Usage",
+                        text = stringResource(id = R.string.ai_usage_title),
                         style = MaterialTheme.typography.headlineLarge,
                         fontWeight = FontWeight.Black,
                         letterSpacing = (-1.0).sp
@@ -73,7 +75,7 @@ fun AIUsageDashboardScreen(
                 },
                 navigationIcon = {
                     IconButton(onClick = onBackClick, modifier = Modifier.springPress()) {
-                        Icon(Icons.AutoMirrored.Rounded.ArrowBack, contentDescription = "Back")
+                        Icon(Icons.AutoMirrored.Rounded.ArrowBack, contentDescription = stringResource(id = R.string.back))
                     }
                 },
                 actions = {
@@ -82,7 +84,7 @@ fun AIUsageDashboardScreen(
                             onClick = { showClearConfirm = true },
                             modifier = Modifier.springPress()
                         ) {
-                            Icon(Icons.Rounded.DeleteSweep, contentDescription = "Clear")
+                            Icon(Icons.Rounded.DeleteSweep, contentDescription = stringResource(id = R.string.ai_usage_clear_cd))
                         }
                     }
                 },
@@ -111,8 +113,8 @@ fun AIUsageDashboardScreen(
 
                 item {
                     ExpressiveSection(
-                        title = "By feature",
-                        description = "How often each AI feature has run on this device"
+                        title = stringResource(id = R.string.ai_usage_section_features),
+                        description = stringResource(id = R.string.ai_usage_section_features_desc)
                     ) {
                         SettingsGroupCard {
                             Column(modifier = Modifier.padding(16.dp)) {
@@ -125,8 +127,8 @@ fun AIUsageDashboardScreen(
                 if (featureStats.isNotEmpty()) {
                     item {
                         ExpressiveSection(
-                            title = "Details",
-                            description = "Success rate, average latency, acceptance"
+                            title = stringResource(id = R.string.ai_usage_section_details),
+                            description = stringResource(id = R.string.ai_usage_section_details_desc)
                         ) {
                             SettingsGroupCard {
                                 featureStats.forEachIndexed { i, row ->
@@ -147,8 +149,8 @@ fun AIUsageDashboardScreen(
                 if (providerStats.isNotEmpty()) {
                     item {
                         ExpressiveSection(
-                            title = "By provider",
-                            description = "Which AI service handled your requests"
+                            title = stringResource(id = R.string.ai_usage_section_provider),
+                            description = stringResource(id = R.string.ai_usage_section_provider_desc)
                         ) {
                             SettingsGroupCard {
                                 Column(modifier = Modifier.padding(16.dp)) {
@@ -176,19 +178,19 @@ fun AIUsageDashboardScreen(
         AlertDialog(
             onDismissRequest = { showClearConfirm = false },
             shape = MaterialTheme.shapes.extraLarge,
-            title = { Text("Clear AI usage history?") },
-            text = { Text("This permanently deletes the local usage stats shown on this dashboard. Your notes and AI feature settings are unaffected.") },
+            title = { Text(stringResource(id = R.string.ai_usage_clear_dialog_title)) },
+            text = { Text(stringResource(id = R.string.ai_usage_clear_dialog_message)) },
             confirmButton = {
                 TextButton(onClick = {
                     viewModel.clearAll()
                     showClearConfirm = false
                 }, modifier = Modifier.springPress()) {
-                    Text("Clear", color = MaterialTheme.colorScheme.error)
+                    Text(stringResource(id = R.string.ai_usage_clear_action), color = MaterialTheme.colorScheme.error)
                 }
             },
             dismissButton = {
                 TextButton(onClick = { showClearConfirm = false }, modifier = Modifier.springPress()) {
-                    Text("Cancel")
+                    Text(stringResource(id = R.string.cancel))
                 }
             }
         )
@@ -210,13 +212,13 @@ private fun EmptyState(modifier: Modifier = Modifier) {
             )
             Spacer(Modifier.height(16.dp))
             Text(
-                "No AI activity yet",
+                stringResource(id = R.string.ai_usage_empty_title),
                 style = MaterialTheme.typography.headlineSmall,
                 fontWeight = FontWeight.Bold
             )
             Spacer(Modifier.height(8.dp))
             Text(
-                "Once you enable an AI feature and use it, you'll see how often it ran, how fast it was, and how often you accepted its suggestions — all stored locally on this device.",
+                stringResource(id = R.string.ai_usage_empty_subtitle),
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
@@ -233,7 +235,7 @@ private fun HeroCard(total: Int, success: Int) {
     ) {
         Column(modifier = Modifier.padding(24.dp)) {
             Text(
-                "AI invocations",
+                stringResource(id = R.string.ai_usage_hero_label),
                 style = MaterialTheme.typography.labelLarge,
                 color = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.8f),
                 fontWeight = FontWeight.SemiBold
@@ -248,7 +250,7 @@ private fun HeroCard(total: Int, success: Int) {
             Spacer(Modifier.height(12.dp))
             Row {
                 StatPill(
-                    label = "Success",
+                    label = stringResource(id = R.string.ai_usage_pill_success),
                     value = "$success",
                     icon = Icons.Rounded.CheckCircle,
                     color = Color(0xFF388E3C)
@@ -256,7 +258,7 @@ private fun HeroCard(total: Int, success: Int) {
                 Spacer(Modifier.width(8.dp))
                 val rate = if (total > 0) success * 100 / total else 0
                 StatPill(
-                    label = "Success rate",
+                    label = stringResource(id = R.string.ai_usage_pill_success_rate),
                     value = "$rate%",
                     icon = Icons.Rounded.Bolt,
                     color = Color(0xFFFFB300)
@@ -311,12 +313,12 @@ private fun HelpfulnessCard(summary: HelpfulnessSummary) {
             Spacer(Modifier.width(16.dp))
             Column(modifier = Modifier.weight(1f)) {
                 Text(
-                    "Suggestions you accepted",
+                    stringResource(id = R.string.ai_usage_helpfulness_label),
                     style = MaterialTheme.typography.labelLarge,
                     color = MaterialTheme.colorScheme.onTertiaryContainer
                 )
                 Text(
-                    "${summary.ratePercent}%  ·  ${summary.acceptedCount} of ${summary.suggestionTotal}",
+                    stringResource(id = R.string.ai_usage_helpfulness_value, summary.ratePercent, summary.acceptedCount, summary.suggestionTotal),
                     style = MaterialTheme.typography.titleLarge,
                     fontWeight = FontWeight.Bold,
                     color = MaterialTheme.colorScheme.onTertiaryContainer
@@ -329,7 +331,7 @@ private fun HelpfulnessCard(summary: HelpfulnessSummary) {
 @Composable
 private fun BarChart(data: Map<AIFeature, Int>) {
     if (data.isEmpty()) {
-        Text("No data yet", style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
+Text(stringResource(id = R.string.ai_usage_no_data), style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
         return
     }
     val max = (data.values.maxOrNull() ?: 1).coerceAtLeast(1)
@@ -387,7 +389,7 @@ private fun FeatureDetailRow(
     val avgLatency = if (row.avgDurationMs > 0) "${row.avgDurationMs.toInt()}ms" else "—"
     val acceptanceText = if (row.suggestions > 0) {
         val pct = row.accepted * 100 / row.suggestions
-        "$pct% accepted (${row.accepted}/${row.suggestions})"
+        stringResource(id = R.string.ai_usage_accepted_value, pct, row.accepted, row.suggestions)
     } else "—"
 
     Column(modifier = Modifier.padding(16.dp)) {
@@ -400,15 +402,15 @@ private fun FeatureDetailRow(
             )
             AssistChip(
                 onClick = {},
-                label = { Text("${row.total} runs", style = MaterialTheme.typography.labelSmall) }
+label = { Text(stringResource(id = R.string.ai_usage_runs, row.total), style = MaterialTheme.typography.labelSmall) }
             )
         }
         Spacer(Modifier.height(6.dp))
         Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-            DetailStat(label = "Success", value = "$successRate%")
-            DetailStat(label = "Avg latency", value = avgLatency)
+            DetailStat(label = stringResource(id = R.string.ai_usage_pill_success), value = "$successRate%")
+            DetailStat(label = stringResource(id = R.string.ai_usage_avg_latency), value = avgLatency)
             if (feature.isSuggestionFeature) {
-                DetailStat(label = "Accepted", value = acceptanceText)
+                DetailStat(label = stringResource(id = R.string.ai_usage_accepted_label), value = acceptanceText)
             }
         }
     }

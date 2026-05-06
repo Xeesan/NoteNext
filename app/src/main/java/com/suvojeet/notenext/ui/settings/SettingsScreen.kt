@@ -120,7 +120,7 @@ fun SettingsScreen(
         listOf(
             SettingsSectionData(
                 title = context.getString(R.string.display_section_title),
-                description = "Visuals and language preferences",
+                description = context.getString(R.string.settings_section_display_subtitle),
                 items = listOf(
                     SettingsItemData(
                         icon = Icons.Rounded.Palette,
@@ -141,56 +141,56 @@ fun SettingsScreen(
                     SettingsItemData(
                         icon = Icons.Rounded.Language,
                         title = context.getString(R.string.language),
-                        subtitle = if (selectedLanguage == "hi") "Hindi (भारत)" else "English (US)",
+                        subtitle = if (selectedLanguage == "hi") context.getString(R.string.settings_lang_subtitle_hi) else context.getString(R.string.settings_lang_subtitle_en),
                         iconColor = tertiaryColor,
                         onClick = { showLanguageSheet = true }
                     )
                 )
             ),
             SettingsSectionData(
-                title = "Data & Maintenance",
-                description = "Backup, imports and cleanup",
+                title = context.getString(R.string.settings_section_data),
+                description = context.getString(R.string.settings_section_data_subtitle),
                 items = listOf(
                     SettingsItemData(
                         icon = Icons.Rounded.Delete,
-                        title = "Auto Cleanup",
-                        subtitle = "Clean bin after $autoDeleteDays days",
+                        title = context.getString(R.string.settings_auto_cleanup),
+                        subtitle = context.getString(R.string.settings_auto_cleanup_subtitle, autoDeleteDays),
                         iconColor = secondaryColor,
                         onClick = { showAutoDeleteDialog = true }
                     ),
                     SettingsItemData(
                         icon = Icons.Rounded.Backup,
-                        title = "Backup & Restore",
-                        subtitle = "Cloud and local data management",
+                        title = context.getString(R.string.backup_restore_section_title),
+                        subtitle = context.getString(R.string.settings_backup_restore_subtitle),
                         iconColor = primaryColor,
                         onClick = { onNavigate("backup") }
                     ),
                     SettingsItemData(
                         icon = Icons.Rounded.Security,
-                        title = "Privacy & Security",
-                        subtitle = "App lock, screenshots, clipboard clearing",
+                        title = context.getString(R.string.settings_privacy_security),
+                        subtitle = context.getString(R.string.settings_privacy_security_subtitle),
                         iconColor = errorColor,
                         onClick = { onNavigate("privacy") }
                     ),
                     SettingsItemData(
                         icon = Icons.Rounded.ImportExport,
-                        title = "Import Notes",
-                        subtitle = "Import from Google Keep ZIP",
+                        title = context.getString(R.string.settings_import_notes),
+                        subtitle = context.getString(R.string.settings_import_notes_subtitle),
                         iconColor = tertiaryColor,
                         onClick = { showImportSourceDialog = true }
                     ),
                     SettingsItemData(
                         icon = Icons.Rounded.AutoAwesome,
-                        title = "AI",
-                        subtitle = "Master switch, providers, features, usage dashboard",
+                        title = context.getString(R.string.settings_ai_label),
+                        subtitle = context.getString(R.string.settings_ai_subtitle),
                         iconColor = secondaryColor,
                         onClick = { onNavigate("ai") }
                     )
                 )
             ),
             SettingsSectionData(
-                title = "Support & Logging",
-                description = "Information and bug reproduction",
+                title = context.getString(R.string.settings_section_support_logging),
+                description = context.getString(R.string.settings_section_support_logging_subtitle),
                 items = listOf(
                     SettingsItemData(
                         icon = Icons.Rounded.VolunteerActivism,
@@ -201,35 +201,35 @@ fun SettingsScreen(
                     ),
                     SettingsItemData(
                         icon = Icons.Rounded.Info,
-                        title = "App Info",
-                        subtitle = "v$versionName Stable Build",
+                        title = context.getString(R.string.settings_app_info),
+                        subtitle = context.getString(R.string.settings_app_info_subtitle, versionName),
                         iconColor = primaryColor,
                         onClick = { onNavigate("about") }
                     ),
                     SettingsItemData(
                         icon = if (isLoggingActive) Icons.Rounded.StopCircle else Icons.Rounded.PlayCircle,
-                        title = if (isLoggingActive) "Stop Logging" else "Start Logging",
-                        subtitle = if (isLoggingActive) "Logging active. Reproduce bug now." else "Record app logs to report bugs",
+                        title = if (isLoggingActive) context.getString(R.string.settings_stop_logging) else context.getString(R.string.settings_start_logging),
+                        subtitle = if (isLoggingActive) context.getString(R.string.settings_logging_active_subtitle) else context.getString(R.string.settings_start_logging_subtitle),
                         iconColor = if (isLoggingActive) errorColor else primaryColor,
                         onClick = {
                             if (isLoggingActive) {
                                 val logFile = LogcatManager.stopLogging()
                                 if (logFile != null) {
                                     LogcatManager.shareLogFile(context, logFile)
-                                    Toast.makeText(context, "Log saved and ready to share", Toast.LENGTH_SHORT).show()
+                                    Toast.makeText(context, context.getString(R.string.settings_log_saved_toast), Toast.LENGTH_SHORT).show()
                                 }
                                 isLoggingActive = false
                             } else {
                                 LogcatManager.startLogging(context)
                                 isLoggingActive = true
-                                Toast.makeText(context, "Logging started. Reproduce the bug now.", Toast.LENGTH_LONG).show()
+                                Toast.makeText(context, context.getString(R.string.settings_logging_started_toast), Toast.LENGTH_LONG).show()
                             }
                         }
                     ),
                     SettingsItemData(
                         icon = Icons.Rounded.Code,
-                        title = "Source Code",
-                        subtitle = "Check out our GitHub repository",
+                        title = context.getString(R.string.settings_source_code),
+                        subtitle = context.getString(R.string.settings_source_code_subtitle),
                         iconColor = surfaceVariantColor,
                         onClick = {
                             val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/suvojeet-sengupta/NoteNext"))
@@ -270,7 +270,7 @@ fun SettingsScreen(
                 },
                 navigationIcon = {
                     IconButton(onClick = onBackClick, modifier = Modifier.springPress()) {
-                        Icon(Icons.Rounded.ArrowBack, contentDescription = "Back")
+                        Icon(Icons.Rounded.ArrowBack, contentDescription = stringResource(id = R.string.back))
                     }
                 },
                 scrollBehavior = scrollBehavior,
@@ -295,7 +295,7 @@ fun SettingsScreen(
                     onSearch = { },
                     active = false,
                     onActiveChange = { },
-                    placeholder = { Text("Search settings...", style = MaterialTheme.typography.bodyLarge) },
+                    placeholder = { Text(stringResource(id = R.string.settings_search_placeholder), style = MaterialTheme.typography.bodyLarge) },
                     leadingIcon = { Icon(Icons.Rounded.Search, contentDescription = null, tint = MaterialTheme.colorScheme.primary) },
                     trailingIcon = if (searchQuery.isNotEmpty()) {
                         { 
@@ -319,8 +319,8 @@ fun SettingsScreen(
                         horizontalArrangement = Arrangement.spacedBy(12.dp)
                     ) {
                         FeaturedCard(
-                            title = "Privacy",
-                            subtitle = if (enableAppLock) "Protected" else "Secure now",
+                            title = stringResource(id = R.string.settings_card_privacy),
+                            subtitle = if (enableAppLock) stringResource(id = R.string.settings_card_protected) else stringResource(id = R.string.settings_card_secure_now),
                             icon = Icons.Rounded.Security,
                             containerColor = MaterialTheme.colorScheme.primaryContainer,
                             contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
@@ -328,8 +328,8 @@ fun SettingsScreen(
                             onClick = { onNavigate("privacy") }
                         )
                         FeaturedCard(
-                            title = "Sync",
-                            subtitle = "Backup Data",
+                            title = stringResource(id = R.string.settings_card_sync),
+                            subtitle = stringResource(id = R.string.settings_card_sync_subtitle),
                             icon = Icons.Rounded.CloudUpload,
                             containerColor = MaterialTheme.colorScheme.secondaryContainer,
                             contentColor = MaterialTheme.colorScheme.onSecondaryContainer,
@@ -367,22 +367,22 @@ fun SettingsScreen(
             if (searchQuery.isEmpty()) {
                 item {
                     ExpressiveSection(
-                        title = "Support & Updates",
-                        description = "Keep NoteNext running smoothly"
+                        title = stringResource(id = R.string.settings_section_support_updates),
+                        description = stringResource(id = R.string.settings_section_support_updates_subtitle)
                     ) {
                         SettingsGroupCard {
                             SettingsItem(
                                 icon = Icons.Rounded.Star,
-                                title = "Rate NoteNext",
-                                subtitle = "Show some love on Play Store",
+                                title = stringResource(id = R.string.settings_rate_app),
+                                subtitle = stringResource(id = R.string.settings_rate_app_subtitle),
                                 iconColor = MaterialTheme.colorScheme.primary,
                                 onClick = { showRateDialog = true }
                             )
                             CheckForUpdateItem(viewModel = viewModel)
                             SettingsItem(
                                 icon = Icons.Rounded.NewReleases,
-                                title = "What's New",
-                                subtitle = "View latest changelog",
+                                title = stringResource(id = R.string.settings_whats_new),
+                                subtitle = stringResource(id = R.string.settings_whats_new_subtitle),
                                 iconColor = MaterialTheme.colorScheme.secondary,
                                 onClick = { onNavigate("changelog") }
                             )
@@ -612,7 +612,7 @@ private fun AutoDeleteDialog(currentDays: Int, onConfirm: (Int) -> Unit, onDismi
         text = {
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
                 Text(
-                    text = "${pos.roundToInt()} days",
+                    text = stringResource(id = R.string.days, pos.roundToInt()),
                     style = MaterialTheme.typography.displaySmall,
                     fontWeight = FontWeight.Black,
                     color = MaterialTheme.colorScheme.primary
@@ -630,7 +630,7 @@ private fun AutoDeleteDialog(currentDays: Int, onConfirm: (Int) -> Unit, onDismi
                     )
                 )
                 Text(
-                    text = "Notes in trash will be permanently deleted after this period.",
+                    text = stringResource(id = R.string.settings_auto_delete_explanation),
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     textAlign = TextAlign.Center
@@ -670,7 +670,7 @@ private fun CheckForUpdateItem(viewModel: com.suvojeet.notenext.ui.MainViewModel
     SettingsItem(
         icon = Icons.Rounded.Update,
         title = stringResource(R.string.check_for_updates),
-        subtitle = if (isChecking) stringResource(R.string.checking_for_updates) else "Current: v$currentVersionName",
+        subtitle = if (isChecking) stringResource(R.string.checking_for_updates) else stringResource(R.string.settings_current_version, currentVersionName),
         iconColor = MaterialTheme.colorScheme.primary,
         onClick = {
             if (!isChecking) {
@@ -689,7 +689,7 @@ fun ImportSourceDialog(onDismiss: () -> Unit, onSelectKeep: () -> Unit) {
         onDismissRequest = onDismiss,
         shape = MaterialTheme.shapes.extraLarge,
         icon = { Icon(Icons.Rounded.ImportExport, contentDescription = null, tint = MaterialTheme.colorScheme.primary) },
-        title = { Text("Import from...") },
+        title = { Text(stringResource(id = R.string.settings_import_from_title)) },
         text = {
             Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
                 ImportOptionItem("Google Keep", Icons.Rounded.Description, keepColor, onSelectKeep)
@@ -699,7 +699,7 @@ fun ImportSourceDialog(onDismiss: () -> Unit, onSelectKeep: () -> Unit) {
         confirmButton = {},
         dismissButton = { 
             TextButton(onClick = onDismiss, modifier = Modifier.springPress()) { 
-                Text("Cancel") 
+                Text(stringResource(id = R.string.cancel)) 
             } 
         },
         containerColor = MaterialTheme.colorScheme.surfaceContainerHigh
@@ -736,7 +736,7 @@ fun ImportOptionItem(text: String, icon: ImageVector, color: Color, onClick: () 
             )
             if (!enabled) {
                 Spacer(Modifier.weight(1f))
-                Text("Coming Soon", style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+Text(stringResource(id = R.string.settings_coming_soon), style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
             }
         }
     }
@@ -748,16 +748,16 @@ fun KeepInstructionsDialog(onDismiss: () -> Unit, onImport: () -> Unit) {
         onDismissRequest = onDismiss,
         shape = MaterialTheme.shapes.extraLarge,
         icon = { Icon(Icons.Rounded.Help, contentDescription = null, tint = MaterialTheme.colorScheme.primary) },
-        title = { Text("Google Keep Import") },
-        text = { Text("Please select your Google Takeout ZIP file to import your Keep notes. We'll extract your text notes and checklists.") },
+        title = { Text(stringResource(id = R.string.settings_keep_import_title)) },
+        text = { Text(stringResource(id = R.string.settings_keep_import_message)) },
         confirmButton = { 
             Button(onClick = onImport, modifier = Modifier.springPress(), shape = CircleShape) { 
-                Text("Select ZIP") 
+                Text(stringResource(id = R.string.settings_select_zip)) 
             } 
         },
         dismissButton = { 
             TextButton(onClick = onDismiss, modifier = Modifier.springPress()) { 
-                Text("Cancel") 
+                Text(stringResource(id = R.string.cancel)) 
             } 
         },
         containerColor = MaterialTheme.colorScheme.surfaceContainerHigh
@@ -770,15 +770,15 @@ private fun BugReportDialog(desc: String, onDescChange: (String) -> Unit, onSend
         onDismissRequest = onDismiss,
         shape = MaterialTheme.shapes.extraLarge,
         icon = { Icon(Icons.Rounded.BugReport, contentDescription = null, tint = MaterialTheme.colorScheme.error) },
-        title = { Text("Bug Report") },
+        title = { Text(stringResource(id = R.string.settings_bug_report_title)) },
         text = { 
             Column {
-                Text("Describe the issue you're facing. System logs will be attached automatically.", style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                Text(stringResource(id = R.string.settings_bug_report_message), style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
                 Spacer(Modifier.height(16.dp))
                 OutlinedTextField(
                     value = desc, 
                     onValueChange = onDescChange, 
-                    placeholder = { Text("Issue description...") }, 
+                    placeholder = { Text(stringResource(id = R.string.settings_bug_report_placeholder)) }, 
                     modifier = Modifier.fillMaxWidth(),
                     shape = MaterialTheme.shapes.large
                 ) 
@@ -791,12 +791,12 @@ private fun BugReportDialog(desc: String, onDescChange: (String) -> Unit, onSend
                 enabled = desc.isNotBlank(),
                 shape = CircleShape
             ) { 
-                Text("Send Report") 
+                Text(stringResource(id = R.string.settings_send_report)) 
             } 
         },
         dismissButton = { 
             TextButton(onClick = onDismiss, modifier = Modifier.springPress()) { 
-                Text("Cancel") 
+                Text(stringResource(id = R.string.cancel)) 
             } 
         },
         containerColor = MaterialTheme.colorScheme.surfaceContainerHigh
@@ -809,20 +809,20 @@ fun RateAppDialog(context: android.content.Context, onDismiss: () -> Unit) {
         onDismissRequest = onDismiss,
         shape = MaterialTheme.shapes.extraLarge,
         icon = { Icon(Icons.Rounded.Star, contentDescription = null, tint = Color(0xFFFFB300)) },
-        title = { Text("Rate NoteNext") },
-        text = { Text("Loving the app? Help us grow by rating it on the Play Store! It only takes a minute.") },
+        title = { Text(stringResource(id = R.string.settings_rate_app)) },
+        text = { Text(stringResource(id = R.string.settings_rate_dialog_message)) },
         confirmButton = { 
             Button(onClick = { 
                 try { context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=${context.packageName}"))) }
                 catch (e: Exception) { context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=${context.packageName}"))) }
                 onDismiss()
             }, modifier = Modifier.springPress(), shape = CircleShape) { 
-                Text("Rate Now") 
+                Text(stringResource(id = R.string.settings_rate_now)) 
             } 
         },
         dismissButton = { 
             TextButton(onClick = onDismiss, modifier = Modifier.springPress()) { 
-                Text("Later") 
+                Text(stringResource(id = R.string.settings_later)) 
             } 
         },
         containerColor = MaterialTheme.colorScheme.surfaceContainerHigh

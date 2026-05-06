@@ -21,23 +21,38 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
+import com.suvojeet.notenext.R
 import com.suvojeet.notenext.ui.components.springPress
 
 @Composable
 fun PasswordSetDialog(
     onDismiss: () -> Unit,
     onConfirm: (String) -> Unit,
-    title: String = "Set Backup Password",
-    confirmText: String = "Encrypt & Save"
+    title: String = stringResource(id = R.string.backup_password_set_title),
+    confirmText: String = stringResource(id = R.string.backup_password_set_confirm)
 ) {
     var password by remember { mutableStateOf("") }
     var confirmPassword by remember { mutableStateOf("") }
     var error by remember { mutableStateOf<String?>(null) }
     var isPasswordVisible by remember { mutableStateOf(false) }
 
+    val strengthWeak = stringResource(id = R.string.backup_password_strength_weak)
+    val strengthMedium = stringResource(id = R.string.backup_password_strength_medium)
+    val strengthStrong = stringResource(id = R.string.backup_password_strength_strong)
+    val errEmpty = stringResource(id = R.string.backup_password_error_empty)
+    val errWeak = stringResource(id = R.string.backup_password_error_weak)
+    val errMismatch = stringResource(id = R.string.backup_password_error_mismatch)
+    val errShort = stringResource(id = R.string.backup_password_error_short, MIN_BACKUP_PASSWORD_LENGTH)
+
     val strength = calculatePasswordStrength(password)
+    val strengthLabel = when (strength) {
+        PasswordStrength.WEAK -> strengthWeak
+        PasswordStrength.MEDIUM -> strengthMedium
+        PasswordStrength.STRONG -> strengthStrong
+    }
     val strengthColor = when (strength) {
         PasswordStrength.WEAK -> Color.Red
         PasswordStrength.MEDIUM -> Color(0xFFFFC107) // Amber
@@ -114,7 +129,7 @@ fun PasswordSetDialog(
                         )
                         Spacer(modifier = Modifier.width(8.dp))
                         Text(
-                            text = "Secured with AES-256 Encryption",
+                            text = stringResource(id = R.string.backup_password_aes_badge),
                             style = MaterialTheme.typography.labelSmall,
                             color = MaterialTheme.colorScheme.onSurfaceVariant,
                             fontWeight = FontWeight.Medium
@@ -124,7 +139,7 @@ fun PasswordSetDialog(
                     Spacer(modifier = Modifier.height(16.dp))
 
                     Text(
-                        text = "Enter a password to encrypt your backup. You will need this password to restore it.",
+                        text = stringResource(id = R.string.backup_password_set_message),
                         style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
@@ -134,7 +149,7 @@ fun PasswordSetDialog(
                     OutlinedTextField(
                         value = password,
                         onValueChange = { password = it; error = null },
-                        label = { Text("Password") },
+                        label = { Text(stringResource(id = R.string.backup_password_label)) },
                         singleLine = true,
                         visualTransformation = if (isPasswordVisible) VisualTransformation.None else PasswordVisualTransformation(),
                         trailingIcon = {
@@ -150,7 +165,7 @@ fun PasswordSetDialog(
                         Spacer(modifier = Modifier.height(8.dp))
                         Row(verticalAlignment = Alignment.CenterVertically) {
                             Text(
-                                text = "Strength: ${strength.name}",
+                                text = stringResource(id = R.string.backup_password_strength_label, strengthLabel),
                                 style = MaterialTheme.typography.labelSmall,
                                 color = strengthColor,
                                 modifier = Modifier.weight(1f)
@@ -173,7 +188,7 @@ fun PasswordSetDialog(
                     OutlinedTextField(
                         value = confirmPassword,
                         onValueChange = { confirmPassword = it; error = null },
-                        label = { Text("Confirm Password") },
+                        label = { Text(stringResource(id = R.string.backup_password_confirm_label)) },
                         singleLine = true,
                         visualTransformation = if (isPasswordVisible) VisualTransformation.None else PasswordVisualTransformation(),
                         modifier = Modifier.fillMaxWidth(),
@@ -199,20 +214,20 @@ fun PasswordSetDialog(
                             onClick = onDismiss,
                             modifier = Modifier.springPress()
                         ) {
-                            Text("Cancel")
+                            Text(stringResource(id = R.string.cancel))
                         }
                         Spacer(modifier = Modifier.width(8.dp))
                         Button(
                             onClick = {
                                 when {
                                     password.isBlank() ->
-                                        error = "Password cannot be empty"
+                                        error = errEmpty
                                     password.length < MIN_BACKUP_PASSWORD_LENGTH ->
-                                        error = "Password must be at least $MIN_BACKUP_PASSWORD_LENGTH characters"
+                                        error = errShort
                                     strength == PasswordStrength.WEAK ->
-                                        error = "Password is too weak. Add digits, uppercase, or symbols."
+                                        error = errWeak
                                     password != confirmPassword ->
-                                        error = "Passwords do not match"
+                                        error = errMismatch
                                     else ->
                                         onConfirm(password)
                                 }
@@ -272,7 +287,7 @@ fun PasswordInputDialog(
 
                 Column(modifier = Modifier.padding(24.dp)) {
                     Text(
-                        text = "Enter Password",
+                        text = stringResource(id = R.string.backup_password_input_title),
                         style = MaterialTheme.typography.headlineSmall,
                         fontWeight = FontWeight.Bold
                     )
@@ -298,7 +313,7 @@ fun PasswordInputDialog(
                         )
                         Spacer(modifier = Modifier.width(8.dp))
                         Text(
-                            text = "Backup encrypted with AES-256",
+                            text = stringResource(id = R.string.backup_password_input_aes_badge),
                             style = MaterialTheme.typography.labelSmall,
                             color = MaterialTheme.colorScheme.onSurfaceVariant,
                             fontSize = 10.sp
@@ -308,7 +323,7 @@ fun PasswordInputDialog(
                     Spacer(modifier = Modifier.height(16.dp))
 
                     Text(
-                        text = "Please enter the password to unlock and restore your backup data.",
+                        text = stringResource(id = R.string.backup_password_input_message),
                         style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
@@ -318,7 +333,7 @@ fun PasswordInputDialog(
                     OutlinedTextField(
                         value = password,
                         onValueChange = { password = it },
-                        label = { Text("Password") },
+                        label = { Text(stringResource(id = R.string.backup_password_label)) },
                         singleLine = true,
                         visualTransformation = if (isPasswordVisible) VisualTransformation.None else PasswordVisualTransformation(),
                         trailingIcon = {
@@ -340,7 +355,7 @@ fun PasswordInputDialog(
                             onClick = onDismiss,
                             modifier = Modifier.springPress()
                         ) {
-                            Text("Cancel")
+                            Text(stringResource(id = R.string.cancel))
                         }
                         Spacer(modifier = Modifier.width(8.dp))
                         Button(
@@ -349,7 +364,7 @@ fun PasswordInputDialog(
                             shape = RoundedCornerShape(12.dp),
                             enabled = password.isNotEmpty()
                         ) {
-                            Text("Unlock & Restore")
+                            Text(stringResource(id = R.string.backup_password_unlock))
                         }
                     }
                 }
@@ -370,30 +385,30 @@ fun EncryptionInfoDialog(onDismiss: () -> Unit) {
                     tint = MaterialTheme.colorScheme.primary
                 )
                 Spacer(Modifier.width(8.dp))
-                Text("About Encrypted Backups")
+                Text(stringResource(id = R.string.backup_encryption_info_title))
             }
         },
         text = {
             Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
                 Text(
-                    "Encrypted backups provide an extra layer of security for your data.",
+                    stringResource(id = R.string.backup_encryption_info_intro),
                     style = MaterialTheme.typography.bodyMedium,
                     fontWeight = FontWeight.Bold
                 )
                 
                 InfoBulletPoint(
-                    title = "How it works",
-                    description = "Your data is encrypted using the AES-256 standard before it leaves your device. This means your notes and attachments are scrambled into an unreadable format."
+                    title = stringResource(id = R.string.backup_encryption_info_how_title),
+                    description = stringResource(id = R.string.backup_encryption_info_how_desc)
                 )
                 
                 InfoBulletPoint(
-                    title = "Security",
-                    description = "Even if someone gains access to your backup file (on Google Drive or your SD card), they cannot read your data without the correct password. Only you hold the key."
+                    title = stringResource(id = R.string.backup_encryption_info_security_title),
+                    description = stringResource(id = R.string.backup_encryption_info_security_desc)
                 )
                 
                 InfoBulletPoint(
-                    title = "Important",
-                    description = "We do not store your backup password. If you lose it, you will not be able to restore your data from that backup. Please keep your password safe."
+                    title = stringResource(id = R.string.backup_encryption_info_important_title),
+                    description = stringResource(id = R.string.backup_encryption_info_important_desc)
                 )
             }
         },
@@ -402,7 +417,7 @@ fun EncryptionInfoDialog(onDismiss: () -> Unit) {
                 onClick = onDismiss,
                 modifier = Modifier.springPress()
             ) {
-                Text("Got it")
+                Text(stringResource(id = R.string.backup_encryption_info_got_it))
             }
         },
         shape = MaterialTheme.shapes.extraLarge

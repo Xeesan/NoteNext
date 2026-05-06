@@ -94,4 +94,34 @@
     <string name="backup_current_edits">தற்போதைய திருத்தங்கள்: %1$d</string>
     <string name="backup_charging_only">சார்ஜ் செய்யும்போது மட்டும் காப்புப் பிரதி</string>
     <string name="backup_charging_only_subtitle">இணைக்கப்பட்டிருக்கும்போது மட்டுமே காப்புப் பிரதி எடுத்து பேட்டரியை சேமிக்கவும்.</string>
+
+    <string name="backup_password_set_title">காப்புப் பிரதி கடவுச்சொல்லை அமை</string>
+    <string name="backup_password_set_confirm">என்க்ரிப்ட் &amp; சேமி</string>
+    <string name="backup_password_aes_badge">AES-256 என்க்ரிப்ஷனால் பாதுகாக்கப்பட்டது</string>
+    <string name="backup_password_set_message">உங்கள் காப்புப் பிரதியை என்க்ரிப்ட் செய்ய ஒரு கடவுச்சொல்லை உள்ளிடவும். மீட்டெடுக்க இந்த கடவுச்சொல் தேவைப்படும்.</string>
+    <string name="backup_password_label">கடவுச்சொல்</string>
+    <string name="backup_password_confirm_label">கடவுச்சொல்லை உறுதிப்படுத்து</string>
+    <string name="backup_password_strength_label">வலிமை: %1$s</string>
+    <string name="backup_password_strength_weak">பலவீனம்</string>
+    <string name="backup_password_strength_medium">நடுத்தரம்</string>
+    <string name="backup_password_strength_strong">வலிமை</string>
+    <string name="backup_password_error_empty">கடவுச்சொல் காலியாக இருக்க முடியாது</string>
+    <string name="backup_password_error_short">கடவுச்சொல் குறைந்தது %1$d எழுத்துகள் இருக்க வேண்டும்</string>
+    <string name="backup_password_error_weak">கடவுச்சொல் மிகவும் பலவீனம். எண்கள், பெரிய எழுத்துகள் அல்லது குறியீடுகளைச் சேர்க்கவும்.</string>
+    <string name="backup_password_error_mismatch">கடவுச்சொற்கள் பொருந்தவில்லை</string>
+
+    <string name="backup_password_input_title">கடவுச்சொல்லை உள்ளிடு</string>
+    <string name="backup_password_input_aes_badge">காப்புப் பிரதி AES-256 மூலம் என்க்ரிப்ட் செய்யப்பட்டது</string>
+    <string name="backup_password_input_message">உங்கள் காப்புப் பிரதி தரவை திறந்து மீட்டெடுக்க கடவுச்சொல்லை உள்ளிடவும்.</string>
+    <string name="backup_password_unlock">திற &amp; மீட்டெடு</string>
+
+    <string name="backup_encryption_info_title">என்க்ரிப்ட் செய்யப்பட்ட காப்புப் பிரதிகள் பற்றி</string>
+    <string name="backup_encryption_info_intro">என்க்ரிப்ட் செய்யப்பட்ட காப்புப் பிரதிகள் உங்கள் தரவுக்கு கூடுதல் பாதுகாப்பு அடுக்கை வழங்குகின்றன.</string>
+    <string name="backup_encryption_info_how_title">இது எப்படி வேலை செய்கிறது</string>
+    <string name="backup_encryption_info_how_desc">உங்கள் தரவு உங்கள் சாதனத்தை விட்டு வெளியேறும் முன் AES-256 தரத்தைப் பயன்படுத்தி என்க்ரிப்ட் செய்யப்படுகிறது. இதன் பொருள் உங்கள் குறிப்புகள் மற்றும் இணைப்புகள் படிக்க முடியாத வடிவமாக மாற்றப்படுகின்றன.</string>
+    <string name="backup_encryption_info_security_title">பாதுகாப்பு</string>
+    <string name="backup_encryption_info_security_desc">யாராவது உங்கள் காப்புப் பிரதிக் கோப்புக்கு (Google Drive அல்லது உங்கள் SD கார்டில்) அணுகலைப் பெற்றாலும், சரியான கடவுச்சொல் இல்லாமல் உங்கள் தரவைப் படிக்க முடியாது. key உங்களிடம் மட்டுமே உள்ளது.</string>
+    <string name="backup_encryption_info_important_title">முக்கியம்</string>
+    <string name="backup_encryption_info_important_desc">நாங்கள் உங்கள் காப்புப் பிரதி கடவுச்சொல்லை சேமிக்கவில்லை. நீங்கள் இதை இழந்தால், அந்த காப்புப் பிரதியில் இருந்து உங்கள் தரவை மீட்டெடுக்க முடியாது. தயவுசெய்து உங்கள் கடவுச்சொல்லை பாதுகாப்பாக வைக்கவும்.</string>
+    <string name="backup_encryption_info_got_it">புரிந்தது</string>
 </resources>

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- SetupScreen navigation -->
+    <string name="setup_back">Back</string>
+    <string name="setup_next">Next</string>
+    <string name="setup_get_started">Get Started</string>
+
+    <!-- Welcome page -->
+    <string name="setup_welcome_title">Welcome to NoteNext</string>
+    <string name="setup_welcome_subtitle">Your secure, expressive, and local notepad designed for everyone.</string>
+    <string name="setup_feature_private">🔒 Private &amp; Local</string>
+    <string name="setup_feature_cloud">☁️ Cloud Backup</string>
+    <string name="setup_feature_reminders">🔔 Smart Reminders</string>
+    <string name="setup_privacy_consent">By continuing, you agree to our Privacy Policy</string>
+
+    <!-- Cloud Sync page -->
+    <string name="setup_cloud_sync_title">Cloud Sync</string>
+    <string name="setup_cloud_sync_subtitle">Secure Google Drive Backup</string>
+    <string name="setup_connected_to">Connected to %1$s</string>
+    <string name="setup_cloud_sync_pitch">Keep your notes synced across devices with secure cloud storage.</string>
+    <string name="setup_connect_google">Connect Google Account</string>
+    <string name="setup_daily_auto_backup">Daily Auto Backup</string>
+    <string name="setup_highly_recommended">Highly recommended</string>
+    <string name="setup_data_restored">Data Restored Successfully</string>
+    <string name="setup_restore_previous">Restore Previous Notes</string>
+
+    <!-- Permissions page -->
+    <string name="setup_permissions_title">System Access</string>
+    <string name="setup_perm_notifications_title">Notifications</string>
+    <string name="setup_perm_notifications_desc">Required for reminders and sync status.</string>
+    <string name="setup_perm_exact_alarms_title">Exact Alarms</string>
+    <string name="setup_perm_exact_alarms_desc">Ensures reminders are triggered precisely.</string>
+    <string name="setup_progress">Progress: %1$d/%2$d</string>
+    <string name="setup_all_ready">All ready to go!</string>
+</resources>

@@ -17,6 +17,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -60,7 +61,7 @@ fun PrivacySecurityScreen(
             LargeTopAppBar(
                 title = {
                     Text(
-                        text = "Privacy & Security",
+                        text = stringResource(id = R.string.settings_privacy_security),
                         style = MaterialTheme.typography.headlineLarge,
                         fontWeight = FontWeight.Black,
                         letterSpacing = (-1.0).sp
@@ -68,7 +69,7 @@ fun PrivacySecurityScreen(
                 },
                 navigationIcon = {
                     IconButton(onClick = onBackClick, modifier = Modifier.springPress()) {
-                        Icon(Icons.AutoMirrored.Rounded.ArrowBack, contentDescription = "Back")
+                        Icon(Icons.AutoMirrored.Rounded.ArrowBack, contentDescription = stringResource(id = R.string.back))
                     }
                 },
                 scrollBehavior = scrollBehavior
@@ -84,8 +85,8 @@ fun PrivacySecurityScreen(
         ) {
             item {
                 ExpressiveSection(
-                    title = "App Access",
-                    description = "Control how you and others access your notes"
+                    title = stringResource(id = R.string.priv_section_app_access),
+                    description = stringResource(id = R.string.priv_section_app_access_desc)
                 ) {
                     SettingsGroupCard {
                         SettingsToggle(
@@ -125,11 +126,11 @@ fun PrivacySecurityScreen(
                                                 context.startActivity(enrollIntent)
                                                 android.widget.Toast.makeText(context, context.getString(R.string.biometric_setup_required), android.widget.Toast.LENGTH_LONG).show()
                                             } catch (e: Exception) {
-                                                android.widget.Toast.makeText(context, "Please enable a screen lock or biometrics in system settings.", android.widget.Toast.LENGTH_LONG).show()
+                                                android.widget.Toast.makeText(context, context.getString(R.string.priv_toast_enroll_fallback), android.widget.Toast.LENGTH_LONG).show()
                                             }
                                         }
                                         else -> {
-                                            android.widget.Toast.makeText(context, "Biometric authentication is not available on this device.", android.widget.Toast.LENGTH_LONG).show()
+                                            android.widget.Toast.makeText(context, context.getString(R.string.priv_toast_biometric_unavailable), android.widget.Toast.LENGTH_LONG).show()
                                         }
                                     }
                                 } else {
@@ -143,14 +144,14 @@ fun PrivacySecurityScreen(
 
             item {
                 ExpressiveSection(
-                    title = "Decoy Vault",
-                    description = "A secondary PIN that reveals a fake set of notes"
+                    title = stringResource(id = R.string.priv_section_decoy),
+                    description = stringResource(id = R.string.priv_section_decoy_desc)
                 ) {
                     SettingsGroupCard {
                         SettingsToggle(
                             icon = Icons.Rounded.VisibilityOff,
-                            title = "Enable Decoy Vault",
-                            subtitle = "Use a secondary PIN for coercion situations",
+                            title = stringResource(id = R.string.priv_enable_decoy),
+                            subtitle = stringResource(id = R.string.priv_enable_decoy_subtitle),
                             iconColor = MaterialTheme.colorScheme.secondary,
                             checked = enableDecoyVault,
                             onCheckedChange = {
@@ -177,8 +178,8 @@ fun PrivacySecurityScreen(
                             )
                             SettingsItem(
                                 icon = Icons.Rounded.Password,
-                                title = "Set Decoy PIN",
-                                subtitle = if (!decoyPinSet) "Not set" else "****",
+                                title = stringResource(id = R.string.priv_set_decoy_pin),
+                                subtitle = if (!decoyPinSet) stringResource(id = R.string.priv_decoy_pin_not_set) else stringResource(id = R.string.priv_decoy_pin_masked),
                                 iconColor = MaterialTheme.colorScheme.secondary,
                                 onClick = { showDecoyPinDialog = true }
                             )
@@ -189,14 +190,14 @@ fun PrivacySecurityScreen(
 
             item {
                 ExpressiveSection(
-                    title = "Data Privacy",
-                    description = "Protect your note content from outside eyes"
+                    title = stringResource(id = R.string.priv_section_data),
+                    description = stringResource(id = R.string.priv_section_data_desc)
                 ) {
                     SettingsGroupCard {
                         SettingsToggle(
                             icon = Icons.Rounded.Lock,
-                            title = "Disallow Screenshots",
-                            subtitle = "Prevent screen capture and hide content in recents",
+                            title = stringResource(id = R.string.priv_disallow_screenshots),
+                            subtitle = stringResource(id = R.string.priv_disallow_screenshots_subtitle),
                             iconColor = MaterialTheme.colorScheme.error,
                             checked = disallowScreenshots,
                             onCheckedChange = { scope.launch { settingsRepository.saveDisallowScreenshots(it) } }
@@ -207,14 +208,14 @@ fun PrivacySecurityScreen(
                         )
                         SettingsItem(
                             icon = Icons.Rounded.ContentPasteOff,
-                            title = "Smart Clipboard Clear",
+                            title = stringResource(id = R.string.priv_clipboard_clear_title),
                             subtitle = when(clipboardTimeout) {
-                                0L -> "Disabled"
-                                1L -> "Immediately on background"
-                                30_000L -> "After 30 seconds"
-                                60_000L -> "After 1 minute"
-                                300_000L -> "After 5 minutes"
-                                else -> "Custom timeout"
+                                0L -> stringResource(id = R.string.priv_clipboard_disabled)
+                                1L -> stringResource(id = R.string.priv_clipboard_immediately_bg)
+                                30_000L -> stringResource(id = R.string.priv_clipboard_30s)
+                                60_000L -> stringResource(id = R.string.priv_clipboard_1m)
+                                300_000L -> stringResource(id = R.string.priv_clipboard_5m)
+                                else -> stringResource(id = R.string.priv_clipboard_custom)
                             },
                             iconColor = MaterialTheme.colorScheme.tertiary,
                             onClick = { showClipboardDialog = true }
@@ -253,14 +254,14 @@ fun PrivacySecurityScreen(
 
             item {
                 ExpressiveSection(
-                    title = "Ephemeral Content",
-                    description = "Notes that don't stick around"
+                    title = stringResource(id = R.string.priv_section_ephemeral),
+                    description = stringResource(id = R.string.priv_section_ephemeral_desc)
                 ) {
                     SettingsGroupCard {
                         SettingsItem(
                             icon = Icons.Rounded.Timer,
-                            title = "Self-Destructing Notes",
-                            subtitle = "Set notes to automatically delete after a certain time",
+                            title = stringResource(id = R.string.priv_self_destruct_title),
+                            subtitle = stringResource(id = R.string.priv_self_destruct_subtitle),
                             iconColor = MaterialTheme.colorScheme.tertiary,
                             onClick = { showSelfDestructInfo = true }
                         )
@@ -301,13 +302,13 @@ fun PrivacySecurityScreen(
         AlertDialog(
             onDismissRequest = { showSelfDestructInfo = false },
             icon = { Icon(Icons.Rounded.Timer, contentDescription = null, tint = MaterialTheme.colorScheme.tertiary) },
-            title = { Text("Self-Destructing Notes") },
+            title = { Text(stringResource(id = R.string.priv_self_destruct_title)) },
             text = {
-                Text("Self-destruct is a per-note feature. You can set a timer for any note by clicking the 'More' (three-dots) menu while editing a note and selecting 'Self-Destruct Timer'. Once the timer expires, the note will be permanently deleted.")
+                Text(stringResource(id = R.string.priv_self_destruct_message))
             },
             confirmButton = {
                 TextButton(onClick = { showSelfDestructInfo = false }) {
-                    Text("Got it")
+                    Text(stringResource(id = R.string.backup_encryption_info_got_it))
                 }
             },
             shape = MaterialTheme.shapes.extraLarge
@@ -322,17 +323,17 @@ private fun ClipboardTimeoutDialog(
     onDismiss: () -> Unit
 ) {
     val options = listOf(
-        0L to "Disabled",
-        1L to "Immediately",
-        30_000L to "30 Seconds",
-        60_000L to "1 Minute",
-        300_000L to "5 Minutes"
+        0L to stringResource(id = R.string.priv_clipboard_opt_disabled),
+        1L to stringResource(id = R.string.priv_clipboard_opt_immediate),
+        30_000L to stringResource(id = R.string.priv_clipboard_opt_30s),
+        60_000L to stringResource(id = R.string.priv_clipboard_opt_1m),
+        300_000L to stringResource(id = R.string.priv_clipboard_opt_5m)
     )
 
     AlertDialog(
         onDismissRequest = onDismiss,
         shape = MaterialTheme.shapes.extraLarge,
-        title = { Text("Clipboard Clear Timeout") },
+        title = { Text(stringResource(id = R.string.priv_clipboard_dialog_title)) },
         text = {
             Column {
                 options.forEach { (timeout, label) ->
@@ -353,7 +354,7 @@ private fun ClipboardTimeoutDialog(
         },
         confirmButton = {
             TextButton(onClick = onDismiss) {
-                Text("Cancel")
+                Text(stringResource(id = R.string.cancel))
             }
         }
     )
@@ -408,18 +409,21 @@ private fun DecoyPinDialog(
     var error by remember { mutableStateOf<String?>(null) }
     var checking by remember { mutableStateOf(false) }
     val dialogScope = rememberCoroutineScope()
+    val errPinLength = stringResource(id = R.string.priv_err_pin_length)
+    val errPinMismatch = stringResource(id = R.string.priv_err_pin_mismatch)
+    val errPinClash = stringResource(id = R.string.priv_err_pin_clash)
 
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text("Set Decoy PIN") },
+        title = { Text(stringResource(id = R.string.priv_decoy_dialog_title)) },
         text = {
             Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
-                Text("Enter a 4-digit secondary PIN. Entering this PIN on the lock screen will open a separate, decoy vault.")
+Text(stringResource(id = R.string.priv_decoy_dialog_message))
 
                 OutlinedTextField(
                     value = pin,
                     onValueChange = { if (it.length <= 4) pin = it },
-                    label = { Text("Secondary PIN") },
+                    label = { Text(stringResource(id = R.string.priv_decoy_pin_label)) },
                     visualTransformation = PasswordVisualTransformation(),
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                     modifier = Modifier.fillMaxWidth()
@@ -428,7 +432,7 @@ private fun DecoyPinDialog(
                 OutlinedTextField(
                     value = confirmPin,
                     onValueChange = { if (it.length <= 4) confirmPin = it },
-                    label = { Text("Confirm Secondary PIN") },
+                    label = { Text(stringResource(id = R.string.priv_decoy_pin_confirm_label)) },
                     visualTransformation = PasswordVisualTransformation(),
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                     modifier = Modifier.fillMaxWidth()
@@ -444,8 +448,8 @@ private fun DecoyPinDialog(
                 enabled = !checking,
                 onClick = {
                     when {
-                        pin.length != 4 -> error = "PIN must be 4 digits"
-                        pin != confirmPin -> error = "PINs do not match"
+                        pin.length != 4 -> error = errPinLength
+                        pin != confirmPin -> error = errPinMismatch
                         else -> {
                             checking = true
                             dialogScope.launch {
@@ -453,7 +457,7 @@ private fun DecoyPinDialog(
                                 // feature: the lock screen always matches the real PIN
                                 // path first, so the decoy never triggers.
                                 if (checkPinClashesWithReal(pin)) {
-                                    error = "Decoy PIN must differ from your app PIN"
+                                    error = errPinClash
                                     checking = false
                                 } else {
                                     onPinSelected(pin)
@@ -463,12 +467,12 @@ private fun DecoyPinDialog(
                     }
                 }
             ) {
-                Text(if (checking) "Saving…" else "Save")
+Text(if (checking) stringResource(id = R.string.priv_saving) else stringResource(id = R.string.save))
             }
         },
         dismissButton = {
             TextButton(onClick = onDismiss) {
-                Text("Cancel")
+                Text(stringResource(id = R.string.cancel))
             }
         },
         shape = MaterialTheme.shapes.extraLarge

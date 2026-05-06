@@ -203,7 +203,7 @@ fun SetupScreen(
                                     ) {
                                         Icon(Icons.AutoMirrored.Rounded.ArrowBack, contentDescription = null)
                                         Spacer(Modifier.width(8.dp))
-                                        Text("Back")
+                                        Text(stringResource(id = R.string.setup_back))
                                     }
                                 }
                                 
@@ -230,7 +230,7 @@ fun SetupScreen(
                                         else ButtonDefaults.buttonColors()
                                 ) {
                                     Text(
-                                        text = if (pagerState.currentPage == 2) "Get Started" else "Next",
+                                        text = if (pagerState.currentPage == 2) stringResource(id = R.string.setup_get_started) else stringResource(id = R.string.setup_next),
                                         fontWeight = FontWeight.Bold,
                                         style = MaterialTheme.typography.titleMedium
                                     )
@@ -283,7 +283,7 @@ private fun WelcomePage() {
         
         AnimatedSetupStep(visible = visible, delay = 200) {
             Text(
-                text = "Welcome to NoteNext",
+                text = stringResource(id = R.string.setup_welcome_title),
                 style = MaterialTheme.typography.displaySmall,
                 fontWeight = FontWeight.Black,
                 textAlign = TextAlign.Center
@@ -294,7 +294,7 @@ private fun WelcomePage() {
         
         AnimatedSetupStep(visible = visible, delay = 400) {
             Text(
-                text = "Your secure, expressive, and local notepad designed for everyone.",
+                text = stringResource(id = R.string.setup_welcome_subtitle),
                 style = MaterialTheme.typography.bodyLarge,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 textAlign = TextAlign.Center
@@ -305,9 +305,9 @@ private fun WelcomePage() {
         
         Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
             val features = listOf(
-                "🔒 Private & Local" to 600,
-                "☁️ Cloud Backup" to 700,
-                "🔔 Smart Reminders" to 800
+                stringResource(id = R.string.setup_feature_private) to 600,
+                stringResource(id = R.string.setup_feature_cloud) to 700,
+                stringResource(id = R.string.setup_feature_reminders) to 800
             )
             
             features.forEach { (text, delay) ->
@@ -333,7 +333,7 @@ private fun WelcomePage() {
         AnimatedSetupStep(visible = visible, delay = 900) {
             val uriHandler = androidx.compose.ui.platform.LocalUriHandler.current
             androidx.compose.material3.Text(
-                text = "By continuing, you agree to our Privacy Policy",
+                text = stringResource(id = R.string.setup_privacy_consent),
                 style = MaterialTheme.typography.labelSmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.7f),
                 textAlign = TextAlign.Center,
@@ -392,7 +392,7 @@ private fun CloudSyncPage(
         Spacer(modifier = Modifier.height(24.dp))
         
         Text(
-            text = "Cloud Sync",
+            text = stringResource(id = R.string.setup_cloud_sync_title),
             style = MaterialTheme.typography.headlineMedium,
             fontWeight = FontWeight.Black
         )
@@ -400,7 +400,7 @@ private fun CloudSyncPage(
         Spacer(modifier = Modifier.height(8.dp))
         
         Text(
-            text = "Secure Google Drive Backup",
+            text = stringResource(id = R.string.setup_cloud_sync_subtitle),
             style = MaterialTheme.typography.bodyMedium,
             color = MaterialTheme.colorScheme.primary,
             fontWeight = FontWeight.Bold
@@ -415,7 +415,7 @@ private fun CloudSyncPage(
         ) {
             Column(modifier = Modifier.padding(24.dp)) {
                 Text(
-                    text = if(backupState.googleAccountEmail != null) "Connected to ${backupState.googleAccountEmail}" else "Keep your notes synced across devices with secure cloud storage.",
+                    text = if(backupState.googleAccountEmail != null) stringResource(id = R.string.setup_connected_to, backupState.googleAccountEmail!!) else stringResource(id = R.string.setup_cloud_sync_pitch),
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
@@ -433,7 +433,7 @@ private fun CloudSyncPage(
                     ) {
                         Icon(Icons.Default.Login, contentDescription = null)
                         Spacer(Modifier.width(12.dp))
-                        Text("Connect Google Account", fontWeight = FontWeight.Bold)
+                        Text(stringResource(id = R.string.setup_connect_google), fontWeight = FontWeight.Bold)
                     }
                 } else {
                     Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
@@ -448,8 +448,8 @@ private fun CloudSyncPage(
                                 horizontalArrangement = Arrangement.SpaceBetween
                             ) {
                                 Column(modifier = Modifier.weight(1f)) {
-                                    Text("Daily Auto Backup", style = MaterialTheme.typography.bodyLarge, fontWeight = FontWeight.Bold)
-                                    Text("Highly recommended", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                                    Text(stringResource(id = R.string.setup_daily_auto_backup), style = MaterialTheme.typography.bodyLarge, fontWeight = FontWeight.Bold)
+                                    Text(stringResource(id = R.string.setup_highly_recommended), style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
                                 }
                                 Switch(
                                     checked = backupState.isAutoBackupEnabled,
@@ -473,7 +473,7 @@ private fun CloudSyncPage(
                                  Row(modifier = Modifier.padding(16.dp), verticalAlignment = Alignment.CenterVertically) {
                                     Icon(Icons.Default.CheckCircle, null, tint = Color(0xFF2E7D32))
                                     Spacer(Modifier.width(12.dp))
-                                    Text("Data Restored Successfully", style = MaterialTheme.typography.bodyMedium, color = Color(0xFF2E7D32), fontWeight = FontWeight.Bold)
+                                    Text(stringResource(id = R.string.setup_data_restored), style = MaterialTheme.typography.bodyMedium, color = Color(0xFF2E7D32), fontWeight = FontWeight.Bold)
                                 }
                             }
                         } else {
@@ -487,7 +487,7 @@ private fun CloudSyncPage(
                             ) {
                                 Icon(Icons.Default.CloudDownload, null)
                                 Spacer(Modifier.width(12.dp))
-                                Text("Restore Previous Notes", fontWeight = FontWeight.Bold)
+                                Text(stringResource(id = R.string.setup_restore_previous), fontWeight = FontWeight.Bold)
                             }
                         }
                     }
@@ -532,7 +532,7 @@ private fun PermissionsPage(
         Spacer(modifier = Modifier.height(24.dp))
         
         Text(
-            text = "System Access",
+            text = stringResource(id = R.string.setup_permissions_title),
             style = MaterialTheme.typography.headlineMedium,
             fontWeight = FontWeight.Black
         )
@@ -542,16 +542,16 @@ private fun PermissionsPage(
         Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
                 PermissionItem(
-                    title = "Notifications",
-                    description = "Required for reminders and sync status.",
+                    title = stringResource(id = R.string.setup_perm_notifications_title),
+                    description = stringResource(id = R.string.setup_perm_notifications_desc),
                     isGranted = postNotificationsGranted,
                     onRequestClick = { postNotificationsLauncher.launch(Manifest.permission.POST_NOTIFICATIONS) }
                 )
             }
 
             PermissionItem(
-                title = "Exact Alarms",
-                description = "Ensures reminders are triggered precisely.",
+                title = stringResource(id = R.string.setup_perm_exact_alarms_title),
+                description = stringResource(id = R.string.setup_perm_exact_alarms_desc),
                 isGranted = state.exactAlarmGranted,
                 onRequestClick = {
                     Intent(Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM).also {
@@ -574,7 +574,7 @@ private fun PermissionsPage(
 
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
             Text(
-                text = "Progress: $grantedCount/$totalCount",
+                text = stringResource(id = R.string.setup_progress, grantedCount, totalCount),
                 style = MaterialTheme.typography.labelLarge,
                 fontWeight = FontWeight.Bold,
                 color = MaterialTheme.colorScheme.primary
@@ -608,7 +608,7 @@ private fun PermissionsPage(
                 ) {
                     Icon(Icons.Default.CheckCircle, null, tint = Color(0xFF2E7D32))
                     Spacer(Modifier.width(12.dp))
-                    Text("All ready to go!", fontWeight = FontWeight.Black, color = Color(0xFF2E7D32))
+                    Text(stringResource(id = R.string.setup_all_ready), fontWeight = FontWeight.Black, color = Color(0xFF2E7D32))
                 }
             }
         }

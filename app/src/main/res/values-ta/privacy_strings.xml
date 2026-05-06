@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Tamil (ta) translations for PrivacySecurityScreen. Native review recommended. -->
+<resources>
+    <string name="priv_section_app_access">ஆப் அணுகல்</string>
+    <string name="priv_section_app_access_desc">நீங்களும் மற்றவர்களும் உங்கள் குறிப்புகளை எவ்வாறு அணுகுவீர்கள் என்பதைக் கட்டுப்படுத்துங்கள்</string>
+    <string name="priv_section_decoy">டிகாய் வால்ட்</string>
+    <string name="priv_section_decoy_desc">போலிக் குறிப்புகளின் தொகுப்பை வெளிப்படுத்தும் இரண்டாம் PIN</string>
+    <string name="priv_section_data">தரவு தனியுரிமை</string>
+    <string name="priv_section_data_desc">உங்கள் குறிப்பு உள்ளடக்கத்தை வெளிப்புற கண்களில் இருந்து பாதுகாக்கவும்</string>
+    <string name="priv_section_ephemeral">தற்காலிக உள்ளடக்கம்</string>
+    <string name="priv_section_ephemeral_desc">தங்காத குறிப்புகள்</string>
+
+    <string name="priv_toast_enroll_fallback">தயவுசெய்து கணினி அமைப்புகளில் ஸ்கிரீன் லாக் அல்லது பயோமெட்ரிக்ஸை இயக்கவும்.</string>
+    <string name="priv_toast_biometric_unavailable">இந்த சாதனத்தில் பயோமெட்ரிக் அங்கீகாரம் கிடைக்கவில்லை.</string>
+
+    <string name="priv_enable_decoy">டிகாய் வால்ட்டை இயக்கு</string>
+    <string name="priv_enable_decoy_subtitle">அழுத்தமான சூழ்நிலைகளுக்கு இரண்டாம் PIN-ஐப் பயன்படுத்தவும்</string>
+    <string name="priv_set_decoy_pin">டிகாய் PIN-ஐ அமை</string>
+    <string name="priv_decoy_pin_not_set">அமைக்கப்படவில்லை</string>
+    <string name="priv_decoy_pin_masked">****</string>
+
+    <string name="priv_disallow_screenshots">ஸ்கிரீன்ஷாட்களை அனுமதிக்காதே</string>
+    <string name="priv_disallow_screenshots_subtitle">திரை பிடிப்பைத் தடு மற்றும் சமீபத்தியதில் உள்ளடக்கத்தை மறை</string>
+    <string name="priv_clipboard_clear_title">ஸ்மார்ட் கிளிப்போர்டு துடைப்பு</string>
+    <string name="priv_clipboard_disabled">முடக்கப்பட்டது</string>
+    <string name="priv_clipboard_immediately_bg">பின்னணியில் உடனடியாக</string>
+    <string name="priv_clipboard_30s">30 விநாடிகளுக்குப் பிறகு</string>
+    <string name="priv_clipboard_1m">1 நிமிடத்திற்குப் பிறகு</string>
+    <string name="priv_clipboard_5m">5 நிமிடங்களுக்குப் பிறகு</string>
+    <string name="priv_clipboard_custom">தனிப்பயன் காலக்கெடு</string>
+
+    <string name="priv_clipboard_dialog_title">கிளிப்போர்டு துடைப்பு காலக்கெடு</string>
+    <string name="priv_clipboard_opt_disabled">முடக்கப்பட்டது</string>
+    <string name="priv_clipboard_opt_immediate">உடனடியாக</string>
+    <string name="priv_clipboard_opt_30s">30 விநாடிகள்</string>
+    <string name="priv_clipboard_opt_1m">1 நிமிடம்</string>
+    <string name="priv_clipboard_opt_5m">5 நிமிடங்கள்</string>
+
+    <string name="priv_self_destruct_title">சுய அழிவு குறிப்புகள்</string>
+    <string name="priv_self_destruct_subtitle">ஒரு குறிப்பிட்ட நேரத்திற்குப் பிறகு குறிப்புகள் தானாக நீக்கப்பட அமைக்கவும்</string>
+    <string name="priv_self_destruct_message">சுய அழிவு என்பது ஒவ்வொரு குறிப்புக்கான அம்சம். ஒரு குறிப்பைத் திருத்தும்போது \'மேலும்\' (மூன்று-புள்ளி) மெனுவைக் கிளிக் செய்து \'Self-Destruct Timer\' தேர்ந்தெடுப்பதன் மூலம் எந்த குறிப்புக்கும் டைமரை அமைக்கலாம். டைமர் காலாவதியானதும், குறிப்பு நிரந்தரமாக நீக்கப்படும்.</string>
+
+    <string name="priv_decoy_dialog_title">டிகாய் PIN-ஐ அமை</string>
+    <string name="priv_decoy_dialog_message">4-இலக்க இரண்டாம் PIN-ஐ உள்ளிடவும். பூட்டுத் திரையில் இந்த PIN-ஐ உள்ளிடுவது தனி, டிகாய் வால்ட்டைத் திறக்கும்.</string>
+    <string name="priv_decoy_pin_label">இரண்டாம் PIN</string>
+    <string name="priv_decoy_pin_confirm_label">இரண்டாம் PIN-ஐ உறுதிப்படுத்து</string>
+    <string name="priv_err_pin_length">PIN 4 இலக்கங்கள் இருக்க வேண்டும்</string>
+    <string name="priv_err_pin_mismatch">PIN-கள் பொருந்தவில்லை</string>
+    <string name="priv_err_pin_clash">டிகாய் PIN உங்கள் ஆப் PIN-இலிருந்து வேறுபட வேண்டும்</string>
+    <string name="priv_saving">சேமிக்கிறது…</string>
+</resources>
