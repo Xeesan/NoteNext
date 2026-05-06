@@ -17,7 +17,7 @@ export const SITE = {
   releaseDate: '2026-05-06',
   themeColor: '#6200ee',
   twitter: '@suvojeet_',
-  ogImage: '/og-image.svg',
+  ogImage: '/og-image.png',
   keywords: [
     'private note-taking app',
     'offline notes Android',

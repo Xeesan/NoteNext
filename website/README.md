@@ -94,7 +94,7 @@ If you want to verify or do it manually:
 ## SEO checklist (already wired)
 
 - ✅ Per-page `<title>`, `<meta description>`, canonical URLs
-- ✅ Open Graph + Twitter cards (image: `public/og-image.svg`)
+- ✅ Open Graph + Twitter cards (image: `public/og-image.png`)
 - ✅ JSON-LD `MobileApplication` schema on home page (rich Google result with rating, price, screenshots)
 - ✅ JSON-LD `WebSite` schema site-wide
 - ✅ JSON-LD `BreadcrumbList` on inner pages
@@ -113,7 +113,7 @@ If you want to verify or do it manually:
    - Verify via DNS TXT record (Cloudflare → DNS → Add TXT)
    - Submit `sitemap-index.xml`
 2. **Submit to Bing Webmaster Tools.** Same flow.
-3. **Generate a PNG OG image (recommended):** Some social platforms (older Facebook clients, Slack 'unfurls') don't render SVG OG images. Convert `public/og-image.svg` → `public/og-image.png` (1200×630) using any SVG-to-PNG tool, then update `ogImage` in `src/consts.ts` to `/og-image.png`. The current SVG works on Twitter/X and most modern platforms.
+3. **PNG OG image:** Generated `public/og-image.png` (1200×630) from the SVG source for universal compatibility (older Facebook clients, Slack 'unfurls', etc.). The configuration in `src/consts.ts` is updated to use `/og-image.png`.
 4. **Add real screenshots** to `public/screenshots/` once available — the home page hero currently uses a CSS mockup as a placeholder.
 
 ## File map
@@ -125,7 +125,7 @@ website/
 ├── package.json
 ├── public/
 │   ├── favicon.svg        # NoteNext yellow logo, scalable
-│   ├── og-image.svg       # social card 1200x630
+│   ├── og-image.png       # social card 1200x630 (universal compatibility)
 │   ├── robots.txt
 │   ├── _headers           # CSP, HSTS, cache rules
 │   ├── _redirects         # /github → repo, /apk → latest release, etc.
