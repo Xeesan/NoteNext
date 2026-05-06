@@ -2,6 +2,8 @@
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import Container from '@/components/Container.astro';
 import Icon from '@/components/Icon.astro';
+import DownloadButtons from '@/components/DownloadButtons.astro';
+import Screenshots from '@/components/Screenshots.astro';
 import { SITE } from '@/consts';
 
 const hasPlay = SITE.playStoreUrl && SITE.playStoreUrl.length > 0;
@@ -12,55 +14,87 @@ const hasPlay = SITE.playStoreUrl && SITE.playStoreUrl.length > 0;
   description={`Download NoteNext v${SITE.version} for Android. Free, open source, MIT licensed. Available via GitHub releases${hasPlay ? ' and Google Play' : ' — Google Play coming soon'}.`}
   pageTitle="Download"
 >
-  <section class="mesh-bg pt-20 pb-14">
-    <Container size="narrow" class="text-center">
-      <p class="text-sm font-semibold text-[#6200ee] mb-3 uppercase tracking-wider">Download</p>
-      <h1 class="text-4xl md:text-5xl font-extrabold mb-5">Get NoteNext on Android</h1>
-      <p class="text-lg text-[#6b7280]">
-        Free. Open source. No accounts. v{SITE.version}, released {SITE.releaseDate}.
-      </p>
+  <section class="mesh-bg pt-16 pb-20 md:pt-24 md:pb-32 relative overflow-hidden">
+    <Container>
+      <div class="grid lg:grid-cols-2 gap-12 items-center">
+        <div>
+          <span
+            class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white border border-[#e5e7eb] text-xs font-medium mb-6"
+          >
+            <span class="w-1.5 h-1.5 rounded-full bg-[#00c853] animate-pulse"></span>
+            v{SITE.version} · Material 3 Expressive
+          </span>
+
+          <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold leading-[1.05] mb-6 text-[#0b0b0d]">
+            Get <span class="gradient-text">NoteNext</span> on Android.
+          </h1>
+
+          <p class="text-lg text-[#6b7280] max-w-xl mb-8 leading-relaxed">
+            Choose your preferred way to install. Free, open source, and built for privacy from the
+            ground up. No accounts, no trackers, no cloud-syncing until you say so.
+          </p>
+
+          <DownloadButtons />
+
+          <ul class="mt-10 grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
+            <li class="flex items-center gap-2 text-[#6b7280]">
+              <Icon name="check" size={16} class="text-[#00964c]" />
+              v{SITE.version} (Stable)
+            </li>
+            <li class="flex items-center gap-2 text-[#6b7280]">
+              <Icon name="check" size={16} class="text-[#00964c]" />
+              Released {SITE.releaseDate}
+            </li>
+            <li class="flex items-center gap-2 text-[#6b7280]">
+              <Icon name="check" size={16} class="text-[#00964c]" />
+              Android 8.0+ required
+            </li>
+            <li class="flex items-center gap-2 text-[#6b7280]">
+              <Icon name="check" size={16} class="text-[#00964c]" />
+              ~25 MB install size
+            </li>
+          </ul>
+        </div>
+
+        <div class="relative">
+          <div class="relative aspect-[9/19] max-w-[300px] mx-auto rounded-[2.5rem] border-8 border-[#0b0b0d] bg-[#0b0b0d] shadow-2xl overflow-hidden float">
+            <img
+              src="/screenshots/notes-list.jpeg"
+              alt="NoteNext Homescreen"
+              class="w-full h-full object-cover"
+            />
+          </div>
+
+          <div
+            class="absolute -bottom-4 -left-4 sm:-left-6 bg-white rounded-2xl shadow-xl border border-[#e5e7eb] p-4 flex items-center gap-3 max-w-[220px]"
+          >
+            <div class="w-10 h-10 rounded-xl bg-[#00c853]/15 text-[#00964c] flex items-center justify-center flex-shrink-0">
+              <Icon name="download" size={20} />
+            </div>
+            <div>
+              <p class="text-xs font-semibold">Free & Open</p>
+              <p class="text-[10px] text-[#6b7280]">MIT Licensed</p>
+            </div>
+          </div>
+
+          <div
+            class="absolute -top-4 -right-2 sm:-right-6 bg-white rounded-2xl shadow-xl border border-[#e5e7eb] p-4 flex items-center gap-3 max-w-[200px]"
+          >
+            <div class="w-10 h-10 rounded-xl bg-[#6200ee]/10 text-[#6200ee] flex items-center justify-center flex-shrink-0">
+              <Icon name="zap" size={20} />
+            </div>
+            <div>
+              <p class="text-xs font-semibold">Native App</p>
+              <p class="text-[10px] text-[#6b7280]">Jetpack Compose</p>
+            </div>
+          </div>
+        </div>
+      </div>
     </Container>
   </section>
 
-  <section class="py-14">
+  <section class="py-14 border-t border-[#e5e7eb]">
     <Container size="narrow">
-      <div class="grid sm:grid-cols-2 gap-5 mb-12">
-        <a
-          href={hasPlay ? SITE.playStoreUrl : '#'}
-          aria-disabled={!hasPlay}
-          class={`card p-7 ${hasPlay ? '' : 'opacity-60 pointer-events-none'}`}
-          target={hasPlay ? '_blank' : undefined}
-          rel={hasPlay ? 'noopener' : undefined}
-        >
-          <div class="w-12 h-12 rounded-xl bg-[#6200ee]/10 text-[#6200ee] flex items-center justify-center mb-4">
-            <Icon name="download" size={24} />
-          </div>
-          <h2 class="text-xl font-bold mb-1">Google Play</h2>
-          <p class="text-sm text-[#6b7280] mb-3">
-            {hasPlay ? 'Auto-updates, easiest install' : 'Coming soon — submission in progress'}
-          </p>
-          <span class="text-sm font-semibold text-[#6200ee]">
-            {hasPlay ? 'Install →' : 'Notify on launch'}
-          </span>
-        </a>
-
-        <a
-          href={SITE.githubReleaseUrl}
-          target="_blank"
-          rel="noopener"
-          class="card p-7"
-        >
-          <div class="w-12 h-12 rounded-xl bg-[#0b0b0d] text-white flex items-center justify-center mb-4">
-            <Icon name="github" size={24} />
-          </div>
-          <h2 class="text-xl font-bold mb-1">GitHub Release</h2>
-          <p class="text-sm text-[#6b7280] mb-3">
-            Signed APK · v{SITE.version} · for sideloading
-          </p>
-          <span class="text-sm font-semibold text-[#6200ee]">Download APK →</span>
-        </a>
-      </div>
-
       <div class="card p-7 mb-10">
         <h2 class="text-xl font-bold mb-4 flex items-center gap-2">
           <Icon name="zap" size={22} class="text-[#6200ee]" />
@@ -89,7 +123,7 @@ const hasPlay = SITE.playStoreUrl && SITE.playStoreUrl.length > 0;
         </ol>
       </div>
 
-      <div class="grid sm:grid-cols-2 gap-5">
+      <div class="grid sm:grid-cols-2 gap-5 mb-20">
         <div class="card p-6">
           <h3 class="font-semibold mb-2">System requirements</h3>
           <ul class="text-sm text-[#6b7280] space-y-1.5">
@@ -108,6 +142,18 @@ const hasPlay = SITE.playStoreUrl && SITE.playStoreUrl.length > 0;
           </a>
         </div>
       </div>
+    </Container>
+  </section>
+
+  <Screenshots />
+
+  <section class="py-20 md:py-28">
+    <Container size="narrow" class="text-center">
+      <h2 class="text-3xl md:text-4xl font-bold mb-5">Try NoteNext today.</h2>
+      <p class="text-lg text-[#6b7280] mb-8">
+        Free. No signup. No tracking. Just open the app and start writing.
+      </p>
+      <DownloadButtons class="justify-center" />
     </Container>
   </section>
 </BaseLayout>
