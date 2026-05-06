@@ -1,5 +1,6 @@
 import java.util.Base64
 import java.util.Date
+import java.util.Calendar
 import java.util.Locale
 import java.text.SimpleDateFormat
 
@@ -20,18 +21,25 @@ android {
         minSdk = libs.versions.minSdk.get().toInt()
         targetSdk = libs.versions.targetSdk.get().toInt()
         
-        // Auto-generate versionCode as YYMMDDHHmm (year-month-day-hour-minute).
-        // Previously used YYMMDDHH which collided when two builds ran in the same hour —
-        // Play Store rejects uploads whose versionCode <= the previous release. Minute
-        // granularity makes intra-hour rebuilds safe while keeping codes monotonic and
-        // human-readable. Year 2026-01-01 00:00 -> 2601010000; max int (~2.1B) covers
-        // dates until ~2121, so no overflow risk.
+        // Auto-generate versionCode as (daysSince2020 * 100000) + secondsSinceMidnight.
+        // This ensures monotonic increases without collision, safe within Int.MAX_VALUE until ~2045.
+        // Example: 2026-05-06 14:59:00 -> ~2300 days since 2020-01-01 * 100000 + (14*3600 + 59*60 + 0)
+        //          = 230,000,000 + 53,940 = 230,053,940 (safely < 2.1B)
         val date = Date()
-        val formattedDate = SimpleDateFormat("yyMMddHHmm", Locale.US).format(date)
+        val calendar = Calendar.getInstance().apply { time = date }
+
+        // Days since 2020-01-01 (epoch = day 1)
+        val epochDate = Calendar.getInstance().apply { set(2020, 0, 1) }
+        val daysSinceEpoch = ((calendar.timeInMillis - epochDate.timeInMillis) / (24 * 60 * 60 * 1000)).toInt()
+
+        // Seconds since midnight (0-86399)
+        val secondsSinceMidnight = calendar.get(Calendar.HOUR_OF_DAY) * 3600 +
+                                   calendar.get(Calendar.MINUTE) * 60 +
+                                   calendar.get(Calendar.SECOND)
 
         // Use manual override from gradle.properties as the absolute minimum to prevent regressions
         val baseVersionCode = (project.findProperty("appVersionCode") as? String)?.toInt() ?: 30
-        val generatedVersionCode = formattedDate.toInt()
+        val generatedVersionCode = (daysSinceEpoch * 100000) + secondsSinceMidnight
 
         versionCode = if (generatedVersionCode > baseVersionCode) generatedVersionCode else baseVersionCode
         

@@ -26,5 +26,14 @@
     <string name="language_english">English</string>
     <string name="language_hindi">Hindi</string>
 
+    <!-- About & Privacy -->
+    <string name="privacy_policy">Privacy Policy</string>
+    <string name="privacy_policy_description">Learn how we protect your notes and data</string>
+    <string name="security_details">Security Details</string>
+    <string name="security_details_description">Technical breakdown of our security stack</string>
+    <string name="faq">FAQ</string>
+    <string name="faq_description">Frequently asked questions about NoteNext</string>
+    <string name="features_title">Features</string>
+    <string name="features_description">Explore everything NoteNext can do</string>
 
 </resources>

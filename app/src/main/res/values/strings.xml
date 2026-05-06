@@ -195,15 +195,7 @@
     <string name="ic_launcher_foreground">App Icon Foreground</string>
     <string name="official_website">Official Website</string>
     <string name="developer_website">Developer Website</string>
-    <string name="privacy_policy">Privacy Policy</string>
     <string name="view_privacy_policy">View Privacy Policy</string>
-    <string name="privacy_policy_description">Learn how we protect your notes and data</string>
-    <string name="faq">FAQ</string>
-    <string name="faq_description">Frequently asked questions about NoteNext</string>
-    <string name="features_title">Features</string>
-    <string name="features_description">Explore everything NoteNext can do</string>
-    <string name="security_details">Security Details</string>
-    <string name="security_details_description">Technical breakdown of our security stack</string>
     
     <!-- Backup Screen -->
     <string name="backup_title">Backup</string>
