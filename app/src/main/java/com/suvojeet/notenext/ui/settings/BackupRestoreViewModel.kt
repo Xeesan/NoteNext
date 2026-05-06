@@ -108,7 +108,9 @@ class BackupRestoreViewModel @Inject constructor(
         
         if (encryptionEnabled && legacyPassword != null) {
             SecurityUtils.saveBackupPassword(application, legacyPassword)
-            sharedPrefs.edit().remove("backup_password").remove("auto_backup_password").apply()
+            // Use commit() (sync) instead of apply() — losing the plaintext password if the
+            // process dies mid-migration would leave it readable on disk.
+            sharedPrefs.edit().remove("backup_password").remove("auto_backup_password").commit()
         }
         
         val hasPassword = SecurityUtils.getBackupPassword(application) != null

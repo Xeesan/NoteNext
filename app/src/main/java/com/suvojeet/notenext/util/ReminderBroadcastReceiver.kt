@@ -26,6 +26,12 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class ReminderBroadcastReceiver : BroadcastReceiver() {
 
+    companion object {
+        const val CHANNEL_ID = "reminder_channel_id"
+        private const val CHANNEL_NAME = "Reminder Channel"
+        private const val CHANNEL_DESCRIPTION = "Channel for Note and Todo Reminders"
+    }
+
     @Inject
     lateinit var repository: NoteRepository
 
@@ -105,7 +111,7 @@ class ReminderBroadcastReceiver : BroadcastReceiver() {
                                     alarmScheduler.schedule(updatedNote)
                                 }
                             } catch (e: Exception) {
-                                e.printStackTrace()
+                                android.util.Log.e("ReminderReceiver", "Failed to reschedule repeating reminder", e)
                             }
                         }
                     }
@@ -133,11 +139,9 @@ class ReminderBroadcastReceiver : BroadcastReceiver() {
 
     private fun createNotificationChannel(context: Context) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val name = "Reminder Channel"
-            val descriptionText = "Channel for Note and Todo Reminders"
             val importance = NotificationManager.IMPORTANCE_HIGH
-            val channel = NotificationChannel("reminder_channel_id", name, importance).apply {
-                description = descriptionText
+            val channel = NotificationChannel(CHANNEL_ID, CHANNEL_NAME, importance).apply {
+                description = CHANNEL_DESCRIPTION
             }
             val notificationManager: NotificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
             notificationManager.createNotificationChannel(channel)
@@ -160,7 +164,7 @@ class ReminderBroadcastReceiver : BroadcastReceiver() {
             context, notificationId, intent, PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )
 
-        val builder = NotificationCompat.Builder(context, "reminder_channel_id")
+        val builder = NotificationCompat.Builder(context, CHANNEL_ID)
             .setSmallIcon(R.drawable.ic_launcher_foreground)
             .setContentTitle(title)
             .setContentText(content)
@@ -177,6 +181,9 @@ class ReminderBroadcastReceiver : BroadcastReceiver() {
             try {
                  notify(notificationId, builder.build())
             } catch (e: SecurityException) {
+                // POST_NOTIFICATIONS revoked — reminder cannot fire. Log so the failure is
+                // visible in Logcat / crash reports rather than silently swallowed.
+                android.util.Log.w("ReminderReceiver", "Notification post denied; permission revoked?", e)
             }
         }
     }

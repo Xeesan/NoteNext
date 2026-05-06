@@ -2,7 +2,13 @@
   "permissions": {
     "allow": [
       "Bash(xargs grep *)",
-      "Bash(awk '/^    fun onEvent/,/^    }/' F:/NoteNext/app/src/main/java/com/suvojeet/notenext/ui/project/ProjectNotesViewModel.kt)"
+      "Bash(awk '/^    fun onEvent/,/^    }/' F:/NoteNext/app/src/main/java/com/suvojeet/notenext/ui/project/ProjectNotesViewModel.kt)",
+      "Bash(git checkout *)",
+      "Bash(git add *)",
+      "Bash(git commit -m ' *)",
+      "Bash(git push *)",
+      "Bash(xargs cat *)",
+      "Bash(xargs ls *)"
     ]
   }
 }

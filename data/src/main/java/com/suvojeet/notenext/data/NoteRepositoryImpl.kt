@@ -29,6 +29,19 @@ class NoteRepositoryImpl @Inject constructor(
 
     private val editCounterMutex = kotlinx.coroutines.sync.Mutex()
 
+    /**
+     * Quote raw user input as a single FTS5 phrase + prefix-match wildcard. Without this the
+     * user can pass FTS operators (NEAR, OR, parentheses, double-quote) and either crash the
+     * query or trigger unintended advanced behaviour. Embedded `"` is escaped per FTS5 rules
+     * (double the quote inside a quoted string).
+     */
+    private fun sanitizeFtsQuery(raw: String): String {
+        val trimmed = raw.trim()
+        if (trimmed.isEmpty()) return "\"\""
+        val escaped = trimmed.replace("\"", "\"\"")
+        return "\"$escaped\"*"
+    }
+
     override suspend fun <T> runInTransaction(block: suspend () -> T): T {
         return db.withTransaction {
             block()
@@ -44,7 +57,7 @@ class NoteRepositoryImpl @Inject constructor(
                 SortType.CUSTOM -> noteDao.getNotesOrderedByPosition(projectId, isDecoy)
             }
         } else {
-            val formattedQuery = "$searchQuery*"
+            val formattedQuery = sanitizeFtsQuery(searchQuery)
             when (sortType) {
                 SortType.DATE_MODIFIED -> noteDao.searchNotesOrderedByDateModified(formattedQuery, projectId, isDecoy)
                 SortType.DATE_CREATED -> noteDao.searchNotesOrderedByDateCreated(formattedQuery, projectId, isDecoy)
@@ -59,7 +72,7 @@ class NoteRepositoryImpl @Inject constructor(
         return if (searchQuery.isBlank()) {
             noteDao.getPinnedNotes(projectId, isDecoy)
         } else {
-            val formattedQuery = "$searchQuery*"
+            val formattedQuery = sanitizeFtsQuery(searchQuery)
             noteDao.searchPinnedNotes(formattedQuery, projectId, isDecoy)
         }
     }
@@ -68,7 +81,7 @@ class NoteRepositoryImpl @Inject constructor(
         return if (searchQuery.isBlank()) {
             noteDao.getPinnedNoteSummaries(projectId, isDecoy)
         } else {
-            val formattedQuery = "$searchQuery*"
+            val formattedQuery = sanitizeFtsQuery(searchQuery)
             noteDao.searchPinnedNoteSummaries(formattedQuery, projectId, isDecoy)
         }
     }
@@ -85,7 +98,7 @@ class NoteRepositoryImpl @Inject constructor(
                         SortType.CUSTOM -> noteDao.getOtherNotesPagedOrderedByPosition(projectId, isDecoy)
                     }
                 } else {
-                    val formattedQuery = "$searchQuery*"
+                    val formattedQuery = sanitizeFtsQuery(searchQuery)
                     when (sortType) {
                         SortType.DATE_MODIFIED -> noteDao.searchOtherNotesPagedOrderedByDateModified(formattedQuery, projectId, isDecoy)
                         SortType.DATE_CREATED -> noteDao.searchOtherNotesPagedOrderedByDateCreated(formattedQuery, projectId, isDecoy)
@@ -109,7 +122,7 @@ class NoteRepositoryImpl @Inject constructor(
                         SortType.CUSTOM -> noteDao.getOtherNoteSummariesPagedOrderedByPosition(projectId, isDecoy)
                     }
                 } else {
-                    val formattedQuery = "$searchQuery*"
+                    val formattedQuery = sanitizeFtsQuery(searchQuery)
                     when (sortType) {
                         SortType.DATE_MODIFIED -> noteDao.searchOtherNoteSummariesPagedOrderedByDateModified(formattedQuery, projectId, isDecoy)
                         SortType.DATE_CREATED -> noteDao.searchOtherNoteSummariesPagedOrderedByDateCreated(formattedQuery, projectId, isDecoy)
@@ -134,7 +147,7 @@ class NoteRepositoryImpl @Inject constructor(
         return if (searchQuery.isBlank()) {
             noteDao.getAllNoteIds(projectId, isDecoy)
         } else {
-            noteDao.searchAllNoteIds(searchQuery, projectId, isDecoy)
+            noteDao.searchAllNoteIds(sanitizeFtsQuery(searchQuery), projectId, isDecoy)
         }
     }
 

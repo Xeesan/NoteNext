@@ -20,16 +20,19 @@ android {
         minSdk = libs.versions.minSdk.get().toInt()
         targetSdk = libs.versions.targetSdk.get().toInt()
         
-        // Auto-generate versionCode based on date (YYMMDDHH)
-        // Format: YY (Year) MM (Month) DD (Day) HH (Hour)
-        // Example: April 25, 2026, 2:00 PM -> 26042514
+        // Auto-generate versionCode as YYMMDDHHmm (year-month-day-hour-minute).
+        // Previously used YYMMDDHH which collided when two builds ran in the same hour —
+        // Play Store rejects uploads whose versionCode <= the previous release. Minute
+        // granularity makes intra-hour rebuilds safe while keeping codes monotonic and
+        // human-readable. Year 2026-01-01 00:00 -> 2601010000; max int (~2.1B) covers
+        // dates until ~2121, so no overflow risk.
         val date = Date()
-        val formattedDate = SimpleDateFormat("yyMMddHH", Locale.US).format(date)
-        
+        val formattedDate = SimpleDateFormat("yyMMddHHmm", Locale.US).format(date)
+
         // Use manual override from gradle.properties as the absolute minimum to prevent regressions
         val baseVersionCode = (project.findProperty("appVersionCode") as? String)?.toInt() ?: 30
         val generatedVersionCode = formattedDate.toInt()
-        
+
         versionCode = if (generatedVersionCode > baseVersionCode) generatedVersionCode else baseVersionCode
         
         // Version name includes the manual version and the build timestamp for clarity

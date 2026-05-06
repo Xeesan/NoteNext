@@ -68,49 +68,77 @@ object EncryptionUtils {
     }
 
     /**
-     * Decrypts an encrypted stream to a target file.
-     * @return true if decryption was successful, false if it failed (e.g. wrong password).
-     * Throws exception for IO errors.
+     * Decrypts an encrypted stream to [outputFile].
+     *
+     * Throws [IllegalArgumentException] for malformed files, [javax.crypto.AEADBadTagException]
+     * (or its parent [javax.crypto.BadPaddingException]) for wrong password / tampered ciphertext,
+     * and [java.io.IOException] for other IO errors.
+     *
+     * Decryption is performed via a sibling `.tmp` file and atomically renamed onto [outputFile]
+     * only after GCM authentication succeeds. On any failure the temp file is deleted so a
+     * partially-decrypted plaintext never remains on disk.
      */
     fun decryptFile(inputStream: InputStream, outputFile: File, password: String) {
-        inputStream.use { objIn ->
-            // Read Header (V1 and V2 headers are the same length)
-            val headerBytes = ByteArray(ENCRYPTED_FILE_HEADER.length)
-            val headerRead = objIn.read(headerBytes)
-            val header = String(headerBytes, Charsets.UTF_8)
+        // Sibling temp file in the same directory so File.renameTo() is atomic on every Android FS.
+        val parent = outputFile.parentFile ?: throw IllegalArgumentException("Output file must have a parent dir")
+        if (!parent.exists()) parent.mkdirs()
+        val tempFile = File(parent, ".${outputFile.name}.${System.nanoTime()}.tmp")
 
-            val iterations = when {
-                headerRead == ENCRYPTED_FILE_HEADER.length && header == ENCRYPTED_FILE_HEADER -> PBKDF2_ITERATIONS
-                headerRead == ENCRYPTED_FILE_HEADER_V1.length && header == ENCRYPTED_FILE_HEADER_V1 -> PBKDF2_ITERATIONS_V1
-                else -> throw IllegalArgumentException("Invalid file format or not an encrypted backup.")
-            }
+        try {
+            inputStream.use { objIn ->
+                // Read Header (V1 and V2 headers are the same length)
+                val headerBytes = ByteArray(ENCRYPTED_FILE_HEADER.length)
+                val headerRead = objIn.read(headerBytes)
+                val header = String(headerBytes, Charsets.UTF_8)
 
-            // Read Salt and IV
-            val salt = ByteArray(SALT_LENGTH_BYTE)
-            if (objIn.read(salt) != SALT_LENGTH_BYTE) throw IllegalArgumentException("Corrupted file (missing salt).")
+                val iterations = when {
+                    headerRead == ENCRYPTED_FILE_HEADER.length && header == ENCRYPTED_FILE_HEADER -> PBKDF2_ITERATIONS
+                    headerRead == ENCRYPTED_FILE_HEADER_V1.length && header == ENCRYPTED_FILE_HEADER_V1 -> PBKDF2_ITERATIONS_V1
+                    else -> throw IllegalArgumentException("Invalid file format or not an encrypted backup.")
+                }
 
-            val iv = ByteArray(IV_LENGTH_BYTE)
-            if (objIn.read(iv) != IV_LENGTH_BYTE) throw IllegalArgumentException("Corrupted file (missing IV).")
+                // Read Salt and IV
+                val salt = ByteArray(SALT_LENGTH_BYTE)
+                if (objIn.read(salt) != SALT_LENGTH_BYTE) throw IllegalArgumentException("Corrupted file (missing salt).")
 
-            val secretKey = deriveKey(password, salt, iterations)
-            val cipher = Cipher.getInstance(ALGORITHM)
-            val parameterSpec = GCMParameterSpec(TAG_LENGTH_BIT, iv)
-            cipher.init(Cipher.DECRYPT_MODE, secretKey, parameterSpec)
+                val iv = ByteArray(IV_LENGTH_BYTE)
+                if (objIn.read(iv) != IV_LENGTH_BYTE) throw IllegalArgumentException("Corrupted file (missing IV).")
 
-            FileOutputStream(outputFile).use { out ->
-                val buffer = ByteArray(8192)
-                var bytesRead: Int
-                while (objIn.read(buffer).also { bytesRead = it } != -1) {
-                    val decrypted = cipher.update(buffer, 0, bytesRead)
-                    if (decrypted != null) {
-                        out.write(decrypted)
+                val secretKey = deriveKey(password, salt, iterations)
+                val cipher = Cipher.getInstance(ALGORITHM)
+                val parameterSpec = GCMParameterSpec(TAG_LENGTH_BIT, iv)
+                cipher.init(Cipher.DECRYPT_MODE, secretKey, parameterSpec)
+
+                FileOutputStream(tempFile).use { out ->
+                    val buffer = ByteArray(8192)
+                    var bytesRead: Int
+                    while (objIn.read(buffer).also { bytesRead = it } != -1) {
+                        val decrypted = cipher.update(buffer, 0, bytesRead)
+                        if (decrypted != null) {
+                            out.write(decrypted)
+                        }
                     }
-                }
-                val finalBytes = cipher.doFinal()
-                if (finalBytes != null) {
-                    out.write(finalBytes)
+                    // GCM auth tag is verified here. If this throws, tempFile is discarded
+                    // in the catch block below — caller never sees partial plaintext.
+                    val finalBytes = cipher.doFinal()
+                    if (finalBytes != null) {
+                        out.write(finalBytes)
+                    }
+                    out.flush()
+                    out.fd.sync()
                 }
             }
+
+            // Auth succeeded — promote temp file to outputFile atomically.
+            if (outputFile.exists() && !outputFile.delete()) {
+                throw java.io.IOException("Could not replace existing output file: ${outputFile.absolutePath}")
+            }
+            if (!tempFile.renameTo(outputFile)) {
+                throw java.io.IOException("Could not finalize decrypted file at ${outputFile.absolutePath}")
+            }
+        } catch (t: Throwable) {
+            tempFile.delete()
+            throw t
         }
     }
     

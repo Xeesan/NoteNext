@@ -204,12 +204,17 @@ fun PasswordSetDialog(
                         Spacer(modifier = Modifier.width(8.dp))
                         Button(
                             onClick = {
-                                if (password.isBlank()) {
-                                    error = "Password cannot be empty"
-                                } else if (password != confirmPassword) {
-                                    error = "Passwords do not match"
-                                } else {
-                                    onConfirm(password)
+                                when {
+                                    password.isBlank() ->
+                                        error = "Password cannot be empty"
+                                    password.length < MIN_BACKUP_PASSWORD_LENGTH ->
+                                        error = "Password must be at least $MIN_BACKUP_PASSWORD_LENGTH characters"
+                                    strength == PasswordStrength.WEAK ->
+                                        error = "Password is too weak. Add digits, uppercase, or symbols."
+                                    password != confirmPassword ->
+                                        error = "Passwords do not match"
+                                    else ->
+                                        onConfirm(password)
                                 }
                             },
                             modifier = Modifier.springPress(),
@@ -425,14 +430,16 @@ enum class PasswordStrength {
     WEAK, MEDIUM, STRONG
 }
 
+const val MIN_BACKUP_PASSWORD_LENGTH = 8
+
 fun calculatePasswordStrength(password: String): PasswordStrength {
-    if (password.length < 6) return PasswordStrength.WEAK
+    if (password.length < MIN_BACKUP_PASSWORD_LENGTH) return PasswordStrength.WEAK
     var score = 0
-    if (password.length >= 8) score++
+    if (password.length >= 12) score++
     if (password.any { it.isDigit() }) score++
     if (password.any { it.isUpperCase() }) score++
     if (password.any { !it.isLetterOrDigit() }) score++ // Special char
-    
+
     return when {
         score >= 3 -> PasswordStrength.STRONG
         score >= 1 -> PasswordStrength.MEDIUM
