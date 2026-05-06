@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Todo screen top bar -->
+    <string name="todo_screen_title">Todos</string>
+    <string name="todo_back_content_description">Back</string>
+    <string name="todo_ai_action_content_description">Generate todos with AI</string>
+    <string name="todo_clear_completed_content_description">Clear completed</string>
+    <string name="todo_add_fab_content_description">Add todo</string>
+
+    <!-- Filter chips -->
+    <string name="todo_filter_all">All</string>
+    <string name="todo_filter_active">Active</string>
+    <string name="todo_filter_done">Done</string>
+
+    <!-- Empty states -->
+    <string name="todo_empty_all">All clear! No tasks for now.</string>
+    <string name="todo_empty_active">You\'ve finished everything! Great job.</string>
+    <string name="todo_empty_completed">No completed tasks yet. Go get \'em!</string>
+
+    <!-- Productivity dashboard -->
+    <string name="todo_daily_progress">Daily Progress</string>
+    <string name="todo_time_to_get_started">Time to get started!</string>
+    <string name="todo_crushed_tasks_today">You\'ve crushed %1$d tasks today!</string>
+    <string name="todo_remaining">Remaining</string>
+    <string name="todo_done_today">Done Today</string>
+
+    <!-- AI dialog -->
+    <string name="ai_todo_dialog_title">Generate Todos with AI</string>
+    <string name="ai_todo_dialog_description">Describe your task or paste a messy note, and AI will split it into clear todos.</string>
+    <string name="ai_todo_dialog_placeholder">Enter text…</string>
+    <string name="ai_todo_dialog_thinking">Thinking…</string>
+    <string name="ai_todo_dialog_generate">Generate</string>
+
+    <!-- Item card -->
+    <string name="todo_priority_high_short">HIGH</string>
+    <string name="todo_priority_med_short">MED</string>
+    <string name="todo_priority_low_short">LOW</string>
+    <string name="todo_overdue_label">Overdue: %1$s</string>
+    <string name="todo_due_label">Due: %1$s</string>
+    <string name="todo_more_options_content_description">More options</string>
+    <string name="todo_convert_to_note">Convert to Note</string>
+    <string name="todo_share_chooser_title">Share Checklist</string>
+</resources>

@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Marathi (mr) translations for NoteNext core common strings.
+    This is a curated subset of the most-visible UI strings.
+    Untranslated keys fall back to the English defaults in values/.
+    Native-speaker review is recommended before public release.
+-->
+<resources>
+    <!-- App identity -->
+    <string name="notenext">नोटनेक्स्ट</string>
+    <string name="notenext_logo">नोटनेक्स्ट लोगो</string>
+
+    <!-- Navigation -->
+    <string name="notes">नोट्स</string>
+    <string name="archive">संग्रह</string>
+    <string name="settings">सेटिंग्ज</string>
+    <string name="reminders">रिमाइंडर</string>
+    <string name="projects">प्रकल्प</string>
+    <string name="bin">बिन</string>
+    <string name="labels">लेबल्स</string>
+
+    <!-- Common buttons -->
+    <string name="back">मागे</string>
+    <string name="save">जतन करा</string>
+    <string name="delete">हटवा</string>
+    <string name="cancel">रद्द करा</string>
+    <string name="ok">ठीक आहे</string>
+    <string name="add">जोडा</string>
+    <string name="edit">संपादित करा</string>
+    <string name="create">तयार करा</string>
+    <string name="share">शेअर करा</string>
+    <string name="move">हलवा</string>
+    <string name="dismiss">डिस्मिस</string>
+    <string name="search">शोधा</string>
+    <string name="menu">मेनू</string>
+    <string name="undo">पूर्ववत करा</string>
+    <string name="redo">पुन्हा करा</string>
+    <string name="more_options">अधिक पर्याय</string>
+    <string name="request">विनंती</string>
+    <string name="continue_button">पुढे चला</string>
+    <string name="sort">क्रमवारी</string>
+
+    <!-- Note actions -->
+    <string name="note">नोट</string>
+    <string name="title">शीर्षक</string>
+    <string name="content">सामग्री</string>
+    <string name="add_note">नोट जोडा</string>
+    <string name="search_notes">नोट्स शोधा</string>
+    <string name="no_notes_yet">अद्याप कोणत्याही नोट्स नाहीत</string>
+    <string name="pinned">पिन केलेले</string>
+    <string name="others">इतर</string>
+    <string name="checklist">चेकलिस्ट</string>
+    <string name="add_checklist">चेकलिस्ट जोडा</string>
+    <string name="drawing">रेखाचित्र</string>
+    <string name="pin_note">नोट पिन करा</string>
+    <string name="unpin_note">नोट अनपिन करा</string>
+    <string name="archive_note">नोट संग्रहित करा</string>
+    <string name="unarchive_note">नोट अनसंग्रहित करा</string>
+    <string name="delete_note">नोट हटवा</string>
+    <string name="move_to_bin">बिन मध्ये हलवा</string>
+
+    <!-- Empty/info -->
+    <string name="no_archived_notes">कोणत्याही संग्रहित नोट्स नाहीत.</string>
+    <string name="create_your_first_note">आपली पहिली नोट तयार करण्यासाठी + बटण दाबा.</string>
+    <string name="no_projects_yet">अद्याप कोणतेही प्रकल्प नाहीत</string>
+
+    <!-- Reminders -->
+    <string name="reminders_title">रिमाइंडर</string>
+    <string name="add_reminder">रिमाइंडर जोडा</string>
+    <string name="set_reminder">रिमाइंडर सेट करा</string>
+    <string name="select_date">तारीख निवडा</string>
+    <string name="select_time">वेळ निवडा</string>
+    <string name="never">कधीही नाही</string>
+    <string name="daily">दररोज</string>
+    <string name="weekly">साप्ताहिक</string>
+    <string name="monthly">मासिक</string>
+    <string name="yearly">वार्षिक</string>
+
+    <!-- Backup -->
+    <string name="backup_title">बॅकअप</string>
+    <string name="create_backup">बॅकअप तयार करा</string>
+    <string name="backup_successful">बॅकअप यशस्वी</string>
+    <string name="restore_title">पुनर्संचयित करा</string>
+    <string name="restore_successful">पुनर्संचयन यशस्वी</string>
+
+    <!-- Todo feature -->
+    <string name="todo">टू-डू</string>
+    <string name="todos">टू-डू</string>
+    <string name="add_todo">टू-डू जोडा</string>
+    <string name="edit_todo">टू-डू संपादित करा</string>
+    <string name="no_todos_yet">अद्याप कोणतेही टू-डू नाहीत</string>
+    <string name="create_first_todo">आपला पहिला टू-डू तयार करण्यासाठी + दाबा</string>
+    <string name="todo_title">शीर्षक</string>
+    <string name="todo_description">वर्णन (पर्यायी)</string>
+    <string name="priority">प्राधान्य</string>
+    <string name="priority_low">कमी</string>
+    <string name="priority_medium">मध्यम</string>
+    <string name="priority_high">उच्च</string>
+    <string name="due_date">देय तारीख</string>
+    <string name="overdue">मुदत संपली</string>
+    <string name="all_todos">सर्व</string>
+    <string name="active_todos">सक्रिय</string>
+    <string name="completed_todos">पूर्ण</string>
+    <string name="delete_completed">पूर्ण झालेले हटवा</string>
+    <string name="todo_completed">टू-डू पूर्ण</string>
+
+    <!-- Crash report -->
+    <string name="crash_report_title">नोटनेक्स्ट क्रॅश झाला</string>
+    <string name="crash_report_text">डेव्हलपरसह क्रॅश रिपोर्ट शेअर करण्यासाठी टॅप करा</string>
+    <string name="crash_report_channel">क्रॅश रिपोर्ट</string>
+</resources>

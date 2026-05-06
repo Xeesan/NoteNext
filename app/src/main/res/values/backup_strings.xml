@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- BackupScreen restore method picker -->
+    <string name="backup_restore_method_title">How would you like to restore?</string>
+    <string name="backup_restore_method_subtitle_local">Select a restoration method for your backup.</string>
+    <string name="backup_restore_method_subtitle_drive">Select a restoration method for this version.</string>
+    <string name="backup_merge_title">Merge with Current Data</string>
+    <string name="backup_merge_description">Keep your current notes and add everything from the backup as new entries.</string>
+    <string name="backup_merge_description_drive">Keep current notes and add everything from the backup as new entries.</string>
+    <string name="backup_overwrite_title">Full Overwrite (Clean Restore)</string>
+    <string name="backup_overwrite_description">ERASE all current data and replace it entirely with the backup content.</string>
+
+    <!-- Section headers -->
+    <string name="backup_section_manual">Manual Backup</string>
+    <string name="backup_section_settings">Backup Settings</string>
+    <string name="backup_section_smart">Smart &amp; Incremental</string>
+
+    <!-- Drive delete dialog -->
+    <string name="backup_delete_drive_title">Delete Drive Backup</string>
+    <string name="backup_delete_drive_message">Are you sure you want to permanently delete the backup from Google Drive? This action cannot be undone.</string>
+    <string name="backup_delete_drive_button">Delete Backup from Drive</string>
+
+    <!-- Unlink dialog -->
+    <string name="backup_unlink_title">Unlink Account</string>
+    <string name="backup_unlink_message">Unlinking will stop automatic backups to Drive. Local backups will not be affected.</string>
+    <string name="backup_unlink_button">Unlink</string>
+
+    <!-- Delete version dialog -->
+    <string name="backup_delete_version_title">Delete Backup Version</string>
+    <string name="backup_delete_version_message">Are you sure you want to permanently delete this backup version? This cannot be undone.</string>
+
+    <!-- Password dialog -->
+    <string name="backup_change_password_title">Change Password</string>
+    <string name="backup_update_password_button">Update Password</string>
+
+    <!-- Google Drive card -->
+    <string name="backup_google_drive">Google Drive</string>
+    <string name="backup_drive_linked">Linked: %1$s</string>
+    <string name="backup_drive_signin_prompt">Sign in to backup your data to the cloud.</string>
+    <string name="backup_include_attachments">Include Attachments</string>
+    <string name="backup_encrypt">Encrypt Backup</string>
+    <string name="backup_password_set">Password set</string>
+    <string name="backup_change_password">Change Password</string>
+    <string name="backup_about_encryption">About Encryption</string>
+    <string name="backup_backing_up">Backing up…</string>
+    <string name="backup_now">Backup Now</string>
+    <string name="backup_restore_latest">Restore Latest</string>
+    <string name="backup_history">Backup History</string>
+    <string name="backup_sign_in">Sign In</string>
+    <string name="backup_unknown_date">Unknown Date</string>
+    <string name="backup_action_restore">Restore</string>
+    <string name="backup_action_delete">Delete</string>
+
+    <!-- Local backup card -->
+    <string name="backup_local_storage">Local Storage</string>
+    <string name="backup_local_storage_subtitle">Backup to or restore from device storage</string>
+    <string name="backup_label_backup">Backup</string>
+    <string name="backup_label_restore">Restore</string>
+    <string name="backup_to_selected_folder">Backup to Selected Folder</string>
+    <string name="backup_select_folder">Select Folder &amp; Backup</string>
+    <string name="backup_restoring">Restoring…</string>
+    <string name="backup_restore_from_file">Restore from File</string>
+    <string name="backup_scanning">Scanning…</string>
+    <string name="backup_selective_restore">Selective Restore</string>
+
+    <!-- Auto backup settings card -->
+    <string name="backup_auto_title">Automatic Backup</string>
+    <string name="backup_auto_encrypt">Encrypt Auto-Backups</string>
+    <string name="backup_auto_encrypt_subtitle">Protect background backups with a password</string>
+    <string name="backup_frequency">Frequency</string>
+    <string name="backup_frequency_daily">Daily</string>
+    <string name="backup_frequency_weekly">Weekly</string>
+    <string name="backup_signin_required">Sign in required</string>
+    <string name="backup_sd_card_folder">SD Card / Local Folder</string>
+    <string name="backup_folder_selected">Selected</string>
+    <string name="backup_change_folder">Change Folder</string>
+
+    <!-- Dashboard -->
+    <string name="backup_health">Backup Health</string>
+    <string name="backup_health_no_backups">No Backups Yet</string>
+    <string name="backup_health_secure">Everything Secure</string>
+    <string name="backup_health_failed">Backup Failed</string>
+    <string name="backup_last_attempt">Last Attempt</string>
+    <string name="backup_storage_used">Storage Used</string>
+    <string name="backup_never">Never</string>
+    <string name="backup_count_notes">Notes</string>
+    <string name="backup_count_projects">Projects</string>
+    <string name="backup_count_labels">Labels</string>
+    <string name="backup_count_files">Files</string>
+
+    <!-- Scan result dialog -->
+    <string name="backup_contents_title">Backup Contents</string>
+    <string name="backup_contents_created">Created: %1$s</string>
+    <string name="backup_contents_select_projects">Select Projects to Restore</string>
+    <string name="backup_contents_merge_note">Note: Selected projects will be merged with your current data.</string>
+    <string name="backup_restore_selected">Restore Selected</string>
+
+    <!-- Smart backup card -->
+    <string name="backup_optimization">Optimization</string>
+    <string name="backup_incremental">Incremental Backup</string>
+    <string name="backup_incremental_subtitle">Only save changes since last backup to save data and storage.</string>
+    <string name="backup_smart_trigger">Smart Backup Trigger</string>
+    <string name="backup_smart_trigger_subtitle">Automatically backup after a certain number of edits.</string>
+    <string name="backup_after_edits">Backup after %1$d edits</string>
+    <string name="backup_current_edits">Current edits: %1$d</string>
+    <string name="backup_charging_only">Backup while Charging Only</string>
+    <string name="backup_charging_only_subtitle">Conserve battery by only backing up when plugged in.</string>
+</resources>

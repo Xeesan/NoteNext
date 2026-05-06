@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Bengali (bn) translations for the Todo screen. -->
+<resources>
+    <string name="todo_screen_title">টু-ডু</string>
+    <string name="todo_back_content_description">পিছনে</string>
+    <string name="todo_ai_action_content_description">AI দিয়ে টু-ডু তৈরি করুন</string>
+    <string name="todo_clear_completed_content_description">সম্পন্নগুলি সাফ করুন</string>
+    <string name="todo_add_fab_content_description">টু-ডু যোগ করুন</string>
+
+    <string name="todo_filter_all">সব</string>
+    <string name="todo_filter_active">সক্রিয়</string>
+    <string name="todo_filter_done">সম্পন্ন</string>
+
+    <string name="todo_empty_all">সব পরিষ্কার! এখন কোনো কাজ নেই।</string>
+    <string name="todo_empty_active">আপনি সব শেষ করেছেন! দারুণ কাজ।</string>
+    <string name="todo_empty_completed">এখনও কোনো সম্পন্ন কাজ নেই। চলুন শুরু করি!</string>
+
+    <string name="todo_daily_progress">দৈনিক অগ্রগতি</string>
+    <string name="todo_time_to_get_started">শুরু করার সময়!</string>
+    <string name="todo_crushed_tasks_today">আজ আপনি %1$d টি কাজ শেষ করেছেন!</string>
+    <string name="todo_remaining">বাকি</string>
+    <string name="todo_done_today">আজ সম্পন্ন</string>
+
+    <string name="ai_todo_dialog_title">AI দিয়ে টু-ডু তৈরি করুন</string>
+    <string name="ai_todo_dialog_description">আপনার কাজ বর্ণনা করুন বা একটি অগোছালো নোট পেস্ট করুন, AI সেটিকে স্পষ্ট টু-ডুতে ভাগ করবে।</string>
+    <string name="ai_todo_dialog_placeholder">টেক্সট লিখুন…</string>
+    <string name="ai_todo_dialog_thinking">ভাবছে…</string>
+    <string name="ai_todo_dialog_generate">তৈরি করুন</string>
+
+    <string name="todo_priority_high_short">উচ্চ</string>
+    <string name="todo_priority_med_short">মাঝারি</string>
+    <string name="todo_priority_low_short">কম</string>
+    <string name="todo_overdue_label">সময় পেরিয়ে গেছে: %1$s</string>
+    <string name="todo_due_label">নির্ধারিত: %1$s</string>
+    <string name="todo_more_options_content_description">আরও বিকল্প</string>
+    <string name="todo_convert_to_note">নোটে রূপান্তর করুন</string>
+    <string name="todo_share_chooser_title">চেকলিস্ট শেয়ার করুন</string>
+</resources>

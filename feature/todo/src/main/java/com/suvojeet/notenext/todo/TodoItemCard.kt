@@ -50,11 +50,16 @@ fun TodoItemCard(
     val todo = todoWithSubtasks.todo
     val subtasks = todoWithSubtasks.subtasks
     var showMenu by remember { mutableStateOf(false) }
-    
+
     val priorityColor = when (todo.priority) {
         2 -> TodoPriorityColors.High
         1 -> TodoPriorityColors.Medium
         else -> TodoPriorityColors.Low
+    }
+    val priorityLabel = when (todo.priority) {
+        2 -> stringResource(R.string.todo_priority_high_short)
+        1 -> stringResource(R.string.todo_priority_med_short)
+        else -> stringResource(R.string.todo_priority_low_short)
     }
 
     val dismissState = rememberSwipeToDismissBoxState(
@@ -114,9 +119,9 @@ fun TodoItemCard(
                         it,
                         contentDescription = null,
                         modifier = Modifier.scale(scale),
-                        tint = if (direction == SwipeToDismissBoxValue.EndToStart) 
-                            MaterialTheme.colorScheme.error 
-                        else 
+                        tint = if (direction == SwipeToDismissBoxValue.EndToStart)
+                            MaterialTheme.colorScheme.error
+                        else
                             MaterialTheme.colorScheme.primary
                     )
                 }
@@ -136,44 +141,49 @@ fun TodoItemCard(
             elevation = CardDefaults.cardElevation(defaultElevation = 0.dp)
         ) {
             Row(
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(IntrinsicSize.Min),
                 verticalAlignment = Alignment.CenterVertically
             ) {
+                // Priority accent bar — height auto-matches the card
                 Box(
                     modifier = Modifier
-                        .width(6.dp)
-                        .height(100.dp) // Slightly taller to accommodate more info
+                        .width(5.dp)
+                        .fillMaxHeight()
                         .background(priorityColor)
                 )
-                
+
                 Checkbox(
                     checked = todo.isCompleted,
                     onCheckedChange = { onToggleComplete() },
-                    modifier = Modifier.padding(start = 12.dp).springPress(),
+                    modifier = Modifier
+                        .padding(start = 10.dp)
+                        .springPress(),
                     colors = CheckboxDefaults.colors(
                         checkedColor = MaterialTheme.colorScheme.primary,
                         uncheckedColor = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 )
-                
+
                 Column(
                     modifier = Modifier
                         .weight(1f)
-                        .padding(vertical = 16.dp, horizontal = 8.dp)
+                        .padding(vertical = 14.dp, horizontal = 8.dp)
                 ) {
                     Text(
                         text = todo.title,
                         style = MaterialTheme.typography.titleMedium,
-                        fontWeight = FontWeight.Bold,
+                        fontWeight = FontWeight.SemiBold,
                         textDecoration = if (todo.isCompleted) TextDecoration.LineThrough else TextDecoration.None,
-                        color = if (todo.isCompleted) 
-                            MaterialTheme.colorScheme.onSurface.copy(alpha = 0.5f) 
-                        else 
+                        color = if (todo.isCompleted)
+                            MaterialTheme.colorScheme.onSurface.copy(alpha = 0.5f)
+                        else
                             MaterialTheme.colorScheme.onSurface,
                         maxLines = 2,
                         overflow = TextOverflow.Ellipsis
                     )
-                    
+
                     if (todo.description.isNotBlank()) {
                         Text(
                             text = todo.description,
@@ -190,16 +200,19 @@ fun TodoItemCard(
                     if (subtasks.isNotEmpty()) {
                         val completedSubtasks = subtasks.count { it.isChecked }
                         val progress = completedSubtasks.toFloat() / subtasks.size
-                        
+
                         Row(
                             verticalAlignment = Alignment.CenterVertically,
                             modifier = Modifier.padding(top = 8.dp)
                         ) {
                             LinearProgressIndicator(
                                 progress = { progress },
-                                modifier = Modifier.width(60.dp).height(4.dp).clip(CircleShape),
+                                modifier = Modifier
+                                    .width(72.dp)
+                                    .height(4.dp)
+                                    .clip(CircleShape),
                                 color = MaterialTheme.colorScheme.primary,
-                                trackColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.1f)
+                                trackColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.12f)
                             )
                             Spacer(modifier = Modifier.width(8.dp))
                             Text(
@@ -209,55 +222,77 @@ fun TodoItemCard(
                             )
                         }
                     }
-                    
-                    Row(
-                        modifier = Modifier.padding(top = 8.dp),
-                        horizontalArrangement = Arrangement.spacedBy(8.dp),
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        todo.dueDate?.let { dueDate ->
-                            val isOverdue = dueDate < System.currentTimeMillis() && !todo.isCompleted
-                            val dateFormat = SimpleDateFormat("MMM dd", Locale.getDefault())
-                            
-                            Surface(
-                                shape = MaterialTheme.shapes.small,
-                                color = if (isOverdue) MaterialTheme.colorScheme.errorContainer else MaterialTheme.colorScheme.surfaceContainerHigh
-                            ) {
-                                Text(
-                                    text = if (isOverdue) "⚠️ Overdue: ${dateFormat.format(Date(dueDate))}" else "📅 ${dateFormat.format(Date(dueDate))}",
-                                    style = MaterialTheme.typography.labelSmall,
-                                    fontWeight = FontWeight.Medium,
-                                    color = if (isOverdue) 
-                                        MaterialTheme.colorScheme.onErrorContainer 
-                                    else 
-                                        MaterialTheme.colorScheme.onSurfaceVariant,
-                                    modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
+
+                    val dueDate = todo.dueDate
+                    val hasReminder = todo.reminderTime != null
+                    if (dueDate != null || hasReminder) {
+                        Row(
+                            modifier = Modifier.padding(top = 8.dp),
+                            horizontalArrangement = Arrangement.spacedBy(6.dp),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            dueDate?.let {
+                                val isOverdue = it < System.currentTimeMillis() && !todo.isCompleted
+                                val dateFormat = SimpleDateFormat("MMM dd", Locale.getDefault())
+                                val formatted = dateFormat.format(Date(it))
+
+                                Surface(
+                                    shape = MaterialTheme.shapes.small,
+                                    color = if (isOverdue)
+                                        MaterialTheme.colorScheme.errorContainer
+                                    else
+                                        MaterialTheme.colorScheme.surfaceContainerHigh
+                                ) {
+                                    Row(
+                                        verticalAlignment = Alignment.CenterVertically,
+                                        modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
+                                    ) {
+                                        Icon(
+                                            if (isOverdue) Icons.Default.WarningAmber
+                                            else Icons.Default.CalendarToday,
+                                            contentDescription = null,
+                                            modifier = Modifier.size(12.dp),
+                                            tint = if (isOverdue)
+                                                MaterialTheme.colorScheme.onErrorContainer
+                                            else
+                                                MaterialTheme.colorScheme.onSurfaceVariant
+                                        )
+                                        Spacer(modifier = Modifier.width(4.dp))
+                                        Text(
+                                            text = if (isOverdue)
+                                                stringResource(R.string.todo_overdue_label, formatted)
+                                            else
+                                                formatted,
+                                            style = MaterialTheme.typography.labelSmall,
+                                            fontWeight = FontWeight.Medium,
+                                            color = if (isOverdue)
+                                                MaterialTheme.colorScheme.onErrorContainer
+                                            else
+                                                MaterialTheme.colorScheme.onSurfaceVariant
+                                        )
+                                    }
+                                }
+                            }
+
+                            if (hasReminder) {
+                                Icon(
+                                    Icons.Default.NotificationsActive,
+                                    contentDescription = null,
+                                    modifier = Modifier.size(14.dp),
+                                    tint = MaterialTheme.colorScheme.primary.copy(alpha = 0.7f)
                                 )
                             }
                         }
-
-                        if (todo.reminderTime != null) {
-                            Icon(
-                                Icons.Default.NotificationsActive,
-                                contentDescription = null,
-                                modifier = Modifier.size(14.dp),
-                                tint = MaterialTheme.colorScheme.primary.copy(alpha = 0.7f)
-                            )
-                        }
                     }
                 }
-                
+
                 Surface(
-                    shape = CircleShape,
-                    color = priorityColor.copy(alpha = 0.1f),
+                    shape = MaterialTheme.shapes.small,
+                    color = priorityColor.copy(alpha = 0.12f),
                     modifier = Modifier.padding(end = 4.dp)
                 ) {
                     Text(
-                        text = when (todo.priority) {
-                            2 -> "HIGH"
-                            1 -> "MED"
-                            else -> "LOW"
-                        },
+                        text = priorityLabel,
                         style = MaterialTheme.typography.labelSmall,
                         fontWeight = FontWeight.Black,
                         color = priorityColor,
@@ -267,7 +302,10 @@ fun TodoItemCard(
 
                 Box {
                     IconButton(onClick = { showMenu = true }, modifier = Modifier.springPress()) {
-                        Icon(Icons.Default.MoreVert, contentDescription = "More options")
+                        Icon(
+                            Icons.Default.MoreVert,
+                            contentDescription = stringResource(R.string.todo_more_options_content_description)
+                        )
                     }
                     DropdownMenu(
                         expanded = showMenu,
@@ -276,7 +314,7 @@ fun TodoItemCard(
                         containerColor = MaterialTheme.colorScheme.surfaceContainerHigh
                     ) {
                         DropdownMenuItem(
-                            text = { Text("Share") },
+                            text = { Text(stringResource(R.string.share)) },
                             leadingIcon = { Icon(Icons.Default.Share, contentDescription = null) },
                             onClick = {
                                 onShare()
@@ -284,17 +322,31 @@ fun TodoItemCard(
                             }
                         )
                         DropdownMenuItem(
-                            text = { Text("Convert to Note") },
+                            text = { Text(stringResource(R.string.todo_convert_to_note)) },
                             leadingIcon = { Icon(Icons.Default.History, contentDescription = null) },
                             onClick = {
                                 onConvertToNote()
                                 showMenu = false
                             }
                         )
-                        HorizontalDivider(modifier = Modifier.padding(vertical = 4.dp), color = MaterialTheme.colorScheme.outlineVariant)
+                        HorizontalDivider(
+                            modifier = Modifier.padding(vertical = 4.dp),
+                            color = MaterialTheme.colorScheme.outlineVariant
+                        )
                         DropdownMenuItem(
-                            text = { Text("Delete", color = MaterialTheme.colorScheme.error) },
-                            leadingIcon = { Icon(Icons.Default.Delete, contentDescription = null, tint = MaterialTheme.colorScheme.error) },
+                            text = {
+                                Text(
+                                    stringResource(R.string.delete),
+                                    color = MaterialTheme.colorScheme.error
+                                )
+                            },
+                            leadingIcon = {
+                                Icon(
+                                    Icons.Default.Delete,
+                                    contentDescription = null,
+                                    tint = MaterialTheme.colorScheme.error
+                                )
+                            },
                             onClick = {
                                 onDelete()
                                 showMenu = false

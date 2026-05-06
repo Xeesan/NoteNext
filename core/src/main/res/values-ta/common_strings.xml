@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Tamil (ta) translations for NoteNext core common strings.
+    This is a curated subset of the most-visible UI strings.
+    Untranslated keys fall back to the English defaults in values/.
+    Native-speaker review is recommended before public release.
+-->
+<resources>
+    <!-- App identity -->
+    <string name="notenext">நோட்நெக்ஸ்ட்</string>
+    <string name="notenext_logo">நோட்நெக்ஸ்ட் லோகோ</string>
+
+    <!-- Navigation -->
+    <string name="notes">குறிப்புகள்</string>
+    <string name="archive">காப்பகம்</string>
+    <string name="settings">அமைப்புகள்</string>
+    <string name="reminders">நினைவூட்டல்கள்</string>
+    <string name="projects">திட்டங்கள்</string>
+    <string name="bin">குப்பைத்தொட்டி</string>
+    <string name="labels">லேபிள்கள்</string>
+
+    <!-- Common buttons -->
+    <string name="back">பின்</string>
+    <string name="save">சேமி</string>
+    <string name="delete">நீக்கு</string>
+    <string name="cancel">ரத்துசெய்</string>
+    <string name="ok">சரி</string>
+    <string name="add">சேர்</string>
+    <string name="edit">திருத்து</string>
+    <string name="create">உருவாக்கு</string>
+    <string name="share">பகிர்</string>
+    <string name="move">நகர்த்து</string>
+    <string name="dismiss">விலக்கு</string>
+    <string name="search">தேடு</string>
+    <string name="menu">பட்டியல்</string>
+    <string name="undo">செயல்தவிர்</string>
+    <string name="redo">மீண்டும் செய்</string>
+    <string name="more_options">மேலும் விருப்பங்கள்</string>
+    <string name="request">கோரிக்கை</string>
+    <string name="continue_button">தொடர்க</string>
+    <string name="sort">வரிசைப்படுத்து</string>
+
+    <!-- Note actions -->
+    <string name="note">குறிப்பு</string>
+    <string name="title">தலைப்பு</string>
+    <string name="content">உள்ளடக்கம்</string>
+    <string name="add_note">குறிப்பு சேர்</string>
+    <string name="search_notes">குறிப்புகளைத் தேடு</string>
+    <string name="no_notes_yet">இன்னும் குறிப்புகள் இல்லை</string>
+    <string name="pinned">பின் செய்யப்பட்டவை</string>
+    <string name="others">மற்றவை</string>
+    <string name="checklist">சரிபார்ப்புப் பட்டியல்</string>
+    <string name="add_checklist">சரிபார்ப்புப் பட்டியல் சேர்</string>
+    <string name="drawing">வரைதல்</string>
+    <string name="pin_note">குறிப்பை பின் செய்</string>
+    <string name="unpin_note">குறிப்பை அன்பின் செய்</string>
+    <string name="archive_note">குறிப்பை காப்பகப்படுத்து</string>
+    <string name="unarchive_note">குறிப்பை மீட்டமை</string>
+    <string name="delete_note">குறிப்பை நீக்கு</string>
+    <string name="move_to_bin">குப்பைத்தொட்டிக்கு நகர்த்து</string>
+
+    <!-- Empty/info -->
+    <string name="no_archived_notes">காப்பகப்படுத்தப்பட்ட குறிப்புகள் இல்லை.</string>
+    <string name="create_your_first_note">உங்கள் முதல் குறிப்பை உருவாக்க + பொத்தானை அழுத்தவும்.</string>
+    <string name="no_projects_yet">இன்னும் திட்டங்கள் இல்லை</string>
+
+    <!-- Reminders -->
+    <string name="reminders_title">நினைவூட்டல்கள்</string>
+    <string name="add_reminder">நினைவூட்டல் சேர்</string>
+    <string name="set_reminder">நினைவூட்டலை அமை</string>
+    <string name="select_date">தேதியைத் தேர்ந்தெடு</string>
+    <string name="select_time">நேரத்தைத் தேர்ந்தெடு</string>
+    <string name="never">ஒருபோதும் இல்லை</string>
+    <string name="daily">தினசரி</string>
+    <string name="weekly">வாராந்திர</string>
+    <string name="monthly">மாதாந்திர</string>
+    <string name="yearly">ஆண்டுதோறும்</string>
+
+    <!-- Backup -->
+    <string name="backup_title">காப்புப் பிரதி</string>
+    <string name="create_backup">காப்புப் பிரதி உருவாக்கு</string>
+    <string name="backup_successful">காப்புப் பிரதி வெற்றிகரமாக முடிந்தது</string>
+    <string name="restore_title">மீட்டெடு</string>
+    <string name="restore_successful">மீட்டெடுப்பு வெற்றிகரமாக முடிந்தது</string>
+
+    <!-- Todo feature -->
+    <string name="todo">டூ-டூ</string>
+    <string name="todos">டூ-டூ</string>
+    <string name="add_todo">டூ-டூ சேர்</string>
+    <string name="edit_todo">டூ-டூ திருத்து</string>
+    <string name="no_todos_yet">இன்னும் டூ-டூ இல்லை</string>
+    <string name="create_first_todo">உங்கள் முதல் டூ-டூவை உருவாக்க + அழுத்தவும்</string>
+    <string name="todo_title">தலைப்பு</string>
+    <string name="todo_description">விளக்கம் (விருப்பம்)</string>
+    <string name="priority">முன்னுரிமை</string>
+    <string name="priority_low">குறைவு</string>
+    <string name="priority_medium">நடுத்தரம்</string>
+    <string name="priority_high">உயர்</string>
+    <string name="due_date">முடிவுத் தேதி</string>
+    <string name="overdue">காலாவதி</string>
+    <string name="all_todos">அனைத்தும்</string>
+    <string name="active_todos">செயலில்</string>
+    <string name="completed_todos">முடிந்தவை</string>
+    <string name="delete_completed">முடிந்தவற்றை நீக்கு</string>
+    <string name="todo_completed">டூ-டூ முடிந்தது</string>
+
+    <!-- Crash report -->
+    <string name="crash_report_title">நோட்நெக்ஸ்ட் செயலிழந்தது</string>
+    <string name="crash_report_text">டெவலப்பருக்கு செயலிழப்பு அறிக்கையைப் பகிர அழுத்தவும்</string>
+    <string name="crash_report_channel">செயலிழப்பு அறிக்கைகள்</string>
+</resources>

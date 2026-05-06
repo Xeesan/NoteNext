@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Tamil (ta) translations for the Todo screen. -->
+<resources>
+    <string name="todo_screen_title">டூ-டூ</string>
+    <string name="todo_back_content_description">பின்</string>
+    <string name="todo_ai_action_content_description">AI மூலம் டூ-டூ உருவாக்கு</string>
+    <string name="todo_clear_completed_content_description">முடிந்தவற்றை அழி</string>
+    <string name="todo_add_fab_content_description">டூ-டூ சேர்</string>
+
+    <string name="todo_filter_all">அனைத்தும்</string>
+    <string name="todo_filter_active">செயலில்</string>
+    <string name="todo_filter_done">முடிந்தது</string>
+
+    <string name="todo_empty_all">அனைத்தும் தெளிவாக உள்ளது! இப்போது வேலைகள் இல்லை.</string>
+    <string name="todo_empty_active">அனைத்தையும் முடித்துவிட்டீர்கள்! சிறந்த வேலை.</string>
+    <string name="todo_empty_completed">இன்னும் முடிக்கப்பட்ட வேலைகள் இல்லை. தொடங்குங்கள்!</string>
+
+    <string name="todo_daily_progress">தினசரி முன்னேற்றம்</string>
+    <string name="todo_time_to_get_started">தொடங்க வேண்டிய நேரம்!</string>
+    <string name="todo_crushed_tasks_today">இன்று %1$d பணிகளை முடித்துவிட்டீர்கள்!</string>
+    <string name="todo_remaining">மீதம்</string>
+    <string name="todo_done_today">இன்று முடிந்தவை</string>
+
+    <string name="ai_todo_dialog_title">AI மூலம் டூ-டூ உருவாக்கு</string>
+    <string name="ai_todo_dialog_description">உங்கள் பணியை விவரிக்கவும் அல்லது குறிப்பை ஒட்டவும், AI அதைத் தெளிவான டூ-டூவாகப் பிரிக்கும்.</string>
+    <string name="ai_todo_dialog_placeholder">உரையை உள்ளிடவும்…</string>
+    <string name="ai_todo_dialog_thinking">யோசிக்கிறது…</string>
+    <string name="ai_todo_dialog_generate">உருவாக்கு</string>
+
+    <string name="todo_priority_high_short">உயர்</string>
+    <string name="todo_priority_med_short">நடு</string>
+    <string name="todo_priority_low_short">குறை</string>
+    <string name="todo_overdue_label">காலாவதி: %1$s</string>
+    <string name="todo_due_label">முடிவு: %1$s</string>
+    <string name="todo_more_options_content_description">மேலும் விருப்பங்கள்</string>
+    <string name="todo_convert_to_note">குறிப்பாக மாற்று</string>
+    <string name="todo_share_chooser_title">சரிபார்ப்புப் பட்டியலைப் பகிர்</string>
+</resources>

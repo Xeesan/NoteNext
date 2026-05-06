@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- BackupScreen restore method picker -->
+    <string name="backup_restore_method_title">आप कैसे रीस्टोर करना चाहेंगे?</string>
+    <string name="backup_restore_method_subtitle_local">अपने बैकअप के लिए रीस्टोर का तरीका चुनें।</string>
+    <string name="backup_restore_method_subtitle_drive">इस संस्करण के लिए रीस्टोर का तरीका चुनें।</string>
+    <string name="backup_merge_title">मौजूदा डेटा के साथ मर्ज करें</string>
+    <string name="backup_merge_description">अपने मौजूदा नोट्स रखें और बैकअप से सब कुछ नई एंट्री के रूप में जोड़ें।</string>
+    <string name="backup_merge_description_drive">मौजूदा नोट्स रखें और बैकअप से सब कुछ नई एंट्री के रूप में जोड़ें।</string>
+    <string name="backup_overwrite_title">पूर्ण ओवरराइट (क्लीन रीस्टोर)</string>
+    <string name="backup_overwrite_description">सभी मौजूदा डेटा को मिटाकर पूरी तरह से बैकअप की सामग्री से बदल दें।</string>
+
+    <!-- Section headers -->
+    <string name="backup_section_manual">मैन्युअल बैकअप</string>
+    <string name="backup_section_settings">बैकअप सेटिंग्स</string>
+    <string name="backup_section_smart">स्मार्ट और इंक्रीमेंटल</string>
+
+    <!-- Drive delete dialog -->
+    <string name="backup_delete_drive_title">ड्राइव बैकअप डिलीट करें</string>
+    <string name="backup_delete_drive_message">क्या आप वाकई Google Drive से बैकअप स्थायी रूप से डिलीट करना चाहते हैं? यह कार्रवाई पूर्ववत नहीं की जा सकती।</string>
+    <string name="backup_delete_drive_button">ड्राइव से बैकअप डिलीट करें</string>
+
+    <!-- Unlink dialog -->
+    <string name="backup_unlink_title">खाता अनलिंक करें</string>
+    <string name="backup_unlink_message">अनलिंक करने से ड्राइव पर ऑटो बैकअप बंद हो जाएंगे। लोकल बैकअप पर कोई असर नहीं पड़ेगा।</string>
+    <string name="backup_unlink_button">अनलिंक करें</string>
+
+    <!-- Delete version dialog -->
+    <string name="backup_delete_version_title">बैकअप संस्करण डिलीट करें</string>
+    <string name="backup_delete_version_message">क्या आप वाकई इस बैकअप संस्करण को स्थायी रूप से डिलीट करना चाहते हैं? यह पूर्ववत नहीं की जा सकती।</string>
+
+    <!-- Password dialog -->
+    <string name="backup_change_password_title">पासवर्ड बदलें</string>
+    <string name="backup_update_password_button">पासवर्ड अपडेट करें</string>
+
+    <!-- Google Drive card -->
+    <string name="backup_google_drive">Google Drive</string>
+    <string name="backup_drive_linked">लिंक है: %1$s</string>
+    <string name="backup_drive_signin_prompt">क्लाउड पर अपना डेटा बैकअप करने के लिए साइन इन करें।</string>
+    <string name="backup_include_attachments">अटैचमेंट शामिल करें</string>
+    <string name="backup_encrypt">बैकअप एन्क्रिप्ट करें</string>
+    <string name="backup_password_set">पासवर्ड सेट है</string>
+    <string name="backup_change_password">पासवर्ड बदलें</string>
+    <string name="backup_about_encryption">एन्क्रिप्शन के बारे में</string>
+    <string name="backup_backing_up">बैकअप हो रहा है…</string>
+    <string name="backup_now">अभी बैकअप करें</string>
+    <string name="backup_restore_latest">नवीनतम रीस्टोर करें</string>
+    <string name="backup_history">बैकअप इतिहास</string>
+    <string name="backup_sign_in">साइन इन करें</string>
+    <string name="backup_unknown_date">अज्ञात तारीख</string>
+    <string name="backup_action_restore">रीस्टोर</string>
+    <string name="backup_action_delete">डिलीट</string>
+
+    <!-- Local backup card -->
+    <string name="backup_local_storage">लोकल स्टोरेज</string>
+    <string name="backup_local_storage_subtitle">डिवाइस स्टोरेज से बैकअप करें या रीस्टोर करें</string>
+    <string name="backup_label_backup">बैकअप</string>
+    <string name="backup_label_restore">रीस्टोर</string>
+    <string name="backup_to_selected_folder">चयनित फ़ोल्डर में बैकअप करें</string>
+    <string name="backup_select_folder">फ़ोल्डर चुनें और बैकअप करें</string>
+    <string name="backup_restoring">रीस्टोर हो रहा है…</string>
+    <string name="backup_restore_from_file">फ़ाइल से रीस्टोर करें</string>
+    <string name="backup_scanning">स्कैन हो रहा है…</string>
+    <string name="backup_selective_restore">चयनात्मक रीस्टोर</string>
+
+    <!-- Auto backup settings card -->
+    <string name="backup_auto_title">स्वचालित बैकअप</string>
+    <string name="backup_auto_encrypt">ऑटो-बैकअप एन्क्रिप्ट करें</string>
+    <string name="backup_auto_encrypt_subtitle">पासवर्ड के साथ बैकग्राउंड बैकअप सुरक्षित रखें</string>
+    <string name="backup_frequency">आवृत्ति</string>
+    <string name="backup_frequency_daily">दैनिक</string>
+    <string name="backup_frequency_weekly">साप्ताहिक</string>
+    <string name="backup_signin_required">साइन इन आवश्यक है</string>
+    <string name="backup_sd_card_folder">SD कार्ड / लोकल फ़ोल्डर</string>
+    <string name="backup_folder_selected">चयनित</string>
+    <string name="backup_change_folder">फ़ोल्डर बदलें</string>
+
+    <!-- Dashboard -->
+    <string name="backup_health">बैकअप स्थिति</string>
+    <string name="backup_health_no_backups">अभी तक कोई बैकअप नहीं</string>
+    <string name="backup_health_secure">सब कुछ सुरक्षित है</string>
+    <string name="backup_health_failed">बैकअप विफल</string>
+    <string name="backup_last_attempt">पिछला प्रयास</string>
+    <string name="backup_storage_used">उपयोग की गई स्टोरेज</string>
+    <string name="backup_never">कभी नहीं</string>
+    <string name="backup_count_notes">नोट्स</string>
+    <string name="backup_count_projects">प्रोजेक्ट्स</string>
+    <string name="backup_count_labels">लेबल</string>
+    <string name="backup_count_files">फ़ाइलें</string>
+
+    <!-- Scan result dialog -->
+    <string name="backup_contents_title">बैकअप की सामग्री</string>
+    <string name="backup_contents_created">बनाया गया: %1$s</string>
+    <string name="backup_contents_select_projects">रीस्टोर करने के लिए प्रोजेक्ट चुनें</string>
+    <string name="backup_contents_merge_note">नोट: चयनित प्रोजेक्ट आपके मौजूदा डेटा के साथ मर्ज होंगे।</string>
+    <string name="backup_restore_selected">चयनित रीस्टोर करें</string>
+
+    <!-- Smart backup card -->
+    <string name="backup_optimization">अनुकूलन</string>
+    <string name="backup_incremental">इंक्रीमेंटल बैकअप</string>
+    <string name="backup_incremental_subtitle">डेटा और स्टोरेज बचाने के लिए केवल पिछले बैकअप के बाद के बदलाव सेव करें।</string>
+    <string name="backup_smart_trigger">स्मार्ट बैकअप ट्रिगर</string>
+    <string name="backup_smart_trigger_subtitle">एक निश्चित संख्या में संपादन के बाद स्वचालित रूप से बैकअप करें।</string>
+    <string name="backup_after_edits">%1$d संपादन के बाद बैकअप करें</string>
+    <string name="backup_current_edits">वर्तमान संपादन: %1$d</string>
+    <string name="backup_charging_only">केवल चार्जिंग पर बैकअप करें</string>
+    <string name="backup_charging_only_subtitle">केवल प्लग-इन होने पर बैकअप करके बैटरी बचाएं।</string>
+</resources>

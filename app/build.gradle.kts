@@ -51,9 +51,22 @@ android {
         androidResources {
             localeFilters.add("en")
             localeFilters.add("hi")
+            localeFilters.add("ta")
+            localeFilters.add("bn")
+            localeFilters.add("mr")
         }
         vectorDrawables {
             useSupportLibrary = true
+        }
+    }
+
+    // Disable per-language splits in the AAB so Play Store delivers all
+    // bundled translations to every install, regardless of device locale.
+    // Without this, in-app language switching would silently fall back to
+    // English on devices whose system locale was stripped from the split.
+    bundle {
+        language {
+            enableSplit = false
         }
     }
 

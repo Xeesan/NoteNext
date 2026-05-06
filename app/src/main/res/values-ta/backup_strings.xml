@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Tamil (ta) translations for the Backup screen. Native review recommended. -->
+<resources>
+    <string name="backup_restore_method_title">எவ்வாறு மீட்டெடுக்க விரும்புகிறீர்கள்?</string>
+    <string name="backup_restore_method_subtitle_local">உங்கள் காப்புப் பிரதிக்கான மீட்டமைப்பு முறையைத் தேர்ந்தெடுக்கவும்.</string>
+    <string name="backup_restore_method_subtitle_drive">இந்தப் பதிப்பிற்கான மீட்டமைப்பு முறையைத் தேர்ந்தெடுக்கவும்.</string>
+    <string name="backup_merge_title">தற்போதைய தரவுடன் இணைக்கவும்</string>
+    <string name="backup_merge_description">உங்கள் தற்போதைய குறிப்புகளை வைத்திருந்து, காப்புப் பிரதியில் இருந்து அனைத்தையும் புதிய உள்ளீடுகளாகச் சேர்க்கவும்.</string>
+    <string name="backup_merge_description_drive">தற்போதைய குறிப்புகளை வைத்து, காப்புப் பிரதியில் உள்ள அனைத்தையும் புதிய உள்ளீடுகளாகச் சேர்க்கவும்.</string>
+    <string name="backup_overwrite_title">முழு மேலெழுதல் (க்ளீன் ரீஸ்டோர்)</string>
+    <string name="backup_overwrite_description">அனைத்து தற்போதைய தரவையும் அழித்து, காப்புப் பிரதியின் உள்ளடக்கத்துடன் முற்றிலும் மாற்றவும்.</string>
+
+    <string name="backup_section_manual">கைமுறை காப்புப் பிரதி</string>
+    <string name="backup_section_settings">காப்புப் பிரதி அமைப்புகள்</string>
+    <string name="backup_section_smart">ஸ்மார்ட் &amp; இன்க்ரிமெண்டல்</string>
+
+    <string name="backup_delete_drive_title">டிரைவ் காப்புப் பிரதியை நீக்கு</string>
+    <string name="backup_delete_drive_message">Google Drive இலிருந்து காப்புப் பிரதியை நிரந்தரமாக நீக்க விரும்புகிறீர்களா? இந்தச் செயலை மாற்ற முடியாது.</string>
+    <string name="backup_delete_drive_button">டிரைவில் இருந்து காப்புப் பிரதியை நீக்கு</string>
+
+    <string name="backup_unlink_title">கணக்கை இணைப்பிலிருந்து நீக்கு</string>
+    <string name="backup_unlink_message">இணைப்பை நீக்குவது டிரைவில் தானியங்கி காப்புப் பிரதிகளை நிறுத்தும். உள்ளூர் காப்புப் பிரதிகள் பாதிக்கப்படாது.</string>
+    <string name="backup_unlink_button">இணைப்பை நீக்கு</string>
+
+    <string name="backup_delete_version_title">காப்புப் பிரதி பதிப்பை நீக்கு</string>
+    <string name="backup_delete_version_message">இந்தக் காப்புப் பிரதி பதிப்பை நிரந்தரமாக நீக்க விரும்புகிறீர்களா? இதை மாற்ற முடியாது.</string>
+
+    <string name="backup_change_password_title">கடவுச்சொல்லை மாற்று</string>
+    <string name="backup_update_password_button">கடவுச்சொல்லைப் புதுப்பி</string>
+
+    <string name="backup_google_drive">Google Drive</string>
+    <string name="backup_drive_linked">இணைக்கப்பட்டது: %1$s</string>
+    <string name="backup_drive_signin_prompt">உங்கள் தரவை க்ளவுடில் காப்புப் பிரதி எடுக்க உள்நுழையவும்.</string>
+    <string name="backup_include_attachments">இணைப்புகளைச் சேர்</string>
+    <string name="backup_encrypt">காப்புப் பிரதியை குறியாக்கம் செய்</string>
+    <string name="backup_password_set">கடவுச்சொல் அமைக்கப்பட்டது</string>
+    <string name="backup_change_password">கடவுச்சொல்லை மாற்று</string>
+    <string name="backup_about_encryption">குறியாக்கம் பற்றி</string>
+    <string name="backup_backing_up">காப்புப் பிரதி எடுக்கப்படுகிறது…</string>
+    <string name="backup_now">இப்போது காப்புப் பிரதி எடு</string>
+    <string name="backup_restore_latest">சமீபத்தியதை மீட்டெடு</string>
+    <string name="backup_history">காப்புப் பிரதி வரலாறு</string>
+    <string name="backup_sign_in">உள்நுழை</string>
+    <string name="backup_unknown_date">தெரியாத தேதி</string>
+    <string name="backup_action_restore">மீட்டெடு</string>
+    <string name="backup_action_delete">நீக்கு</string>
+
+    <string name="backup_local_storage">உள்ளக சேமிப்பு</string>
+    <string name="backup_local_storage_subtitle">சாதன சேமிப்பிற்கு காப்புப் பிரதி எடு அல்லது மீட்டெடு</string>
+    <string name="backup_label_backup">காப்புப் பிரதி</string>
+    <string name="backup_label_restore">மீட்டெடு</string>
+    <string name="backup_to_selected_folder">தேர்ந்தெடுத்த கோப்புறையில் காப்புப் பிரதி எடு</string>
+    <string name="backup_select_folder">கோப்புறையைத் தேர்ந்தெடு &amp; காப்புப் பிரதி எடு</string>
+    <string name="backup_restoring">மீட்டெடுக்கப்படுகிறது…</string>
+    <string name="backup_restore_from_file">கோப்பிலிருந்து மீட்டெடு</string>
+    <string name="backup_scanning">ஸ்கேன் செய்கிறது…</string>
+    <string name="backup_selective_restore">தேர்ந்தெடுக்கப்பட்ட மீட்டமைப்பு</string>
+
+    <string name="backup_auto_title">தானியங்கி காப்புப் பிரதி</string>
+    <string name="backup_auto_encrypt">ஆட்டோ-காப்புப் பிரதிகளை குறியாக்கம் செய்</string>
+    <string name="backup_auto_encrypt_subtitle">பின்னணி காப்புப் பிரதிகளை கடவுச்சொல்லுடன் பாதுகாக்கவும்</string>
+    <string name="backup_frequency">அதிர்வெண்</string>
+    <string name="backup_frequency_daily">தினசரி</string>
+    <string name="backup_frequency_weekly">வாராந்திர</string>
+    <string name="backup_signin_required">உள்நுழைவு தேவை</string>
+    <string name="backup_sd_card_folder">SD கார்டு / உள்ளக கோப்புறை</string>
+    <string name="backup_folder_selected">தேர்ந்தெடுக்கப்பட்டது</string>
+    <string name="backup_change_folder">கோப்புறையை மாற்று</string>
+
+    <string name="backup_health">காப்புப் பிரதி நிலை</string>
+    <string name="backup_health_no_backups">இன்னும் காப்புப் பிரதிகள் இல்லை</string>
+    <string name="backup_health_secure">அனைத்தும் பாதுகாப்பானது</string>
+    <string name="backup_health_failed">காப்புப் பிரதி தோல்வியடைந்தது</string>
+    <string name="backup_last_attempt">கடைசி முயற்சி</string>
+    <string name="backup_storage_used">பயன்படுத்தப்பட்ட சேமிப்பு</string>
+    <string name="backup_never">ஒருபோதும் இல்லை</string>
+    <string name="backup_count_notes">குறிப்புகள்</string>
+    <string name="backup_count_projects">திட்டங்கள்</string>
+    <string name="backup_count_labels">லேபிள்கள்</string>
+    <string name="backup_count_files">கோப்புகள்</string>
+
+    <string name="backup_contents_title">காப்புப் பிரதியின் உள்ளடக்கம்</string>
+    <string name="backup_contents_created">உருவாக்கப்பட்டது: %1$s</string>
+    <string name="backup_contents_select_projects">மீட்டெடுக்க திட்டங்களைத் தேர்ந்தெடுக்கவும்</string>
+    <string name="backup_contents_merge_note">குறிப்பு: தேர்ந்தெடுக்கப்பட்ட திட்டங்கள் உங்கள் தற்போதைய தரவுடன் இணைக்கப்படும்.</string>
+    <string name="backup_restore_selected">தேர்ந்தெடுத்ததை மீட்டெடு</string>
+
+    <string name="backup_optimization">மேம்படுத்துதல்</string>
+    <string name="backup_incremental">இன்க்ரிமெண்டல் காப்புப் பிரதி</string>
+    <string name="backup_incremental_subtitle">தரவு மற்றும் சேமிப்பைச் சேமிக்க, கடைசி காப்புப் பிரதிக்குப் பின் ஏற்பட்ட மாற்றங்களை மட்டும் சேமிக்கவும்.</string>
+    <string name="backup_smart_trigger">ஸ்மார்ட் காப்புப் பிரதி தூண்டுதல்</string>
+    <string name="backup_smart_trigger_subtitle">குறிப்பிட்ட எண்ணிக்கையிலான திருத்தங்களுக்குப் பிறகு தானாகவே காப்புப் பிரதி எடுக்கவும்.</string>
+    <string name="backup_after_edits">%1$d திருத்தங்களுக்குப் பிறகு காப்புப் பிரதி</string>
+    <string name="backup_current_edits">தற்போதைய திருத்தங்கள்: %1$d</string>
+    <string name="backup_charging_only">சார்ஜ் செய்யும்போது மட்டும் காப்புப் பிரதி</string>
+    <string name="backup_charging_only_subtitle">இணைக்கப்பட்டிருக்கும்போது மட்டுமே காப்புப் பிரதி எடுத்து பேட்டரியை சேமிக்கவும்.</string>
+</resources>

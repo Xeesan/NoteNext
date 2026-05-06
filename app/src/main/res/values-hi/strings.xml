@@ -1,0 +1,225 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">नोटनेक्स्ट</string>
+    <string name="manage_labels">लेबल प्रबंधित करें</string>
+    <string name="label_icon">लेबल आइकन</string>
+    <string name="pinned_note_description">पिन किया गया नोट</string>
+    <string name="attachment_icon_description">अटैचमेंट</string>
+    <string name="reminder_icon_description">रिमाइंडर</string>
+    <string name="reminder_date_format">dd MMM, yyyy HH:mm</string>
+    <string name="list_view_icon_description">सूची दृश्य</string>
+    <string name="grid_view_icon_description">ग्रिड दृश्य</string>
+    <string name="checkbox_content_description">चेकलिस्ट आइटम चेकबॉक्स</string>
+    <string name="selected_color_description">चयनित रंग</string>
+    <string name="bold_description">बोल्ड</string>
+    <string name="italic_description">इटैलिक</string>
+    <string name="underline_description">रेखांकित</string>
+    <string name="heading_style_description">शीर्षक शैली</string>
+    <string name="insert_link_description">लिंक डालें</string>
+    <string name="image_content_description">छवि</string>
+    <string name="history">इतिहास</string>
+    <string name="unlock_with_biometrics">बायोमेट्रिक्स से अनलॉक करें</string>
+    <string name="biometric_setup_required">ऐप लॉक सक्षम करने के लिए बायोमेट्रिक सेटअप आवश्यक है।</string>
+    <string name="crash_toast_text">नोटनेक्स्ट क्रैश हो गया। डेवलपर को रिपोर्ट भेज दी गई है।</string>
+    <string name="widget_description">आपके पिन किए गए नोट्स और चेकलिस्ट की इंटरैक्टिव सूची।</string>
+    <string name="glance_widget_name">नोटनेक्स्ट इंटरैक्टिव विजेट</string>
+    <string name="save_as_note">आंतरिक नोट के रूप में सेव करें</string>
+
+    <!-- Crash Report -->
+    <string name="crash_report_title">क्रैश रिपोर्ट</string>
+    <string name="crash_report_text">डेवलपर को क्रैश रिपोर्ट भेजी जाएगी</string>
+    <string name="crash_report_channel">क्रैश रिपोर्ट चैनल</string>
+
+    <!-- Update Related -->
+    <string name="update_downloaded_ready">अपडेट डाउनलोड हो गया है और इंस्टॉल के लिए तैयार है</string>
+    <string name="restart_to_update">अपडेट के लिए रीस्टार्ट करें</string>
+    <string name="update_available">अपडेट उपलब्ध है</string>
+    <string name="update_now">अभी अपडेट करें</string>
+    <string name="you_are_up_to_date">आप अप टू डेट हैं</string>
+    <string name="check_for_updates">अपडेट की जांच करें</string>
+    <string name="checking_for_updates">अपडेट की जांच हो रही है…</string>
+    <string name="update_ready">अपडेट तैयार है</string>
+    <string name="downloading_update">अपडेट डाउनलोड हो रहा है</string>
+    <string name="installing_update">अपडेट इंस्टॉल हो रहा है</string>
+    <string name="downloading_msg">हम आपके लिए नोटनेक्स्ट का नवीनतम संस्करण डाउनलोड कर रहे हैं।</string>
+    <string name="installing_msg">अपडेट इंस्टॉलेशन को अंतिम रूप दिया जा रहा है। इसमें कुछ क्षण लगेंगे।</string>
+    <string name="update_available_msg">हमने आपके अनुभव को बेहतर बनाने के लिए कुछ शानदार नई सुविधाएं जोड़ी हैं और बग ठीक किए हैं।</string>
+    <string name="downloading">डाउनलोड हो रहा है…</string>
+    <string name="installing">इंस्टॉल हो रहा है…</string>
+    <string name="run_in_background">बैकग्राउंड में चलाएं</string>
+    <string name="later">बाद में</string>
+
+    <!-- Navigation -->
+    <string name="notes">नोट्स</string>
+    <string name="projects">प्रोजेक्ट्स</string>
+    <string name="archive">आर्काइव</string>
+    <string name="reminders">रिमाइंडर</string>
+    <string name="todos">टू-डू</string>
+    <string name="bin">बिन</string>
+    <string name="settings">सेटिंग्स</string>
+    <string name="labels">लेबल</string>
+
+    <!-- Common Buttons -->
+    <string name="save">सेव करें</string>
+    <string name="cancel">रद्द करें</string>
+    <string name="ok">ठीक है</string>
+    <string name="create">बनाएं</string>
+    <string name="delete">डिलीट करें</string>
+    <string name="request">अनुरोध करें</string>
+    <string name="move">ले जाएं</string>
+    <string name="share">शेयर करें</string>
+    <string name="edit">एडिट करें</string>
+    <string name="add">जोड़ें</string>
+    <string name="remove">हटाएं</string>
+    <string name="close">बंद करें</string>
+    <string name="back">वापस</string>
+    <string name="menu">मेनू</string>
+    <string name="search">खोजें</string>
+
+    <!-- Add/Edit Note -->
+    <string name="add_note">नोट जोड़ें</string>
+    <string name="note">नोट</string>
+    <string name="title">शीर्षक</string>
+    <string name="add_attachment">अटैचमेंट जोड़ें</string>
+    <string name="toggle_color_picker">रंग पिकर टॉगल करें</string>
+    <string name="toggle_format_bar">फॉर्मेट बार टॉगल करें</string>
+    <string name="undo">पूर्ववत करें</string>
+    <string name="redo">फिर से करें</string>
+    <string name="more_options">अधिक विकल्प</string>
+    <string name="add_image">छवि जोड़ें</string>
+    <string name="take_photo">फोटो लें</string>
+    <string name="audio_recording">ऑडियो रिकॉर्डिंग</string>
+    <string name="add_checklist">चेकलिस्ट जोड़ें</string>
+    <string name="pin_note">नोट पिन करें</string>
+    <string name="unpin_note">नोट अनपिन करें</string>
+    <string name="archive_note">नोट आर्काइव करें</string>
+    <string name="unarchive_note">नोट अनआर्काइव करें</string>
+    <string name="delete_note">नोट डिलीट करें</string>
+    <string name="move_to_bin_question">बिन में ले जाएं?</string>
+    <string name="move_to_bin_message">यह नोट बिन में ले जाया जाएगा।</string>
+    <string name="move_to_bin">बिन में ले जाएं</string>
+    <string name="exact_alarm_permission">सटीक अलार्म अनुमति</string>
+    <string name="exact_alarm_permission_description">रिमाइंडर सही समय पर काम करने के लिए यह अनुमति आवश्यक है</string>
+    <string name="last_edited">अंतिम संपादित: %s</string>
+    <string name="make_a_copy">कॉपी बनाएं</string>
+    <string name="save_as">इस रूप में सेव करें</string>
+    <string name="lock">लॉक करें</string>
+    <string name="unlock">अनलॉक करें</string>
+    <string name="convert_to_list">सूची में बदलें</string>
+    <string name="convert_to_text">टेक्स्ट में बदलें</string>
+    <string name="convert_to_todo">टू-डू में बदलें</string>
+    <string name="print">प्रिंट करें</string>
+    <string name="move_to_project">प्रोजेक्ट में ले जाएं</string>
+    <string name="add_label">लेबल जोड़ें</string>
+    <string name="create_new_label">नया लेबल बनाएं</string>
+    <string name="create_new_project">नया प्रोजेक्ट बनाएं</string>
+    <string name="project_name">प्रोजेक्ट का नाम</string>
+    <string name="project_description">विवरण (वैकल्पिक)</string>
+    <string name="edit_description">विवरण संपादित करें</string>
+    <string name="none_remove_from_project">कोई नहीं (प्रोजेक्ट से हटाएं)</string>
+    <string name="link_preview_removed">लिंक प्रीव्यू हटा दिया गया</string>
+    <string name="send_notes_via">नोट्स भेजें</string>
+    <string name="project_created">प्रोजेक्ट बनाया गया</string>
+
+    <!-- Heading Styles -->
+    <string name="normal_text">सामान्य टेक्स्ट</string>
+    <string name="heading_1">शीर्षक 1</string>
+    <string name="heading_2">शीर्षक 2</string>
+    <string name="heading_3">शीर्षक 3</string>
+    <string name="heading_4">शीर्षक 4</string>
+    <string name="heading_5">शीर्षक 5</string>
+    <string name="heading_6">शीर्षक 6</string>
+
+    <!-- Checklist -->
+    <string name="add_item">आइटम जोड़ें</string>
+    <string name="checklist">चेकलिस्ट</string>
+
+    <!-- Image Viewer -->
+    <string name="image_viewer">छवि दर्शक</string>
+    <string name="remove_image">छवि हटाएं</string>
+
+    <!-- Link Preview -->
+    <string name="link_preview_image">लिंक प्रीव्यू छवि</string>
+    <string name="remove_preview">प्रीव्यू हटाएं</string>
+    <string name="copy_url">यूआरएल कॉपी करें</string>
+
+    <!-- More Options Sheet -->
+    <string name="search_notes">नोट्स खोजें</string>
+
+    <!-- Note Editor -->
+    <string name="restore_note_title">नोट रीस्टोर करें</string>
+    <string name="restore_note_confirmation">यह नोट इसकी मूल स्थिति में रीस्टोर हो जाएगा</string>
+
+    <!-- Archive Screen -->
+    <string name="no_archived_notes">कोई आर्काइव किए गए नोट्स नहीं हैं</string>
+
+    <!-- Notes Screen -->
+    <string name="no_notes_found_label">कोई नोट नहीं मिला</string>
+    <string name="no_notes_found">कोई नोट नहीं मिला</string>
+    <string name="no_notes_yet">अभी कोई नोट नहीं है</string>
+    <string name="create_your_first_note">अपना पहला नोट बनाएं</string>
+    <string name="pinned">पिन किए गए</string>
+    <string name="others">अन्य</string>
+
+    <!-- Projects Screen -->
+    <string name="no_projects_yet">अभी कोई प्रोजेक्ट नहीं है</string>
+    <string name="create_first_project">अपने नोट्स को व्यवस्थित करने के लिए पहला प्रोजेक्ट बनाएं</string>
+
+    <!-- Labels Screen -->
+    <string name="labels_title">लेबल</string>
+    <string name="edit_labels">लेबल एडिट करें</string>
+    <string name="new_label">नया लेबल</string>
+
+    <!-- Reminder Screen -->
+    <string name="reminders_title">रिमाइंडर</string>
+    <string name="add_reminder_title">रिमाइंडर जोड़ें</string>
+    <string name="select_date">तारीख चुनें</string>
+    <string name="select_time">समय चुनें</string>
+
+    <!-- Drawing -->
+    <string name="drawing">ड्राइंग</string>
+    <string name="todo">टू-डू</string>
+
+    <!-- About Screen -->
+    <string name="about_screen_title">के बारे में</string>
+    <string name="what_makes_us_different">हमें क्या अलग बनाता है</string>
+    <string name="local_storage_title">स्थानीय भंडारण</string>
+    <string name="local_storage_description">आपके सभी नोट्स आपके डिवाइस पर ही स्टोर होते हैं</string>
+    <string name="about_the_app_title">ऐप के बारे में</string>
+    <string name="about_the_app_description">नोटनेक्स्ट एक भारतीय, पूरी तरह से मुफ्त और ओपन-सोर्स नोट लेने वाला ऐप है। यह आपके विचारों, आइडियाज़ और दैनिक कार्यों को सरल, सहज और गोपनीयता-केंद्रित तरीके से व्यवस्थित करने में मदद करता है। अपने डेटा पर नियंत्रण रखते हुए नोट्स, चेकलिस्ट और रिमाइंडर बनाएं।</string>
+    <string name="core_developer">कोर डेवलपर</string>
+    <string name="open_source_title">ओपन सोर्स</string>
+    <string name="made_with_love">❤️ से बनाया गया</string>
+    <string name="notenext">नोटनेक्स्ट</string>
+    <string name="about_subtitle">भारतीय • ओपन सोर्स • मुफ्त और निजी</string>
+    <string name="notenext_logo">नोटनेक्स्ट लोगो</string>
+    <string name="ic_launcher_foreground">ऐप आइकन फोरग्राउंड</string>
+    <string name="official_website">आधिकारिक वेबसाइट</string>
+    <string name="developer_website">डेवलपर वेबसाइट</string>
+    <string name="view_privacy_policy">गोपनीयता नीति देखें</string>
+
+    <!-- Backup Screen -->
+    <string name="backup_title">बैकअप</string>
+
+    <!-- AI Settings -->
+    <string name="groq_settings_title">AI सेटिंग्स</string>
+    <string name="use_custom_api_key">कस्टम API कुंजी का उपयोग करें</string>
+    <string name="use_custom_api_key_subtitle">अपनी खुद की AI API कुंजी दर्ज करें</string>
+    <string name="enter_groq_api_key">AI API कुंजी दर्ज करें</string>
+    <string name="api_key_placeholder">API कुंजी</string>
+    <string name="fetching_models">मॉडल प्राप्त हो रहे हैं…</string>
+    <string name="fetch_models">मॉडल प्राप्त करें</string>
+    <string name="select_fast_model">फास्ट मॉडल चुनें</string>
+    <string name="select_fast_model_subtitle">त्वरित प्रतिक्रियाओं के लिए मॉडल चुनें</string>
+    <string name="select_large_model">लार्ज मॉडल चुनें</string>
+    <string name="select_large_model_subtitle">विस्तृत प्रतिक्रियाओं के लिए मॉडल चुनें</string>
+    <string name="api_key_instructions_title">API कुंजी कैसे प्राप्त करें</string>
+    <string name="api_key_step_1">1. AI प्रदाता की वेबसाइट पर जाएं</string>
+    <string name="api_key_step_2">2. खाता बनाएं या साइन इन करें</string>
+    <string name="api_key_step_3">3. API कुंजी सेक्शन पर जाएं</string>
+    <string name="api_key_step_4">4. नई API कुंजी बनाएं</string>
+    <string name="open_groq_console">AI कंसोल खोलें</string>
+
+    <!-- Biometric -->
+    <string name="biometric_auth_failed">बायोमेट्रिक प्रमाणीकरण विफल</string>
+</resources>

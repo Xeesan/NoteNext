@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Bengali (bn) translations for the Backup screen. Native review recommended. -->
+<resources>
+    <string name="backup_restore_method_title">আপনি কীভাবে পুনরুদ্ধার করতে চান?</string>
+    <string name="backup_restore_method_subtitle_local">আপনার ব্যাকআপের জন্য পুনরুদ্ধার পদ্ধতি নির্বাচন করুন।</string>
+    <string name="backup_restore_method_subtitle_drive">এই সংস্করণের জন্য পুনরুদ্ধার পদ্ধতি নির্বাচন করুন।</string>
+    <string name="backup_merge_title">বর্তমান ডেটার সাথে মার্জ করুন</string>
+    <string name="backup_merge_description">আপনার বর্তমান নোট রাখুন এবং ব্যাকআপ থেকে সব কিছু নতুন এন্ট্রি হিসেবে যোগ করুন।</string>
+    <string name="backup_merge_description_drive">বর্তমান নোট রাখুন এবং ব্যাকআপ থেকে সব কিছু নতুন এন্ট্রি হিসেবে যোগ করুন।</string>
+    <string name="backup_overwrite_title">সম্পূর্ণ ওভাররাইট (ক্লিন রিস্টোর)</string>
+    <string name="backup_overwrite_description">সমস্ত বর্তমান ডেটা মুছে ফেলে এবং সম্পূর্ণরূপে ব্যাকআপ বিষয়বস্তু দিয়ে প্রতিস্থাপন করুন।</string>
+
+    <string name="backup_section_manual">ম্যানুয়াল ব্যাকআপ</string>
+    <string name="backup_section_settings">ব্যাকআপ সেটিংস</string>
+    <string name="backup_section_smart">স্মার্ট &amp; ইনক্রিমেন্টাল</string>
+
+    <string name="backup_delete_drive_title">ড্রাইভ ব্যাকআপ মুছুন</string>
+    <string name="backup_delete_drive_message">আপনি কি Google Drive থেকে ব্যাকআপ স্থায়ীভাবে মুছে ফেলতে চান? এই ক্রিয়াটি ফিরিয়ে আনা যাবে না।</string>
+    <string name="backup_delete_drive_button">ড্রাইভ থেকে ব্যাকআপ মুছুন</string>
+
+    <string name="backup_unlink_title">অ্যাকাউন্ট আনলিঙ্ক করুন</string>
+    <string name="backup_unlink_message">আনলিঙ্ক করলে ড্রাইভে স্বয়ংক্রিয় ব্যাকআপ বন্ধ হয়ে যাবে। স্থানীয় ব্যাকআপ প্রভাবিত হবে না।</string>
+    <string name="backup_unlink_button">আনলিঙ্ক</string>
+
+    <string name="backup_delete_version_title">ব্যাকআপ সংস্করণ মুছুন</string>
+    <string name="backup_delete_version_message">আপনি কি এই ব্যাকআপ সংস্করণটি স্থায়ীভাবে মুছে ফেলতে চান? এটি ফিরিয়ে আনা যাবে না।</string>
+
+    <string name="backup_change_password_title">পাসওয়ার্ড পরিবর্তন করুন</string>
+    <string name="backup_update_password_button">পাসওয়ার্ড আপডেট করুন</string>
+
+    <string name="backup_google_drive">Google Drive</string>
+    <string name="backup_drive_linked">লিঙ্ক করা: %1$s</string>
+    <string name="backup_drive_signin_prompt">ক্লাউডে আপনার ডেটা ব্যাকআপ করতে সাইন ইন করুন।</string>
+    <string name="backup_include_attachments">সংযুক্তি অন্তর্ভুক্ত করুন</string>
+    <string name="backup_encrypt">ব্যাকআপ এনক্রিপ্ট করুন</string>
+    <string name="backup_password_set">পাসওয়ার্ড সেট</string>
+    <string name="backup_change_password">পাসওয়ার্ড পরিবর্তন</string>
+    <string name="backup_about_encryption">এনক্রিপশন সম্পর্কে</string>
+    <string name="backup_backing_up">ব্যাকআপ হচ্ছে…</string>
+    <string name="backup_now">এখনই ব্যাকআপ করুন</string>
+    <string name="backup_restore_latest">সর্বশেষ পুনরুদ্ধার করুন</string>
+    <string name="backup_history">ব্যাকআপ ইতিহাস</string>
+    <string name="backup_sign_in">সাইন ইন</string>
+    <string name="backup_unknown_date">অজানা তারিখ</string>
+    <string name="backup_action_restore">পুনরুদ্ধার</string>
+    <string name="backup_action_delete">মুছুন</string>
+
+    <string name="backup_local_storage">স্থানীয় স্টোরেজ</string>
+    <string name="backup_local_storage_subtitle">ডিভাইস স্টোরেজে ব্যাকআপ করুন বা সেখান থেকে পুনরুদ্ধার করুন</string>
+    <string name="backup_label_backup">ব্যাকআপ</string>
+    <string name="backup_label_restore">পুনরুদ্ধার</string>
+    <string name="backup_to_selected_folder">নির্বাচিত ফোল্ডারে ব্যাকআপ</string>
+    <string name="backup_select_folder">ফোল্ডার নির্বাচন করুন &amp; ব্যাকআপ</string>
+    <string name="backup_restoring">পুনরুদ্ধার হচ্ছে…</string>
+    <string name="backup_restore_from_file">ফাইল থেকে পুনরুদ্ধার</string>
+    <string name="backup_scanning">স্ক্যান হচ্ছে…</string>
+    <string name="backup_selective_restore">নির্বাচনী পুনরুদ্ধার</string>
+
+    <string name="backup_auto_title">স্বয়ংক্রিয় ব্যাকআপ</string>
+    <string name="backup_auto_encrypt">অটো-ব্যাকআপ এনক্রিপ্ট করুন</string>
+    <string name="backup_auto_encrypt_subtitle">পাসওয়ার্ড দিয়ে ব্যাকগ্রাউন্ড ব্যাকআপ সুরক্ষিত করুন</string>
+    <string name="backup_frequency">ফ্রিকোয়েন্সি</string>
+    <string name="backup_frequency_daily">দৈনিক</string>
+    <string name="backup_frequency_weekly">সাপ্তাহিক</string>
+    <string name="backup_signin_required">সাইন ইন প্রয়োজন</string>
+    <string name="backup_sd_card_folder">SD কার্ড / স্থানীয় ফোল্ডার</string>
+    <string name="backup_folder_selected">নির্বাচিত</string>
+    <string name="backup_change_folder">ফোল্ডার পরিবর্তন করুন</string>
+
+    <string name="backup_health">ব্যাকআপ অবস্থা</string>
+    <string name="backup_health_no_backups">এখনও কোনো ব্যাকআপ নেই</string>
+    <string name="backup_health_secure">সব কিছু সুরক্ষিত</string>
+    <string name="backup_health_failed">ব্যাকআপ ব্যর্থ</string>
+    <string name="backup_last_attempt">শেষ প্রচেষ্টা</string>
+    <string name="backup_storage_used">ব্যবহৃত স্টোরেজ</string>
+    <string name="backup_never">কখনও না</string>
+    <string name="backup_count_notes">নোট</string>
+    <string name="backup_count_projects">প্রকল্প</string>
+    <string name="backup_count_labels">লেবেল</string>
+    <string name="backup_count_files">ফাইল</string>
+
+    <string name="backup_contents_title">ব্যাকআপের বিষয়বস্তু</string>
+    <string name="backup_contents_created">তৈরি: %1$s</string>
+    <string name="backup_contents_select_projects">পুনরুদ্ধার করতে প্রকল্প নির্বাচন করুন</string>
+    <string name="backup_contents_merge_note">নোট: নির্বাচিত প্রকল্পগুলি আপনার বর্তমান ডেটার সাথে মার্জ হবে।</string>
+    <string name="backup_restore_selected">নির্বাচিত পুনরুদ্ধার করুন</string>
+
+    <string name="backup_optimization">অপ্টিমাইজেশন</string>
+    <string name="backup_incremental">ইনক্রিমেন্টাল ব্যাকআপ</string>
+    <string name="backup_incremental_subtitle">ডেটা ও স্টোরেজ সাশ্রয় করতে কেবল শেষ ব্যাকআপের পর থেকে পরিবর্তনগুলি সংরক্ষণ করুন।</string>
+    <string name="backup_smart_trigger">স্মার্ট ব্যাকআপ ট্রিগার</string>
+    <string name="backup_smart_trigger_subtitle">নির্দিষ্ট সংখ্যক সম্পাদনার পরে স্বয়ংক্রিয়ভাবে ব্যাকআপ করুন।</string>
+    <string name="backup_after_edits">%1$d সম্পাদনার পরে ব্যাকআপ</string>
+    <string name="backup_current_edits">বর্তমান সম্পাদনা: %1$d</string>
+    <string name="backup_charging_only">শুধু চার্জিং অবস্থায় ব্যাকআপ</string>
+    <string name="backup_charging_only_subtitle">শুধু প্লাগ-ইন থাকা অবস্থায় ব্যাকআপ করে ব্যাটারি বাঁচান।</string>
+</resources>

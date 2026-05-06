@@ -185,4 +185,77 @@
     <string name="restart_to_update">अपडेट के लिए रीस्टार्ट करें</string>
     <string name="checking_for_updates">अपडेट की जांच हो रही है...</string>
     <string name="you_are_up_to_date">आप अप टू डेट हैं</string>
+
+    <!-- Misc additions -->
+    <string name="scan_qr">QR स्कैन करें</string>
+    <string name="create">बनाएं</string>
+    <string name="dismiss">खारिज करें</string>
+    <string name="official_website">आधिकारिक वेबसाइट</string>
+    <string name="developer_website">डेवलपर वेबसाइट</string>
+    <string name="privacy_policy">गोपनीयता नीति</string>
+    <string name="privacy_policy_description">जानें कि हम आपके नोट्स और डेटा को कैसे सुरक्षित रखते हैं</string>
+    <string name="view_privacy_policy">गोपनीयता नीति देखें</string>
+    <string name="faq">FAQ</string>
+    <string name="faq_description">नोटनेक्स्ट के बारे में अक्सर पूछे जाने वाले प्रश्न</string>
+    <string name="features_title">विशेषताएं</string>
+    <string name="features_description">जानें नोटनेक्स्ट क्या-क्या कर सकता है</string>
+    <string name="security_details">सुरक्षा विवरण</string>
+    <string name="security_details_description">हमारे सुरक्षा स्टैक का तकनीकी विवरण</string>
+    <string name="feedback_provider">फीडबैक और टेस्टिंग</string>
+
+    <!-- Notes/Projects empty/search states -->
+    <string name="no_notes_found">आपकी खोज से मेल खाता कोई नोट नहीं मिला।</string>
+    <string name="no_notes_found_label">\'%1$s\' लेबल वाला कोई नोट नहीं मिला।</string>
+    <string name="create_your_first_note">अपना पहला नोट बनाने के लिए + बटन पर टैप करें।</string>
+    <string name="create_first_project">नया प्रोजेक्ट बनाने के लिए + बटन पर टैप करें।</string>
+    <string name="project_description">विवरण (वैकल्पिक)</string>
+    <string name="edit_description">विवरण संपादित करें</string>
+
+    <!-- Crash report -->
+    <string name="crash_report_title">नोटनेक्स्ट क्रैश हो गया</string>
+    <string name="crash_report_text">डेवलपर के साथ क्रैश रिपोर्ट साझा करने के लिए टैप करें</string>
+    <string name="crash_report_channel">क्रैश रिपोर्ट</string>
+
+    <!-- To-Do feature -->
+    <string name="todo">टू-डू</string>
+    <string name="todos">टू-डू</string>
+    <string name="add_todo">टू-डू जोड़ें</string>
+    <string name="edit_todo">टू-डू एडिट करें</string>
+    <string name="no_todos_yet">अभी कोई टू-डू नहीं है</string>
+    <string name="create_first_todo">अपना पहला टू-डू बनाने के लिए + पर टैप करें</string>
+    <string name="todo_title">शीर्षक</string>
+    <string name="todo_description">विवरण (वैकल्पिक)</string>
+    <string name="priority">प्राथमिकता</string>
+    <string name="priority_low">कम</string>
+    <string name="priority_medium">मध्यम</string>
+    <string name="priority_high">उच्च</string>
+    <string name="due_date">देय तिथि</string>
+    <string name="overdue">समय बीत चुका है</string>
+    <string name="all_todos">सभी</string>
+    <string name="active_todos">सक्रिय</string>
+    <string name="completed_todos">पूर्ण</string>
+    <string name="delete_completed">पूर्ण किए गए हटाएं</string>
+    <string name="todo_completed">टू-डू पूर्ण हुआ</string>
+
+    <!-- Groq AI Settings -->
+    <string name="groq_settings_title">Groq AI सेटिंग्स</string>
+    <string name="groq_settings_description">Groq के साथ अपने AI अनुभव को कॉन्फ़िगर करें।</string>
+    <string name="use_custom_api_key">कस्टम API कुंजी का उपयोग करें</string>
+    <string name="use_custom_api_key_subtitle">ऐप की डिफ़ॉल्ट के बजाय अपनी Groq API कुंजी का उपयोग करें।</string>
+    <string name="enter_groq_api_key">Groq API कुंजी दर्ज करें</string>
+    <string name="api_key_placeholder">gsk_…</string>
+    <string name="api_key_instructions_title">API कुंजी कैसे प्राप्त करें?</string>
+    <string name="api_key_step_1">1. console.groq.com पर Groq कंसोल खोलें।</string>
+    <string name="api_key_step_2">2. साइन इन करें या खाता बनाएं।</string>
+    <string name="api_key_step_3">3. API Keys सेक्शन में जाकर "Create API Key" पर क्लिक करें।</string>
+    <string name="api_key_step_4">4. कुंजी कॉपी करके यहाँ पेस्ट करें।</string>
+    <string name="open_groq_console">Groq कंसोल खोलें</string>
+    <string name="select_fast_model">फास्ट मॉडल</string>
+    <string name="select_fast_model_subtitle">त्वरित कार्यों जैसे ग्रामर और सारांश के लिए उपयोग।</string>
+    <string name="select_large_model">लार्ज मॉडल</string>
+    <string name="select_large_model_subtitle">जटिल कार्यों जैसे चेकलिस्ट जनरेशन के लिए उपयोग।</string>
+    <string name="fetch_models">उपलब्ध मॉडल प्राप्त करें</string>
+    <string name="fetching_models">मॉडल प्राप्त हो रहे हैं…</string>
+    <string name="models_fetched_successfully">मॉडल सफलतापूर्वक प्राप्त हुए!</string>
+    <string name="failed_to_fetch_models">मॉडल प्राप्त करने में विफल। अपनी API कुंजी और कनेक्शन जांचें।</string>
 </resources>

@@ -181,10 +181,10 @@ fun BackupScreen(
         AlertDialog(
             onDismissRequest = { showConfirmDialog = null },
             icon = { Icon(Icons.Default.Warning, contentDescription = null, tint = MaterialTheme.colorScheme.primary) },
-            title = { Text("How would you like to restore?") },
+            title = { Text(stringResource(id = R.string.backup_restore_method_title)) },
             text = {
                 Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
-                    Text("Select a restoration method for your backup.")
+                    Text(stringResource(id = R.string.backup_restore_method_subtitle_local))
                     
                     OutlinedCard(
                         onClick = {
@@ -197,8 +197,8 @@ fun BackupScreen(
                         modifier = Modifier.fillMaxWidth()
                     ) {
                         Column(modifier = Modifier.padding(12.dp)) {
-                            Text("Merge with Current Data", style = MaterialTheme.typography.titleSmall, fontWeight = FontWeight.Bold)
-                            Text("Keep your current notes and add everything from the backup as new entries.", style = MaterialTheme.typography.bodySmall)
+                            Text(stringResource(id = R.string.backup_merge_title), style = MaterialTheme.typography.titleSmall, fontWeight = FontWeight.Bold)
+                            Text(stringResource(id = R.string.backup_merge_description), style = MaterialTheme.typography.bodySmall)
                         }
                     }
 
@@ -214,8 +214,8 @@ fun BackupScreen(
                         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.errorContainer.copy(alpha = 0.1f))
                     ) {
                         Column(modifier = Modifier.padding(12.dp)) {
-                            Text("Full Overwrite (Clean Restore)", style = MaterialTheme.typography.titleSmall, fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.error)
-                            Text("ERASE all current data and replace it entirely with the backup content.", style = MaterialTheme.typography.bodySmall)
+                            Text(stringResource(id = R.string.backup_overwrite_title), style = MaterialTheme.typography.titleSmall, fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.error)
+                            Text(stringResource(id = R.string.backup_overwrite_description), style = MaterialTheme.typography.bodySmall)
                         }
                     }
                 }
@@ -271,7 +271,7 @@ fun BackupScreen(
 
             // 2. Sections: Manual Backup
             item {
-                SectionHeader("Manual Backup")
+                SectionHeader(stringResource(id = R.string.backup_section_manual))
             }
 
             // Google Drive Backup Card
@@ -373,7 +373,7 @@ fun BackupScreen(
 
             // 3. Sections: Settings (Auto Backup)
             item {
-                SectionHeader("Backup Settings")
+                SectionHeader(stringResource(id = R.string.backup_section_settings))
             }
 
             item {
@@ -406,7 +406,7 @@ fun BackupScreen(
 
             // 4. Smart & Incremental
             item {
-                SectionHeader("Smart & Incremental")
+                SectionHeader(stringResource(id = R.string.backup_section_smart))
             }
 
             item {
@@ -435,8 +435,8 @@ fun BackupScreen(
     if (showDeleteDialog) {
         AlertDialog(
             onDismissRequest = { showDeleteDialog = false },
-            title = { Text("Delete Drive Backup") },
-            text = { Text("Are you sure you want to permanently delete the backup from Google Drive? This action cannot be undone.") },
+            title = { Text(stringResource(id = R.string.backup_delete_drive_title)) },
+            text = { Text(stringResource(id = R.string.backup_delete_drive_message)) },
             confirmButton = {
                 TextButton(
                     onClick = {
@@ -444,10 +444,10 @@ fun BackupScreen(
                         GoogleSignIn.getLastSignedInAccount(context)?.let { viewModel.deleteDriveBackup(it) }
                     },
                     colors = ButtonDefaults.textButtonColors(contentColor = MaterialTheme.colorScheme.error)
-                ) { Text("Delete") }
+                ) { Text(stringResource(id = R.string.delete)) }
             },
             dismissButton = {
-                TextButton(onClick = { showDeleteDialog = false }) { Text("Cancel") }
+                TextButton(onClick = { showDeleteDialog = false }) { Text(stringResource(id = R.string.cancel)) }
             }
         )
     }
@@ -455,8 +455,8 @@ fun BackupScreen(
     if (showUnlinkDialog) {
         AlertDialog(
             onDismissRequest = { showUnlinkDialog = false },
-            title = { Text("Unlink Account") },
-            text = { Text("Unlinking will stop automatic backups to Drive. Local backups will not be affected.") },
+            title = { Text(stringResource(id = R.string.backup_unlink_title)) },
+            text = { Text(stringResource(id = R.string.backup_unlink_message)) },
             confirmButton = {
                 TextButton(
                     onClick = {
@@ -464,10 +464,10 @@ fun BackupScreen(
                         viewModel.signOut(context)
                     },
                     colors = ButtonDefaults.textButtonColors(contentColor = MaterialTheme.colorScheme.error)
-                ) { Text("Unlink") }
+                ) { Text(stringResource(id = R.string.backup_unlink_button)) }
             },
             dismissButton = {
-                TextButton(onClick = { showUnlinkDialog = false }) { Text("Cancel") }
+                TextButton(onClick = { showUnlinkDialog = false }) { Text(stringResource(id = R.string.cancel)) }
             }
         )
     }
@@ -476,8 +476,8 @@ fun BackupScreen(
         AlertDialog(
             onDismissRequest = { versionToDelete = null },
             icon = { Icon(Icons.Default.Warning, contentDescription = null, tint = MaterialTheme.colorScheme.error) },
-            title = { Text("Delete Backup Version") },
-            text = { Text("Are you sure you want to permanently delete this backup version? This cannot be undone.") },
+            title = { Text(stringResource(id = R.string.backup_delete_version_title)) },
+            text = { Text(stringResource(id = R.string.backup_delete_version_message)) },
             confirmButton = {
                 TextButton(
                     onClick = {
@@ -489,10 +489,10 @@ fun BackupScreen(
                         versionToDelete = null
                     },
                     colors = ButtonDefaults.textButtonColors(contentColor = MaterialTheme.colorScheme.error)
-                ) { Text("Delete") }
+                ) { Text(stringResource(id = R.string.delete)) }
             },
             dismissButton = {
-                TextButton(onClick = { versionToDelete = null }) { Text("Cancel") }
+                TextButton(onClick = { versionToDelete = null }) { Text(stringResource(id = R.string.cancel)) }
             }
         )
     }
@@ -501,10 +501,10 @@ fun BackupScreen(
         AlertDialog(
             onDismissRequest = { versionToRestore = null },
             icon = { Icon(Icons.Default.Restore, contentDescription = null, tint = MaterialTheme.colorScheme.primary) },
-            title = { Text("How would you like to restore?") },
+            title = { Text(stringResource(id = R.string.backup_restore_method_title)) },
             text = {
                 Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
-                    Text("Select a restoration method for this version.")
+                    Text(stringResource(id = R.string.backup_restore_method_subtitle_drive))
                     
                     OutlinedCard(
                         onClick = {
@@ -518,8 +518,8 @@ fun BackupScreen(
                         modifier = Modifier.fillMaxWidth()
                     ) {
                         Column(modifier = Modifier.padding(12.dp)) {
-                            Text("Merge with Current Data", style = MaterialTheme.typography.titleSmall, fontWeight = FontWeight.Bold)
-                            Text("Keep current notes and add everything from the backup as new entries.", style = MaterialTheme.typography.bodySmall)
+                            Text(stringResource(id = R.string.backup_merge_title), style = MaterialTheme.typography.titleSmall, fontWeight = FontWeight.Bold)
+                            Text(stringResource(id = R.string.backup_merge_description_drive), style = MaterialTheme.typography.bodySmall)
                         }
                     }
 
@@ -536,15 +536,15 @@ fun BackupScreen(
                         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.errorContainer.copy(alpha = 0.1f))
                     ) {
                         Column(modifier = Modifier.padding(12.dp)) {
-                            Text("Full Overwrite (Clean Restore)", style = MaterialTheme.typography.titleSmall, fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.error)
-                            Text("ERASE all current data and replace it entirely with the backup content.", style = MaterialTheme.typography.bodySmall)
+                            Text(stringResource(id = R.string.backup_overwrite_title), style = MaterialTheme.typography.titleSmall, fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.error)
+                            Text(stringResource(id = R.string.backup_overwrite_description), style = MaterialTheme.typography.bodySmall)
                         }
                     }
                 }
             },
             confirmButton = {},
             dismissButton = {
-                TextButton(onClick = { versionToRestore = null }) { Text("Cancel") }
+                TextButton(onClick = { versionToRestore = null }) { Text(stringResource(id = R.string.cancel)) }
             }
         )
     }
@@ -566,8 +566,8 @@ fun BackupScreen(
                 viewModel.changePassword(password)
                 showChangePasswordDialog = false
             },
-            title = "Change Password",
-            confirmText = "Update Password"
+            title = stringResource(id = R.string.backup_change_password_title),
+            confirmText = stringResource(id = R.string.backup_update_password_button)
         )
     }
 
@@ -617,12 +617,12 @@ fun ManualDriveBackupCard(
                  )
                  Spacer(Modifier.width(16.dp))
                  Column {
-                     Text("Google Drive", style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold))
+                     Text(stringResource(id = R.string.backup_google_drive), style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold))
                      Spacer(Modifier.height(4.dp))
                      if (state.googleAccountEmail != null) {
-                         Text("Linked: ${state.googleAccountEmail}", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                         Text(stringResource(id = R.string.backup_drive_linked, state.googleAccountEmail), style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
                      } else {
-                         Text("Sign in to backup your data to the cloud.", style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                         Text(stringResource(id = R.string.backup_drive_signin_prompt), style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
                      }
                  }
              }
@@ -637,7 +637,7 @@ fun ManualDriveBackupCard(
                  ) {
                      Checkbox(checked = state.includeAttachments, onCheckedChange = onToggleAttachments)
                      Spacer(Modifier.width(8.dp))
-                     Text("Include Attachments", style = MaterialTheme.typography.bodyMedium)
+                     Text(stringResource(id = R.string.backup_include_attachments), style = MaterialTheme.typography.bodyMedium)
                  }
 
                  // Encryption Toggle
@@ -651,20 +651,20 @@ fun ManualDriveBackupCard(
                      Checkbox(checked = isEncryptionEnabled, onCheckedChange = onToggleEncryption)
                      Spacer(Modifier.width(8.dp))
                      Column(modifier = Modifier.weight(1f)) {
-                         Text("Encrypt Backup", style = MaterialTheme.typography.bodyMedium)
+                         Text(stringResource(id = R.string.backup_encrypt), style = MaterialTheme.typography.bodyMedium)
                          if (isEncryptionEnabled) {
-                             Text("Password set", style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.primary)
+                             Text(stringResource(id = R.string.backup_password_set), style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.primary)
                          }
                      }
                      if (isEncryptionEnabled) {
                          TextButton(onClick = onChangePassword) {
-                             Text("Change Password", fontSize = 12.sp)
+                             Text(stringResource(id = R.string.backup_change_password), fontSize = 12.sp)
                          }
                      }
                      IconButton(onClick = onShowInfo) {
                          Icon(
                              imageVector = Icons.Default.Info,
-                             contentDescription = "About Encryption",
+                             contentDescription = stringResource(id = R.string.backup_about_encryption),
                              tint = MaterialTheme.colorScheme.primary,
                              modifier = Modifier.size(20.dp)
                          )
@@ -686,9 +686,9 @@ fun ManualDriveBackupCard(
                                 color = MaterialTheme.colorScheme.onPrimary
                             )
                             Spacer(Modifier.width(8.dp))
-                             Text(state.uploadProgress ?: "Backing up...")
+                             Text(state.uploadProgress ?: stringResource(id = R.string.backup_backing_up))
                          } else {
-                             Text("Backup Now")
+                             Text(stringResource(id = R.string.backup_now))
                          }
                      }
                       // Latest Restore Button (if versions exist)
@@ -700,7 +700,7 @@ fun ManualDriveBackupCard(
                             if (state.isRestoring && state.restoreResult?.contains("latest") == true) {
                                  LoadingIndicator(modifier = Modifier.size(16.dp))
                             } else {
-                                 Text("Restore Latest")
+                                 Text(stringResource(id = R.string.backup_restore_latest))
                             }
                          }
                      }
@@ -709,7 +709,7 @@ fun ManualDriveBackupCard(
                  // Versions List
                  if (state.backupVersions.isNotEmpty()) {
                      Spacer(Modifier.height(16.dp))
-                     Text("Backup History", style = MaterialTheme.typography.titleSmall, fontWeight = FontWeight.SemiBold)
+                     Text(stringResource(id = R.string.backup_history), style = MaterialTheme.typography.titleSmall, fontWeight = FontWeight.SemiBold)
                      Spacer(Modifier.height(8.dp))
                      
                      Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
@@ -730,7 +730,7 @@ fun ManualDriveBackupCard(
 
                  Spacer(Modifier.height(8.dp))
                  TextButton(onClick = onUnlink, modifier = Modifier.align(Alignment.End)) {
-                     Text("Unlink Account", color = MaterialTheme.colorScheme.error)
+                     Text(stringResource(id = R.string.backup_unlink_title), color = MaterialTheme.colorScheme.error)
                  }
              } else {
                  Spacer(Modifier.height(20.dp))
@@ -739,7 +739,7 @@ fun ManualDriveBackupCard(
                      modifier = Modifier.fillMaxWidth(),
                      shape = RoundedCornerShape(12.dp)
                  ) {
-                     Text("Sign In")
+                     Text(stringResource(id = R.string.backup_sign_in))
                  }
              }
          }
@@ -757,7 +757,7 @@ fun BackupVersionItem(
     val size = formatSize(version.size)
     val date = version.modifiedTime?.let {
         SimpleDateFormat("MMM dd, HH:mm", Locale.getDefault()).format(Date(it.value))
-    } ?: "Unknown Date"
+    } ?: stringResource(id = R.string.backup_unknown_date)
 
     Row(
         modifier = Modifier
@@ -774,10 +774,10 @@ fun BackupVersionItem(
          
          Row {
              IconButton(onClick = onRestore, enabled = !isRestoring && !isDeleting) {
-                 Icon(Icons.Default.Restore, "Restore", tint = MaterialTheme.colorScheme.primary)
+                 Icon(Icons.Default.Restore, stringResource(id = R.string.backup_action_restore), tint = MaterialTheme.colorScheme.primary)
              }
              IconButton(onClick = onDelete, enabled = !isRestoring && !isDeleting) {
-                  Icon(Icons.Default.Delete, "Delete", tint = MaterialTheme.colorScheme.error)
+                  Icon(Icons.Default.Delete, stringResource(id = R.string.backup_action_delete), tint = MaterialTheme.colorScheme.error)
              }
          }
     }
@@ -811,13 +811,13 @@ fun ManualLocalBackupCard(
                 )
                 Spacer(Modifier.width(16.dp))
                 Column {
-                    Text("Local Storage", style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold))
-                    Text("Backup to or restore from device storage", style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                    Text(stringResource(id = R.string.backup_local_storage), style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold))
+                    Text(stringResource(id = R.string.backup_local_storage_subtitle), style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
                 }
             }
             Spacer(Modifier.height(20.dp))
             
-            Text("Backup", style = MaterialTheme.typography.labelMedium, color = MaterialTheme.colorScheme.primary)
+            Text(stringResource(id = R.string.backup_label_backup), style = MaterialTheme.typography.labelMedium, color = MaterialTheme.colorScheme.primary)
             Spacer(Modifier.height(8.dp))
             
             // Encryption Toggle
@@ -831,20 +831,20 @@ fun ManualLocalBackupCard(
                 Checkbox(checked = isEncryptionEnabled, onCheckedChange = onToggleEncryption)
                 Spacer(Modifier.width(8.dp))
                 Column(modifier = Modifier.weight(1f)) {
-                    Text("Encrypt Backup", style = MaterialTheme.typography.bodyMedium)
+                    Text(stringResource(id = R.string.backup_encrypt), style = MaterialTheme.typography.bodyMedium)
                     if (isEncryptionEnabled) {
-                        Text("Password set", style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.primary)
+                        Text(stringResource(id = R.string.backup_password_set), style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.primary)
                     }
                 }
                 if (isEncryptionEnabled) {
                     TextButton(onClick = onChangePassword) {
-                        Text("Change Password", fontSize = 12.sp)
+                        Text(stringResource(id = R.string.backup_change_password), fontSize = 12.sp)
                     }
                 }
                 IconButton(onClick = onShowInfo) {
                     Icon(
                         imageVector = Icons.Default.Info,
-                        contentDescription = "About Encryption",
+                        contentDescription = stringResource(id = R.string.backup_about_encryption),
                         tint = MaterialTheme.colorScheme.primary,
                         modifier = Modifier.size(20.dp)
                     )
@@ -861,9 +861,9 @@ fun ManualLocalBackupCard(
                  if (state.isBackingUp && state.backupResult?.contains("SD Card") == true) {
                      LoadingIndicator(modifier = Modifier.size(16.dp))
                      Spacer(Modifier.width(8.dp))
-                     Text("Backing up...")
+                     Text(stringResource(id = R.string.backup_backing_up))
                  } else {
-                     Text(if (state.sdCardFolderUri != null) "Backup to Selected Folder" else "Select Folder & Backup")
+                     Text(if (state.sdCardFolderUri != null) stringResource(id = R.string.backup_to_selected_folder) else stringResource(id = R.string.backup_select_folder))
                  }
             }
 
@@ -871,7 +871,7 @@ fun ManualLocalBackupCard(
             HorizontalDivider()
             Spacer(Modifier.height(16.dp))
             
-            Text("Restore", style = MaterialTheme.typography.labelMedium, color = MaterialTheme.colorScheme.primary)
+            Text(stringResource(id = R.string.backup_label_restore), style = MaterialTheme.typography.labelMedium, color = MaterialTheme.colorScheme.primary)
             Spacer(Modifier.height(8.dp))
 
             // Restore From File
@@ -884,11 +884,11 @@ fun ManualLocalBackupCard(
                 if(state.isRestoring && state.restoreResult?.contains("Local") == true) {
                     LoadingIndicator(modifier = Modifier.size(16.dp), color = MaterialTheme.colorScheme.onSecondary)
                      Spacer(Modifier.width(8.dp))
-                     Text("Restoring...")
+                     Text(stringResource(id = R.string.backup_restoring))
                 } else {
                     Icon(Icons.Default.UploadFile, contentDescription = null, modifier = Modifier.size(16.dp))
                     Spacer(Modifier.width(8.dp))
-                    Text("Restore from File")
+                    Text(stringResource(id = R.string.backup_restore_from_file))
                 }
             }
 
@@ -903,9 +903,9 @@ fun ManualLocalBackupCard(
                  if (state.isScanning) {
                       LoadingIndicator(modifier = Modifier.size(16.dp))
                       Spacer(Modifier.width(8.dp))
-                      Text("Scanning...")
+                      Text(stringResource(id = R.string.backup_scanning))
                  } else {
-                     Text("Selective Restore")
+                     Text(stringResource(id = R.string.backup_selective_restore))
                  }
             }
             
@@ -941,7 +941,7 @@ fun AutoBackupSettingsCard(
              Row(verticalAlignment = Alignment.CenterVertically) {
                 Icon(Icons.Default.Schedule, null, tint = MaterialTheme.colorScheme.tertiary, modifier = Modifier.size(28.dp))
                 Spacer(Modifier.width(16.dp))
-                Text("Automatic Backup", style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold))
+                Text(stringResource(id = R.string.backup_auto_title), style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold))
             }
             
             Spacer(Modifier.height(24.dp))
@@ -953,8 +953,8 @@ fun AutoBackupSettingsCard(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Column(Modifier.weight(1f)) {
-                    Text("Encrypt Auto-Backups", style = MaterialTheme.typography.bodyLarge)
-                    Text("Protect background backups with a password", style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                    Text(stringResource(id = R.string.backup_auto_encrypt), style = MaterialTheme.typography.bodyLarge)
+                    Text(stringResource(id = R.string.backup_auto_encrypt_subtitle), style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
                 }
                 Switch(
                     checked = state.isEncryptionEnabled,
@@ -967,14 +967,17 @@ fun AutoBackupSettingsCard(
             Spacer(Modifier.height(16.dp))
 
             // Frequency
-            Text("Frequency", style = MaterialTheme.typography.labelMedium, color = MaterialTheme.colorScheme.primary)
+            Text(stringResource(id = R.string.backup_frequency), style = MaterialTheme.typography.labelMedium, color = MaterialTheme.colorScheme.primary)
             Spacer(Modifier.height(8.dp))
             Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                listOf("Daily", "Weekly").forEach { freq ->
+                listOf(
+                    "Daily" to stringResource(id = R.string.backup_frequency_daily),
+                    "Weekly" to stringResource(id = R.string.backup_frequency_weekly)
+                ).forEach { (freq, label) ->
                     FilterChip(
                         selected = state.backupFrequency == freq,
                         onClick = { onFrequencyChange(freq) },
-                        label = { Text(freq) },
+                        label = { Text(label) },
                         leadingIcon = if (state.backupFrequency == freq) {
                             { Icon(Icons.Default.Check, null, Modifier.size(16.dp)) }
                         } else null
@@ -993,9 +996,9 @@ fun AutoBackupSettingsCard(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Column(Modifier.weight(1f)) {
-                    Text("Google Drive", style = MaterialTheme.typography.bodyLarge)
+                    Text(stringResource(id = R.string.backup_google_drive), style = MaterialTheme.typography.bodyLarge)
                     if (state.googleAccountEmail == null && state.isAutoBackupEnabled) {
-                        Text("Sign in required", style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.error)
+                        Text(stringResource(id = R.string.backup_signin_required), style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.error)
                     }
                 }
                 Switch(
@@ -1019,9 +1022,10 @@ fun AutoBackupSettingsCard(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Column(Modifier.weight(1f)) {
-                    Text("SD Card / Local Folder", style = MaterialTheme.typography.bodyLarge)
+                    Text(stringResource(id = R.string.backup_sd_card_folder), style = MaterialTheme.typography.bodyLarge)
                     state.sdCardFolderUri?.let { uri ->
-                        val path = try { android.net.Uri.parse(uri).path?.substringAfterLast(":") ?: "Selected" } catch(e:Exception){"Selected"}
+                        val selectedFallback = stringResource(id = R.string.backup_folder_selected)
+                        val path = try { android.net.Uri.parse(uri).path?.substringAfterLast(":") ?: selectedFallback } catch(e:Exception){ selectedFallback }
                         Text(path, style = MaterialTheme.typography.labelSmall, maxLines=1, color = MaterialTheme.colorScheme.onSurfaceVariant)
                     }
                 }
@@ -1036,7 +1040,7 @@ fun AutoBackupSettingsCard(
             
             if (state.sdCardFolderUri != null || state.isSdCardAutoBackupEnabled) {
                 TextButton(onClick = onChangeSdLocation) {
-                    Text("Change Folder")
+                    Text(stringResource(id = R.string.backup_change_folder))
                 }
             }
         }
@@ -1071,7 +1075,7 @@ fun BackupDashboardCard(details: BackupDetails, state: BackupRestoreState) {
             ) {
                 Column {
                     Text(
-                        text = "Backup Health",
+                        text = stringResource(id = R.string.backup_health),
                         style = MaterialTheme.typography.labelLarge,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                         fontWeight = FontWeight.Medium
@@ -1080,7 +1084,7 @@ fun BackupDashboardCard(details: BackupDetails, state: BackupRestoreState) {
                         Box(modifier = Modifier.size(8.dp).background(statusColor, CircleShape))
                         Spacer(Modifier.width(8.dp))
                         Text(
-                            text = if (state.lastBackupTime == 0L) "No Backups Yet" else if (isSuccess) "Everything Secure" else "Backup Failed",
+                            text = if (state.lastBackupTime == 0L) stringResource(id = R.string.backup_health_no_backups) else if (isSuccess) stringResource(id = R.string.backup_health_secure) else stringResource(id = R.string.backup_health_failed),
                             style = MaterialTheme.typography.titleMedium,
                             fontWeight = FontWeight.Bold,
                             color = statusColor
@@ -1111,7 +1115,7 @@ fun BackupDashboardCard(details: BackupDetails, state: BackupRestoreState) {
                 val sdf = SimpleDateFormat("MMM dd, HH:mm", Locale.getDefault())
                 sdf.format(Date(state.lastBackupTime))
             } else {
-                "Never"
+                stringResource(id = R.string.backup_never)
             }
             
             Row(
@@ -1123,12 +1127,12 @@ fun BackupDashboardCard(details: BackupDetails, state: BackupRestoreState) {
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Column(modifier = Modifier.weight(1f)) {
-                    Text("Last Attempt", style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                    Text(stringResource(id = R.string.backup_last_attempt), style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
                     Text(text = lastBackupText, style = MaterialTheme.typography.bodyMedium, fontWeight = FontWeight.Bold)
                 }
                 VerticalDivider(modifier = Modifier.height(24.dp).padding(horizontal = 16.dp), color = MaterialTheme.colorScheme.outlineVariant)
                 Column(modifier = Modifier.weight(1f)) {
-                    Text("Storage Used", style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                    Text(stringResource(id = R.string.backup_storage_used), style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
                     Text(text = formatSize(details.totalSize), style = MaterialTheme.typography.bodyMedium, fontWeight = FontWeight.Bold)
                 }
             }
@@ -1142,14 +1146,14 @@ fun BackupDashboardCard(details: BackupDetails, state: BackupRestoreState) {
                     UsageStatItem(
                         icon = Icons.Default.Description,
                         count = details.notesCount.toString(),
-                        label = "Notes",
+                        label = stringResource(id = R.string.backup_count_notes),
                         color = MaterialTheme.colorScheme.primary
                     )
                     Spacer(modifier = Modifier.height(16.dp))
                      UsageStatItem(
                         icon = Icons.Default.Folder,
                         count = details.projectsCount.toString(),
-                        label = "Projects",
+                        label = stringResource(id = R.string.backup_count_projects),
                         color = MaterialTheme.colorScheme.tertiary
                     )
                 }
@@ -1157,14 +1161,14 @@ fun BackupDashboardCard(details: BackupDetails, state: BackupRestoreState) {
                     UsageStatItem(
                         icon = Icons.Default.Label,
                         count = details.labelsCount.toString(),
-                        label = "Labels",
+                        label = stringResource(id = R.string.backup_count_labels),
                         color = MaterialTheme.colorScheme.secondary
                     )
                      Spacer(modifier = Modifier.height(16.dp))
                     UsageStatItem(
                         icon = Icons.Default.AttachFile,
                         count = details.attachmentsCount.toString(),
-                        label = "Files",
+                        label = stringResource(id = R.string.backup_count_files),
                         color = MaterialTheme.colorScheme.error
                     )
                 }
@@ -1231,7 +1235,7 @@ fun DeleteBackupCard(
             if (isLoading) {
                  LoadingIndicator(Modifier.size(16.dp), color = MaterialTheme.colorScheme.error)
             } else {
-                 Text("Delete Backup from Drive", color = MaterialTheme.colorScheme.error, fontWeight = FontWeight.Bold)
+                 Text(stringResource(id = R.string.backup_delete_drive_button), color = MaterialTheme.colorScheme.error, fontWeight = FontWeight.Bold)
             }
         }
     }
@@ -1266,10 +1270,10 @@ fun BackupScanResultDialog(
         onDismissRequest = onDismiss,
         title = { 
             Column {
-                Text("Backup Contents", style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.Bold)
+                Text(stringResource(id = R.string.backup_contents_title), style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.Bold)
                 scanResult.backupTimestamp?.let { 
                     Text(
-                        text = "Created: ${SimpleDateFormat("MMM dd, HH:mm", Locale.getDefault()).format(Date(it))}",
+                        text = stringResource(id = R.string.backup_contents_created, SimpleDateFormat("MMM dd, HH:mm", Locale.getDefault()).format(Date(it))),
                         style = MaterialTheme.typography.labelSmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
@@ -1283,12 +1287,12 @@ fun BackupScanResultDialog(
                     modifier = Modifier.fillMaxWidth().clip(RoundedCornerShape(12.dp)).background(MaterialTheme.colorScheme.secondaryContainer.copy(alpha = 0.3f)).padding(12.dp),
                     horizontalArrangement = Arrangement.SpaceAround
                 ) {
-                    ScanStatItem(count = scanResult.notesCount, label = "Notes", icon = Icons.Default.Description)
-                    ScanStatItem(count = scanResult.labelsCount, label = "Labels", icon = Icons.Default.Label)
-                    ScanStatItem(count = scanResult.attachmentsCount, label = "Files", icon = Icons.Default.AttachFile)
+                    ScanStatItem(count = scanResult.notesCount, label = stringResource(id = R.string.backup_count_notes), icon = Icons.Default.Description)
+                    ScanStatItem(count = scanResult.labelsCount, label = stringResource(id = R.string.backup_count_labels), icon = Icons.Default.Label)
+                    ScanStatItem(count = scanResult.attachmentsCount, label = stringResource(id = R.string.backup_count_files), icon = Icons.Default.AttachFile)
                 }
 
-                Text("Select Projects to Restore", style = MaterialTheme.typography.titleSmall, fontWeight = FontWeight.Bold)
+                Text(stringResource(id = R.string.backup_contents_select_projects), style = MaterialTheme.typography.titleSmall, fontWeight = FontWeight.Bold)
                 
                 LazyColumn(modifier = Modifier.heightIn(max = 250.dp).fillMaxWidth()) {
                     items(
@@ -1318,7 +1322,7 @@ fun BackupScanResultDialog(
                 }
                 
                 Text(
-                    "Note: Selected projects will be merged with your current data.",
+                    stringResource(id = R.string.backup_contents_merge_note),
                     style = MaterialTheme.typography.labelSmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
@@ -1329,12 +1333,12 @@ fun BackupScanResultDialog(
                 onClick = { onConfirm(selectedIds.toList()) },
                 enabled = selectedIds.isNotEmpty()
             ) {
-                Text("Restore Selected")
+                Text(stringResource(id = R.string.backup_restore_selected))
             }
         },
         dismissButton = {
             TextButton(onClick = onDismiss) {
-                Text("Cancel")
+                Text(stringResource(id = R.string.cancel))
             }
         }
     )
@@ -1426,7 +1430,7 @@ fun SmartBackupSettingsCard(
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Icon(Icons.Default.AutoMode, null, tint = MaterialTheme.colorScheme.primary, modifier = Modifier.size(28.dp))
                 Spacer(Modifier.width(16.dp))
-                Text("Optimization", style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold))
+                Text(stringResource(id = R.string.backup_optimization), style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold))
             }
             
             Spacer(Modifier.height(24.dp))
@@ -1438,8 +1442,8 @@ fun SmartBackupSettingsCard(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Column(Modifier.weight(1f)) {
-                    Text("Incremental Backup", style = MaterialTheme.typography.bodyLarge)
-                    Text("Only save changes since last backup to save data and storage.", style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                    Text(stringResource(id = R.string.backup_incremental), style = MaterialTheme.typography.bodyLarge)
+                    Text(stringResource(id = R.string.backup_incremental_subtitle), style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
                 }
                 Switch(
                     checked = state.isIncrementalEnabled,
@@ -1461,8 +1465,8 @@ fun SmartBackupSettingsCard(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Column(Modifier.weight(1f)) {
-                    Text("Smart Backup Trigger", style = MaterialTheme.typography.bodyLarge)
-                    Text("Automatically backup after a certain number of edits.", style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                    Text(stringResource(id = R.string.backup_smart_trigger), style = MaterialTheme.typography.bodyLarge)
+                    Text(stringResource(id = R.string.backup_smart_trigger_subtitle), style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
                 }
                 Switch(
                     checked = state.isSmartBackupEnabled,
@@ -1475,7 +1479,7 @@ fun SmartBackupSettingsCard(
 
             if (state.isSmartBackupEnabled) {
                 Spacer(Modifier.height(16.dp))
-                Text("Backup after ${state.editsThreshold} edits", style = MaterialTheme.typography.labelMedium, color = MaterialTheme.colorScheme.primary)
+                Text(stringResource(id = R.string.backup_after_edits, state.editsThreshold), style = MaterialTheme.typography.labelMedium, color = MaterialTheme.colorScheme.primary)
                 Slider(
                     value = state.editsThreshold.toFloat(),
                     onValueChange = { onThresholdChange(it.toInt()) },
@@ -1483,7 +1487,7 @@ fun SmartBackupSettingsCard(
                     steps = 9
                 )
                 Text(
-                    "Current edits: ${state.currentEditCount}", 
+                    stringResource(id = R.string.backup_current_edits, state.currentEditCount),
                     style = MaterialTheme.typography.labelSmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     modifier = Modifier.align(Alignment.End)
@@ -1501,8 +1505,8 @@ fun SmartBackupSettingsCard(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Column(Modifier.weight(1f)) {
-                    Text("Backup while Charging Only", style = MaterialTheme.typography.bodyLarge)
-                    Text("Conserve battery by only backing up when plugged in.", style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                    Text(stringResource(id = R.string.backup_charging_only), style = MaterialTheme.typography.bodyLarge)
+                    Text(stringResource(id = R.string.backup_charging_only_subtitle), style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
                 }
                 Switch(
                     checked = state.isChargingConstraintEnabled,

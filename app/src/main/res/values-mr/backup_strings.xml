@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Marathi (mr) translations for the Backup screen. Native review recommended. -->
+<resources>
+    <string name="backup_restore_method_title">तुम्हाला कसे पुनर्संचयित करायचे आहे?</string>
+    <string name="backup_restore_method_subtitle_local">तुमच्या बॅकअपसाठी पुनर्संचयन पद्धत निवडा.</string>
+    <string name="backup_restore_method_subtitle_drive">या आवृत्तीसाठी पुनर्संचयन पद्धत निवडा.</string>
+    <string name="backup_merge_title">वर्तमान डेटासह विलीन करा</string>
+    <string name="backup_merge_description">तुमच्या वर्तमान नोट्स ठेवा आणि बॅकअपमधील सर्व काही नवीन नोंदी म्हणून जोडा.</string>
+    <string name="backup_merge_description_drive">वर्तमान नोट्स ठेवा आणि बॅकअपमधील सर्व काही नवीन नोंदी म्हणून जोडा.</string>
+    <string name="backup_overwrite_title">पूर्ण ओव्हरराइट (क्लीन रिस्टोर)</string>
+    <string name="backup_overwrite_description">सर्व वर्तमान डेटा मिटवा आणि पूर्णपणे बॅकअप सामग्रीसह बदला.</string>
+
+    <string name="backup_section_manual">मॅन्युअल बॅकअप</string>
+    <string name="backup_section_settings">बॅकअप सेटिंग्ज</string>
+    <string name="backup_section_smart">स्मार्ट &amp; इन्क्रिमेंटल</string>
+
+    <string name="backup_delete_drive_title">ड्राइव्ह बॅकअप हटवा</string>
+    <string name="backup_delete_drive_message">तुम्हाला Google Drive वरून बॅकअप कायमचा हटवायचा आहे का? ही क्रिया परत केली जाऊ शकत नाही.</string>
+    <string name="backup_delete_drive_button">ड्राइव्हवरून बॅकअप हटवा</string>
+
+    <string name="backup_unlink_title">खाते अनलिंक करा</string>
+    <string name="backup_unlink_message">अनलिंक केल्याने ड्राइव्हवर ऑटो बॅकअप थांबतील. लोकल बॅकअप प्रभावित होणार नाहीत.</string>
+    <string name="backup_unlink_button">अनलिंक</string>
+
+    <string name="backup_delete_version_title">बॅकअप आवृत्ती हटवा</string>
+    <string name="backup_delete_version_message">तुम्हाला ही बॅकअप आवृत्ती कायमची हटवायची आहे का? हे परत केले जाऊ शकत नाही.</string>
+
+    <string name="backup_change_password_title">पासवर्ड बदला</string>
+    <string name="backup_update_password_button">पासवर्ड अद्यतनित करा</string>
+
+    <string name="backup_google_drive">Google Drive</string>
+    <string name="backup_drive_linked">लिंक केलेले: %1$s</string>
+    <string name="backup_drive_signin_prompt">क्लाउडवर तुमचा डेटा बॅकअप करण्यासाठी साइन इन करा.</string>
+    <string name="backup_include_attachments">संलग्नक समाविष्ट करा</string>
+    <string name="backup_encrypt">बॅकअप एन्क्रिप्ट करा</string>
+    <string name="backup_password_set">पासवर्ड सेट</string>
+    <string name="backup_change_password">पासवर्ड बदला</string>
+    <string name="backup_about_encryption">एन्क्रिप्शन बद्दल</string>
+    <string name="backup_backing_up">बॅकअप होत आहे…</string>
+    <string name="backup_now">आता बॅकअप करा</string>
+    <string name="backup_restore_latest">नवीनतम पुनर्संचयित करा</string>
+    <string name="backup_history">बॅकअप इतिहास</string>
+    <string name="backup_sign_in">साइन इन</string>
+    <string name="backup_unknown_date">अज्ञात तारीख</string>
+    <string name="backup_action_restore">पुनर्संचयित करा</string>
+    <string name="backup_action_delete">हटवा</string>
+
+    <string name="backup_local_storage">लोकल स्टोरेज</string>
+    <string name="backup_local_storage_subtitle">डिव्हाइस स्टोरेजवर बॅकअप करा किंवा त्यातून पुनर्संचयित करा</string>
+    <string name="backup_label_backup">बॅकअप</string>
+    <string name="backup_label_restore">पुनर्संचयन</string>
+    <string name="backup_to_selected_folder">निवडलेल्या फोल्डरमध्ये बॅकअप</string>
+    <string name="backup_select_folder">फोल्डर निवडा &amp; बॅकअप</string>
+    <string name="backup_restoring">पुनर्संचयित होत आहे…</string>
+    <string name="backup_restore_from_file">फाइलमधून पुनर्संचयित करा</string>
+    <string name="backup_scanning">स्कॅन होत आहे…</string>
+    <string name="backup_selective_restore">निवडक पुनर्संचयन</string>
+
+    <string name="backup_auto_title">स्वयंचलित बॅकअप</string>
+    <string name="backup_auto_encrypt">ऑटो-बॅकअप एन्क्रिप्ट करा</string>
+    <string name="backup_auto_encrypt_subtitle">पासवर्डसह बॅकग्राउंड बॅकअप संरक्षित करा</string>
+    <string name="backup_frequency">वारंवारता</string>
+    <string name="backup_frequency_daily">दररोज</string>
+    <string name="backup_frequency_weekly">साप्ताहिक</string>
+    <string name="backup_signin_required">साइन इन आवश्यक</string>
+    <string name="backup_sd_card_folder">SD कार्ड / लोकल फोल्डर</string>
+    <string name="backup_folder_selected">निवडलेले</string>
+    <string name="backup_change_folder">फोल्डर बदला</string>
+
+    <string name="backup_health">बॅकअप आरोग्य</string>
+    <string name="backup_health_no_backups">अद्याप कोणतेही बॅकअप नाहीत</string>
+    <string name="backup_health_secure">सर्व काही सुरक्षित</string>
+    <string name="backup_health_failed">बॅकअप अयशस्वी</string>
+    <string name="backup_last_attempt">शेवटचा प्रयत्न</string>
+    <string name="backup_storage_used">वापरलेले स्टोरेज</string>
+    <string name="backup_never">कधीही नाही</string>
+    <string name="backup_count_notes">नोट्स</string>
+    <string name="backup_count_projects">प्रकल्प</string>
+    <string name="backup_count_labels">लेबल</string>
+    <string name="backup_count_files">फाइल्स</string>
+
+    <string name="backup_contents_title">बॅकअपची सामग्री</string>
+    <string name="backup_contents_created">तयार केले: %1$s</string>
+    <string name="backup_contents_select_projects">पुनर्संचयित करण्यासाठी प्रकल्प निवडा</string>
+    <string name="backup_contents_merge_note">टीप: निवडलेले प्रकल्प तुमच्या वर्तमान डेटासह विलीन होतील.</string>
+    <string name="backup_restore_selected">निवडलेले पुनर्संचयित करा</string>
+
+    <string name="backup_optimization">ऑप्टिमायझेशन</string>
+    <string name="backup_incremental">इन्क्रिमेंटल बॅकअप</string>
+    <string name="backup_incremental_subtitle">डेटा आणि स्टोरेज वाचवण्यासाठी फक्त शेवटच्या बॅकअपपासून बदल जतन करा.</string>
+    <string name="backup_smart_trigger">स्मार्ट बॅकअप ट्रिगर</string>
+    <string name="backup_smart_trigger_subtitle">विशिष्ट संख्येच्या संपादनांनंतर स्वयंचलितपणे बॅकअप करा.</string>
+    <string name="backup_after_edits">%1$d संपादनांनंतर बॅकअप</string>
+    <string name="backup_current_edits">वर्तमान संपादने: %1$d</string>
+    <string name="backup_charging_only">फक्त चार्जिंग दरम्यान बॅकअप</string>
+    <string name="backup_charging_only_subtitle">फक्त प्लग-इन असताना बॅकअप करून बॅटरी वाचवा.</string>
+</resources>

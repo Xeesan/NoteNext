@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Marathi (mr) translations for the Todo screen. -->
+<resources>
+    <string name="todo_screen_title">टू-डू</string>
+    <string name="todo_back_content_description">मागे</string>
+    <string name="todo_ai_action_content_description">AI ने टू-डू तयार करा</string>
+    <string name="todo_clear_completed_content_description">पूर्ण झालेले साफ करा</string>
+    <string name="todo_add_fab_content_description">टू-डू जोडा</string>
+
+    <string name="todo_filter_all">सर्व</string>
+    <string name="todo_filter_active">सक्रिय</string>
+    <string name="todo_filter_done">पूर्ण</string>
+
+    <string name="todo_empty_all">सर्व काही स्वच्छ! आत्ता कोणतेही काम नाही.</string>
+    <string name="todo_empty_active">तुम्ही सर्व काही पूर्ण केले! छान काम.</string>
+    <string name="todo_empty_completed">अद्याप कोणतेही पूर्ण केलेले काम नाही. चला सुरुवात करूया!</string>
+
+    <string name="todo_daily_progress">दैनिक प्रगती</string>
+    <string name="todo_time_to_get_started">सुरुवात करण्याची वेळ!</string>
+    <string name="todo_crushed_tasks_today">आज तुम्ही %1$d कामे पूर्ण केली!</string>
+    <string name="todo_remaining">शिल्लक</string>
+    <string name="todo_done_today">आज पूर्ण</string>
+
+    <string name="ai_todo_dialog_title">AI ने टू-डू तयार करा</string>
+    <string name="ai_todo_dialog_description">तुमचे काम वर्णन करा किंवा एखादी विस्कळीत नोट पेस्ट करा, AI ती स्पष्ट टू-डू मध्ये विभाजित करेल.</string>
+    <string name="ai_todo_dialog_placeholder">मजकूर लिहा…</string>
+    <string name="ai_todo_dialog_thinking">विचार करत आहे…</string>
+    <string name="ai_todo_dialog_generate">तयार करा</string>
+
+    <string name="todo_priority_high_short">उच्च</string>
+    <string name="todo_priority_med_short">मध्यम</string>
+    <string name="todo_priority_low_short">कमी</string>
+    <string name="todo_overdue_label">मुदत संपली: %1$s</string>
+    <string name="todo_due_label">देय: %1$s</string>
+    <string name="todo_more_options_content_description">अधिक पर्याय</string>
+    <string name="todo_convert_to_note">नोट मध्ये रूपांतरित करा</string>
+    <string name="todo_share_chooser_title">चेकलिस्ट शेअर करा</string>
+</resources>

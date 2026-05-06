@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Bengali (bn) translations for NoteNext core common strings.
+    This is a curated subset of the most-visible UI strings.
+    Untranslated keys fall back to the English defaults in values/.
+    Native-speaker review is recommended before public release.
+-->
+<resources>
+    <!-- App identity -->
+    <string name="notenext">নোটনেক্সট</string>
+    <string name="notenext_logo">নোটনেক্সট লোগো</string>
+
+    <!-- Navigation -->
+    <string name="notes">নোট</string>
+    <string name="archive">আর্কাইভ</string>
+    <string name="settings">সেটিংস</string>
+    <string name="reminders">রিমাইন্ডার</string>
+    <string name="projects">প্রকল্প</string>
+    <string name="bin">বিন</string>
+    <string name="labels">লেবেল</string>
+
+    <!-- Common buttons -->
+    <string name="back">পিছনে</string>
+    <string name="save">সংরক্ষণ</string>
+    <string name="delete">মুছুন</string>
+    <string name="cancel">বাতিল</string>
+    <string name="ok">ঠিক আছে</string>
+    <string name="add">যোগ করুন</string>
+    <string name="edit">সম্পাদনা</string>
+    <string name="create">তৈরি করুন</string>
+    <string name="share">শেয়ার করুন</string>
+    <string name="move">সরান</string>
+    <string name="dismiss">খারিজ করুন</string>
+    <string name="search">অনুসন্ধান</string>
+    <string name="menu">মেনু</string>
+    <string name="undo">পূর্বাবস্থায় ফিরুন</string>
+    <string name="redo">পুনরায় করুন</string>
+    <string name="more_options">আরও বিকল্প</string>
+    <string name="request">অনুরোধ</string>
+    <string name="continue_button">চালিয়ে যান</string>
+    <string name="sort">সাজান</string>
+
+    <!-- Note actions -->
+    <string name="note">নোট</string>
+    <string name="title">শিরোনাম</string>
+    <string name="content">বিষয়বস্তু</string>
+    <string name="add_note">নোট যোগ করুন</string>
+    <string name="search_notes">নোট খুঁজুন</string>
+    <string name="no_notes_yet">এখনও কোনো নোট নেই</string>
+    <string name="pinned">পিন করা</string>
+    <string name="others">অন্যান্য</string>
+    <string name="checklist">চেকলিস্ট</string>
+    <string name="add_checklist">চেকলিস্ট যোগ করুন</string>
+    <string name="drawing">অঙ্কন</string>
+    <string name="pin_note">নোট পিন করুন</string>
+    <string name="unpin_note">নোট আনপিন করুন</string>
+    <string name="archive_note">নোট আর্কাইভ করুন</string>
+    <string name="unarchive_note">নোট আনআর্কাইভ করুন</string>
+    <string name="delete_note">নোট মুছুন</string>
+    <string name="move_to_bin">বিনে সরান</string>
+
+    <!-- Empty/info -->
+    <string name="no_archived_notes">কোনো আর্কাইভ করা নোট নেই।</string>
+    <string name="create_your_first_note">আপনার প্রথম নোট তৈরি করতে + বোতাম চাপুন।</string>
+    <string name="no_projects_yet">এখনও কোনো প্রকল্প নেই</string>
+
+    <!-- Reminders -->
+    <string name="reminders_title">রিমাইন্ডার</string>
+    <string name="add_reminder">রিমাইন্ডার যোগ করুন</string>
+    <string name="set_reminder">রিমাইন্ডার সেট করুন</string>
+    <string name="select_date">তারিখ নির্বাচন করুন</string>
+    <string name="select_time">সময় নির্বাচন করুন</string>
+    <string name="never">কখনও না</string>
+    <string name="daily">দৈনিক</string>
+    <string name="weekly">সাপ্তাহিক</string>
+    <string name="monthly">মাসিক</string>
+    <string name="yearly">বার্ষিক</string>
+
+    <!-- Backup -->
+    <string name="backup_title">ব্যাকআপ</string>
+    <string name="create_backup">ব্যাকআপ তৈরি করুন</string>
+    <string name="backup_successful">ব্যাকআপ সফল হয়েছে</string>
+    <string name="restore_title">পুনরুদ্ধার</string>
+    <string name="restore_successful">পুনরুদ্ধার সফল হয়েছে</string>
+
+    <!-- Todo feature -->
+    <string name="todo">টু-ডু</string>
+    <string name="todos">টু-ডু</string>
+    <string name="add_todo">টু-ডু যোগ করুন</string>
+    <string name="edit_todo">টু-ডু সম্পাদনা</string>
+    <string name="no_todos_yet">এখনও কোনো টু-ডু নেই</string>
+    <string name="create_first_todo">আপনার প্রথম টু-ডু তৈরি করতে + চাপুন</string>
+    <string name="todo_title">শিরোনাম</string>
+    <string name="todo_description">বিবরণ (ঐচ্ছিক)</string>
+    <string name="priority">অগ্রাধিকার</string>
+    <string name="priority_low">কম</string>
+    <string name="priority_medium">মাঝারি</string>
+    <string name="priority_high">উচ্চ</string>
+    <string name="due_date">নির্ধারিত তারিখ</string>
+    <string name="overdue">সময় পেরিয়ে গেছে</string>
+    <string name="all_todos">সব</string>
+    <string name="active_todos">সক্রিয়</string>
+    <string name="completed_todos">সম্পন্ন</string>
+    <string name="delete_completed">সম্পন্নগুলি মুছুন</string>
+    <string name="todo_completed">টু-ডু সম্পন্ন</string>
+
+    <!-- Crash report -->
+    <string name="crash_report_title">নোটনেক্সট ক্র্যাশ হয়েছে</string>
+    <string name="crash_report_text">ডেভেলপারের সাথে ক্র্যাশ রিপোর্ট শেয়ার করতে চাপুন</string>
+    <string name="crash_report_channel">ক্র্যাশ রিপোর্ট</string>
+</resources>
