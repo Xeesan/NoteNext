@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="rem_date">தேதி</string>
+    <string name="rem_time">நேரம்</string>
     <string name="rem_repeat_interval">மீண்டும் இடைவெளி</string>
     <string name="rem_set_reminder_button">நினைவூட்டலை அமை</string>
 

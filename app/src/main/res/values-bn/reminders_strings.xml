@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="rem_date">তারিখ</string>
+    <string name="rem_time">সময়</string>
     <string name="rem_repeat_interval">পুনরাবৃত্তি ব্যবধান</string>
     <string name="rem_set_reminder_button">রিমাইন্ডার সেট করুন</string>
 

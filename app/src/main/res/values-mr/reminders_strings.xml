@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="rem_date">तारीख</string>
+    <string name="rem_time">वेळ</string>
     <string name="rem_repeat_interval">पुनरावृत्ती अंतराल</string>
     <string name="rem_set_reminder_button">स्मरणपत्र सेट करा</string>
 

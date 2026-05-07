@@ -2,6 +2,7 @@
 <resources>
     <!-- ReminderSetDialog -->
     <string name="rem_date">Date</string>
+    <string name="rem_time">Time</string>
     <string name="rem_repeat_interval">Repeat Interval</string>
     <string name="rem_set_reminder_button">Set Reminder</string>
 

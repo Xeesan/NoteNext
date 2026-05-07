@@ -97,7 +97,7 @@ fun ReminderSheetContent(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(
-            text = stringResource(id = R.string.set_reminder),
+            text = stringResource(id = com.suvojeet.notenext.core.R.string.set_reminder),
             style = MaterialTheme.typography.headlineSmall,
             fontWeight = FontWeight.Bold,
             modifier = Modifier.padding(bottom = 24.dp)
@@ -124,7 +124,7 @@ fun ReminderSheetContent(
                 shape = MaterialTheme.shapes.medium
             ) {
                 Column(modifier = Modifier.padding(12.dp), horizontalAlignment = Alignment.CenterHorizontally) {
-                    Text(stringResource(id = R.string.time), style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.primary)
+                    Text(stringResource(id = R.string.rem_time), style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.primary)
                     Text(selectedTime.format(DateTimeFormatter.ofPattern("hh:mm a")), style = MaterialTheme.typography.bodyLarge, fontWeight = FontWeight.Bold)
                 }
             }

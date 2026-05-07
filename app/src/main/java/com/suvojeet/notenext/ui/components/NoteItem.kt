@@ -193,13 +193,13 @@ fun NoteItem(
                     ) {
                         Icon(
                             imageVector = Icons.Filled.Lock,
-                            contentDescription = stringResource(id = R.string.note_locked_content_cd),
+                            contentDescription = stringResource(id = com.suvojeet.notenext.core.R.string.note_locked_content_cd),
                             modifier = Modifier.size(24.dp),
                             tint = tintColor
                         )
                         Spacer(modifier = Modifier.height(4.dp))
                         Text(
-                            text = stringResource(id = R.string.note_locked_message),
+                            text = stringResource(id = com.suvojeet.notenext.core.R.string.note_locked_message),
                             style = MaterialTheme.typography.bodySmall,
                             fontWeight = FontWeight.Medium,
                             color = contentColor.copy(alpha = 0.7f)
@@ -349,20 +349,21 @@ fun NoteItem(
                                 ) {
                                     Icon(
                                         imageVector = Icons.Default.Timer,
-                                        contentDescription = stringResource(id = R.string.note_self_destruct_cd),
+                                        contentDescription = stringResource(id = com.suvojeet.notenext.core.R.string.note_self_destruct_cd),
                                         modifier = Modifier.size(16.dp),
                                         tint = MaterialTheme.colorScheme.error.copy(alpha = 0.8f)
                                     )
                                     
-                                    val remainingText = remember(expiry) {
+                                    val expiredLabel = stringResource(id = com.suvojeet.notenext.core.R.string.note_expired)
+                                    val remainingText = remember(expiry, expiredLabel) {
                                         val remaining = expiry - System.currentTimeMillis()
                                         if (remaining <= 0) {
-                                            stringResource(id = R.string.note_expired)
+                                            expiredLabel
                                         } else {
                                             val hours = java.util.concurrent.TimeUnit.MILLISECONDS.toHours(remaining)
                                             val minutes = java.util.concurrent.TimeUnit.MILLISECONDS.toMinutes(remaining) % 60
                                             val days = java.util.concurrent.TimeUnit.MILLISECONDS.toDays(remaining)
-                                            
+
                                             when {
                                                 days > 0 -> "${days}d"
                                                 hours > 0 -> "${hours}h"

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="rem_date">तारीख</string>
+    <string name="rem_time">समय</string>
     <string name="rem_repeat_interval">दोहराव अंतराल</string>
     <string name="rem_set_reminder_button">रिमाइंडर सेट करें</string>
 
