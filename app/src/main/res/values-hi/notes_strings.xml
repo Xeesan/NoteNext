@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="note_search_close_cd">खोज बंद करें</string>
+    <string name="note_search_placeholder">नोट में खोजें…</string>
+    <string name="note_search_next_cd">अगला</string>
+    <string name="note_search_previous_cd">पिछला</string>
+
+    <string name="checklist_delete">हटाएं</string>
+    <string name="checklist_delete_item_cd">आइटम हटाएं</string>
+    <string name="checklist_delete_all">सभी हटाएं</string>
+    <string name="checklist_reorder_cd">पुन: क्रमित करें</string>
+
+    <string name="note_dialog_self_destruct_title">स्व-नष्ट टाइमर</string>
+    <string name="note_dialog_select_time">समय चुनें</string>
+    <string name="note_dialog_remove_timer">टाइमर हटाएं</string>
+    <string name="note_dialog_set">सेट करें</string>
+    <string name="note_dialog_custom">कस्टम…</string>
+
+    <string name="link_dialog_title">लिंक डालें</string>
+    <string name="link_dialog_section_options">लिंक विकल्प</string>
+    <string name="link_dialog_url">URL</string>
+    <string name="link_dialog_display_text">डिस्प्ले टेक्स्ट</string>
+    <string name="link_dialog_insert">डालें</string>
+</resources>

@@ -40,4 +40,16 @@
     <string name="todo_more_options_content_description">More options</string>
     <string name="todo_convert_to_note">Convert to Note</string>
     <string name="todo_share_chooser_title">Share Checklist</string>
+
+    <!-- AddEditTodoDialog -->
+    <string name="todo_edit_task">Edit Task</string>
+    <string name="todo_description_optional">Description (Optional)</string>
+    <string name="todo_subtasks">Subtasks</string>
+    <string name="todo_add_subtask_placeholder">Add subtask…</string>
+    <string name="todo_reminder">Reminder</string>
+    <string name="todo_project">Project</string>
+    <string name="todo_select_project">Select Project</string>
+    <string name="todo_no_project">No Project</string>
+    <string name="todo_clear">Clear</string>
+    <string name="todo_close">Close</string>
 </resources>

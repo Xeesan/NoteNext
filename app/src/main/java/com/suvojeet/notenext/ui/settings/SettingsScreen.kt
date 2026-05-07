@@ -141,7 +141,13 @@ fun SettingsScreen(
                     SettingsItemData(
                         icon = Icons.Rounded.Language,
                         title = context.getString(R.string.language),
-                        subtitle = if (selectedLanguage == "hi") context.getString(R.string.settings_lang_subtitle_hi) else context.getString(R.string.settings_lang_subtitle_en),
+                        subtitle = when (selectedLanguage) {
+                            "hi" -> context.getString(R.string.settings_lang_subtitle_hi)
+                            "ta" -> context.getString(R.string.settings_lang_subtitle_ta)
+                            "bn" -> context.getString(R.string.settings_lang_subtitle_bn)
+                            "mr" -> context.getString(R.string.settings_lang_subtitle_mr)
+                            else -> context.getString(R.string.settings_lang_subtitle_en)
+                        },
                         iconColor = tertiaryColor,
                         onClick = { showLanguageSheet = true }
                     )
@@ -415,7 +421,13 @@ fun SettingsScreen(
     }
 
     if (showLanguageSheet) {
-        val languages = listOf("en" to R.string.language_english, "hi" to R.string.language_hindi)
+        val languages = listOf(
+            "en" to R.string.language_english,
+            "hi" to R.string.language_hindi,
+            "ta" to R.string.language_tamil,
+            "bn" to R.string.language_bengali,
+            "mr" to R.string.language_marathi,
+        )
         SelectionBottomSheet(
             title = stringResource(id = R.string.choose_language),
             items = languages,

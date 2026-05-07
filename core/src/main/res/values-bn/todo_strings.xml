@@ -35,4 +35,15 @@
     <string name="todo_more_options_content_description">আরও বিকল্প</string>
     <string name="todo_convert_to_note">নোটে রূপান্তর করুন</string>
     <string name="todo_share_chooser_title">চেকলিস্ট শেয়ার করুন</string>
+
+    <string name="todo_edit_task">কাজ সম্পাদনা করুন</string>
+    <string name="todo_description_optional">বিবরণ (ঐচ্ছিক)</string>
+    <string name="todo_subtasks">উপ-কাজ</string>
+    <string name="todo_add_subtask_placeholder">উপ-কাজ যোগ করুন…</string>
+    <string name="todo_reminder">রিমাইন্ডার</string>
+    <string name="todo_project">প্রকল্প</string>
+    <string name="todo_select_project">প্রকল্প নির্বাচন করুন</string>
+    <string name="todo_no_project">কোনো প্রকল্প নেই</string>
+    <string name="todo_clear">সাফ করুন</string>
+    <string name="todo_close">বন্ধ করুন</string>
 </resources>

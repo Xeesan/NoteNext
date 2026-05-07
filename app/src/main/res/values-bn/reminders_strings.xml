@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="rem_date">তারিখ</string>
+    <string name="rem_repeat_interval">পুনরাবৃত্তি ব্যবধান</string>
+    <string name="rem_set_reminder_button">রিমাইন্ডার সেট করুন</string>
+
+    <string name="rem_screen_title">রিমাইন্ডার</string>
+    <string name="rem_screen_empty_title">এখনও কোনো রিমাইন্ডার নেই</string>
+    <string name="rem_screen_empty_subtitle">নোটে সেট করা রিমাইন্ডার এখানে দেখাবে।</string>
+
+    <string name="rem_tab_all">সব</string>
+    <string name="rem_tab_upcoming">আসন্ন</string>
+    <string name="rem_tab_elapsed">অতীত</string>
+    <string name="rem_section_all">সব রিমাইন্ডার</string>
+    <string name="rem_section_default">রিমাইন্ডার</string>
+    <string name="rem_section_desc">আপনার সময়-সংবেদনশীল নোট পরিচালনা করুন</string>
+    <string name="rem_empty_message">কোনো রিমাইন্ডার পাওয়া যায়নি</string>
+    <string name="rem_no_title">কোনো শিরোনাম নেই</string>
+    <string name="rem_next_label">পরবর্তী: %1$s</string>
+    <string name="rem_delete_cd">রিমাইন্ডার মুছুন</string>
+</resources>

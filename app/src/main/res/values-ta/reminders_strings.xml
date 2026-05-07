@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="rem_date">தேதி</string>
+    <string name="rem_repeat_interval">மீண்டும் இடைவெளி</string>
+    <string name="rem_set_reminder_button">நினைவூட்டலை அமை</string>
+
+    <string name="rem_screen_title">நினைவூட்டல்கள்</string>
+    <string name="rem_screen_empty_title">இன்னும் நினைவூட்டல்கள் இல்லை</string>
+    <string name="rem_screen_empty_subtitle">குறிப்புகளில் அமைத்த நினைவூட்டல்கள் இங்கே தோன்றும்.</string>
+
+    <string name="rem_tab_all">அனைத்தும்</string>
+    <string name="rem_tab_upcoming">வரவிருக்கும்</string>
+    <string name="rem_tab_elapsed">கடந்தவை</string>
+    <string name="rem_section_all">அனைத்து நினைவூட்டல்களும்</string>
+    <string name="rem_section_default">நினைவூட்டல்கள்</string>
+    <string name="rem_section_desc">உங்கள் நேரம்-உணர்திறன் குறிப்புகளை நிர்வகி</string>
+    <string name="rem_empty_message">நினைவூட்டல்கள் எதுவும் இல்லை</string>
+    <string name="rem_no_title">தலைப்பு இல்லை</string>
+    <string name="rem_next_label">அடுத்தது: %1$s</string>
+    <string name="rem_delete_cd">நினைவூட்டலை நீக்கு</string>
+</resources>

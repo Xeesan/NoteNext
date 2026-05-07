@@ -27,6 +27,9 @@
     <string name="choose_language">भाषा निवडा</string>
     <string name="language_english">इंग्रजी</string>
     <string name="language_hindi">हिंदी</string>
+    <string name="language_tamil">तमिळ</string>
+    <string name="language_bengali">बंगाली</string>
+    <string name="language_marathi">मराठी</string>
 
     <string name="privacy_policy">गोपनीयता धोरण</string>
     <string name="privacy_policy_description">आम्ही तुमच्या नोट्स आणि डेटाचे संरक्षण कसे करतो ते जाणून घ्या</string>
@@ -94,4 +97,14 @@
 
     <string name="settings_lang_subtitle_en">इंग्रजी (US)</string>
     <string name="settings_lang_subtitle_hi">हिंदी (भारत)</string>
+    <string name="settings_lang_subtitle_ta">तमिळ (தமிழ்)</string>
+    <string name="settings_lang_subtitle_bn">बंगाली (বাংলা)</string>
+    <string name="settings_lang_subtitle_mr">मराठी (मराठी)</string>
+
+    <string name="bin_empty_action_cd">बिन रिकामे करा</string>
+    <string name="bin_section_title_deleted">हटवलेल्या नोट्स</string>
+    <string name="bin_section_desc">बिनमधील नोट्स %1$d दिवसांनंतर स्वयंचलितपणे हटवल्या जातील</string>
+    <string name="bin_empty_dialog_title">बिन रिकामे करा</string>
+    <string name="bin_empty_dialog_message">तुम्हाला नक्की बिनमधील सर्व नोट्स कायमच्या हटवायच्या आहेत का? ही क्रिया पूर्ववत केली जाऊ शकत नाही.</string>
+    <string name="bin_empty_dialog_action">सर्व हटवा</string>
 </resources>

@@ -1,5 +1,10 @@
 <resources>
     <string name="back">Back</string>
+    <!-- NoteItem -->
+    <string name="note_locked_content_cd">Locked Content</string>
+    <string name="note_locked_message">Content is locked</string>
+    <string name="note_self_destruct_cd">Self-destruct timer</string>
+    <string name="note_expired">Expired</string>
     <string name="save">Save</string>
     <string name="delete">Delete</string>
     <string name="cancel">Cancel</string>

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="projects_more_cd">अधिक</string>
+    <string name="projects_add_menu">प्रोजेक्ट जोड़ें</string>
+    <string name="projects_section_title">वर्कस्पेस</string>
+    <string name="projects_section_desc">अपने संबंधित नोट्स और विचारों को एक साथ समूहित करें</string>
+    <string name="projects_delete_title">प्रोजेक्ट हटाएं</string>
+    <string name="projects_delete_message">क्या आप वाकई इस प्रोजेक्ट को हटाना चाहते हैं? यह क्रिया पूर्ववत नहीं की जा सकती।</string>
+
+    <string name="projects_expand_cd">विस्तार करें</string>
+    <string name="projects_collapse_cd">संकुचित करें</string>
+    <string name="projects_pin_to_home">होम पर पिन करें</string>
+    <string name="projects_add_subproject">सब-प्रोजेक्ट जोड़ें</string>
+</resources>

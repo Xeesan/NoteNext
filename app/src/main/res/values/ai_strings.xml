@@ -113,4 +113,81 @@
     <string name="ai_usage_avg_latency">Avg latency</string>
     <string name="ai_usage_accepted_label">Accepted</string>
     <string name="ai_usage_accepted_value">%1$d%% accepted (%2$d/%3$d)</string>
+
+    <!-- AiSummarySheet -->
+    <string name="ai_summary_brand">NoteNext AI</string>
+    <string name="ai_summary_copy_cd">Copy Summary</string>
+    <string name="ai_summary_share_cd">Share Summary</string>
+    <string name="ai_summary_close_cd">Close</string>
+    <string name="ai_summary_clip_label">AI Summary</string>
+    <string name="ai_summary_copied_toast">Copied to clipboard</string>
+    <string name="ai_summary_share_subject">Note Summary</string>
+    <string name="ai_summary_share_chooser">Share Summary</string>
+    <string name="ai_summary_summarizing">Summarizing…</string>
+    <string name="ai_summary_thinking">Thinking…</string>
+    <string name="ai_summary_hide_thinking">Hide thinking process</string>
+    <string name="ai_summary_disclaimer">AI-generated content can be inaccurate. Please verify important information.</string>
+    <string name="ai_summary_unavailable">No summary available.</string>
+
+    <!-- ToneRewriteScreen -->
+    <string name="ai_tone_title">Rewrite tone</string>
+    <string name="ai_tone_apply_cd">Apply</string>
+    <string name="ai_tone_rewriting_in">Rewriting in %1$s tone</string>
+    <string name="ai_tone_pick_below">Pick a tone below</string>
+    <string name="ai_tone_preview">Preview</string>
+    <string name="ai_tone_in_progress">AI is rewriting…</string>
+    <string name="ai_tone_apply_changes">Apply Changes</string>
+    <string name="ai_tone_try_again">Try Again</string>
+
+    <!-- AIFeaturesScreen -->
+    <string name="ai_features_title">AI Features</string>
+    <string name="ai_features_quick_actions">Quick actions</string>
+    <string name="ai_features_quick_actions_desc">Apply to all features at once</string>
+    <string name="ai_features_disable_all">Disable all</string>
+    <string name="ai_features_enable_all">Enable all</string>
+    <string name="ai_features_group_ondemand">Note actions (on demand)</string>
+    <string name="ai_features_group_ondemand_desc">You explicitly trigger these — nothing runs unless you tap a button.</string>
+    <string name="ai_features_group_suggestions">Suggestions (after save)</string>
+    <string name="ai_features_group_suggestions_desc">These run quietly after a note is saved. They never apply changes — you tap to accept.</string>
+    <string name="ai_features_group_ondevice">On-device features</string>
+    <string name="ai_features_group_ondevice_desc">These run locally on your phone and do not require the AI master switch or a network provider.</string>
+    <string name="ai_features_master_off_banner">AI master switch is OFF. Per-feature toggles below are disabled until you enable it from the AI Settings hub.</string>
+
+    <!-- AISettingsScreen -->
+    <string name="ai_settings_title">AI</string>
+    <string name="ai_settings_master_section">Master switch</string>
+    <string name="ai_settings_master_section_desc">Turn every AI feature on or off. NoteNext is offline-first — AI is opt-in.</string>
+    <string name="ai_settings_master_on_title">AI is enabled</string>
+    <string name="ai_settings_master_off_title">AI is disabled</string>
+    <string name="ai_settings_master_on_subtitle">Per-feature toggles below take effect</string>
+    <string name="ai_settings_master_off_subtitle">All AI features are off — nothing will be sent to any provider</string>
+
+    <string name="ai_settings_manage_section">Manage</string>
+    <string name="ai_settings_manage_section_desc">Pick which features run, see what they\'re doing</string>
+    <string name="ai_settings_nav_features">AI Features</string>
+    <string name="ai_settings_nav_features_subtitle">Enable or disable each feature individually</string>
+    <string name="ai_settings_nav_ondevice">On-Device Features</string>
+    <string name="ai_settings_nav_ondevice_subtitle">Smart features that run locally without AI</string>
+    <string name="ai_settings_nav_dashboard">Usage Dashboard</string>
+    <string name="ai_settings_nav_dashboard_empty">No AI calls yet</string>
+    <string name="ai_settings_nav_dashboard_count">%1$d AI invocations recorded</string>
+
+    <string name="ai_settings_provider_section">Provider</string>
+    <string name="ai_settings_provider_section_desc">Choose which service handles your AI requests. Default provider is built in — others need an API key.</string>
+    <string name="ai_settings_provider_default_name">AI Provider</string>
+    <string name="ai_settings_provider_default_desc">Fast inference, bundled with the app</string>
+    <string name="ai_settings_provider_openai_desc">GPT-4o, GPT-4.1 — bring your own key</string>
+    <string name="ai_settings_provider_anthropic_desc">Claude Sonnet, Haiku, Opus — bring your own key</string>
+    <string name="ai_settings_provider_gemini_desc">Gemini Flash &amp; Pro — bring your own key</string>
+    <string name="ai_settings_badge_default">Default</string>
+    <string name="ai_settings_badge_configured">Configured</string>
+    <string name="ai_settings_provider_selected_cd">Selected</string>
+
+    <string name="ai_settings_privacy_section">Privacy</string>
+    <string name="ai_settings_privacy_section_desc">Local-only telemetry — nothing here ever leaves your device</string>
+    <string name="ai_settings_track_usage_title">Track AI usage locally</string>
+    <string name="ai_settings_track_usage_subtitle">Powers the dashboard. Counts which features ran, when, and the result. The note content is never recorded.</string>
+
+    <string name="ai_settings_banner_title">How AI works in NoteNext</string>
+    <string name="ai_settings_banner_body">Every AI feature is OFF by default. When you turn one on, the relevant text from your note is sent to the provider you\'ve chosen — and nothing else. We never upload your full database, attachments, or labels in bulk. You can disable everything with one tap above.</string>
 </resources>

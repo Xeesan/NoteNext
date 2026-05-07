@@ -110,4 +110,77 @@
     <string name="ai_usage_avg_latency">सरासरी विलंब</string>
     <string name="ai_usage_accepted_label">स्वीकारले</string>
     <string name="ai_usage_accepted_value">%1$d%% स्वीकारले (%2$d/%3$d)</string>
+
+    <string name="ai_summary_brand">NoteNext AI</string>
+    <string name="ai_summary_copy_cd">सारांश कॉपी करा</string>
+    <string name="ai_summary_share_cd">सारांश शेअर करा</string>
+    <string name="ai_summary_close_cd">बंद करा</string>
+    <string name="ai_summary_clip_label">AI सारांश</string>
+    <string name="ai_summary_copied_toast">क्लिपबोर्डवर कॉपी केले</string>
+    <string name="ai_summary_share_subject">नोट सारांश</string>
+    <string name="ai_summary_share_chooser">सारांश शेअर करा</string>
+    <string name="ai_summary_summarizing">सारांश तयार करत आहे…</string>
+    <string name="ai_summary_thinking">विचार करत आहे…</string>
+    <string name="ai_summary_hide_thinking">विचार प्रक्रिया लपवा</string>
+    <string name="ai_summary_disclaimer">AI द्वारे तयार केलेली सामग्री चुकीची असू शकते. कृपया महत्त्वाची माहिती सत्यापित करा.</string>
+    <string name="ai_summary_unavailable">कोणताही सारांश उपलब्ध नाही.</string>
+
+    <string name="ai_tone_title">टोन पुन्हा लिहा</string>
+    <string name="ai_tone_apply_cd">लागू करा</string>
+    <string name="ai_tone_rewriting_in">%1$s टोनमध्ये पुन्हा लिहित आहे</string>
+    <string name="ai_tone_pick_below">खाली एक टोन निवडा</string>
+    <string name="ai_tone_preview">पूर्वावलोकन</string>
+    <string name="ai_tone_in_progress">AI पुन्हा लिहित आहे…</string>
+    <string name="ai_tone_apply_changes">बदल लागू करा</string>
+    <string name="ai_tone_try_again">पुन्हा प्रयत्न करा</string>
+
+    <string name="ai_features_title">AI वैशिष्ट्ये</string>
+    <string name="ai_features_quick_actions">द्रुत क्रिया</string>
+    <string name="ai_features_quick_actions_desc">सर्व वैशिष्ट्यांना एकाच वेळी लागू करा</string>
+    <string name="ai_features_disable_all">सर्व अक्षम करा</string>
+    <string name="ai_features_enable_all">सर्व सक्षम करा</string>
+    <string name="ai_features_group_ondemand">नोट क्रिया (मागणीनुसार)</string>
+    <string name="ai_features_group_ondemand_desc">तुम्ही या स्पष्टपणे ट्रिगर करता — तुम्ही बटण टॅप करेपर्यंत काहीच चालत नाही.</string>
+    <string name="ai_features_group_suggestions">सूचना (जतन केल्यानंतर)</string>
+    <string name="ai_features_group_suggestions_desc">नोट जतन झाल्यानंतर या शांतपणे चालतात. त्या कधीही बदल लागू करत नाहीत — स्वीकारण्यासाठी तुम्ही टॅप करता.</string>
+    <string name="ai_features_group_ondevice">डिव्हाइसवर वैशिष्ट्ये</string>
+    <string name="ai_features_group_ondevice_desc">ही तुमच्या फोनवर स्थानिकपणे चालतात आणि AI मास्टर स्विच किंवा नेटवर्क प्रदात्याची आवश्यकता नसते.</string>
+    <string name="ai_features_master_off_banner">AI मास्टर स्विच बंद आहे. AI सेटिंग्ज हबमधून तुम्ही ते सक्षम करेपर्यंत खालील प्रति-वैशिष्ट्य टॉगल अक्षम आहेत.</string>
+
+    <string name="ai_settings_title">AI</string>
+    <string name="ai_settings_master_section">मास्टर स्विच</string>
+    <string name="ai_settings_master_section_desc">प्रत्येक AI वैशिष्ट्य चालू किंवा बंद करा. NoteNext ऑफलाइन-प्रथम आहे — AI ऑप्ट-इन आहे.</string>
+    <string name="ai_settings_master_on_title">AI सक्षम आहे</string>
+    <string name="ai_settings_master_off_title">AI अक्षम आहे</string>
+    <string name="ai_settings_master_on_subtitle">खालील प्रति-वैशिष्ट्य टॉगल कार्यान्वित आहेत</string>
+    <string name="ai_settings_master_off_subtitle">सर्व AI वैशिष्ट्ये बंद आहेत — कोणत्याही प्रदात्याकडे काहीही पाठवले जाणार नाही</string>
+
+    <string name="ai_settings_manage_section">व्यवस्थापन</string>
+    <string name="ai_settings_manage_section_desc">कोणती वैशिष्ट्ये चालावी ते निवडा, ती काय करत आहेत ते पहा</string>
+    <string name="ai_settings_nav_features">AI वैशिष्ट्ये</string>
+    <string name="ai_settings_nav_features_subtitle">प्रत्येक वैशिष्ट्य स्वतंत्रपणे सक्षम किंवा अक्षम करा</string>
+    <string name="ai_settings_nav_ondevice">डिव्हाइसवर वैशिष्ट्ये</string>
+    <string name="ai_settings_nav_ondevice_subtitle">AI शिवाय स्थानिकपणे चालणारी स्मार्ट वैशिष्ट्ये</string>
+    <string name="ai_settings_nav_dashboard">वापर डॅशबोर्ड</string>
+    <string name="ai_settings_nav_dashboard_empty">अद्याप कोणतेही AI कॉल नाहीत</string>
+    <string name="ai_settings_nav_dashboard_count">%1$d AI invocations नोंदवले</string>
+
+    <string name="ai_settings_provider_section">प्रदाता</string>
+    <string name="ai_settings_provider_section_desc">कोणती सेवा तुमच्या AI विनंत्या हाताळेल ते निवडा. डीफॉल्ट प्रदाता अंगभूत आहे — इतरांना API key आवश्यक आहे.</string>
+    <string name="ai_settings_provider_default_name">AI प्रदाता</string>
+    <string name="ai_settings_provider_default_desc">वेगवान अनुमान, ॲपसोबत बंडल केले</string>
+    <string name="ai_settings_provider_openai_desc">GPT-4o, GPT-4.1 — तुमची स्वतःची key आणा</string>
+    <string name="ai_settings_provider_anthropic_desc">Claude Sonnet, Haiku, Opus — तुमची स्वतःची key आणा</string>
+    <string name="ai_settings_provider_gemini_desc">Gemini Flash &amp; Pro — तुमची स्वतःची key आणा</string>
+    <string name="ai_settings_badge_default">डीफॉल्ट</string>
+    <string name="ai_settings_badge_configured">कॉन्फिगर केले</string>
+    <string name="ai_settings_provider_selected_cd">निवडले</string>
+
+    <string name="ai_settings_privacy_section">गोपनीयता</string>
+    <string name="ai_settings_privacy_section_desc">केवळ-स्थानिक टेलिमेट्री — इथून काहीही तुमचे डिव्हाइस सोडत नाही</string>
+    <string name="ai_settings_track_usage_title">AI वापर स्थानिकपणे ट्रॅक करा</string>
+    <string name="ai_settings_track_usage_subtitle">डॅशबोर्डला सक्षम करते. कोणती वैशिष्ट्ये कधी चालली आणि निकाल काय होता ते मोजते. नोट सामग्री कधीही नोंदवली जात नाही.</string>
+
+    <string name="ai_settings_banner_title">NoteNext मध्ये AI कसे कार्य करते</string>
+    <string name="ai_settings_banner_body">प्रत्येक AI वैशिष्ट्य डिफॉल्टनुसार बंद आहे. तुम्ही एक चालू केल्यावर, तुमच्या नोटमधील संबंधित मजकूर तुम्ही निवडलेल्या प्रदात्याला पाठवला जातो — आणि इतर काहीही नाही. आम्ही तुमचा संपूर्ण डेटाबेस, संलग्नक किंवा लेबल्स कधीही मोठ्या प्रमाणात अपलोड करत नाही. तुम्ही वर एका टॅपने सर्वकाही अक्षम करू शकता.</string>
 </resources>

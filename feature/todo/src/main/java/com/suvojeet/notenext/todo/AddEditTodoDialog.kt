@@ -51,7 +51,7 @@ fun AddEditTodoDialog(
         shape = MaterialTheme.shapes.extraLarge,
         title = {
             Text(
-                text = if (editingTodo == null) stringResource(id = R.string.add_todo) else "Edit Task",
+                text = if (editingTodo == null) stringResource(id = R.string.add_todo) else stringResource(id = R.string.todo_edit_task),
                 style = MaterialTheme.typography.titleLarge,
                 fontWeight = FontWeight.Bold
             )
@@ -76,7 +76,7 @@ fun AddEditTodoDialog(
                 OutlinedTextField(
                     value = description,
                     onValueChange = { description = it },
-                    label = { Text("Description (Optional)") },
+                    label = { Text(stringResource(id = R.string.todo_description_optional)) },
                     modifier = Modifier.fillMaxWidth(),
                     shape = MaterialTheme.shapes.medium,
                     minLines = 2
@@ -84,7 +84,7 @@ fun AddEditTodoDialog(
                 
                 Column {
                     Text(
-                        text = "Priority",
+                        text = stringResource(id = R.string.priority),
                         style = MaterialTheme.typography.labelMedium,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                         modifier = Modifier.padding(bottom = 8.dp)
@@ -94,21 +94,21 @@ fun AddEditTodoDialog(
                         horizontalArrangement = Arrangement.spacedBy(8.dp)
                     ) {
                         PriorityChip(
-                            label = "Low",
+                            label = stringResource(id = R.string.priority_low),
                             selected = priority == 0,
                             onClick = { priority = 0 },
                             color = TodoPriorityColors.Low,
                             modifier = Modifier.weight(1f)
                         )
                         PriorityChip(
-                            label = "Med",
+                            label = stringResource(id = R.string.todo_priority_med_short),
                             selected = priority == 1,
                             onClick = { priority = 1 },
                             color = TodoPriorityColors.Medium,
                             modifier = Modifier.weight(1f)
                         )
                         PriorityChip(
-                            label = "High",
+                            label = stringResource(id = R.string.priority_high),
                             selected = priority == 2,
                             onClick = { priority = 2 },
                             color = TodoPriorityColors.High,
@@ -120,7 +120,7 @@ fun AddEditTodoDialog(
                 // Subtasks Section
                 Column {
                     Text(
-                        text = "Subtasks",
+                        text = stringResource(id = R.string.todo_subtasks),
                         style = MaterialTheme.typography.labelMedium,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                         modifier = Modifier.padding(bottom = 8.dp)
@@ -164,7 +164,7 @@ fun AddEditTodoDialog(
                         OutlinedTextField(
                             value = newSubtaskText,
                             onValueChange = { newSubtaskText = it },
-                            placeholder = { Text("Add subtask...", fontSize = 14.sp) },
+                            placeholder = { Text(stringResource(id = R.string.todo_add_subtask_placeholder), fontSize = 14.sp) },
                             modifier = Modifier.weight(1f),
                             shape = MaterialTheme.shapes.medium,
                             singleLine = true,
@@ -206,7 +206,7 @@ fun AddEditTodoDialog(
                             Text(
                                 text = dueDate?.let {
                                     SimpleDateFormat("MMM dd", Locale.getDefault()).format(Date(it))
-                                } ?: "Due Date",
+                                } ?: stringResource(id = R.string.due_date),
                                 style = MaterialTheme.typography.bodySmall,
                                 fontWeight = FontWeight.Medium,
                                 color = if (dueDate != null) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant
@@ -233,7 +233,7 @@ fun AddEditTodoDialog(
                             Text(
                                 text = reminderTime?.let {
                                     SimpleDateFormat("hh:mm a", Locale.getDefault()).format(Date(it))
-                                } ?: "Reminder",
+                                } ?: stringResource(id = R.string.todo_reminder),
                                 style = MaterialTheme.typography.bodySmall,
                                 fontWeight = FontWeight.Medium,
                                 color = if (reminderTime != null) MaterialTheme.colorScheme.secondary else MaterialTheme.colorScheme.onSurfaceVariant
@@ -257,10 +257,11 @@ fun AddEditTodoDialog(
                                 tint = if (selectedProjectId != null) MaterialTheme.colorScheme.tertiary else MaterialTheme.colorScheme.onSurfaceVariant
                             )
                             Spacer(modifier = Modifier.height(4.dp))
+                            val projectFallback = stringResource(id = R.string.todo_project)
                             Text(
                                 text = selectedProjectId?.let { id ->
-                                    projects.find { it.id == id }?.name ?: "Project"
-                                } ?: "Project",
+                                    projects.find { it.id == id }?.name ?: projectFallback
+                                } ?: projectFallback,
                                 style = MaterialTheme.typography.bodySmall,
                                 fontWeight = FontWeight.Medium,
                                 maxLines = 1,
@@ -305,12 +306,12 @@ fun AddEditTodoDialog(
                         dueDate = datePickerState.selectedDateMillis
                         showDatePicker = false
                     }
-                ) { Text("OK") }
+                ) { Text(stringResource(id = R.string.ok)) }
             },
             dismissButton = {
                 TextButton(
                     onClick = { showDatePicker = false }
-                ) { Text("Cancel") }
+                ) { Text(stringResource(id = R.string.cancel)) }
             }
         ) {
             DatePicker(state = datePickerState)
@@ -344,15 +345,15 @@ fun AddEditTodoDialog(
                         reminderTime = selCal.timeInMillis
                         showTimePicker = false
                     }
-                ) { Text("OK") }
+                ) { Text(stringResource(id = R.string.ok)) }
             },
             dismissButton = {
                 TextButton(
-                    onClick = { 
+                    onClick = {
                         reminderTime = null
-                        showTimePicker = false 
+                        showTimePicker = false
                     }
-                ) { Text("Clear") }
+                ) { Text(stringResource(id = R.string.todo_clear)) }
             },
             text = {
                 TimePicker(state = timePickerState)
@@ -363,11 +364,11 @@ fun AddEditTodoDialog(
     if (showProjectPicker) {
         AlertDialog(
             onDismissRequest = { showProjectPicker = false },
-            title = { Text("Select Project") },
+            title = { Text(stringResource(id = R.string.todo_select_project)) },
             text = {
                 Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
                     ListItem(
-                        headlineContent = { Text("No Project") },
+                        headlineContent = { Text(stringResource(id = R.string.todo_no_project)) },
                         modifier = Modifier.clickable { 
                             selectedProjectId = null
                             showProjectPicker = false
@@ -387,7 +388,7 @@ fun AddEditTodoDialog(
                 }
             },
             confirmButton = {
-                TextButton(onClick = { showProjectPicker = false }) { Text("Close") }
+                TextButton(onClick = { showProjectPicker = false }) { Text(stringResource(id = R.string.todo_close)) }
             }
         )
     }

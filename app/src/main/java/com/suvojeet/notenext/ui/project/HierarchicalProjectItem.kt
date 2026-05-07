@@ -13,6 +13,8 @@ import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
 import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.material.icons.outlined.Folder
 import androidx.compose.material3.*
+import androidx.compose.ui.res.stringResource
+import com.suvojeet.notenext.R
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -142,7 +144,7 @@ fun HierarchicalProjectItem(
                 ) {
                     Icon(
                         imageVector = Icons.Default.MoreVert,
-                        contentDescription = "More options",
+                        contentDescription = stringResource(id = R.string.more_options),
                         tint = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 }
@@ -152,7 +154,7 @@ fun HierarchicalProjectItem(
                     onDismissRequest = { showMenu = false }
                 ) {
                     DropdownMenuItem(
-                        text = { Text("Add Sub-Project") },
+                        text = { Text(stringResource(id = R.string.projects_add_subproject)) },
                         leadingIcon = { Icon(Icons.Default.CreateNewFolder, contentDescription = null) },
                         onClick = {
                             showMenu = false
@@ -160,7 +162,7 @@ fun HierarchicalProjectItem(
                         }
                     )
                     DropdownMenuItem(
-                        text = { Text("Add to Home") },
+                        text = { Text(stringResource(id = R.string.projects_pin_to_home)) },
                         leadingIcon = { Icon(Icons.Outlined.Home, contentDescription = null) },
                         onClick = {
                             showMenu = false
@@ -168,7 +170,7 @@ fun HierarchicalProjectItem(
                         }
                     )
                     DropdownMenuItem(
-                        text = { Text("Delete") },
+                        text = { Text(stringResource(id = R.string.delete)) },
                         leadingIcon = { Icon(Icons.Outlined.Delete, contentDescription = null) },
                         onClick = {
                             showMenu = false
@@ -184,7 +186,7 @@ fun HierarchicalProjectItem(
             ) {
                 Icon(
                     imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
-                    contentDescription = if (isExpanded) "Collapse" else "Expand",
+                    contentDescription = if (isExpanded) stringResource(id = R.string.projects_collapse_cd) else stringResource(id = R.string.projects_expand_cd),
                     tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f),
                     modifier = Modifier.rotate(arrowRotation)
                 )

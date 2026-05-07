@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Bengali (bn) translations. Native review recommended. -->
+<resources>
+    <string name="note_search_close_cd">অনুসন্ধান বন্ধ করুন</string>
+    <string name="note_search_placeholder">নোটে খুঁজুন…</string>
+    <string name="note_search_next_cd">পরবর্তী</string>
+    <string name="note_search_previous_cd">পূর্ববর্তী</string>
+
+    <string name="checklist_delete">মুছুন</string>
+    <string name="checklist_delete_item_cd">আইটেম মুছুন</string>
+    <string name="checklist_delete_all">সব মুছুন</string>
+    <string name="checklist_reorder_cd">পুনর্বিন্যাস</string>
+
+    <string name="note_dialog_self_destruct_title">স্ব-ধ্বংস টাইমার</string>
+    <string name="note_dialog_select_time">সময় নির্বাচন করুন</string>
+    <string name="note_dialog_remove_timer">টাইমার সরান</string>
+    <string name="note_dialog_set">সেট</string>
+    <string name="note_dialog_custom">কাস্টম…</string>
+
+    <string name="link_dialog_title">লিঙ্ক যোগ করুন</string>
+    <string name="link_dialog_section_options">লিঙ্ক বিকল্প</string>
+    <string name="link_dialog_url">URL</string>
+    <string name="link_dialog_display_text">প্রদর্শন টেক্সট</string>
+    <string name="link_dialog_insert">যোগ করুন</string>
+</resources>

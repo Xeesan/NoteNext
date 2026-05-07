@@ -276,10 +276,10 @@ fun ExpiryTimerDialog(
                         showDatePicker = false
                         showTimePicker = true
                     }
-                }) { Text("Next") }
+                }) { Text(stringResource(id = R.string.note_search_next_cd)) }
             },
             dismissButton = {
-                TextButton(onClick = { showDatePicker = false }) { Text("Cancel") }
+                TextButton(onClick = { showDatePicker = false }) { Text(stringResource(id = R.string.cancel)) }
             }
         ) {
             DatePicker(state = datePickerState)
@@ -295,12 +295,12 @@ fun ExpiryTimerDialog(
                     val expiryMillis = expiryDateTime.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli()
                     onExpirySelected(expiryMillis)
                     showTimePicker = false
-                }) { Text("Set") }
+                }) { Text(stringResource(id = R.string.note_dialog_set)) }
             },
             dismissButton = {
-                TextButton(onClick = { showTimePicker = false }) { Text("Cancel") }
+                TextButton(onClick = { showTimePicker = false }) { Text(stringResource(id = R.string.cancel)) }
             },
-            title = { Text("Select Time") },
+            title = { Text(stringResource(id = R.string.note_dialog_select_time)) },
             text = { TimePicker(state = timePickerState) }
         )
     }
@@ -314,7 +314,7 @@ fun ExpiryTimerDialog(
     AlertDialog(
         onDismissRequest = onDismiss,
         shape = MaterialTheme.shapes.extraLarge,
-        title = { Text("Self-Destruct Timer") },
+        title = { Text(stringResource(id = R.string.note_dialog_self_destruct_title)) },
         text = {
             Column {
                 options.forEach { (duration, label) ->
@@ -346,7 +346,7 @@ fun ExpiryTimerDialog(
                 ) {
                     RadioButton(selected = false, onClick = null)
                     Spacer(Modifier.width(16.dp))
-                    Text("Custom...")
+                    Text(stringResource(id = R.string.note_dialog_custom))
                 }
 
                 if (currentExpiryTime != null) {
@@ -361,14 +361,14 @@ fun ExpiryTimerDialog(
                     ) {
                         Icon(Icons.Default.Delete, contentDescription = null, tint = MaterialTheme.colorScheme.error)
                         Spacer(Modifier.width(16.dp))
-                        Text("Remove Timer", color = MaterialTheme.colorScheme.error)
+                        Text(stringResource(id = R.string.note_dialog_remove_timer), color = MaterialTheme.colorScheme.error)
                     }
                 }
             }
         },
         confirmButton = {
             TextButton(onClick = onDismiss) {
-                Text("Cancel")
+                Text(stringResource(id = R.string.cancel))
             }
         }
     )

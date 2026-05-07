@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Marathi (mr) translations for labels. Native review recommended. -->
+<resources>
+    <string name="label_dialog_title">लेबल्स व्यवस्थापित करा</string>
+    <string name="label_dialog_subtitle">सानुकूल लेबल्ससह तुमच्या नोट्स व्यवस्थित करा</string>
+    <string name="label_dialog_input_placeholder">लेबलचे नाव प्रविष्ट करा…</string>
+    <string name="label_dialog_add_cd">जोडा</string>
+    <string name="label_dialog_existing">विद्यमान लेबल्स</string>
+    <string name="label_dialog_empty">अद्याप कोणतेही लेबल नाही</string>
+
+    <string name="edit_labels_title">लेबल्स संपादित करा</string>
+    <string name="edit_labels_empty_title">अद्याप कोणतेही लेबल नाही</string>
+    <string name="edit_labels_empty_subtitle">तुमच्या नोट्स व्यवस्थित करण्यासाठी लेबल्स तयार करा</string>
+    <string name="edit_labels_create">लेबल तयार करा</string>
+    <string name="edit_labels_rename">नाव बदला</string>
+    <string name="edit_labels_delete_confirm">हे लेबल हटवायचे?</string>
+    <string name="edit_labels_delete_message">हे लेबल वापरणाऱ्या नोट्स त्यांची सामग्री ठेवतील; फक्त लेबल काढले जाईल.</string>
+    <string name="edit_labels_search_cd">लेबल्स शोधा</string>
+    <string name="edit_labels_section_title">लेबल व्यवस्थापन</string>
+    <string name="edit_labels_section_desc">तुमच्या नोट्स सुसंरचित ठेवण्यासाठी लेबल्स तयार करा आणि व्यवस्थित करा.</string>
+    <string name="edit_labels_empty_default">अद्याप कोणतेही लेबल नाही. तुमच्या नोट्स व्यवस्थित करण्यासाठी एक तयार करा.</string>
+    <string name="edit_labels_empty_search">"%1$s" शी जुळणारे कोणतेही लेबल नाही</string>
+    <string name="edit_labels_delete_cd">लेबल हटवा</string>
+    <string name="edit_labels_name_field">लेबलचे नाव</string>
+    <string name="edit_labels_clear_cd">साफ करा</string>
+    <string name="edit_labels_save_changes">बदल जतन करा</string>
+    <string name="edit_labels_create_label">लेबल तयार करा</string>
+</resources>

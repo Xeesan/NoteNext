@@ -1,5 +1,9 @@
 <resources>
     <string name="back">वापस</string>
+    <string name="note_locked_content_cd">लॉक्ड सामग्री</string>
+    <string name="note_locked_message">सामग्री लॉक है</string>
+    <string name="note_self_destruct_cd">स्व-नष्ट टाइमर</string>
+    <string name="note_expired">समाप्त</string>
     <string name="save">सेव करें</string>
     <string name="delete">डिलीट करें</string>
     <string name="cancel">रद्द करें</string>

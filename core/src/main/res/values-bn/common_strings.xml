@@ -21,6 +21,10 @@
 
     <!-- Common buttons -->
     <string name="back">পিছনে</string>
+    <string name="note_locked_content_cd">লক করা সামগ্রী</string>
+    <string name="note_locked_message">সামগ্রী লক করা</string>
+    <string name="note_self_destruct_cd">স্ব-ধ্বংস টাইমার</string>
+    <string name="note_expired">মেয়াদ শেষ</string>
     <string name="save">সংরক্ষণ</string>
     <string name="delete">মুছুন</string>
     <string name="cancel">বাতিল</string>

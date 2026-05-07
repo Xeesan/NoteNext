@@ -110,4 +110,77 @@
     <string name="ai_usage_avg_latency">গড় ল্যাটেন্সি</string>
     <string name="ai_usage_accepted_label">গৃহীত</string>
     <string name="ai_usage_accepted_value">%1$d%% গৃহীত (%2$d/%3$d)</string>
+
+    <string name="ai_summary_brand">NoteNext AI</string>
+    <string name="ai_summary_copy_cd">সারাংশ কপি করুন</string>
+    <string name="ai_summary_share_cd">সারাংশ শেয়ার করুন</string>
+    <string name="ai_summary_close_cd">বন্ধ করুন</string>
+    <string name="ai_summary_clip_label">AI সারাংশ</string>
+    <string name="ai_summary_copied_toast">ক্লিপবোর্ডে কপি হয়েছে</string>
+    <string name="ai_summary_share_subject">নোট সারাংশ</string>
+    <string name="ai_summary_share_chooser">সারাংশ শেয়ার করুন</string>
+    <string name="ai_summary_summarizing">সারসংক্ষেপ করছে…</string>
+    <string name="ai_summary_thinking">ভাবছে…</string>
+    <string name="ai_summary_hide_thinking">চিন্তার প্রক্রিয়া লুকান</string>
+    <string name="ai_summary_disclaimer">AI দ্বারা তৈরি সামগ্রী ভুল হতে পারে। অনুগ্রহ করে গুরুত্বপূর্ণ তথ্য যাচাই করুন।</string>
+    <string name="ai_summary_unavailable">কোনো সারাংশ উপলব্ধ নেই।</string>
+
+    <string name="ai_tone_title">টোন পুনরায় লিখুন</string>
+    <string name="ai_tone_apply_cd">প্রয়োগ করুন</string>
+    <string name="ai_tone_rewriting_in">%1$s টোনে পুনরায় লিখছে</string>
+    <string name="ai_tone_pick_below">নিচে একটি টোন বেছে নিন</string>
+    <string name="ai_tone_preview">প্রিভিউ</string>
+    <string name="ai_tone_in_progress">AI পুনরায় লিখছে…</string>
+    <string name="ai_tone_apply_changes">পরিবর্তন প্রয়োগ করুন</string>
+    <string name="ai_tone_try_again">আবার চেষ্টা করুন</string>
+
+    <string name="ai_features_title">AI বৈশিষ্ট্য</string>
+    <string name="ai_features_quick_actions">দ্রুত ক্রিয়াকলাপ</string>
+    <string name="ai_features_quick_actions_desc">সব বৈশিষ্ট্যে একসাথে প্রয়োগ করুন</string>
+    <string name="ai_features_disable_all">সব নিষ্ক্রিয় করুন</string>
+    <string name="ai_features_enable_all">সব সক্ষম করুন</string>
+    <string name="ai_features_group_ondemand">নোট ক্রিয়াকলাপ (চাহিদামত)</string>
+    <string name="ai_features_group_ondemand_desc">আপনি স্পষ্টভাবে এগুলি ট্রিগার করেন — আপনি একটি বোতাম ট্যাপ না করা পর্যন্ত কিছুই চলে না।</string>
+    <string name="ai_features_group_suggestions">পরামর্শ (সংরক্ষণের পরে)</string>
+    <string name="ai_features_group_suggestions_desc">নোট সংরক্ষণ করার পরে এগুলি নিরবে চলে। এগুলি কখনই পরিবর্তন প্রয়োগ করে না — গ্রহণ করতে আপনি ট্যাপ করেন।</string>
+    <string name="ai_features_group_ondevice">ডিভাইসে বৈশিষ্ট্য</string>
+    <string name="ai_features_group_ondevice_desc">এগুলি আপনার ফোনে স্থানীয়ভাবে চলে এবং AI মাস্টার সুইচ বা নেটওয়ার্ক প্রোভাইডার প্রয়োজন হয় না।</string>
+    <string name="ai_features_master_off_banner">AI মাস্টার সুইচ বন্ধ। AI সেটিংস হাব থেকে এটি সক্ষম না করা পর্যন্ত নিচের প্রতি-বৈশিষ্ট্য টগল নিষ্ক্রিয়।</string>
+
+    <string name="ai_settings_title">AI</string>
+    <string name="ai_settings_master_section">মাস্টার সুইচ</string>
+    <string name="ai_settings_master_section_desc">প্রতিটি AI বৈশিষ্ট্য চালু বা বন্ধ করুন। NoteNext অফলাইন-প্রথম — AI অপ্ট-ইন।</string>
+    <string name="ai_settings_master_on_title">AI সক্ষম</string>
+    <string name="ai_settings_master_off_title">AI নিষ্ক্রিয়</string>
+    <string name="ai_settings_master_on_subtitle">নিচের প্রতি-বৈশিষ্ট্য টগল কার্যকর</string>
+    <string name="ai_settings_master_off_subtitle">সব AI বৈশিষ্ট্য বন্ধ — কোনো প্রোভাইডারে কিছু পাঠানো হবে না</string>
+
+    <string name="ai_settings_manage_section">পরিচালনা</string>
+    <string name="ai_settings_manage_section_desc">কোন বৈশিষ্ট্যগুলি চলবে তা নির্বাচন করুন, তারা কী করছে দেখুন</string>
+    <string name="ai_settings_nav_features">AI বৈশিষ্ট্য</string>
+    <string name="ai_settings_nav_features_subtitle">প্রতিটি বৈশিষ্ট্য পৃথকভাবে সক্ষম বা নিষ্ক্রিয় করুন</string>
+    <string name="ai_settings_nav_ondevice">ডিভাইসে বৈশিষ্ট্য</string>
+    <string name="ai_settings_nav_ondevice_subtitle">AI ছাড়াই স্থানীয়ভাবে চলে এমন স্মার্ট বৈশিষ্ট্য</string>
+    <string name="ai_settings_nav_dashboard">ব্যবহার ড্যাশবোর্ড</string>
+    <string name="ai_settings_nav_dashboard_empty">এখনও কোনো AI কল নেই</string>
+    <string name="ai_settings_nav_dashboard_count">%1$d AI invocations রেকর্ড করা হয়েছে</string>
+
+    <string name="ai_settings_provider_section">প্রোভাইডার</string>
+    <string name="ai_settings_provider_section_desc">কোন পরিষেবা আপনার AI অনুরোধগুলি পরিচালনা করবে তা নির্বাচন করুন। ডিফল্ট প্রোভাইডার বিল্ট-ইন — অন্যদের জন্য API key প্রয়োজন।</string>
+    <string name="ai_settings_provider_default_name">AI প্রোভাইডার</string>
+    <string name="ai_settings_provider_default_desc">দ্রুত ইনফারেন্স, অ্যাপের সাথে বান্ডিল</string>
+    <string name="ai_settings_provider_openai_desc">GPT-4o, GPT-4.1 — আপনার নিজের key আনুন</string>
+    <string name="ai_settings_provider_anthropic_desc">Claude Sonnet, Haiku, Opus — আপনার নিজের key আনুন</string>
+    <string name="ai_settings_provider_gemini_desc">Gemini Flash &amp; Pro — আপনার নিজের key আনুন</string>
+    <string name="ai_settings_badge_default">ডিফল্ট</string>
+    <string name="ai_settings_badge_configured">কনফিগার করা</string>
+    <string name="ai_settings_provider_selected_cd">নির্বাচিত</string>
+
+    <string name="ai_settings_privacy_section">গোপনীয়তা</string>
+    <string name="ai_settings_privacy_section_desc">শুধুমাত্র-স্থানীয় টেলিমেট্রি — এখানের কিছুই আপনার ডিভাইস ছেড়ে যায় না</string>
+    <string name="ai_settings_track_usage_title">AI ব্যবহার স্থানীয়ভাবে ট্র্যাক করুন</string>
+    <string name="ai_settings_track_usage_subtitle">ড্যাশবোর্ড চালায়। কোন বৈশিষ্ট্যগুলি কখন চলেছে এবং ফলাফল গণনা করে। নোটের সামগ্রী কখনই রেকর্ড করা হয় না।</string>
+
+    <string name="ai_settings_banner_title">NoteNext-এ AI কীভাবে কাজ করে</string>
+    <string name="ai_settings_banner_body">প্রতিটি AI বৈশিষ্ট্য ডিফল্টভাবে বন্ধ। আপনি যখন একটি চালু করেন, আপনার নোটের প্রাসঙ্গিক টেক্সট আপনার নির্বাচিত প্রোভাইডারে পাঠানো হয় — এবং অন্য কিছু নয়। আমরা কখনই আপনার সম্পূর্ণ ডেটাবেস, সংযুক্তি বা লেবেলগুলি বাল্কে আপলোড করি না। আপনি উপরে এক ট্যাপে সবকিছু নিষ্ক্রিয় করতে পারেন।</string>
 </resources>

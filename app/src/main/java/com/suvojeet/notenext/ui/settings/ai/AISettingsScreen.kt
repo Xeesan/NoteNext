@@ -24,9 +24,11 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.suvojeet.notenext.R
 import com.suvojeet.notenext.data.ai.AIProvider
 import com.suvojeet.notenext.ui.components.ExpressiveSection
 import com.suvojeet.notenext.ui.components.SettingsGroupCard
@@ -73,6 +75,7 @@ fun AISettingsScreen(
 
     val geminiKey by viewModel.geminiKey.collectAsStateWithLifecycle()
     val geminiModel by viewModel.geminiModel.collectAsStateWithLifecycle()
+    val configuredBadge = stringResource(id = R.string.ai_settings_badge_configured)
 
     Scaffold(
         modifier = Modifier
@@ -82,7 +85,7 @@ fun AISettingsScreen(
             LargeTopAppBar(
                 title = {
                     Text(
-                        text = "AI",
+                        text = stringResource(id = R.string.ai_settings_title),
                         style = MaterialTheme.typography.headlineLarge,
                         fontWeight = FontWeight.Black,
                         letterSpacing = (-1.0).sp
@@ -90,7 +93,7 @@ fun AISettingsScreen(
                 },
                 navigationIcon = {
                     IconButton(onClick = onBackClick, modifier = Modifier.springPress()) {
-                        Icon(Icons.AutoMirrored.Rounded.ArrowBack, contentDescription = "Back")
+                        Icon(Icons.AutoMirrored.Rounded.ArrowBack, contentDescription = stringResource(id = R.string.back))
                     }
                 },
                 scrollBehavior = scrollBehavior
@@ -108,17 +111,17 @@ fun AISettingsScreen(
 
             item {
                 ExpressiveSection(
-                    title = "Master switch",
-                    description = "Turn every AI feature on or off. NoteNext is offline-first — AI is opt-in."
+                    title = stringResource(id = R.string.ai_settings_master_section),
+                    description = stringResource(id = R.string.ai_settings_master_section_desc)
                 ) {
                     SettingsGroupCard {
                         SettingsToggle(
                             icon = if (masterEnabled) Icons.Rounded.AutoAwesome else Icons.Rounded.PowerSettingsNew,
-                            title = if (masterEnabled) "AI is enabled" else "AI is disabled",
+                            title = if (masterEnabled) stringResource(id = R.string.ai_settings_master_on_title) else stringResource(id = R.string.ai_settings_master_off_title),
                             subtitle = if (masterEnabled)
-                                "Per-feature toggles below take effect"
+                                stringResource(id = R.string.ai_settings_master_on_subtitle)
                             else
-                                "All AI features are off — nothing will be sent to any provider",
+                                stringResource(id = R.string.ai_settings_master_off_subtitle),
                             iconColor = if (masterEnabled) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant,
                             checked = masterEnabled,
                             onCheckedChange = viewModel::setMasterEnabled
@@ -129,15 +132,15 @@ fun AISettingsScreen(
 
             item {
                 ExpressiveSection(
-                    title = "Manage",
-                    description = "Pick which features run, see what they're doing"
+                    title = stringResource(id = R.string.ai_settings_manage_section),
+                    description = stringResource(id = R.string.ai_settings_manage_section_desc)
                 ) {
                     SettingsGroupCard {
                         SettingsNav(
                             icon = Icons.Rounded.Tune,
                             iconColor = MaterialTheme.colorScheme.primary,
-                            title = "AI Features",
-                            subtitle = "Enable or disable each feature individually",
+                            title = stringResource(id = R.string.ai_settings_nav_features),
+                            subtitle = stringResource(id = R.string.ai_settings_nav_features_subtitle),
                             onClick = onOpenFeatures
                         )
                         HorizontalDivider(
@@ -147,8 +150,8 @@ fun AISettingsScreen(
                         SettingsNav(
                             icon = Icons.Rounded.Devices,
                             iconColor = Color(0xFF00897B),
-                            title = "On-Device Features",
-                            subtitle = "Smart features that run locally without AI",
+                            title = stringResource(id = R.string.ai_settings_nav_ondevice),
+                            subtitle = stringResource(id = R.string.ai_settings_nav_ondevice_subtitle),
                             onClick = onOpenOnDeviceFeatures
                         )
                         HorizontalDivider(
@@ -158,8 +161,8 @@ fun AISettingsScreen(
                         SettingsNav(
                             icon = Icons.Rounded.Insights,
                             iconColor = Color(0xFF6750A4),
-                            title = "Usage Dashboard",
-                            subtitle = if (totalCalls == 0) "No AI calls yet" else "$totalCalls AI invocations recorded",
+                            title = stringResource(id = R.string.ai_settings_nav_dashboard),
+                            subtitle = if (totalCalls == 0) stringResource(id = R.string.ai_settings_nav_dashboard_empty) else stringResource(id = R.string.ai_settings_nav_dashboard_count, totalCalls),
                             onClick = onOpenDashboard
                         )
                     }
@@ -168,48 +171,48 @@ fun AISettingsScreen(
 
             item {
                 ExpressiveSection(
-                    title = "Provider",
-                    description = "Choose which service handles your AI requests. Default provider is built in — others need an API key."
+                    title = stringResource(id = R.string.ai_settings_provider_section),
+                    description = stringResource(id = R.string.ai_settings_provider_section_desc)
                 ) {
                     SettingsGroupCard {
                         Column(modifier = Modifier.padding(16.dp)) {
                             ProviderCard(
-                                name = "AI Provider",
-                                description = "Fast inference, bundled with the app",
+                                name = stringResource(id = R.string.ai_settings_provider_default_name),
+                                description = stringResource(id = R.string.ai_settings_provider_default_desc),
                                 icon = Icons.Rounded.Bolt,
                                 iconColor = Color(0xFFFFC107),
                                 isSelected = selectedProvider == AIProvider.GROQ,
-                                badge = "Default",
+                                badge = stringResource(id = R.string.ai_settings_badge_default),
                                 onClick = { viewModel.selectProvider(AIProvider.GROQ) }
                             )
                             Spacer(Modifier.height(12.dp))
                             ProviderCard(
                                 name = "OpenAI",
-                                description = "GPT-4o, GPT-4.1 — bring your own key",
+                                description = stringResource(id = R.string.ai_settings_provider_openai_desc),
                                 icon = Icons.Rounded.AutoAwesome,
                                 iconColor = Color(0xFF10A37A),
                                 isSelected = selectedProvider == AIProvider.OPENAI,
-                                badge = if (openAIKey.isNotBlank()) "Configured" else null,
+                                badge = if (openAIKey.isNotBlank()) configuredBadge else null,
                                 onClick = { viewModel.selectProvider(AIProvider.OPENAI) }
                             )
                             Spacer(Modifier.height(12.dp))
                             ProviderCard(
-                                name = "Anthropic (Claude)",
-                                description = "Claude Sonnet, Haiku, Opus — bring your own key",
+                                name = stringResource(id = R.string.ai_provider_anthropic_name),
+                                description = stringResource(id = R.string.ai_settings_provider_anthropic_desc),
                                 icon = Icons.Rounded.Psychology,
                                 iconColor = Color(0xFFFF5722),
                                 isSelected = selectedProvider == AIProvider.ANTHROPIC,
-                                badge = if (anthropicKey.isNotBlank()) "Configured" else null,
+                                badge = if (anthropicKey.isNotBlank()) configuredBadge else null,
                                 onClick = { viewModel.selectProvider(AIProvider.ANTHROPIC) }
                             )
                             Spacer(Modifier.height(12.dp))
                             ProviderCard(
-                                name = "Google Gemini",
-                                description = "Gemini Flash & Pro — bring your own key",
+                                name = stringResource(id = R.string.ai_provider_gemini_name),
+                                description = stringResource(id = R.string.ai_settings_provider_gemini_desc),
                                 icon = Icons.Rounded.ModelTraining,
                                 iconColor = Color(0xFF4285F4),
                                 isSelected = selectedProvider == AIProvider.GEMINI,
-                                badge = if (geminiKey.isNotBlank()) "Configured" else null,
+                                badge = if (geminiKey.isNotBlank()) configuredBadge else null,
                                 onClick = { viewModel.selectProvider(AIProvider.GEMINI) }
                             )
                         }
@@ -270,14 +273,14 @@ fun AISettingsScreen(
 
             item {
                 ExpressiveSection(
-                    title = "Privacy",
-                    description = "Local-only telemetry — nothing here ever leaves your device"
+                    title = stringResource(id = R.string.ai_settings_privacy_section),
+                    description = stringResource(id = R.string.ai_settings_privacy_section_desc)
                 ) {
                     SettingsGroupCard {
                         SettingsToggle(
                             icon = Icons.Rounded.QueryStats,
-                            title = "Track AI usage locally",
-                            subtitle = "Powers the dashboard. Counts which features ran, when, and the result. The note content is never recorded.",
+                            title = stringResource(id = R.string.ai_settings_track_usage_title),
+                            subtitle = stringResource(id = R.string.ai_settings_track_usage_subtitle),
                             iconColor = Color(0xFF00897B),
                             checked = usageTracking,
                             onCheckedChange = viewModel::setUsageTrackingEnabled
@@ -311,14 +314,14 @@ private fun PrivacyBanner() {
             Spacer(Modifier.width(16.dp))
             Column {
                 Text(
-                    text = "How AI works in NoteNext",
+                    text = stringResource(id = R.string.ai_settings_banner_title),
                     style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.Bold,
                     color = MaterialTheme.colorScheme.onTertiaryContainer
                 )
                 Spacer(Modifier.height(8.dp))
                 Text(
-                    text = "Every AI feature is OFF by default. When you turn one on, the relevant text from your note is sent to the provider you've chosen — and nothing else. We never upload your full database, attachments, or labels in bulk. You can disable everything with one tap above.",
+                    text = stringResource(id = R.string.ai_settings_banner_body),
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onTertiaryContainer
                 )
@@ -395,7 +398,7 @@ private fun ProviderCard(
             if (isSelected) {
                 Icon(
                     Icons.Rounded.CheckCircle,
-                    contentDescription = "Selected",
+                    contentDescription = stringResource(id = R.string.ai_settings_provider_selected_cd),
                     tint = MaterialTheme.colorScheme.primary
                 )
             }

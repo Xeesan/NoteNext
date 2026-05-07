@@ -21,6 +21,10 @@
 
     <!-- Common buttons -->
     <string name="back">मागे</string>
+    <string name="note_locked_content_cd">लॉक केलेली सामग्री</string>
+    <string name="note_locked_message">सामग्री लॉक आहे</string>
+    <string name="note_self_destruct_cd">स्व-नष्ट टायमर</string>
+    <string name="note_expired">कालबाह्य</string>
     <string name="save">जतन करा</string>
     <string name="delete">हटवा</string>
     <string name="cancel">रद्द करा</string>

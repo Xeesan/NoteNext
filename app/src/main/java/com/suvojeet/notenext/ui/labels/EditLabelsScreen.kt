@@ -88,7 +88,7 @@ fun EditLabelsScreen(
                             onClick = { viewModel.onEvent(EditLabelsEvent.OnSearchVisibilityChange(true)) },
                             modifier = Modifier.springPress()
                         ) {
-                            Icon(Icons.Default.Search, contentDescription = "Search Labels")
+                            Icon(Icons.Default.Search, contentDescription = stringResource(id = R.string.edit_labels_search_cd))
                         }
                     },
                     scrollBehavior = scrollBehavior
@@ -116,8 +116,8 @@ fun EditLabelsScreen(
         ) {
             item {
                 ExpressiveSection(
-                    title = "Label Management",
-                    description = "Create and organize labels to keep your notes structured."
+                    title = stringResource(id = R.string.edit_labels_section_title),
+                    description = stringResource(id = R.string.edit_labels_section_desc)
                 ) {
                     // This section can hold a summary or quick actions if needed
                 }
@@ -127,10 +127,10 @@ fun EditLabelsScreen(
                 item {
                     EmptyState(
                         icon = Icons.AutoMirrored.Filled.Label,
-                        message = if (state.searchQuery.isEmpty()) 
-                            "No labels yet. Create one to organize your notes."
-                        else 
-                            "No labels matching \"${state.searchQuery}\""
+                        message = if (state.searchQuery.isEmpty())
+                            stringResource(id = R.string.edit_labels_empty_default)
+                        else
+                            stringResource(id = R.string.edit_labels_empty_search, state.searchQuery)
                     )
                 }
             } else {
@@ -276,7 +276,7 @@ fun LabelActionSheet(
                         ),
                         modifier = Modifier.springPress()
                     ) {
-                        Icon(Icons.Default.Delete, contentDescription = "Delete Label")
+                        Icon(Icons.Default.Delete, contentDescription = stringResource(id = R.string.edit_labels_delete_cd))
                     }
                 }
             }
@@ -286,8 +286,8 @@ fun LabelActionSheet(
             OutlinedTextField(
                 value = name,
                 onValueChange = { name = it },
-                label = { Text("Label Name") },
-                placeholder = { Text("Enter label name...") },
+                label = { Text(stringResource(id = R.string.edit_labels_name_field)) },
+                placeholder = { Text(stringResource(id = R.string.label_dialog_input_placeholder)) },
                 modifier = Modifier.fillMaxWidth(),
                 shape = MaterialTheme.shapes.large,
                 singleLine = true,
@@ -297,7 +297,7 @@ fun LabelActionSheet(
                 trailingIcon = {
                     if (name.isNotEmpty()) {
                         IconButton(onClick = { name = "" }) {
-                            Icon(Icons.Default.Close, contentDescription = "Clear")
+                            Icon(Icons.Default.Close, contentDescription = stringResource(id = R.string.edit_labels_clear_cd))
                         }
                     }
                 },
@@ -319,7 +319,7 @@ fun LabelActionSheet(
                 enabled = name.isNotBlank()
             ) {
                 Text(
-                    if (isEdit) "Save Changes" else "Create Label",
+                    if (isEdit) stringResource(id = R.string.edit_labels_save_changes) else stringResource(id = R.string.edit_labels_create_label),
                     style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.Bold
                 )
@@ -335,7 +335,7 @@ fun LabelActionSheet(
                     .springPress(),
                 shape = MaterialTheme.shapes.extraLarge
             ) {
-                Text("Cancel", style = MaterialTheme.typography.titleMedium)
+                Text(stringResource(id = R.string.cancel), style = MaterialTheme.typography.titleMedium)
             }
         }
     }

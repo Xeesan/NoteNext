@@ -21,6 +21,10 @@
 
     <!-- Common buttons -->
     <string name="back">பின்</string>
+    <string name="note_locked_content_cd">பூட்டப்பட்ட உள்ளடக்கம்</string>
+    <string name="note_locked_message">உள்ளடக்கம் பூட்டப்பட்டுள்ளது</string>
+    <string name="note_self_destruct_cd">சுய-அழிவு டைமர்</string>
+    <string name="note_expired">முடிந்தது</string>
     <string name="save">சேமி</string>
     <string name="delete">நீக்கு</string>
     <string name="cancel">ரத்துசெய்</string>

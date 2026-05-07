@@ -27,6 +27,9 @@
     <string name="choose_language">ভাষা নির্বাচন করুন</string>
     <string name="language_english">ইংরেজি</string>
     <string name="language_hindi">হিন্দি</string>
+    <string name="language_tamil">তামিল</string>
+    <string name="language_bengali">বাংলা</string>
+    <string name="language_marathi">মারাঠি</string>
 
     <string name="privacy_policy">গোপনীয়তা নীতি</string>
     <string name="privacy_policy_description">জানুন আমরা কীভাবে আপনার নোট ও ডেটা সুরক্ষিত রাখি</string>
@@ -94,4 +97,14 @@
 
     <string name="settings_lang_subtitle_en">ইংরেজি (US)</string>
     <string name="settings_lang_subtitle_hi">হিন্দি (ভারত)</string>
+    <string name="settings_lang_subtitle_ta">তামিল (தமிழ்)</string>
+    <string name="settings_lang_subtitle_bn">বাংলা (বাংলা)</string>
+    <string name="settings_lang_subtitle_mr">মারাঠি (मराठी)</string>
+
+    <string name="bin_empty_action_cd">বিন খালি করুন</string>
+    <string name="bin_section_title_deleted">মুছে ফেলা নোট</string>
+    <string name="bin_section_desc">বিনের নোটগুলি %1$d দিন পরে স্বয়ংক্রিয়ভাবে মুছে ফেলা হবে</string>
+    <string name="bin_empty_dialog_title">বিন খালি করুন</string>
+    <string name="bin_empty_dialog_message">আপনি কি নিশ্চিত যে আপনি বিনের সব নোট স্থায়ীভাবে মুছতে চান? এই ক্রিয়াটি ফিরিয়ে আনা যাবে না।</string>
+    <string name="bin_empty_dialog_action">সব মুছুন</string>
 </resources>

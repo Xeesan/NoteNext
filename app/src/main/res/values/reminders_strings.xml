@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- ReminderSetDialog -->
+    <string name="rem_date">Date</string>
+    <string name="rem_repeat_interval">Repeat Interval</string>
+    <string name="rem_set_reminder_button">Set Reminder</string>
+
+    <!-- ReminderScreen -->
+    <string name="rem_screen_title">Reminders</string>
+    <string name="rem_screen_empty_title">No reminders yet</string>
+    <string name="rem_screen_empty_subtitle">Reminders you set on notes will show up here.</string>
+
+    <string name="rem_tab_all">All</string>
+    <string name="rem_tab_upcoming">Upcoming</string>
+    <string name="rem_tab_elapsed">Elapsed</string>
+    <string name="rem_section_all">All Reminders</string>
+    <string name="rem_section_default">Reminders</string>
+    <string name="rem_section_desc">Manage your time-sensitive notes</string>
+    <string name="rem_empty_message">No reminders found</string>
+    <string name="rem_no_title">No Title</string>
+    <string name="rem_next_label">Next: %1$s</string>
+    <string name="rem_delete_cd">Delete Reminder</string>
+</resources>

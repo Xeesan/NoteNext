@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Bengali (bn) translations for labels. Native review recommended. -->
+<resources>
+    <string name="label_dialog_title">লেবেল পরিচালনা করুন</string>
+    <string name="label_dialog_subtitle">কাস্টম লেবেল দিয়ে আপনার নোট সংগঠিত করুন</string>
+    <string name="label_dialog_input_placeholder">লেবেলের নাম লিখুন…</string>
+    <string name="label_dialog_add_cd">যোগ করুন</string>
+    <string name="label_dialog_existing">বিদ্যমান লেবেল</string>
+    <string name="label_dialog_empty">এখনও কোনো লেবেল নেই</string>
+
+    <string name="edit_labels_title">লেবেল সম্পাদনা করুন</string>
+    <string name="edit_labels_empty_title">এখনও কোনো লেবেল নেই</string>
+    <string name="edit_labels_empty_subtitle">আপনার নোট সংগঠিত করতে লেবেল তৈরি করুন</string>
+    <string name="edit_labels_create">লেবেল তৈরি করুন</string>
+    <string name="edit_labels_rename">নাম পরিবর্তন করুন</string>
+    <string name="edit_labels_delete_confirm">এই লেবেল মুছবেন?</string>
+    <string name="edit_labels_delete_message">এই লেবেল ব্যবহার করা নোটগুলি তাদের সামগ্রী রাখবে; শুধুমাত্র লেবেল সরানো হবে।</string>
+    <string name="edit_labels_search_cd">লেবেল অনুসন্ধান</string>
+    <string name="edit_labels_section_title">লেবেল পরিচালনা</string>
+    <string name="edit_labels_section_desc">আপনার নোটগুলিকে সংগঠিত রাখতে লেবেল তৈরি করুন এবং সংগঠিত করুন।</string>
+    <string name="edit_labels_empty_default">এখনও কোনো লেবেল নেই। আপনার নোট সংগঠিত করতে একটি তৈরি করুন।</string>
+    <string name="edit_labels_empty_search">"%1$s" এর সাথে মিলছে এমন কোনো লেবেল নেই</string>
+    <string name="edit_labels_delete_cd">লেবেল মুছুন</string>
+    <string name="edit_labels_name_field">লেবেলের নাম</string>
+    <string name="edit_labels_clear_cd">সাফ করুন</string>
+    <string name="edit_labels_save_changes">পরিবর্তন সংরক্ষণ করুন</string>
+    <string name="edit_labels_create_label">লেবেল তৈরি করুন</string>
+</resources>

@@ -109,4 +109,77 @@
     <string name="ai_usage_avg_latency">औसत लेटेंसी</string>
     <string name="ai_usage_accepted_label">स्वीकृत</string>
     <string name="ai_usage_accepted_value">%1$d%% स्वीकृत (%2$d/%3$d)</string>
+
+    <string name="ai_summary_brand">NoteNext AI</string>
+    <string name="ai_summary_copy_cd">सारांश कॉपी करें</string>
+    <string name="ai_summary_share_cd">सारांश साझा करें</string>
+    <string name="ai_summary_close_cd">बंद करें</string>
+    <string name="ai_summary_clip_label">AI सारांश</string>
+    <string name="ai_summary_copied_toast">क्लिपबोर्ड में कॉपी किया गया</string>
+    <string name="ai_summary_share_subject">नोट सारांश</string>
+    <string name="ai_summary_share_chooser">सारांश साझा करें</string>
+    <string name="ai_summary_summarizing">सारांश बना रहे हैं…</string>
+    <string name="ai_summary_thinking">सोच रहे हैं…</string>
+    <string name="ai_summary_hide_thinking">सोचने की प्रक्रिया छिपाएं</string>
+    <string name="ai_summary_disclaimer">AI द्वारा उत्पन्न सामग्री गलत हो सकती है। कृपया महत्वपूर्ण जानकारी सत्यापित करें।</string>
+    <string name="ai_summary_unavailable">कोई सारांश उपलब्ध नहीं।</string>
+
+    <string name="ai_tone_title">टोन फिर से लिखें</string>
+    <string name="ai_tone_apply_cd">लागू करें</string>
+    <string name="ai_tone_rewriting_in">%1$s टोन में फिर से लिख रहे हैं</string>
+    <string name="ai_tone_pick_below">नीचे एक टोन चुनें</string>
+    <string name="ai_tone_preview">पूर्वावलोकन</string>
+    <string name="ai_tone_in_progress">AI फिर से लिख रहा है…</string>
+    <string name="ai_tone_apply_changes">परिवर्तन लागू करें</string>
+    <string name="ai_tone_try_again">फिर से कोशिश करें</string>
+
+    <string name="ai_features_title">AI फीचर्स</string>
+    <string name="ai_features_quick_actions">त्वरित क्रियाएं</string>
+    <string name="ai_features_quick_actions_desc">सभी फीचर्स पर एक साथ लागू करें</string>
+    <string name="ai_features_disable_all">सभी अक्षम करें</string>
+    <string name="ai_features_enable_all">सभी सक्षम करें</string>
+    <string name="ai_features_group_ondemand">नोट क्रियाएं (मांग पर)</string>
+    <string name="ai_features_group_ondemand_desc">आप इन्हें स्पष्ट रूप से ट्रिगर करते हैं — कुछ भी तब तक नहीं चलता जब तक आप बटन नहीं दबाते।</string>
+    <string name="ai_features_group_suggestions">सुझाव (सेव के बाद)</string>
+    <string name="ai_features_group_suggestions_desc">ये नोट सेव होने के बाद चुपचाप चलते हैं। ये कभी बदलाव लागू नहीं करते — स्वीकार करने के लिए आप टैप करते हैं।</string>
+    <string name="ai_features_group_ondevice">डिवाइस पर फीचर्स</string>
+    <string name="ai_features_group_ondevice_desc">ये आपके फोन पर स्थानीय रूप से चलते हैं और AI मास्टर स्विच या नेटवर्क प्रोवाइडर की आवश्यकता नहीं होती।</string>
+    <string name="ai_features_master_off_banner">AI मास्टर स्विच बंद है। नीचे के प्रति-फीचर टॉगल तब तक अक्षम हैं जब तक आप इसे AI सेटिंग्स हब से सक्षम नहीं करते।</string>
+
+    <string name="ai_settings_title">AI</string>
+    <string name="ai_settings_master_section">मास्टर स्विच</string>
+    <string name="ai_settings_master_section_desc">हर AI फीचर को चालू या बंद करें। NoteNext ऑफलाइन-फर्स्ट है — AI ऑप्ट-इन है।</string>
+    <string name="ai_settings_master_on_title">AI सक्षम है</string>
+    <string name="ai_settings_master_off_title">AI अक्षम है</string>
+    <string name="ai_settings_master_on_subtitle">नीचे के प्रति-फीचर टॉगल प्रभावी हैं</string>
+    <string name="ai_settings_master_off_subtitle">सभी AI फीचर्स बंद हैं — किसी भी प्रोवाइडर को कुछ नहीं भेजा जाएगा</string>
+
+    <string name="ai_settings_manage_section">प्रबंधन</string>
+    <string name="ai_settings_manage_section_desc">चुनें कि कौन से फीचर्स चलें, देखें वे क्या कर रहे हैं</string>
+    <string name="ai_settings_nav_features">AI फीचर्स</string>
+    <string name="ai_settings_nav_features_subtitle">हर फीचर को व्यक्तिगत रूप से सक्षम या अक्षम करें</string>
+    <string name="ai_settings_nav_ondevice">डिवाइस पर फीचर्स</string>
+    <string name="ai_settings_nav_ondevice_subtitle">स्मार्ट फीचर्स जो AI के बिना स्थानीय रूप से चलते हैं</string>
+    <string name="ai_settings_nav_dashboard">उपयोग डैशबोर्ड</string>
+    <string name="ai_settings_nav_dashboard_empty">अभी तक कोई AI कॉल नहीं</string>
+    <string name="ai_settings_nav_dashboard_count">%1$d AI invocations रिकॉर्ड हुए</string>
+
+    <string name="ai_settings_provider_section">प्रोवाइडर</string>
+    <string name="ai_settings_provider_section_desc">चुनें कि कौन सी सेवा आपके AI अनुरोधों को संभालती है। डिफ़ॉल्ट प्रोवाइडर बिल्ट-इन है — अन्य के लिए API key चाहिए।</string>
+    <string name="ai_settings_provider_default_name">AI प्रोवाइडर</string>
+    <string name="ai_settings_provider_default_desc">तेज़ इनफरेंस, ऐप के साथ बंडल</string>
+    <string name="ai_settings_provider_openai_desc">GPT-4o, GPT-4.1 — अपनी key लाएं</string>
+    <string name="ai_settings_provider_anthropic_desc">Claude Sonnet, Haiku, Opus — अपनी key लाएं</string>
+    <string name="ai_settings_provider_gemini_desc">Gemini Flash और Pro — अपनी key लाएं</string>
+    <string name="ai_settings_badge_default">डिफ़ॉल्ट</string>
+    <string name="ai_settings_badge_configured">कॉन्फ़िगर्ड</string>
+    <string name="ai_settings_provider_selected_cd">चयनित</string>
+
+    <string name="ai_settings_privacy_section">गोपनीयता</string>
+    <string name="ai_settings_privacy_section_desc">केवल-स्थानीय टेलीमेट्री — यहाँ से कुछ भी आपके डिवाइस से बाहर नहीं जाता</string>
+    <string name="ai_settings_track_usage_title">AI उपयोग को स्थानीय रूप से ट्रैक करें</string>
+    <string name="ai_settings_track_usage_subtitle">डैशबोर्ड को सक्षम करता है। गिनती करता है कि कौन से फीचर्स कब चले और परिणाम क्या रहा। नोट सामग्री कभी रिकॉर्ड नहीं होती।</string>
+
+    <string name="ai_settings_banner_title">NoteNext में AI कैसे काम करता है</string>
+    <string name="ai_settings_banner_body">हर AI फीचर डिफ़ॉल्ट रूप से बंद है। जब आप कोई चालू करते हैं, तो आपके नोट का प्रासंगिक टेक्स्ट चुने गए प्रोवाइडर को भेजा जाता है — और कुछ नहीं। हम आपके पूरे डेटाबेस, संलग्नक या लेबल्स को कभी थोक में अपलोड नहीं करते। आप ऊपर एक टैप से सब कुछ अक्षम कर सकते हैं।</string>
 </resources>

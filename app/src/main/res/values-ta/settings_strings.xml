@@ -27,6 +27,9 @@
     <string name="choose_language">மொழியைத் தேர்ந்தெடு</string>
     <string name="language_english">ஆங்கிலம்</string>
     <string name="language_hindi">இந்தி</string>
+    <string name="language_tamil">தமிழ்</string>
+    <string name="language_bengali">பெங்காலி</string>
+    <string name="language_marathi">மராத்தி</string>
 
     <string name="privacy_policy">தனியுரிமைக் கொள்கை</string>
     <string name="privacy_policy_description">உங்கள் குறிப்புகள் மற்றும் தரவை எப்படி பாதுகாக்கிறோம் என்பதை அறியவும்</string>
@@ -94,4 +97,14 @@
 
     <string name="settings_lang_subtitle_en">ஆங்கிலம் (US)</string>
     <string name="settings_lang_subtitle_hi">இந்தி (இந்தியா)</string>
+    <string name="settings_lang_subtitle_ta">தமிழ் (தமிழ்)</string>
+    <string name="settings_lang_subtitle_bn">பெங்காலி (বাংলা)</string>
+    <string name="settings_lang_subtitle_mr">மராத்தி (मराठी)</string>
+
+    <string name="bin_empty_action_cd">குப்பைத் தொட்டியை காலி செய்</string>
+    <string name="bin_section_title_deleted">நீக்கப்பட்ட குறிப்புகள்</string>
+    <string name="bin_section_desc">குப்பைத் தொட்டியில் உள்ள குறிப்புகள் %1$d நாட்களுக்குப் பிறகு தானாக நீக்கப்படும்</string>
+    <string name="bin_empty_dialog_title">குப்பைத் தொட்டியை காலி செய்</string>
+    <string name="bin_empty_dialog_message">குப்பைத் தொட்டியில் உள்ள அனைத்து குறிப்புகளையும் நிரந்தரமாக நீக்க விரும்புகிறீர்களா? இந்தச் செயலை மாற்ற முடியாது.</string>
+    <string name="bin_empty_dialog_action">அனைத்தையும் நீக்கு</string>
 </resources>

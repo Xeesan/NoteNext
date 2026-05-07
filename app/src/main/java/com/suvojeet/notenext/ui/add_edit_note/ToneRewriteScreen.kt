@@ -17,7 +17,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.suvojeet.notenext.R
 import com.suvojeet.notenext.data.ai.ToneOption
 import com.suvojeet.notenext.ui.components.springPress
 import com.suvojeet.notenext.ui.notes.NotesEditState
@@ -33,10 +35,10 @@ fun ToneRewriteScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Rewrite tone") },
+                title = { Text(stringResource(id = R.string.ai_tone_title)) },
                 navigationIcon = {
                     IconButton(onClick = onBack, modifier = Modifier.springPress()) {
-                        Icon(Icons.AutoMirrored.Rounded.ArrowBack, contentDescription = "Back")
+                        Icon(Icons.AutoMirrored.Rounded.ArrowBack, contentDescription = stringResource(id = R.string.back))
                     }
                 },
                 actions = {
@@ -48,7 +50,7 @@ fun ToneRewriteScreen(
                             },
                             modifier = Modifier.springPress()
                         ) {
-                            Icon(Icons.Rounded.Check, contentDescription = "Apply")
+                            Icon(Icons.Rounded.Check, contentDescription = stringResource(id = R.string.ai_tone_apply_cd))
                         }
                     }
                 }
@@ -79,9 +81,9 @@ fun ToneRewriteScreen(
                 Spacer(Modifier.width(12.dp))
                 Column {
                     Text(
-                        text = if (state.toneRewriteSelectedTone != null) 
-                            "Rewriting in ${state.toneRewriteSelectedTone.displayName.lowercase()} tone" 
-                            else "Pick a tone below",
+                        text = if (state.toneRewriteSelectedTone != null)
+                            stringResource(id = R.string.ai_tone_rewriting_in, state.toneRewriteSelectedTone.displayName.lowercase())
+                            else stringResource(id = R.string.ai_tone_pick_below),
                         style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
@@ -112,7 +114,7 @@ fun ToneRewriteScreen(
             Spacer(Modifier.height(24.dp))
 
             Text(
-                "Preview", 
+                stringResource(id = R.string.ai_tone_preview),
                 style = MaterialTheme.typography.labelSmall, 
                 color = MaterialTheme.colorScheme.primary, 
                 fontWeight = FontWeight.SemiBold
@@ -133,7 +135,7 @@ fun ToneRewriteScreen(
                         ) {
                             CircularProgressIndicator(modifier = Modifier.size(32.dp))
                             Spacer(Modifier.height(16.dp))
-                            Text("AI is rewriting...", style = MaterialTheme.typography.bodyMedium)
+                            Text(stringResource(id = R.string.ai_tone_in_progress), style = MaterialTheme.typography.bodyMedium)
                         }
                         state.toneRewriteError != null -> Text(
                             state.toneRewriteError,
@@ -166,7 +168,7 @@ fun ToneRewriteScreen(
                 ) {
                     Icon(Icons.Rounded.Check, contentDescription = null)
                     Spacer(Modifier.width(8.dp))
-                    Text("Apply Changes")
+                    Text(stringResource(id = R.string.ai_tone_apply_changes))
                 }
                 
                 Spacer(Modifier.height(12.dp))
@@ -180,7 +182,7 @@ fun ToneRewriteScreen(
                 ) {
                     Icon(Icons.Rounded.Refresh, contentDescription = null)
                     Spacer(Modifier.width(8.dp))
-                    Text("Try Again")
+                    Text(stringResource(id = R.string.ai_tone_try_again))
                 }
             }
         }

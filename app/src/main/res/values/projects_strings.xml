@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- ProjectScreen -->
+    <string name="projects_more_cd">More</string>
+    <string name="projects_add_menu">Add Project</string>
+    <string name="projects_section_title">Workspaces</string>
+    <string name="projects_section_desc">Group your related notes and ideas together</string>
+    <string name="projects_delete_title">Delete Project</string>
+    <string name="projects_delete_message">Are you sure you want to delete this project? This action cannot be undone.</string>
+
+    <!-- HierarchicalProjectItem -->
+    <string name="projects_expand_cd">Expand</string>
+    <string name="projects_collapse_cd">Collapse</string>
+    <string name="projects_pin_to_home">Pin to home</string>
+    <string name="projects_add_subproject">Add subproject</string>
+</resources>

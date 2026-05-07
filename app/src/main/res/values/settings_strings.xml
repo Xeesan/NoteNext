@@ -25,6 +25,9 @@
     <string name="choose_language">Choose Language</string>
     <string name="language_english">English</string>
     <string name="language_hindi">Hindi</string>
+    <string name="language_tamil">Tamil</string>
+    <string name="language_bengali">Bengali</string>
+    <string name="language_marathi">Marathi</string>
 
     <!-- About &amp; Privacy -->
     <string name="privacy_policy">Privacy Policy</string>
@@ -99,4 +102,15 @@
     <!-- Language display labels (kept in source script) -->
     <string name="settings_lang_subtitle_en">English (US)</string>
     <string name="settings_lang_subtitle_hi">Hindi (भारत)</string>
+    <string name="settings_lang_subtitle_ta">Tamil (தமிழ்)</string>
+    <string name="settings_lang_subtitle_bn">Bengali (বাংলা)</string>
+    <string name="settings_lang_subtitle_mr">Marathi (मराठी)</string>
+
+    <!-- BinScreen -->
+    <string name="bin_empty_action_cd">Empty Bin</string>
+    <string name="bin_section_title_deleted">Deleted Notes</string>
+    <string name="bin_section_desc">Notes in the bin will be automatically deleted after %1$d days</string>
+    <string name="bin_empty_dialog_title">Empty Bin</string>
+    <string name="bin_empty_dialog_message">Are you sure you want to permanently delete all notes in the bin? This action cannot be undone.</string>
+    <string name="bin_empty_dialog_action">Delete All</string>
 </resources>

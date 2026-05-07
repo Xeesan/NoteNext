@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Marathi (mr) translations. Native review recommended. -->
+<resources>
+    <string name="note_search_close_cd">शोध बंद करा</string>
+    <string name="note_search_placeholder">नोटमध्ये शोधा…</string>
+    <string name="note_search_next_cd">पुढील</string>
+    <string name="note_search_previous_cd">मागील</string>
+
+    <string name="checklist_delete">हटवा</string>
+    <string name="checklist_delete_item_cd">आयटम हटवा</string>
+    <string name="checklist_delete_all">सर्व हटवा</string>
+    <string name="checklist_reorder_cd">पुनर्क्रमित करा</string>
+
+    <string name="note_dialog_self_destruct_title">स्व-नष्ट टायमर</string>
+    <string name="note_dialog_select_time">वेळ निवडा</string>
+    <string name="note_dialog_remove_timer">टायमर काढा</string>
+    <string name="note_dialog_set">सेट करा</string>
+    <string name="note_dialog_custom">सानुकूल…</string>
+
+    <string name="link_dialog_title">लिंक टाका</string>
+    <string name="link_dialog_section_options">लिंक पर्याय</string>
+    <string name="link_dialog_url">URL</string>
+    <string name="link_dialog_display_text">डिस्प्ले मजकूर</string>
+    <string name="link_dialog_insert">टाका</string>
+</resources>

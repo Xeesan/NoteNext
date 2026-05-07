@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- LabelDialog -->
+    <string name="label_dialog_title">Manage Labels</string>
+    <string name="label_dialog_subtitle">Organize your notes with custom labels</string>
+    <string name="label_dialog_input_placeholder">Enter label name…</string>
+    <string name="label_dialog_add_cd">Add</string>
+    <string name="label_dialog_existing">Existing Labels</string>
+    <string name="label_dialog_empty">No labels yet</string>
+
+    <!-- EditLabelsScreen -->
+    <string name="edit_labels_title">Edit Labels</string>
+    <string name="edit_labels_empty_title">No labels yet</string>
+    <string name="edit_labels_empty_subtitle">Create labels to organize your notes</string>
+    <string name="edit_labels_create">Create label</string>
+    <string name="edit_labels_rename">Rename</string>
+    <string name="edit_labels_delete_confirm">Delete this label?</string>
+    <string name="edit_labels_delete_message">Notes using this label will keep their content; the label is just removed.</string>
+    <string name="edit_labels_search_cd">Search Labels</string>
+    <string name="edit_labels_section_title">Label Management</string>
+    <string name="edit_labels_section_desc">Create and organize labels to keep your notes structured.</string>
+    <string name="edit_labels_empty_default">No labels yet. Create one to organize your notes.</string>
+    <string name="edit_labels_empty_search">No labels matching "%1$s"</string>
+    <string name="edit_labels_delete_cd">Delete Label</string>
+    <string name="edit_labels_name_field">Label Name</string>
+    <string name="edit_labels_clear_cd">Clear</string>
+    <string name="edit_labels_save_changes">Save Changes</string>
+    <string name="edit_labels_create_label">Create Label</string>
+</resources>

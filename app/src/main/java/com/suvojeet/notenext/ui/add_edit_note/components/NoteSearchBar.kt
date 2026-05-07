@@ -1,11 +1,13 @@
 package com.suvojeet.notenext.ui.add_edit_note.components
 
+import com.suvojeet.notenext.R
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material3.*
+import androidx.compose.ui.res.stringResource
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -41,7 +43,7 @@ fun NoteSearchBar(
                 value = query,
                 onValueChange = onQueryChange,
                 modifier = Modifier.weight(1f),
-                placeholder = { Text("Find in note...") },
+                placeholder = { Text(stringResource(id = R.string.note_search_placeholder)) },
                 colors = TextFieldDefaults.colors(
                     focusedContainerColor = Color.Transparent,
                     unfocusedContainerColor = Color.Transparent,
@@ -62,15 +64,15 @@ fun NoteSearchBar(
             }
             
             IconButton(onClick = onPrevious, enabled = totalResults > 0) {
-                Icon(Icons.Default.KeyboardArrowUp, contentDescription = "Previous")
+                Icon(Icons.Default.KeyboardArrowUp, contentDescription = stringResource(id = R.string.note_search_previous_cd))
             }
             
             IconButton(onClick = onNext, enabled = totalResults > 0) {
-                Icon(Icons.Default.KeyboardArrowDown, contentDescription = "Next")
+                Icon(Icons.Default.KeyboardArrowDown, contentDescription = stringResource(id = R.string.note_search_next_cd))
             }
             
             IconButton(onClick = onClose) {
-                Icon(Icons.Default.Close, contentDescription = "Close search")
+                Icon(Icons.Default.Close, contentDescription = stringResource(id = R.string.note_search_close_cd))
             }
         }
     }

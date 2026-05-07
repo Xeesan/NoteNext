@@ -95,21 +95,21 @@ fun ReminderScreen(
                 FilterChip(
                     selected = selectedTab == 0,
                     onClick = { selectedTab = 0 },
-                    label = { Text("All") },
+                    label = { Text(stringResource(id = R.string.rem_tab_all)) },
                     shape = MaterialTheme.shapes.medium,
                     modifier = Modifier.springPress()
                 )
                 FilterChip(
                     selected = selectedTab == 1,
                     onClick = { selectedTab = 1 },
-                    label = { Text("Upcoming") },
+                    label = { Text(stringResource(id = R.string.rem_tab_upcoming)) },
                     shape = MaterialTheme.shapes.medium,
                     modifier = Modifier.springPress()
                 )
                 FilterChip(
                     selected = selectedTab == 2,
                     onClick = { selectedTab = 2 },
-                    label = { Text("Elapsed") },
+                    label = { Text(stringResource(id = R.string.rem_tab_elapsed)) },
                     shape = MaterialTheme.shapes.medium,
                     modifier = Modifier.springPress()
                 )
@@ -118,17 +118,17 @@ fun ReminderScreen(
             if (currentList.isEmpty()) {
                 EmptyState(
                     icon = Icons.Outlined.Notifications,
-                    message = "No reminders found"
+                    message = stringResource(id = R.string.rem_empty_message)
                 )
             } else {
                 ExpressiveSection(
                     title = when(selectedTab) {
-                        0 -> "All Reminders"
-                        1 -> "Upcoming"
-                        2 -> "Elapsed"
-                        else -> "Reminders"
+                        0 -> stringResource(id = R.string.rem_section_all)
+                        1 -> stringResource(id = R.string.rem_tab_upcoming)
+                        2 -> stringResource(id = R.string.rem_tab_elapsed)
+                        else -> stringResource(id = R.string.rem_section_default)
                     },
-                    description = "Manage your time-sensitive notes"
+                    description = stringResource(id = R.string.rem_section_desc)
                 ) {
                     SettingsGroupCard {
                         LazyColumn(
@@ -174,7 +174,7 @@ fun ReminderItem(
     ) {
         Column(modifier = Modifier.weight(1f)) {
             Text(
-                text = note.title.ifEmpty { "No Title" },
+                text = note.title.ifEmpty { stringResource(id = R.string.rem_no_title) },
                 style = MaterialTheme.typography.bodyLarge,
                 fontWeight = FontWeight.SemiBold,
                  maxLines = 1
@@ -184,7 +184,7 @@ fun ReminderItem(
             note.reminderTime?.let { time ->
                 val sdf = SimpleDateFormat("dd MMM yyyy, HH:mm", Locale.getDefault())
                 Text(
-                    text = "Next: ${sdf.format(Date(time))}",
+                    text = stringResource(id = R.string.rem_next_label, sdf.format(Date(time))),
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
@@ -217,7 +217,7 @@ fun ReminderItem(
         IconButton(onClick = onDeleteClick, modifier = Modifier.springPress()) {
             Icon(
                 imageVector = Icons.Default.Delete,
-                contentDescription = "Delete Reminder",
+                contentDescription = stringResource(id = R.string.rem_delete_cd),
                 tint = MaterialTheme.colorScheme.error,
                 modifier = Modifier.size(24.dp)
             )

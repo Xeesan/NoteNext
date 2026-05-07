@@ -21,8 +21,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import com.suvojeet.notenext.R
 import com.suvojeet.notenext.ui.components.springPress
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -76,7 +78,7 @@ fun AiSummarySheet(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = "NoteNext AI",
+                    text = stringResource(id = R.string.ai_summary_brand),
                     style = MaterialTheme.typography.titleLarge,
                     fontWeight = FontWeight.Bold,
                     modifier = Modifier.weight(1f),
@@ -87,15 +89,15 @@ fun AiSummarySheet(
                     IconButton(
                         onClick = {
                             val clipboard = context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
-                            val clip = ClipData.newPlainText("AI Summary", summary)
+                            val clip = ClipData.newPlainText(context.getString(R.string.ai_summary_clip_label), summary)
                             clipboard.setPrimaryClip(clip)
-                            Toast.makeText(context, "Copied to clipboard", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(context, context.getString(R.string.ai_summary_copied_toast), Toast.LENGTH_SHORT).show()
                         },
                         modifier = Modifier.springPress()
                     ) {
                         Icon(
                             imageVector = Icons.Default.ContentCopy,
-                            contentDescription = "Copy Summary",
+                            contentDescription = stringResource(id = R.string.ai_summary_copy_cd),
                             tint = MaterialTheme.colorScheme.onSurfaceVariant
                         )
                     }
@@ -104,16 +106,16 @@ fun AiSummarySheet(
                         onClick = {
                             val shareIntent = Intent(Intent.ACTION_SEND).apply {
                                 type = "text/plain"
-                                putExtra(Intent.EXTRA_SUBJECT, "Note Summary")
+                                putExtra(Intent.EXTRA_SUBJECT, context.getString(R.string.ai_summary_share_subject))
                                 putExtra(Intent.EXTRA_TEXT, summary)
                             }
-                            context.startActivity(Intent.createChooser(shareIntent, "Share Summary"))
+                            context.startActivity(Intent.createChooser(shareIntent, context.getString(R.string.ai_summary_share_chooser)))
                         },
                         modifier = Modifier.springPress()
                     ) {
                         Icon(
                             imageVector = Icons.Default.Share,
-                            contentDescription = "Share Summary",
+                            contentDescription = stringResource(id = R.string.ai_summary_share_cd),
                             tint = MaterialTheme.colorScheme.onSurfaceVariant
                         )
                     }
@@ -131,7 +133,7 @@ fun AiSummarySheet(
                 ) {
                     Icon(
                         imageVector = Icons.Default.Close,
-                        contentDescription = "Close",
+                        contentDescription = stringResource(id = R.string.ai_summary_close_cd),
                         tint = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 }
@@ -161,7 +163,7 @@ fun AiSummarySheet(
                             )
                             Spacer(modifier = Modifier.height(16.dp))
                             Text(
-                                text = "Summarizing...", 
+                                text = stringResource(id = R.string.ai_summary_summarizing),
                                 style = MaterialTheme.typography.bodyMedium,
                                 color = MaterialTheme.colorScheme.onSurfaceVariant
                             )
@@ -209,7 +211,7 @@ fun AiSummarySheet(
                                                 )
                                                 Spacer(modifier = Modifier.width(8.dp))
                                                 Text(
-                                                    text = if (showThinking) "Hide thinking process" else "Thinking...",
+                                                    text = if (showThinking) stringResource(id = R.string.ai_summary_hide_thinking) else stringResource(id = R.string.ai_summary_thinking),
                                                     style = MaterialTheme.typography.labelLarge,
                                                     color = MaterialTheme.colorScheme.primary,
                                                     fontWeight = FontWeight.Bold
@@ -276,7 +278,7 @@ fun AiSummarySheet(
                                         )
                                         Spacer(modifier = Modifier.width(12.dp))
                                         Text(
-                                            text = "AI-generated content can be inaccurate. Please verify important information.",
+                                            text = stringResource(id = R.string.ai_summary_disclaimer),
                                             style = MaterialTheme.typography.labelSmall,
                                             color = MaterialTheme.colorScheme.onSurfaceVariant
                                         )
@@ -284,7 +286,7 @@ fun AiSummarySheet(
                                 }
                             }
                         } ?: Text(
-                            "No summary available.", 
+                            stringResource(id = R.string.ai_summary_unavailable),
                             style = MaterialTheme.typography.bodyLarge,
                             color = MaterialTheme.colorScheme.onSurfaceVariant,
                             modifier = Modifier.padding(16.dp)

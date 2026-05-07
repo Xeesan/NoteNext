@@ -66,7 +66,7 @@ fun BinScreen(
                         actions = {
                             if (state.notes.isNotEmpty()) {
                                 IconButton(onClick = { showEmptyBinDialog = true }, modifier = Modifier.springPress()) {
-                                    Icon(imageVector = Icons.Default.DeleteForever, contentDescription = "Empty Bin")
+                                    Icon(imageVector = Icons.Default.DeleteForever, contentDescription = stringResource(id = R.string.bin_empty_action_cd))
                                 }
                             }
                         },
@@ -91,8 +91,8 @@ fun BinScreen(
                     )
                 } else {
                     ExpressiveSection(
-                        title = "Deleted Notes",
-                        description = "Notes in the bin will be automatically deleted after ${state.autoDeleteDays} days"
+                        title = stringResource(id = R.string.bin_section_title_deleted),
+                        description = stringResource(id = R.string.bin_section_desc, state.autoDeleteDays)
                     ) {
                         LazyVerticalStaggeredGrid(
                             columns = StaggeredGridCells.Fixed(2),
@@ -152,8 +152,8 @@ fun BinScreen(
         AlertDialog(
             onDismissRequest = { showEmptyBinDialog = false },
             shape = MaterialTheme.shapes.extraLarge,
-            title = { Text("Empty Bin") },
-            text = { Text("Are you sure you want to permanently delete all notes in the bin? This action cannot be undone.") },
+            title = { Text(stringResource(id = R.string.bin_empty_dialog_title)) },
+            text = { Text(stringResource(id = R.string.bin_empty_dialog_message)) },
             confirmButton = {
                 TextButton(
                     modifier = Modifier.springPress(),
@@ -162,12 +162,12 @@ fun BinScreen(
                         showEmptyBinDialog = false
                     }
                 ) {
-                    Text("Delete All", color = MaterialTheme.colorScheme.error, fontWeight = FontWeight.Bold)
+                    Text(stringResource(id = R.string.bin_empty_dialog_action), color = MaterialTheme.colorScheme.error, fontWeight = FontWeight.Bold)
                 }
             },
             dismissButton = {
                 TextButton(onClick = { showEmptyBinDialog = false }, modifier = Modifier.springPress()) {
-                    Text("Cancel")
+                    Text(stringResource(id = R.string.cancel))
                 }
             }
         )

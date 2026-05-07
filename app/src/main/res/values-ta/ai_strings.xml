@@ -110,4 +110,77 @@
     <string name="ai_usage_avg_latency">சராசரி தாமதம்</string>
     <string name="ai_usage_accepted_label">ஏற்றுக்கொள்ளப்பட்டது</string>
     <string name="ai_usage_accepted_value">%1$d%% ஏற்றுக்கொள்ளப்பட்டது (%2$d/%3$d)</string>
+
+    <string name="ai_summary_brand">NoteNext AI</string>
+    <string name="ai_summary_copy_cd">சுருக்கத்தை நகலெடு</string>
+    <string name="ai_summary_share_cd">சுருக்கத்தைப் பகிர்</string>
+    <string name="ai_summary_close_cd">மூடு</string>
+    <string name="ai_summary_clip_label">AI சுருக்கம்</string>
+    <string name="ai_summary_copied_toast">கிளிப்போர்டுக்கு நகலெடுக்கப்பட்டது</string>
+    <string name="ai_summary_share_subject">குறிப்பு சுருக்கம்</string>
+    <string name="ai_summary_share_chooser">சுருக்கத்தைப் பகிர்</string>
+    <string name="ai_summary_summarizing">சுருக்குகிறது…</string>
+    <string name="ai_summary_thinking">யோசிக்கிறது…</string>
+    <string name="ai_summary_hide_thinking">சிந்தனை செயல்முறையை மறை</string>
+    <string name="ai_summary_disclaimer">AI மூலம் உருவாக்கப்பட்ட உள்ளடக்கம் தவறாக இருக்கலாம். முக்கிய தகவலைச் சரிபார்க்கவும்.</string>
+    <string name="ai_summary_unavailable">சுருக்கம் கிடைக்கவில்லை.</string>
+
+    <string name="ai_tone_title">தொனியை மீண்டும் எழுது</string>
+    <string name="ai_tone_apply_cd">பயன்படுத்து</string>
+    <string name="ai_tone_rewriting_in">%1$s தொனியில் மீண்டும் எழுதுகிறது</string>
+    <string name="ai_tone_pick_below">கீழே ஒரு தொனியைத் தேர்ந்தெடு</string>
+    <string name="ai_tone_preview">முன்னோட்டம்</string>
+    <string name="ai_tone_in_progress">AI மீண்டும் எழுதுகிறது…</string>
+    <string name="ai_tone_apply_changes">மாற்றங்களைப் பயன்படுத்து</string>
+    <string name="ai_tone_try_again">மீண்டும் முயற்சி செய்</string>
+
+    <string name="ai_features_title">AI அம்சங்கள்</string>
+    <string name="ai_features_quick_actions">விரைவு செயல்கள்</string>
+    <string name="ai_features_quick_actions_desc">அனைத்து அம்சங்களுக்கும் ஒரே நேரத்தில் பயன்படுத்து</string>
+    <string name="ai_features_disable_all">அனைத்தையும் முடக்கு</string>
+    <string name="ai_features_enable_all">அனைத்தையும் இயக்கு</string>
+    <string name="ai_features_group_ondemand">குறிப்பு செயல்கள் (கோரிக்கையில்)</string>
+    <string name="ai_features_group_ondemand_desc">நீங்கள் இவற்றை வெளிப்படையாகத் தூண்டுகிறீர்கள் — நீங்கள் ஒரு பொத்தானைத் தட்டாதவரை எதுவும் இயங்காது.</string>
+    <string name="ai_features_group_suggestions">பரிந்துரைகள் (சேமித்த பிறகு)</string>
+    <string name="ai_features_group_suggestions_desc">ஒரு குறிப்பு சேமிக்கப்பட்ட பிறகு இவை அமைதியாக இயங்கும். அவை எப்போதும் மாற்றங்களைப் பயன்படுத்த மாட்டாது — ஏற்க நீங்கள் தட்டுகிறீர்கள்.</string>
+    <string name="ai_features_group_ondevice">சாதனத்தில் அம்சங்கள்</string>
+    <string name="ai_features_group_ondevice_desc">இவை உங்கள் தொலைபேசியில் உள்ளூரில் இயங்குகின்றன மற்றும் AI முதன்மை சுவிட்ச் அல்லது நெட்வொர்க் வழங்குநர் தேவையில்லை.</string>
+    <string name="ai_features_master_off_banner">AI முதன்மை சுவிட்ச் முடக்கப்பட்டுள்ளது. AI அமைப்புகள் ஹப்பில் இருந்து இதை இயக்கும் வரை கீழே உள்ள ஒவ்வொரு அம்ச டாகிள்களும் முடக்கப்பட்டுள்ளன.</string>
+
+    <string name="ai_settings_title">AI</string>
+    <string name="ai_settings_master_section">முதன்மை சுவிட்ச்</string>
+    <string name="ai_settings_master_section_desc">ஒவ்வொரு AI அம்சத்தையும் இயக்கு அல்லது முடக்கு. NoteNext ஆஃப்லைன்-முதலானது — AI விருப்பம்.</string>
+    <string name="ai_settings_master_on_title">AI இயக்கப்பட்டுள்ளது</string>
+    <string name="ai_settings_master_off_title">AI முடக்கப்பட்டுள்ளது</string>
+    <string name="ai_settings_master_on_subtitle">கீழே உள்ள ஒவ்வொரு அம்ச டாகிள்களும் செயலில் உள்ளன</string>
+    <string name="ai_settings_master_off_subtitle">அனைத்து AI அம்சங்களும் முடக்கப்பட்டுள்ளன — எந்த வழங்குநருக்கும் எதுவும் அனுப்பப்படாது</string>
+
+    <string name="ai_settings_manage_section">நிர்வகி</string>
+    <string name="ai_settings_manage_section_desc">எந்த அம்சங்கள் இயங்க வேண்டும் என்பதைத் தேர்ந்தெடுத்து, அவை என்ன செய்கின்றன என்பதைப் பார்க்கவும்</string>
+    <string name="ai_settings_nav_features">AI அம்சங்கள்</string>
+    <string name="ai_settings_nav_features_subtitle">ஒவ்வொரு அம்சத்தையும் தனித்தனியாக இயக்கு அல்லது முடக்கு</string>
+    <string name="ai_settings_nav_ondevice">சாதனத்தில் அம்சங்கள்</string>
+    <string name="ai_settings_nav_ondevice_subtitle">AI இல்லாமல் உள்ளூரில் இயங்கும் ஸ்மார்ட் அம்சங்கள்</string>
+    <string name="ai_settings_nav_dashboard">பயன்பாட்டு டாஷ்போர்டு</string>
+    <string name="ai_settings_nav_dashboard_empty">இன்னும் AI அழைப்புகள் இல்லை</string>
+    <string name="ai_settings_nav_dashboard_count">%1$d AI invocations பதிவு செய்யப்பட்டது</string>
+
+    <string name="ai_settings_provider_section">வழங்குநர்</string>
+    <string name="ai_settings_provider_section_desc">உங்கள் AI கோரிக்கைகளை எந்த சேவை கையாளுகிறது என்பதைத் தேர்ந்தெடுக்கவும். இயல்பு வழங்குநர் உள்ளமைந்துள்ளது — மற்றவர்களுக்கு API key தேவை.</string>
+    <string name="ai_settings_provider_default_name">AI வழங்குநர்</string>
+    <string name="ai_settings_provider_default_desc">வேகமான அனுமானம், ஆப்-உடன் தொகுக்கப்பட்டது</string>
+    <string name="ai_settings_provider_openai_desc">GPT-4o, GPT-4.1 — உங்கள் சொந்த key-ஐக் கொண்டு வாருங்கள்</string>
+    <string name="ai_settings_provider_anthropic_desc">Claude Sonnet, Haiku, Opus — உங்கள் சொந்த key-ஐக் கொண்டு வாருங்கள்</string>
+    <string name="ai_settings_provider_gemini_desc">Gemini Flash &amp; Pro — உங்கள் சொந்த key-ஐக் கொண்டு வாருங்கள்</string>
+    <string name="ai_settings_badge_default">இயல்பு</string>
+    <string name="ai_settings_badge_configured">கட்டமைக்கப்பட்டது</string>
+    <string name="ai_settings_provider_selected_cd">தேர்ந்தெடுக்கப்பட்டது</string>
+
+    <string name="ai_settings_privacy_section">தனியுரிமை</string>
+    <string name="ai_settings_privacy_section_desc">உள்ளக-மட்டும் டெலிமெட்ரி — இங்கிருந்து எதுவும் உங்கள் சாதனத்தை விட்டு வெளியேறாது</string>
+    <string name="ai_settings_track_usage_title">AI பயன்பாட்டை உள்ளூரில் கண்காணி</string>
+    <string name="ai_settings_track_usage_subtitle">டாஷ்போர்டை இயக்குகிறது. எந்த அம்சங்கள் எப்போது இயங்கின, முடிவு என்ன என்பதை எண்ணுகிறது. குறிப்பு உள்ளடக்கம் ஒருபோதும் பதிவு செய்யப்படாது.</string>
+
+    <string name="ai_settings_banner_title">NoteNext-இல் AI எவ்வாறு செயல்படுகிறது</string>
+    <string name="ai_settings_banner_body">ஒவ்வொரு AI அம்சமும் இயல்பாக முடக்கப்பட்டுள்ளது. நீங்கள் ஒன்றை இயக்கும்போது, உங்கள் குறிப்பின் தொடர்புடைய உரை நீங்கள் தேர்ந்தெடுத்த வழங்குநருக்கு அனுப்பப்படுகிறது — வேறு எதுவும் இல்லை. உங்கள் முழு தரவுத்தளம், இணைப்புகள் அல்லது லேபிள்களை நாங்கள் ஒருபோதும் மொத்தமாக பதிவேற்றுவதில்லை. மேலே ஒரு தட்டுதலில் எல்லாவற்றையும் நீங்கள் முடக்கலாம்.</string>
 </resources>

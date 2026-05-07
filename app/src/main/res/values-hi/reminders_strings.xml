@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="rem_date">तारीख</string>
+    <string name="rem_repeat_interval">दोहराव अंतराल</string>
+    <string name="rem_set_reminder_button">रिमाइंडर सेट करें</string>
+
+    <string name="rem_screen_title">रिमाइंडर</string>
+    <string name="rem_screen_empty_title">अभी तक कोई रिमाइंडर नहीं</string>
+    <string name="rem_screen_empty_subtitle">नोट्स पर सेट किए गए रिमाइंडर यहाँ दिखेंगे।</string>
+
+    <string name="rem_tab_all">सभी</string>
+    <string name="rem_tab_upcoming">आगामी</string>
+    <string name="rem_tab_elapsed">बीते हुए</string>
+    <string name="rem_section_all">सभी रिमाइंडर</string>
+    <string name="rem_section_default">रिमाइंडर</string>
+    <string name="rem_section_desc">समय-संवेदनशील नोट्स प्रबंधित करें</string>
+    <string name="rem_empty_message">कोई रिमाइंडर नहीं मिला</string>
+    <string name="rem_no_title">कोई शीर्षक नहीं</string>
+    <string name="rem_next_label">अगला: %1$s</string>
+    <string name="rem_delete_cd">रिमाइंडर हटाएं</string>
+</resources>

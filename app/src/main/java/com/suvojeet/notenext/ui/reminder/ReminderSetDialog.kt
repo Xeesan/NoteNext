@@ -15,6 +15,8 @@ import java.time.LocalTime
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 
+import androidx.compose.ui.res.stringResource
+import com.suvojeet.notenext.R
 import com.suvojeet.notenext.data.RepeatOption
 import com.suvojeet.notenext.ui.components.springPress
 
@@ -54,12 +56,12 @@ fun ReminderSheetContent(
                     }
                     showDatePicker = false
                 }, modifier = Modifier.springPress()) {
-                    Text("OK", fontWeight = FontWeight.Bold)
+                    Text(stringResource(id = R.string.ok), fontWeight = FontWeight.Bold)
                 }
             },
             dismissButton = {
                 TextButton(onClick = { showDatePicker = false }, modifier = Modifier.springPress()) {
-                    Text("Cancel")
+                    Text(stringResource(id = R.string.cancel))
                 }
             }
         ) {
@@ -75,12 +77,12 @@ fun ReminderSheetContent(
                     selectedTime = LocalTime.of(timePickerState.hour, timePickerState.minute)
                     showTimePicker = false
                 }, modifier = Modifier.springPress()) {
-                    Text("OK", fontWeight = FontWeight.Bold)
+                    Text(stringResource(id = R.string.ok), fontWeight = FontWeight.Bold)
                 }
             },
             dismissButton = {
                 TextButton(onClick = { showTimePicker = false }, modifier = Modifier.springPress()) {
-                    Text("Cancel")
+                    Text(stringResource(id = R.string.cancel))
                 }
             }
         ) {
@@ -95,7 +97,7 @@ fun ReminderSheetContent(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(
-            text = "Set Reminder",
+            text = stringResource(id = R.string.set_reminder),
             style = MaterialTheme.typography.headlineSmall,
             fontWeight = FontWeight.Bold,
             modifier = Modifier.padding(bottom = 24.dp)
@@ -112,7 +114,7 @@ fun ReminderSheetContent(
                 shape = MaterialTheme.shapes.medium
             ) {
                 Column(modifier = Modifier.padding(12.dp), horizontalAlignment = Alignment.CenterHorizontally) {
-                    Text("Date", style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.primary)
+                    Text(stringResource(id = R.string.rem_date), style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.primary)
                     Text(selectedDate.format(DateTimeFormatter.ofPattern("MMM dd")), style = MaterialTheme.typography.bodyLarge, fontWeight = FontWeight.Bold)
                 }
             }
@@ -122,7 +124,7 @@ fun ReminderSheetContent(
                 shape = MaterialTheme.shapes.medium
             ) {
                 Column(modifier = Modifier.padding(12.dp), horizontalAlignment = Alignment.CenterHorizontally) {
-                    Text("Time", style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.primary)
+                    Text(stringResource(id = R.string.time), style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.primary)
                     Text(selectedTime.format(DateTimeFormatter.ofPattern("hh:mm a")), style = MaterialTheme.typography.bodyLarge, fontWeight = FontWeight.Bold)
                 }
             }
@@ -139,7 +141,7 @@ fun ReminderSheetContent(
                 value = selectedRepeatOption.label,
                 onValueChange = { /* Read Only */ },
                 readOnly = true,
-                label = { Text("Repeat Interval") },
+                label = { Text(stringResource(id = R.string.rem_repeat_interval)) },
                 trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expandedRepeatMenu) },
                 shape = MaterialTheme.shapes.extraSmall,
                 modifier = Modifier
@@ -179,7 +181,7 @@ fun ReminderSheetContent(
                 modifier = Modifier.springPress(),
                 shape = MaterialTheme.shapes.medium
             ) {
-                Text("Set Reminder", fontWeight = FontWeight.Bold)
+                Text(stringResource(id = R.string.rem_set_reminder_button), fontWeight = FontWeight.Bold)
             }
         }
         Spacer(modifier = Modifier.height(16.dp))

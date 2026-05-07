@@ -35,4 +35,15 @@
     <string name="todo_more_options_content_description">अधिक पर्याय</string>
     <string name="todo_convert_to_note">नोट मध्ये रूपांतरित करा</string>
     <string name="todo_share_chooser_title">चेकलिस्ट शेअर करा</string>
+
+    <string name="todo_edit_task">कार्य संपादित करा</string>
+    <string name="todo_description_optional">वर्णन (पर्यायी)</string>
+    <string name="todo_subtasks">उप-कार्ये</string>
+    <string name="todo_add_subtask_placeholder">उप-कार्य जोडा…</string>
+    <string name="todo_reminder">स्मरणपत्र</string>
+    <string name="todo_project">प्रकल्प</string>
+    <string name="todo_select_project">प्रकल्प निवडा</string>
+    <string name="todo_no_project">प्रकल्प नाही</string>
+    <string name="todo_clear">साफ करा</string>
+    <string name="todo_close">बंद करा</string>
 </resources>

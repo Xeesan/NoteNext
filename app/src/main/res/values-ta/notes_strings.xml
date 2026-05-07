@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Tamil (ta) translations. Native review recommended. -->
+<resources>
+    <string name="note_search_close_cd">தேடலை மூடு</string>
+    <string name="note_search_placeholder">குறிப்பில் கண்டுபிடி…</string>
+    <string name="note_search_next_cd">அடுத்தது</string>
+    <string name="note_search_previous_cd">முந்தையது</string>
+
+    <string name="checklist_delete">நீக்கு</string>
+    <string name="checklist_delete_item_cd">உருப்படியை நீக்கு</string>
+    <string name="checklist_delete_all">அனைத்தையும் நீக்கு</string>
+    <string name="checklist_reorder_cd">மறுவரிசை</string>
+
+    <string name="note_dialog_self_destruct_title">சுய-அழிவு டைமர்</string>
+    <string name="note_dialog_select_time">நேரம் தேர்ந்தெடு</string>
+    <string name="note_dialog_remove_timer">டைமரை அகற்று</string>
+    <string name="note_dialog_set">அமை</string>
+    <string name="note_dialog_custom">தனிப்பயன்…</string>
+
+    <string name="link_dialog_title">இணைப்பைச் செருகு</string>
+    <string name="link_dialog_section_options">இணைப்பு விருப்பங்கள்</string>
+    <string name="link_dialog_url">URL</string>
+    <string name="link_dialog_display_text">காட்சி உரை</string>
+    <string name="link_dialog_insert">செருகு</string>
+</resources>

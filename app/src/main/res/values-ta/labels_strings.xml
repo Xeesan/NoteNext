@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Tamil (ta) translations for labels. Native review recommended. -->
+<resources>
+    <string name="label_dialog_title">லேபிள்களை நிர்வகி</string>
+    <string name="label_dialog_subtitle">தனிப்பயன் லேபிள்களுடன் உங்கள் குறிப்புகளை ஒழுங்கமை</string>
+    <string name="label_dialog_input_placeholder">லேபிள் பெயரை உள்ளிடு…</string>
+    <string name="label_dialog_add_cd">சேர்</string>
+    <string name="label_dialog_existing">உள்ள லேபிள்கள்</string>
+    <string name="label_dialog_empty">இன்னும் லேபிள்கள் இல்லை</string>
+
+    <string name="edit_labels_title">லேபிள்களை திருத்து</string>
+    <string name="edit_labels_empty_title">இன்னும் லேபிள்கள் இல்லை</string>
+    <string name="edit_labels_empty_subtitle">உங்கள் குறிப்புகளை ஒழுங்கமைக்க லேபிள்களை உருவாக்கவும்</string>
+    <string name="edit_labels_create">லேபிள் உருவாக்கு</string>
+    <string name="edit_labels_rename">மறுபெயரிடு</string>
+    <string name="edit_labels_delete_confirm">இந்த லேபிளை நீக்கவா?</string>
+    <string name="edit_labels_delete_message">இந்த லேபிளைப் பயன்படுத்தும் குறிப்புகள் அதன் உள்ளடக்கத்தைத் தக்கவைத்துக் கொள்ளும்; லேபிள் மட்டும் அகற்றப்படும்.</string>
+    <string name="edit_labels_search_cd">லேபிள்களைத் தேடு</string>
+    <string name="edit_labels_section_title">லேபிள் மேலாண்மை</string>
+    <string name="edit_labels_section_desc">உங்கள் குறிப்புகளை கட்டமைக்கப்பட்டதாக வைத்திருக்க லேபிள்களை உருவாக்கி ஒழுங்கமைக்கவும்.</string>
+    <string name="edit_labels_empty_default">இன்னும் லேபிள்கள் இல்லை. உங்கள் குறிப்புகளை ஒழுங்கமைக்க ஒன்றை உருவாக்கவும்.</string>
+    <string name="edit_labels_empty_search">"%1$s"-உடன் பொருந்தும் லேபிள் இல்லை</string>
+    <string name="edit_labels_delete_cd">லேபிளை நீக்கு</string>
+    <string name="edit_labels_name_field">லேபிள் பெயர்</string>
+    <string name="edit_labels_clear_cd">துடை</string>
+    <string name="edit_labels_save_changes">மாற்றங்களைச் சேமி</string>
+    <string name="edit_labels_create_label">லேபிளை உருவாக்கு</string>
+</resources>

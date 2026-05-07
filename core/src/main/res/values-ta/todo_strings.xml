@@ -35,4 +35,15 @@
     <string name="todo_more_options_content_description">மேலும் விருப்பங்கள்</string>
     <string name="todo_convert_to_note">குறிப்பாக மாற்று</string>
     <string name="todo_share_chooser_title">சரிபார்ப்புப் பட்டியலைப் பகிர்</string>
+
+    <string name="todo_edit_task">பணியைத் திருத்து</string>
+    <string name="todo_description_optional">விளக்கம் (விருப்பம்)</string>
+    <string name="todo_subtasks">உப-பணிகள்</string>
+    <string name="todo_add_subtask_placeholder">உப-பணியைச் சேர்…</string>
+    <string name="todo_reminder">நினைவூட்டல்</string>
+    <string name="todo_project">திட்டம்</string>
+    <string name="todo_select_project">திட்டத்தைத் தேர்ந்தெடு</string>
+    <string name="todo_no_project">திட்டம் இல்லை</string>
+    <string name="todo_clear">துடை</string>
+    <string name="todo_close">மூடு</string>
 </resources>

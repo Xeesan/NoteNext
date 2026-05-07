@@ -193,13 +193,13 @@ fun NoteItem(
                     ) {
                         Icon(
                             imageVector = Icons.Filled.Lock,
-                            contentDescription = "Locked Content",
+                            contentDescription = stringResource(id = R.string.note_locked_content_cd),
                             modifier = Modifier.size(24.dp),
                             tint = tintColor
                         )
                         Spacer(modifier = Modifier.height(4.dp))
                         Text(
-                            text = "Content is locked",
+                            text = stringResource(id = R.string.note_locked_message),
                             style = MaterialTheme.typography.bodySmall,
                             fontWeight = FontWeight.Medium,
                             color = contentColor.copy(alpha = 0.7f)
@@ -349,7 +349,7 @@ fun NoteItem(
                                 ) {
                                     Icon(
                                         imageVector = Icons.Default.Timer,
-                                        contentDescription = "Self-destruct timer",
+                                        contentDescription = stringResource(id = R.string.note_self_destruct_cd),
                                         modifier = Modifier.size(16.dp),
                                         tint = MaterialTheme.colorScheme.error.copy(alpha = 0.8f)
                                     )
@@ -357,7 +357,7 @@ fun NoteItem(
                                     val remainingText = remember(expiry) {
                                         val remaining = expiry - System.currentTimeMillis()
                                         if (remaining <= 0) {
-                                            "Expired"
+                                            stringResource(id = R.string.note_expired)
                                         } else {
                                             val hours = java.util.concurrent.TimeUnit.MILLISECONDS.toHours(remaining)
                                             val minutes = java.util.concurrent.TimeUnit.MILLISECONDS.toMinutes(remaining) % 60

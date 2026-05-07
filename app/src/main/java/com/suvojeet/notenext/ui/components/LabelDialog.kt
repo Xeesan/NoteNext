@@ -95,7 +95,7 @@ fun LabelDialog(
                 }
                 Spacer(modifier = Modifier.height(16.dp))
                 Text(
-                    text = "Manage Labels",
+                    text = stringResource(id = R.string.label_dialog_title),
                     style = MaterialTheme.typography.headlineSmall,
                     fontWeight = FontWeight.ExtraBold
                 )
@@ -107,7 +107,7 @@ fun LabelDialog(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Text(
-                    text = "Organize your notes with custom labels",
+                    text = stringResource(id = R.string.label_dialog_subtitle),
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     textAlign = TextAlign.Center,
@@ -118,7 +118,7 @@ fun LabelDialog(
                 OutlinedTextField(
                     value = newLabel,
                     onValueChange = { newLabel = it },
-                    placeholder = { Text("Enter label name...") },
+                    placeholder = { Text(stringResource(id = R.string.label_dialog_input_placeholder)) },
                     modifier = Modifier.fillMaxWidth(),
                     shape = CircleShape,
                     singleLine = true,
@@ -136,7 +136,7 @@ fun LabelDialog(
                             ) {
                                 Icon(
                                     imageVector = Icons.Rounded.Add,
-                                    contentDescription = "Add",
+                                    contentDescription = stringResource(id = R.string.label_dialog_add_cd),
                                     tint = MaterialTheme.colorScheme.onPrimary,
                                     modifier = Modifier.size(20.dp)
                                 )
@@ -155,7 +155,7 @@ fun LabelDialog(
                     Spacer(modifier = Modifier.height(24.dp))
                     
                     Text(
-                        text = "Existing Labels",
+                        text = stringResource(id = R.string.label_dialog_existing),
                         style = MaterialTheme.typography.labelLarge,
                         color = MaterialTheme.colorScheme.primary,
                         fontWeight = FontWeight.Bold,
@@ -199,7 +199,7 @@ fun LabelDialog(
                 } else {
                     Spacer(modifier = Modifier.height(32.dp))
                     Text(
-                        text = "No labels yet",
+                        text = stringResource(id = R.string.label_dialog_empty),
                         style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f),
                         fontWeight = FontWeight.Medium
@@ -212,7 +212,7 @@ fun LabelDialog(
                 onClick = onDismiss,
                 modifier = Modifier.padding(bottom = 8.dp, end = 8.dp)
             ) {
-                Text("Close", fontWeight = FontWeight.Bold)
+                Text(stringResource(id = R.string.close), fontWeight = FontWeight.Bold)
             }
         },
         shape = RoundedCornerShape(32.dp),

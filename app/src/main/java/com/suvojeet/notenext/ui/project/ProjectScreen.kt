@@ -108,8 +108,8 @@ fun ProjectScreen(
         AlertDialog(
             onDismissRequest = { projectToDelete = null },
             shape = MaterialTheme.shapes.extraLarge,
-            title = { Text("Delete Project", fontWeight = FontWeight.Bold) },
-            text = { Text("Are you sure you want to delete this project? This action cannot be undone.") },
+            title = { Text(stringResource(id = R.string.projects_delete_title), fontWeight = FontWeight.Bold) },
+            text = { Text(stringResource(id = R.string.projects_delete_message)) },
             confirmButton = {
                 Button(
                     onClick = {
@@ -118,12 +118,12 @@ fun ProjectScreen(
                     },
                     colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.error)
                 ) {
-                    Text("Delete")
+                    Text(stringResource(id = R.string.delete))
                 }
             },
             dismissButton = {
                 TextButton(onClick = { projectToDelete = null }) {
-                    Text("Cancel")
+                    Text(stringResource(id = R.string.cancel))
                 }
             }
         )
@@ -148,14 +148,14 @@ fun ProjectScreen(
                 actions = {
                     Box {
                         IconButton(onClick = { showTopMenu = true }, modifier = Modifier.springPress()) {
-                            Icon(Icons.Default.MoreVert, contentDescription = "More")
+                            Icon(Icons.Default.MoreVert, contentDescription = stringResource(id = R.string.projects_more_cd))
                         }
                         DropdownMenu(
                             expanded = showTopMenu,
                             onDismissRequest = { showTopMenu = false }
                         ) {
                             DropdownMenuItem(
-                                text = { Text("Add Project") },
+                                text = { Text(stringResource(id = R.string.projects_add_menu)) },
                                 leadingIcon = { Icon(Icons.Default.CreateNewFolder, contentDescription = null) },
                                 onClick = {
                                     showTopMenu = false
@@ -182,8 +182,8 @@ fun ProjectScreen(
                 )
             } else {
                 ExpressiveSection(
-                    title = "Workspaces",
-                    description = "Group your related notes and ideas together"
+                    title = stringResource(id = R.string.projects_section_title),
+                    description = stringResource(id = R.string.projects_section_desc)
                 ) {
                     LazyColumn(
                         modifier = Modifier.fillMaxSize(),

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="rem_date">तारीख</string>
+    <string name="rem_repeat_interval">पुनरावृत्ती अंतराल</string>
+    <string name="rem_set_reminder_button">स्मरणपत्र सेट करा</string>
+
+    <string name="rem_screen_title">स्मरणपत्रे</string>
+    <string name="rem_screen_empty_title">अद्याप कोणतेही स्मरणपत्र नाही</string>
+    <string name="rem_screen_empty_subtitle">नोट्सवर सेट केलेली स्मरणपत्रे येथे दिसतील.</string>
+
+    <string name="rem_tab_all">सर्व</string>
+    <string name="rem_tab_upcoming">आगामी</string>
+    <string name="rem_tab_elapsed">गत</string>
+    <string name="rem_section_all">सर्व स्मरणपत्रे</string>
+    <string name="rem_section_default">स्मरणपत्रे</string>
+    <string name="rem_section_desc">तुमच्या वेळ-संवेदनशील नोट्स व्यवस्थापित करा</string>
+    <string name="rem_empty_message">कोणतेही स्मरणपत्र सापडले नाही</string>
+    <string name="rem_no_title">शीर्षक नाही</string>
+    <string name="rem_next_label">पुढील: %1$s</string>
+    <string name="rem_delete_cd">स्मरणपत्र हटवा</string>
+</resources>

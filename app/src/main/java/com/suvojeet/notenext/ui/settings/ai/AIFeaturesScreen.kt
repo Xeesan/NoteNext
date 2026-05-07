@@ -24,6 +24,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.compose.ui.res.stringResource
+import com.suvojeet.notenext.R
 import com.suvojeet.notenext.data.ai.AIFeature
 import com.suvojeet.notenext.ui.components.ExpressiveSection
 import com.suvojeet.notenext.ui.components.SettingsGroupCard
@@ -55,7 +57,7 @@ fun AIFeaturesScreen(
             LargeTopAppBar(
                 title = {
                     Text(
-                        text = "AI Features",
+                        text = stringResource(id = R.string.ai_features_title),
                         style = MaterialTheme.typography.headlineLarge,
                         fontWeight = FontWeight.Black,
                         letterSpacing = (-1.0).sp
@@ -63,7 +65,7 @@ fun AIFeaturesScreen(
                 },
                 navigationIcon = {
                     IconButton(onClick = onBackClick, modifier = Modifier.springPress()) {
-                        Icon(Icons.AutoMirrored.Rounded.ArrowBack, contentDescription = "Back")
+                        Icon(Icons.AutoMirrored.Rounded.ArrowBack, contentDescription = stringResource(id = R.string.back))
                     }
                 },
                 scrollBehavior = scrollBehavior
@@ -81,8 +83,8 @@ fun AIFeaturesScreen(
 
             item {
                 ExpressiveSection(
-                    title = "Quick actions",
-                    description = "Apply to all features at once"
+                    title = stringResource(id = R.string.ai_features_quick_actions),
+                    description = stringResource(id = R.string.ai_features_quick_actions_desc)
                 ) {
                     Row(
                         modifier = Modifier.fillMaxWidth(),
@@ -96,7 +98,7 @@ fun AIFeaturesScreen(
                         ) {
                             Icon(Icons.Rounded.Block, contentDescription = null, modifier = Modifier.size(18.dp))
                             Spacer(Modifier.width(8.dp))
-                            Text("Disable all")
+                            Text(stringResource(id = R.string.ai_features_disable_all))
                         }
                         Button(
                             onClick = viewModel::enableAll,
@@ -106,7 +108,7 @@ fun AIFeaturesScreen(
                         ) {
                             Icon(Icons.Rounded.AutoAwesome, contentDescription = null, modifier = Modifier.size(18.dp))
                             Spacer(Modifier.width(8.dp))
-                            Text("Enable all")
+                            Text(stringResource(id = R.string.ai_features_enable_all))
                         }
                     }
                 }
@@ -115,8 +117,8 @@ fun AIFeaturesScreen(
             // Group by category for readability
             item {
                 FeatureGroup(
-                    title = "Note actions (on demand)",
-                    description = "You explicitly trigger these — nothing runs unless you tap a button.",
+                    title = stringResource(id = R.string.ai_features_group_ondemand),
+                    description = stringResource(id = R.string.ai_features_group_ondemand_desc),
                     features = listOf(
                         AIFeature.SUMMARIZE,
                         AIFeature.CHECKLIST,
@@ -133,8 +135,8 @@ fun AIFeaturesScreen(
 
             item {
                 FeatureGroup(
-                    title = "Suggestions (after save)",
-                    description = "These run quietly after a note is saved. They never apply changes — you tap to accept.",
+                    title = stringResource(id = R.string.ai_features_group_suggestions),
+                    description = stringResource(id = R.string.ai_features_group_suggestions_desc),
                     features = listOf(
                         AIFeature.AUTO_TAG,
                         AIFeature.SMART_REMINDER
@@ -147,8 +149,8 @@ fun AIFeaturesScreen(
 
             item {
                 FeatureGroup(
-                    title = "On-device features",
-                    description = "These run locally on your phone and do not require the AI master switch or a network provider.",
+                    title = stringResource(id = R.string.ai_features_group_ondevice),
+                    description = stringResource(id = R.string.ai_features_group_ondevice_desc),
                     features = listOf(
                         AIFeature.LINKED_NOTES
                     ),
@@ -178,7 +180,7 @@ private fun MasterDisabledBanner() {
             )
             Spacer(Modifier.width(12.dp))
             Text(
-                text = "AI master switch is OFF. Per-feature toggles below are disabled until you enable it from the AI Settings hub.",
+                text = stringResource(id = R.string.ai_features_master_off_banner),
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onErrorContainer
             )

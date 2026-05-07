@@ -104,20 +104,20 @@ fun InsertLinkDialog(
     AlertDialog(
         onDismissRequest = onDismiss,
         shape = MaterialTheme.shapes.extraLarge,
-        title = { Text("Insert Link") },
+        title = { Text(stringResource(id = R.string.link_dialog_title)) },
         text = {
             Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
                 OutlinedTextField(
                     value = text,
                     onValueChange = { text = it },
-                    label = { Text("Display Text") },
+                    label = { Text(stringResource(id = R.string.link_dialog_display_text)) },
                     modifier = Modifier.fillMaxWidth(),
                     shape = MaterialTheme.shapes.medium
                 )
                 OutlinedTextField(
                     value = url,
                     onValueChange = { url = it },
-                    label = { Text("URL") },
+                    label = { Text(stringResource(id = R.string.link_dialog_url)) },
                     modifier = Modifier.fillMaxWidth(),
                     shape = MaterialTheme.shapes.medium
                 )
@@ -129,7 +129,7 @@ fun InsertLinkDialog(
                 enabled = text.isNotBlank() && url.isNotBlank(),
                 modifier = Modifier.springPress()
             ) {
-                Text("Insert")
+                Text(stringResource(id = R.string.link_dialog_insert))
             }
         },
         dismissButton = {
@@ -150,7 +150,7 @@ fun LinkActionDialog(
     AlertDialog(
         onDismissRequest = onDismiss,
         shape = MaterialTheme.shapes.extraLarge,
-        title = { Text("Link Options") },
+        title = { Text(stringResource(id = R.string.link_dialog_section_options)) },
         text = {
             Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
                 Text(url, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.primary, maxLines = 1)

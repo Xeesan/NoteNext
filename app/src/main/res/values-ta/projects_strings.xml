@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Tamil (ta) translations for projects. Native review recommended. -->
+<resources>
+    <string name="projects_more_cd">மேலும்</string>
+    <string name="projects_add_menu">திட்டத்தைச் சேர்</string>
+    <string name="projects_section_title">பணியிடங்கள்</string>
+    <string name="projects_section_desc">உங்கள் தொடர்புடைய குறிப்புகள் மற்றும் கருத்துக்களை ஒன்றாகக் குழுவாக்குங்கள்</string>
+    <string name="projects_delete_title">திட்டத்தை நீக்கு</string>
+    <string name="projects_delete_message">இந்தத் திட்டத்தை நீக்க விரும்புகிறீர்களா? இந்தச் செயலை மாற்ற முடியாது.</string>
+
+    <string name="projects_expand_cd">விரிவாக்கு</string>
+    <string name="projects_collapse_cd">சுருக்கு</string>
+    <string name="projects_pin_to_home">முகப்பில் பின் செய்</string>
+    <string name="projects_add_subproject">உப-திட்டம் சேர்</string>
+</resources>

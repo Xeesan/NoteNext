@@ -177,7 +177,7 @@ fun LazyListScope.ChecklistEditor(
                 Spacer(modifier = Modifier.weight(1f))
                     
                 TextButton(onClick = { onEvent(NotesEvent.DeleteAllCheckedItems) }, modifier = Modifier.springPress()) {
-                    Text("Delete all", color = MaterialTheme.colorScheme.error, fontWeight = FontWeight.SemiBold)
+                    Text(stringResource(id = R.string.checklist_delete_all), color = MaterialTheme.colorScheme.error, fontWeight = FontWeight.SemiBold)
                 }
             }
         }
@@ -288,7 +288,7 @@ fun ChecklistItemRow(
             ) {
                 Icon(
                     imageVector = Icons.Default.Delete,
-                    contentDescription = "Delete",
+                    contentDescription = stringResource(id = R.string.checklist_delete),
                     tint = MaterialTheme.colorScheme.onErrorContainer
                 )
             }
@@ -305,7 +305,7 @@ fun ChecklistItemRow(
         ) {
             Icon(
                 imageVector = Icons.Default.DragHandle,
-                contentDescription = "Reorder",
+                contentDescription = stringResource(id = R.string.checklist_reorder_cd),
                 modifier = Modifier
                     .padding(start = 8.dp, end = 4.dp)
                     .size(24.dp)
@@ -405,7 +405,7 @@ fun ChecklistItemRow(
             ) {
                 Icon(
                     imageVector = Icons.Default.Delete,
-                    contentDescription = "Delete Item",
+                    contentDescription = stringResource(id = R.string.checklist_delete_item_cd),
                     tint = MaterialTheme.colorScheme.onSurfaceVariant,
                     modifier = Modifier.size(20.dp)
                 )
