@@ -56,6 +56,8 @@ import androidx.compose.foundation.rememberScrollState
 
 import com.suvojeet.notenext.util.LogcatManager
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatDelegate
+import androidx.core.os.LocaleListCompat
 
 @Composable
 fun SettingsScreen(
@@ -435,6 +437,9 @@ fun SettingsScreen(
             onDismiss = { showLanguageSheet = false },
             onItemSelected = { (code, _) ->
                 scope.launch { settingsRepository.saveLanguage(code) }
+                // Apply the locale immediately. AppCompatDelegate triggers an Activity
+                // recreate; the MainActivity collect block is a fallback for cold starts.
+                AppCompatDelegate.setApplicationLocales(LocaleListCompat.forLanguageTags(code))
                 showLanguageSheet = false
             },
             itemLabel = { stringResource(id = it.second) }
