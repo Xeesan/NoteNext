@@ -13,6 +13,7 @@ const hasPlay = SITE.playStoreUrl && SITE.playStoreUrl.length > 0;
   title="Download"
   description={`Download NoteNext v${SITE.version} for Android. Free, open source, MIT licensed. Available via GitHub releases${hasPlay ? ' and Google Play' : ' — Google Play coming soon'}.`}
   pageTitle="Download"
+  preloadImage="/screenshots/notes-list.jpeg"
 >
   <section class="mesh-bg pt-16 pb-20 md:pt-24 md:pb-32 relative overflow-hidden">
     <Container>
@@ -60,7 +61,12 @@ const hasPlay = SITE.playStoreUrl && SITE.playStoreUrl.length > 0;
           <div class="relative aspect-[9/19] max-w-[300px] mx-auto rounded-[2.5rem] border-8 border-[#0b0b0d] bg-[#0b0b0d] shadow-2xl overflow-hidden float">
             <img
               src="/screenshots/notes-list.jpeg"
-              alt="NoteNext Homescreen"
+              alt="NoteNext notes grid view with rich previews, color labels, and a checklist note"
+              width="300"
+              height="633"
+              fetchpriority="high"
+              loading="eager"
+              decoding="async"
               class="w-full h-full object-cover"
             />
           </div>

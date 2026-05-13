@@ -9,9 +9,11 @@ interface Props {
 
 const { type = 'page', pageTitle, pageUrl } = Astro.props;
 
+const logoUrl = new URL('/favicon.svg', SITE.url).toString();
+
 const softwareApp = {
   '@context': 'https://schema.org',
-  '@type': 'MobileApplication',
+  '@type': 'SoftwareApplication',
   name: SITE.name,
   description: SITE.description,
   applicationCategory: 'ProductivityApplication',
@@ -21,6 +23,7 @@ const softwareApp = {
   softwareVersion: SITE.version,
   datePublished: SITE.releaseDate,
   inLanguage: 'en',
+  image: new URL(SITE.ogImage, SITE.url).toString(),
   offers: {
     '@type': 'Offer',
     price: '0',
@@ -35,13 +38,10 @@ const softwareApp = {
     '@type': 'Person',
     name: SITE.author,
     url: SITE.authorUrl,
-  },
-  aggregateRating: {
-    '@type': 'AggregateRating',
-    ratingValue: '5',
-    ratingCount: '1',
-    bestRating: '5',
-    worstRating: '1',
+    logo: {
+      '@type': 'ImageObject',
+      url: logoUrl,
+    },
   },
   featureList: [
     'Local-first storage',
@@ -68,6 +68,11 @@ const organization = {
     '@type': 'Person',
     name: SITE.author,
     email: SITE.email,
+    url: SITE.authorUrl,
+    logo: {
+      '@type': 'ImageObject',
+      url: logoUrl,
+    },
   },
 };
 

@@ -9,18 +9,22 @@ interface Props {
   title?: string;
   description?: string;
   image?: string;
+  imageAlt?: string;
   noindex?: boolean;
   jsonLdType?: 'home' | 'page';
   pageTitle?: string;
+  preloadImage?: string;
 }
 
 const {
   title,
   description = SITE.description,
   image = SITE.ogImage,
+  imageAlt = `${SITE.name} — ${SITE.shortDescription}`,
   noindex = false,
   jsonLdType = 'page',
   pageTitle,
+  preloadImage,
 } = Astro.props;
 
 const pageTitleFull = title ? `${title} | ${SITE.name}` : SITE.title;
@@ -37,12 +41,16 @@ const ogImageUrl = new URL(image, SITE.url).toString();
 
     <title>{pageTitleFull}</title>
     <meta name="description" content={description} />
-    <meta name="keywords" content={SITE.keywords.join(', ')} />
     <meta name="author" content={SITE.author} />
     <meta name="theme-color" content={SITE.themeColor} />
     <meta name="color-scheme" content="light" />
+    <meta name="application-name" content={SITE.name} />
+    <meta name="apple-mobile-web-app-title" content={SITE.name} />
 
     <link rel="canonical" href={canonical} />
+    <link rel="alternate" hreflang="en" href={canonical} />
+    <link rel="alternate" hreflang="en-IN" href={canonical} />
+    <link rel="alternate" hreflang="x-default" href={canonical} />
 
     {noindex && <meta name="robots" content="noindex, nofollow" />}
     {!noindex && <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1" />}
@@ -51,12 +59,15 @@ const ogImageUrl = new URL(image, SITE.url).toString();
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <link rel="manifest" href="/site.webmanifest" />
 
+    {preloadImage && <link rel="preload" as="image" href={preloadImage} fetchpriority="high" />}
+
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content={SITE.name} />
     <meta property="og:title" content={pageTitleFull} />
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonical} />
     <meta property="og:image" content={ogImageUrl} />
+    <meta property="og:image:alt" content={imageAlt} />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
     <meta property="og:locale" content="en_US" />
@@ -65,14 +76,29 @@ const ogImageUrl = new URL(image, SITE.url).toString();
     <meta name="twitter:title" content={pageTitleFull} />
     <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content={ogImageUrl} />
+    <meta name="twitter:image:alt" content={imageAlt} />
     {SITE.twitter && <meta name="twitter:creator" content={SITE.twitter} />}
+    {SITE.twitter && <meta name="twitter:site" content={SITE.twitter} />}
 
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      rel="stylesheet"
+      rel="preload"
+      as="style"
       href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Roboto+Flex:opsz,wght@8..144,400;8..144,600;8..144,700;8..144,800&display=swap"
     />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Roboto+Flex:opsz,wght@8..144,400;8..144,600;8..144,700;8..144,800&display=swap"
+      media="print"
+      onload="this.media='all'"
+    />
+    <noscript>
+      <link
+        rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Roboto+Flex:opsz,wght@8..144,400;8..144,600;8..144,700;8..144,800&display=swap"
+      />
+    </noscript>
 
     <JsonLd type={jsonLdType} pageTitle={pageTitle} pageUrl={canonical} />
 
