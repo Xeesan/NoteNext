@@ -139,6 +139,14 @@
     <string name="ai_tone_apply_changes">Apply Changes</string>
     <string name="ai_tone_try_again">Try Again</string>
 
+    <!-- AiActionItemsSheet -->
+    <string name="ai_extract_tasks_title">Action Items</string>
+    <string name="ai_extract_tasks_desc">AI extracted these tasks from your note</string>
+    <string name="ai_extract_tasks_extracting">Extracting tasks…</string>
+    <string name="ai_extract_tasks_empty">No actionable tasks found.</string>
+    <string name="ai_extract_tasks_add_to_todo">Add to Todo</string>
+    <string name="ai_extract_tasks_items_count">%1$d tasks selected</string>
+
     <!-- AIFeaturesScreen -->
     <string name="ai_features_title">AI Features</string>
     <string name="ai_features_quick_actions">Quick actions</string>

@@ -701,6 +701,14 @@ fun AddEditNoteScreen(
         )
     }
 
+    AiActionItemsSheet(
+        isVisible = state.showActionItemsSheet,
+        isExtracting = state.isExtractingTasks,
+        extractedTasks = state.extractedTasksPreview,
+        onDismiss = { onEvent(NotesEvent.ClearExtractedActionItems) },
+        onSaveToTodo = { tasks -> onEvent(NotesEvent.SaveActionItemsToTodo(tasks)) }
+    )
+
     AnimatedVisibility(
         visible = showToneRewriteSheet,
         enter = slideInHorizontally(initialOffsetX = { it }) + fadeIn(),

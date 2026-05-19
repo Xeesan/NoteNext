@@ -84,4 +84,33 @@ class AIDelegate @Inject constructor(
             }
         }
     }
+
+    fun extractActionItems(
+        content: String,
+        scope: CoroutineScope,
+        events: MutableSharedFlow<NotesUiEvent>,
+        onUpdate: ((NotesEditState) -> NotesEditState) -> Unit
+    ) {
+        scope.launch {
+            onUpdate { it.copy(isExtractingTasks = true, showActionItemsSheet = true, extractedTasksPreview = kotlinx.collections.immutable.persistentListOf()) }
+            aiRepository.generateTodos(content).collect { result ->
+                result.onSuccess { tasks ->
+                    onUpdate { it.copy(
+                        isExtractingTasks = false,
+                        extractedTasksPreview = kotlinx.collections.immutable.toImmutableList(tasks)
+                    ) }
+                }.onFailure { failure ->
+                    onUpdate { it.copy(isExtractingTasks = false) }
+                    val errorMessage = when (failure) {
+                        is AiResult.RateLimited -> "AI is busy. Please try again in ${failure.retryAfterSeconds}s."
+                        is AiResult.InvalidKey -> "Invalid API key. Check settings."
+                        is AiResult.NetworkError -> "Network error: ${failure.message}"
+                        is AiResult.AllModelsFailed -> "AI failed to respond. Try again later."
+                        else -> "Failed to extract tasks."
+                    }
+                    events.emit(NotesUiEvent.ShowToast(errorMessage))
+                }
+            }
+        }
+    }
 }

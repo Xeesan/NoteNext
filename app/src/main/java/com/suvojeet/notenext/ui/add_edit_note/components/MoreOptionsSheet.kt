@@ -98,6 +98,7 @@ fun MoreOptionsSheet(
             if (!state.editingIsNewNote) {
                 add(OptionItem("History", Icons.Default.History, secondaryColor) { showHistoryDialog(true) })
             }
+            add(OptionItem("Extract Tasks", Icons.Default.AutoFixHigh, tertiaryColor) { onEvent(NotesEvent.ExtractActionItems) })
             add(OptionItem("To Todo", Icons.Default.PlaylistAddCheck, tertiaryColor) { onEvent(NotesEvent.ConvertToTodo) })
             add(OptionItem("Delete", Icons.Default.Delete, errorColor) { showDeleteDialog(true) })
         }

@@ -222,6 +222,58 @@ class NotesViewModel @Inject constructor(
             is NotesEvent.ClearGeneratedChecklist -> {
                 editorDelegate.updateState { it.copy(generatedChecklistPreview = persistentListOf(), isGeneratingChecklist = false) }
             }
+            is NotesEvent.ExtractActionItems -> {
+                viewModelScope.launch {
+                    if (!aiFeatureGate.isEnabled(com.suvojeet.notenext.data.ai.AIFeature.TODOS)) {
+                        _events.emit(NotesUiEvent.ShowToast("Todo generation is disabled in AI Settings"))
+                        return@launch
+                    }
+                    val content = if (editState.value.editingNoteType == NoteType.CHECKLIST) {
+                        editState.value.editingChecklist.joinToString("\n") { it.text }
+                    } else {
+                        editState.value.editingContent.text
+                    }
+
+                    if (content.isBlank()) {
+                        _events.emit(NotesUiEvent.ShowToast("Note is empty"))
+                        return@launch
+                    }
+
+                    aiDelegate.extractActionItems(content, viewModelScope, _events) { transform ->
+                        editorDelegate.updateState(transform)
+                    }
+                }
+            }
+            is NotesEvent.SaveActionItemsToTodo -> {
+                viewModelScope.launch {
+                    val tasks = event.tasks
+                    if (tasks.isNotEmpty()) {
+                        val maxPos = todoRepository.getMaxPosition()
+                        tasks.forEachIndexed { index, (title, description) ->
+                            val todo = com.suvojeet.notenext.data.TodoItem(
+                                title = title,
+                                description = description,
+                                priority = 1,
+                                position = maxPos + index + 1,
+                                createdAt = System.currentTimeMillis()
+                            )
+                            todoRepository.insertTodo(todo)
+                        }
+                        editorDelegate.updateState { it.copy(
+                            showActionItemsSheet = false,
+                            extractedTasksPreview = persistentListOf()
+                        ) }
+                        _events.emit(NotesUiEvent.ShowToast("Added ${tasks.size} tasks to Todo"))
+                    }
+                }
+            }
+            is NotesEvent.ClearExtractedActionItems -> {
+                editorDelegate.updateState { it.copy(
+                    showActionItemsSheet = false,
+                    extractedTasksPreview = persistentListOf(),
+                    isExtractingTasks = false
+                ) }
+            }
             is NotesEvent.FixGrammar -> {
                 viewModelScope.launch {
                     if (!aiFeatureGate.isEnabled(com.suvojeet.notenext.data.ai.AIFeature.GRAMMAR)) {
