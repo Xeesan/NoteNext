@@ -106,7 +106,10 @@ fun NotesEvent.toProjectNotesEvent(): ProjectNotesEvent {
         is NotesEvent.DismissSuggestedLabels,
         is NotesEvent.AcceptExtractedReminder,
         is NotesEvent.DismissExtractedReminder,
-        is NotesEvent.OpenLinkedNote -> ProjectNotesEvent.NoOp
+        is NotesEvent.OpenLinkedNote,
+        is NotesEvent.ExtractActionItems,
+        is NotesEvent.SaveActionItemsToTodo,
+        is NotesEvent.ClearExtractedActionItems -> ProjectNotesEvent.NoOp
     }
 }
 

@@ -10,6 +10,8 @@ import com.suvojeet.notenext.data.repository.onSuccess
 import com.suvojeet.notenext.ui.notes.NotesEditState
 import com.suvojeet.notenext.ui.notes.NotesUiEvent
 import com.suvojeet.notenext.util.SimpleDiffUtils
+import kotlinx.collections.immutable.persistentListOf
+import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.launch
@@ -92,12 +94,12 @@ class AIDelegate @Inject constructor(
         onUpdate: ((NotesEditState) -> NotesEditState) -> Unit
     ) {
         scope.launch {
-            onUpdate { it.copy(isExtractingTasks = true, showActionItemsSheet = true, extractedTasksPreview = kotlinx.collections.immutable.persistentListOf()) }
+            onUpdate { it.copy(isExtractingTasks = true, showActionItemsSheet = true, extractedTasksPreview = persistentListOf()) }
             aiRepository.generateTodos(content).collect { result ->
                 result.onSuccess { tasks ->
                     onUpdate { it.copy(
                         isExtractingTasks = false,
-                        extractedTasksPreview = kotlinx.collections.immutable.toImmutableList(tasks)
+                        extractedTasksPreview = tasks.toImmutableList()
                     ) }
                 }.onFailure { failure ->
                     onUpdate { it.copy(isExtractingTasks = false) }
