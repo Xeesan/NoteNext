@@ -21,7 +21,7 @@ import com.suvojeet.notenext.util.HtmlConverter
 import com.suvojeet.notenext.data.LinkPreviewRepository
 import com.suvojeet.notenext.data.ProjectDao
 import com.suvojeet.notenext.core.util.SortType
-import com.suvojeet.notenext.data.AlarmScheduler
+import com.suvojeet.notenext.data.ReminderScheduler
 import java.time.LocalDateTime
 import java.time.ZoneId
 import com.suvojeet.notenext.data.RepeatOption
@@ -57,7 +57,7 @@ class ProjectNotesViewModel @Inject constructor(
     private val todoRepository: com.suvojeet.notenext.data.TodoRepository,
     private val noteUseCases: com.suvojeet.notenext.domain.use_case.NoteUseCases,
     private val linkPreviewRepository: LinkPreviewRepository,
-    private val alarmScheduler: AlarmScheduler,
+    private val reminderScheduler: ReminderScheduler,
     private val richTextController: com.suvojeet.notenext.ui.notes.RichTextController,
     private val aiRepository: AiRepository,
     private val aiSuggestionsDelegate: com.suvojeet.notenext.ui.notes.delegate.AISuggestionsDelegate,
@@ -143,7 +143,7 @@ class ProjectNotesViewModel @Inject constructor(
                         editingContent = TextFieldValue(content),
                         editingNoteType = event.version.noteType
                     )
-                    _events.emit(ProjectNotesUiEvent.ShowToast("Version restored"))
+                    _events.emit(ProjectNotesUiEvent.ShowSnackbar("Version restored"))
                 }
             }
             is ProjectNotesEvent.NavigateToNoteByTitle -> {
@@ -157,7 +157,7 @@ class ProjectNotesViewModel @Inject constructor(
                         val noteToBin = fullNote.note.copy(isBinned = true, binnedOn = System.currentTimeMillis())
                         repository.updateNote(noteToBin)
                         recentlyDeletedNote = fullNote.note
-                        _events.emit(ProjectNotesUiEvent.ShowToast("Note moved to Bin"))
+                        _events.emit(ProjectNotesUiEvent.ShowSnackbar("Note moved to Bin"))
                     }
                 }
             }
@@ -206,7 +206,7 @@ class ProjectNotesViewModel @Inject constructor(
                     } else {
                         if (selectedSummaries.size > 1) "${selectedSummaries.size} notes unpinned" else "Note unpinned"
                     }
-                    _events.emit(ProjectNotesUiEvent.ShowToast(message))
+                    _events.emit(ProjectNotesUiEvent.ShowSnackbar(message))
                 }
             }
             is ProjectNotesEvent.ToggleLockForSelectedNotes -> {
@@ -226,11 +226,11 @@ class ProjectNotesViewModel @Inject constructor(
                         } else {
                             if (selectedSummaries.size > 1) "${selectedSummaries.size} notes unlocked" else "Note unlocked"
                         }
-                        _events.emit(ProjectNotesUiEvent.ShowToast(message))
+                        _events.emit(ProjectNotesUiEvent.ShowSnackbar(message))
                     } catch (e: Exception) {
                         e.printStackTrace()
                         val errorMessage = if (areNotesBeingLocked) "Failed to lock notes" else "Failed to unlock notes: Authentication may be required"
-                        _events.emit(ProjectNotesUiEvent.ShowToast(errorMessage))
+                        _events.emit(ProjectNotesUiEvent.ShowSnackbar(errorMessage))
                     }
                 }
             }
@@ -243,7 +243,7 @@ class ProjectNotesViewModel @Inject constructor(
                         }
                     }
                     _state.value = state.value.copy(selectedNoteIds = emptyList())
-                    _events.emit(ProjectNotesUiEvent.ShowToast("${selectedIds.size} notes moved to Bin"))
+                    _events.emit(ProjectNotesUiEvent.ShowSnackbar("${selectedIds.size} notes moved to Bin"))
                 }
             }
             is ProjectNotesEvent.ArchiveSelectedNotes -> {
@@ -277,7 +277,7 @@ class ProjectNotesViewModel @Inject constructor(
                         }
                     }
                     _state.value = state.value.copy(selectedNoteIds = emptyList())
-                    _events.emit(ProjectNotesUiEvent.ShowToast("Color updated for ${selectedIds.size} notes"))
+                    _events.emit(ProjectNotesUiEvent.ShowSnackbar("Color updated for ${selectedIds.size} notes"))
                 }
             }
             is ProjectNotesEvent.CopySelectedNotes -> {
@@ -299,7 +299,7 @@ class ProjectNotesViewModel @Inject constructor(
                     }
                     _state.value = state.value.copy(selectedNoteIds = emptyList())
                     val message = if (selectedIds.size > 1) "${selectedIds.size} notes copied" else "Note copied"
-                    _events.emit(ProjectNotesUiEvent.ShowToast(message))
+                    _events.emit(ProjectNotesUiEvent.ShowSnackbar(message))
                 }
             }
             is ProjectNotesEvent.SendSelectedNotes -> {
@@ -344,11 +344,11 @@ class ProjectNotesViewModel @Inject constructor(
                                 repeatOption = event.repeatOption.name // Store enum name as string
                             )
                             repository.updateNote(updatedNote)
-                            alarmScheduler.schedule(updatedNote)
+                            reminderScheduler.scheduleNoteReminder(updatedNote)
                         }
                     }
                     _state.value = state.value.copy(selectedNoteIds = emptyList())
-                    _events.emit(ProjectNotesUiEvent.ShowToast("Reminder set for ${selectedIds.size} notes"))
+                    _events.emit(ProjectNotesUiEvent.ShowSnackbar("Reminder set for ${selectedIds.size} notes"))
                 }
             }
             is ProjectNotesEvent.SetLabelForSelectedNotes -> {
@@ -766,7 +766,7 @@ class ProjectNotesViewModel @Inject constructor(
                 }
 
                 if (content.isBlank()) {
-                    viewModelScope.launch { _events.emit(ProjectNotesUiEvent.ShowToast("Note content is empty")) }
+                    viewModelScope.launch { _events.emit(ProjectNotesUiEvent.ShowSnackbar("Note content is empty")) }
                     return
                 }
 
@@ -784,7 +784,7 @@ class ProjectNotesViewModel @Inject constructor(
                                 else -> "Summarization failed."
                             }
                             _state.value = _state.value.copy(isSummarizing = false, showSummaryDialog = false)
-                            _events.emit(ProjectNotesUiEvent.ShowToast(errorMessage))
+                            _events.emit(ProjectNotesUiEvent.ShowSnackbar(errorMessage, actionLabel = "Retry", onAction = { onEvent(ProjectNotesEvent.Summarize) }))
                         }
                     }
                 }
@@ -812,7 +812,7 @@ class ProjectNotesViewModel @Inject constructor(
                                 else -> "Generation failed."
                             }
                             _state.value = _state.value.copy(isGeneratingChecklist = false)
-                            _events.emit(ProjectNotesUiEvent.ShowToast(errorMessage))
+                            _events.emit(ProjectNotesUiEvent.ShowSnackbar(errorMessage, actionLabel = "Retry", onAction = { onEvent(ProjectNotesEvent.GenerateChecklist(event.topic)) }))
                         }
                     }
                 }
@@ -858,7 +858,7 @@ class ProjectNotesViewModel @Inject constructor(
                                 else -> "Grammar fix failed."
                             }
                             _state.value = _state.value.copy(isFixingGrammar = false)
-                            _events.emit(ProjectNotesUiEvent.ShowToast(errorMessage))
+                            _events.emit(ProjectNotesUiEvent.ShowSnackbar(errorMessage, actionLabel = "Retry", onAction = { onEvent(ProjectNotesEvent.FixGrammar) }))
                         }
                     }
                 }
@@ -908,9 +908,9 @@ class ProjectNotesViewModel @Inject constructor(
                         context.contentResolver.openOutputStream(event.uri)?.use { outputStream ->
                             outputStream.write(fullContent.toByteArray())
                         }
-                        _events.emit(ProjectNotesUiEvent.ShowToast("Note exported successfully"))
+                        _events.emit(ProjectNotesUiEvent.ShowSnackbar("Note exported successfully"))
                     } catch (e: Exception) {
-                        _events.emit(ProjectNotesUiEvent.ShowToast("Export failed: ${e.message}"))
+                        _events.emit(ProjectNotesUiEvent.ShowSnackbar("Export failed: ${e.message}"))
                     }
                 }
             }
@@ -933,7 +933,7 @@ class ProjectNotesViewModel @Inject constructor(
                             repository.updateNote(updatedNote)
                             _state.value = state.value.copy(isPinned = updatedNote.isPinned)
                             val message = if (updatedNote.isPinned) "Note pinned" else "Note unpinned"
-                            _events.emit(ProjectNotesUiEvent.ShowToast(message))
+                            _events.emit(ProjectNotesUiEvent.ShowSnackbar(message))
                         }
                     }
                 }
@@ -947,7 +947,7 @@ class ProjectNotesViewModel @Inject constructor(
                     state.value.expandedNoteId?.let { noteId ->
                          if (noteId != -1) {
                              onEvent(ProjectNotesEvent.OnSaveNoteClick(shouldCollapse = false))
-                             _events.emit(ProjectNotesUiEvent.ShowToast(if (newLockState) "Note locked" else "Note unlocked"))
+                             _events.emit(ProjectNotesUiEvent.ShowSnackbar(if (newLockState) "Note locked" else "Note unlocked"))
                          }
                     }
                 }
@@ -1083,18 +1083,18 @@ class ProjectNotesViewModel @Inject constructor(
                             }
 
                             if (state.value.editingReminderTime != null) {
-                                alarmScheduler.schedule(note.copy(id = currentNoteId.toInt()))
+                                reminderScheduler.scheduleNoteReminder(note.copy(id = currentNoteId.toInt()))
                             } else if (noteId != -1) {
-                                alarmScheduler.cancel(note.copy(id = currentNoteId.toInt()))
+                                reminderScheduler.cancelNoteReminder(note.copy(id = currentNoteId.toInt()))
                             }
 
                             // Per-note exact-alarm self-destruct. See NotesViewModel.kt
                             // for rationale — same fix mirrored here for project notes.
                             val withId = note.copy(id = currentNoteId.toInt())
                             if (note.expiryTime != null) {
-                                alarmScheduler.scheduleExpiry(withId)
+                                reminderScheduler.scheduleNoteExpiry(withId)
                             } else if (noteId != -1) {
-                                alarmScheduler.cancelExpiry(withId)
+                                reminderScheduler.cancelNoteExpiry(withId)
                             }
 
                             // Handle Checklist Items
@@ -1167,7 +1167,7 @@ class ProjectNotesViewModel @Inject constructor(
                         if (it != -1) {
                             repository.getNoteById(it)?.let { note ->
                                 repository.updateNote(note.note.copy(isBinned = true, binnedOn = System.currentTimeMillis()))
-                                _events.emit(ProjectNotesUiEvent.ShowToast("Note moved to Bin"))
+                                _events.emit(ProjectNotesUiEvent.ShowSnackbar("Note moved to Bin"))
                             }
                         }
                     }
@@ -1190,7 +1190,7 @@ class ProjectNotesViewModel @Inject constructor(
                             }
                             repository.insertChecklistItems(newChecklistItems)
                             
-                            _events.emit(ProjectNotesUiEvent.ShowToast("Note copied"))
+                            _events.emit(ProjectNotesUiEvent.ShowSnackbar("Note copied"))
                         }
                     }
                 }
@@ -1389,7 +1389,7 @@ class ProjectNotesViewModel @Inject constructor(
                     }
                     
                     onEvent(ProjectNotesEvent.CollapseNote)
-                    _events.emit(ProjectNotesUiEvent.ShowToast("Converted to Todo successfully"))
+                    _events.emit(ProjectNotesUiEvent.ShowSnackbar("Converted to Todo successfully"))
                 }
             }
             is ProjectNotesEvent.DeleteAllCheckedItems -> {
@@ -1463,14 +1463,14 @@ class ProjectNotesViewModel @Inject constructor(
                             editingIsNewNote = true
                         )
                     } catch (e: Exception) {
-                        _events.emit(ProjectNotesUiEvent.ShowToast("Failed to load file: ${e.message}"))
+                        _events.emit(ProjectNotesUiEvent.ShowSnackbar("Failed to load file: ${e.message}"))
                     }
                 }
             }
             is ProjectNotesEvent.SaveExternalAsNote -> {
                 viewModelScope.launch {
                     onEvent(ProjectNotesEvent.OnSaveNoteClick(shouldCollapse = false))
-                    _events.emit(ProjectNotesUiEvent.ShowToast("Saved as internal note"))
+                    _events.emit(ProjectNotesUiEvent.ShowSnackbar("Saved as internal note"))
                 }
             }
             is ProjectNotesEvent.NoOp -> { /* no-op bridge for AI suggestion events not yet wired into ProjectNotesViewModel */ }
@@ -1484,7 +1484,7 @@ class ProjectNotesViewModel @Inject constructor(
     private fun runToneRewrite(tone: com.suvojeet.notenext.data.ai.ToneOption) {
         val source = state.value.editingContent.text
         if (source.isBlank()) {
-            viewModelScope.launch { _events.emit(ProjectNotesUiEvent.ShowToast("Nothing to rewrite")) }
+            viewModelScope.launch { _events.emit(ProjectNotesUiEvent.ShowSnackbar("Nothing to rewrite")) }
             return
         }
         _state.value = state.value.copy(

@@ -13,8 +13,8 @@ import com.suvojeet.notenext.data.TodoDao
 import com.suvojeet.notenext.data.TodoRepository
 import com.suvojeet.notenext.data.TodoRepositoryImpl
 import com.suvojeet.notenext.data.repository.SettingsRepository
-import com.suvojeet.notenext.data.AlarmScheduler
-import com.suvojeet.notenext.data.AlarmSchedulerImpl
+import com.suvojeet.notenext.data.ReminderScheduler
+import com.suvojeet.notenext.data.AlarmManagerScheduler
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -110,9 +110,10 @@ object AppModule {
         labelDao: LabelDao,
         projectDao: ProjectDao,
         checklistItemDao: ChecklistItemDao,
+        backupSettingsRepository: com.suvojeet.notenext.data.repository.BackupSettingsRepository,
         @ApplicationContext context: Context
     ): com.suvojeet.notenext.data.NoteRepository {
-        return com.suvojeet.notenext.data.NoteRepositoryImpl(db, noteDao, labelDao, projectDao, checklistItemDao, context)
+        return com.suvojeet.notenext.data.NoteRepositoryImpl(db, noteDao, labelDao, projectDao, checklistItemDao, context, backupSettingsRepository)
     }
 
     @Provides
@@ -123,8 +124,8 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideAlarmScheduler(@ApplicationContext context: Context): AlarmScheduler {
-        return AlarmSchedulerImpl(context)
+    fun provideReminderScheduler(@ApplicationContext context: Context): ReminderScheduler {
+        return AlarmManagerScheduler(context)
     }
 
     @Provides
@@ -147,8 +148,8 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideReviewManager(@ApplicationContext context: Context): com.suvojeet.notenext.util.ReviewManager {
-        return com.suvojeet.notenext.util.ReviewManager(context)
+    fun provideReviewManager(repository: com.suvojeet.notenext.data.repository.ReviewSettingsRepository): com.suvojeet.notenext.util.ReviewManager {
+        return com.suvojeet.notenext.util.ReviewManager(repository)
     }
 }
 

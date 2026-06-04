@@ -25,7 +25,7 @@ import com.suvojeet.notenext.data.Project
 import com.suvojeet.notenext.data.ProjectDao
 import com.suvojeet.notenext.core.util.SortType
 import com.suvojeet.notenext.ui.notes.LayoutType
-import com.suvojeet.notenext.data.AlarmScheduler
+import com.suvojeet.notenext.data.ReminderScheduler
 import java.time.LocalDateTime
 import java.time.ZoneId
 import com.suvojeet.notenext.data.RepeatOption
@@ -42,6 +42,7 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.distinctUntilChanged
@@ -82,9 +83,11 @@ class NotesViewModel @Inject constructor(
     private val todoRepository: com.suvojeet.notenext.data.TodoRepository,
     private val noteUseCases: NoteUseCases,
     private val linkPreviewRepository: LinkPreviewRepository,
-    private val alarmScheduler: AlarmScheduler,
+    private val reminderScheduler: ReminderScheduler,
     private val richTextController: RichTextController,
     private val aiRepository: AiRepository,
+    private val settingsRepository: com.suvojeet.notenext.data.repository.SettingsRepository,
+    private val draftRepository: com.suvojeet.notenext.data.repository.DraftRepository,
     @ApplicationContext private val context: Context,
     private val savedStateHandle: androidx.lifecycle.SavedStateHandle,
     private val editorDelegate: com.suvojeet.notenext.ui.notes.delegate.NoteEditorDelegate,
@@ -104,6 +107,7 @@ class NotesViewModel @Inject constructor(
 
     val listState = listDelegate.listState
     val editState = editorDelegate.editState
+    val aiPromptHistory = settingsRepository.aiPromptHistory.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
 
     // High-frequency editing flows to isolate recomposition
     val editingContent = editState.map { it.editingContent }.distinctUntilChanged()
@@ -168,9 +172,10 @@ class NotesViewModel @Inject constructor(
             is NotesEvent.GenerateChecklist -> {
                 viewModelScope.launch {
                     if (!aiFeatureGate.isEnabled(com.suvojeet.notenext.data.ai.AIFeature.CHECKLIST)) {
-                        _events.emit(NotesUiEvent.ShowToast("Checklist generation is disabled in AI Settings"))
+                        _events.emit(NotesUiEvent.ShowSnackbar("Checklist generation is disabled in AI Settings"))
                         return@launch
                     }
+                    settingsRepository.saveAiPrompt(event.topic)
                     editorDelegate.updateState { it.copy(isGeneratingChecklist = true, generatedChecklistPreview = persistentListOf()) }
                     aiRepository.generateChecklist(event.topic).collect { result ->
                         result.onSuccess { items ->
@@ -189,7 +194,7 @@ class NotesViewModel @Inject constructor(
                                 is AiResult.AllModelsFailed -> "All AI models failed to respond. Try again later."
                                 else -> "Failed to generate checklist."
                             }
-                            _events.emit(NotesUiEvent.ShowToast(errorMessage))
+                            _events.emit(NotesUiEvent.ShowSnackbar(errorMessage, actionLabel = "Retry", onAction = { onEvent(NotesEvent.GenerateChecklist(event.topic)) }))
                         }
                     }
                 }
@@ -225,7 +230,7 @@ class NotesViewModel @Inject constructor(
             is NotesEvent.ExtractActionItems -> {
                 viewModelScope.launch {
                     if (!aiFeatureGate.isEnabled(com.suvojeet.notenext.data.ai.AIFeature.TODOS)) {
-                        _events.emit(NotesUiEvent.ShowToast("Todo generation is disabled in AI Settings"))
+                        _events.emit(NotesUiEvent.ShowSnackbar("Todo generation is disabled in AI Settings"))
                         return@launch
                     }
                     val content = if (editState.value.editingNoteType == NoteType.CHECKLIST) {
@@ -235,7 +240,7 @@ class NotesViewModel @Inject constructor(
                     }
 
                     if (content.isBlank()) {
-                        _events.emit(NotesUiEvent.ShowToast("Note is empty"))
+                        _events.emit(NotesUiEvent.ShowSnackbar("Note is empty"))
                         return@launch
                     }
 
@@ -263,7 +268,7 @@ class NotesViewModel @Inject constructor(
                             showActionItemsSheet = false,
                             extractedTasksPreview = persistentListOf()
                         ) }
-                        _events.emit(NotesUiEvent.ShowToast("Added ${tasks.size} tasks to Todo"))
+                        _events.emit(NotesUiEvent.ShowSnackbar("Added ${tasks.size} tasks to Todo"))
                     }
                 }
             }
@@ -277,7 +282,7 @@ class NotesViewModel @Inject constructor(
             is NotesEvent.FixGrammar -> {
                 viewModelScope.launch {
                     if (!aiFeatureGate.isEnabled(com.suvojeet.notenext.data.ai.AIFeature.GRAMMAR)) {
-                        _events.emit(NotesUiEvent.ShowToast("Grammar fix is disabled in AI Settings"))
+                        _events.emit(NotesUiEvent.ShowSnackbar("Grammar fix is disabled in AI Settings"))
                         return@launch
                     }
                     aiDelegate.fixGrammar(editState.value.editingContent, viewModelScope, _events) { transform ->
@@ -368,7 +373,7 @@ class NotesViewModel @Inject constructor(
                             onEvent(NotesEvent.AddAttachment(localUri.toString(), mimeType ?: "image/jpeg"))
                         } catch (e: Exception) {
                             e.printStackTrace()
-                            _events.emit(NotesUiEvent.ShowToast("Failed to import image: ${e.message}"))
+                            _events.emit(NotesUiEvent.ShowSnackbar("Failed to import image: ${e.message}"))
                         }
                     }
                 }
@@ -381,7 +386,7 @@ class NotesViewModel @Inject constructor(
                         fixedContentPreview = null,
                         originalContentBackup = null
                     ) }
-                    viewModelScope.launch { _events.emit(NotesUiEvent.ShowToast("Fixed!")) }
+                    viewModelScope.launch { _events.emit(NotesUiEvent.ShowSnackbar("Fixed!")) }
                 }
             }
             is NotesEvent.ClearGrammarFix -> {
@@ -417,7 +422,7 @@ class NotesViewModel @Inject constructor(
                         ) }
                     } catch (e: Exception) {
                         e.printStackTrace()
-                        _events.emit(NotesUiEvent.ShowToast("Failed to load file: ${e.message}"))
+                        _events.emit(NotesUiEvent.ShowSnackbar("Failed to load file: ${e.message}"))
                     }
                 }
             }
@@ -442,7 +447,7 @@ class NotesViewModel @Inject constructor(
                         externalUri = null,
                         editingIsNewNote = false
                     ) }
-                    _events.emit(NotesUiEvent.ShowToast("Saved as internal note"))
+                    _events.emit(NotesUiEvent.ShowSnackbar("Saved as internal note"))
                     updateWidgets()
                 }
             }
@@ -543,7 +548,7 @@ class NotesViewModel @Inject constructor(
                     } else {
                         if (allSelectedNotes.size > 1) "${allSelectedNotes.size} notes unpinned" else "Note unpinned"
                     }
-                    _events.emit(NotesUiEvent.ShowToast(message))
+                    _events.emit(NotesUiEvent.ShowSnackbar(message))
                     updateWidgets()
                 }
             }
@@ -568,12 +573,12 @@ class NotesViewModel @Inject constructor(
                         } else {
                             if (selectedNotes.size > 1) "${selectedNotes.size} notes unlocked" else "Note unlocked"
                         }
-                        _events.emit(NotesUiEvent.ShowToast(message))
+                        _events.emit(NotesUiEvent.ShowSnackbar(message))
                         updateWidgets()
                     } catch (e: Exception) {
                         e.printStackTrace()
                         val errorMessage = if (areNotesBeingLocked) "Failed to lock notes" else "Failed to unlock notes: Authentication may be required"
-                        _events.emit(NotesUiEvent.ShowToast(errorMessage))
+                        _events.emit(NotesUiEvent.ShowSnackbar(errorMessage))
                     }
                 }
             }
@@ -584,7 +589,7 @@ class NotesViewModel @Inject constructor(
                         repository.updateNote(note.note.copy(isBinned = true, binnedOn = System.currentTimeMillis()))
                     }
                     listDelegate.updateState { it.copy(selectedNoteIds = persistentListOf()) }
-                    _events.emit(NotesUiEvent.ShowToast("${selectedNotes.size} notes moved to Bin"))
+                    _events.emit(NotesUiEvent.ShowSnackbar("${selectedNotes.size} notes moved to Bin"))
                     updateWidgets()
                 }
             }
@@ -616,7 +621,7 @@ class NotesViewModel @Inject constructor(
                     listDelegate.updateState { it.copy(
                         selectedNoteIds = persistentListOf()
                     ) }
-                    _events.emit(NotesUiEvent.ShowToast("Color updated"))
+                    _events.emit(NotesUiEvent.ShowSnackbar("Color updated"))
                 }
             }
             is NotesEvent.CopySelectedNotes -> {
@@ -641,7 +646,7 @@ class NotesViewModel @Inject constructor(
                     }
                     listDelegate.updateState { it.copy(selectedNoteIds = persistentListOf()) }
                     val message = if (selectedNotes.size > 1) "${selectedNotes.size} notes copied" else "Note copied"
-                    _events.emit(NotesUiEvent.ShowToast(message))
+                    _events.emit(NotesUiEvent.ShowSnackbar(message))
                 }
             }
             is NotesEvent.SendSelectedNotes -> {
@@ -682,10 +687,10 @@ class NotesViewModel @Inject constructor(
                             repeatOption = event.repeatOption.name // Store enum name as string
                         )
                         repository.updateNote(updatedNote)
-                        alarmScheduler.schedule(updatedNote)
+                        reminderScheduler.scheduleNoteReminder(updatedNote)
                     }
                     listDelegate.updateState { it.copy(selectedNoteIds = persistentListOf()) }
-                    _events.emit(NotesUiEvent.ShowToast("Reminder set for ${selectedNotes.size} notes"))
+                    _events.emit(NotesUiEvent.ShowSnackbar("Reminder set for ${selectedNotes.size} notes"))
                 }
             }
             is NotesEvent.SetLabelForSelectedNotes -> {
@@ -780,15 +785,22 @@ class NotesViewModel @Inject constructor(
                             }
                         }
                     } else {
-                        editorDelegate.reset("", TextFieldValue())
+                        val draft = draftRepository.noteDraft.first()
+                        val restoredContent = if (!draft.isNullOrBlank()) {
+                            TextFieldValue(richTextController.parseMarkdownToAnnotatedString(draft))
+                        } else {
+                            TextFieldValue()
+                        }
+                        
+                        editorDelegate.reset("", restoredContent)
                         savedStateHandle[KEY_EXPANDED_NOTE_ID] = -1
                         savedStateHandle[KEY_EDITING_TITLE] = ""
-                        savedStateHandle[KEY_EDITING_CONTENT] = ""
+                        savedStateHandle[KEY_EDITING_CONTENT] = draft ?: ""
                         savedStateHandle[KEY_NOTE_TYPE] = event.noteType.name
                         editorDelegate.updateState { it.copy(
                             expandedNoteId = -1,
                             editingTitle = "",
-                            editingContent = TextFieldValue(),
+                            editingContent = restoredContent,
                             editingColor = NoteGradients.NO_COLOR,
                             editingIsNewNote = true,
                             editingLastEdited = 0,
@@ -818,7 +830,7 @@ class NotesViewModel @Inject constructor(
                     editState.value.expandedNoteId?.let { noteId ->
                          if (noteId != -1) {
                              saveNote(shouldCollapse = false)
-                             _events.emit(NotesUiEvent.ShowToast(if (newLockState) "Note locked" else "Note unlocked"))
+                             _events.emit(NotesUiEvent.ShowSnackbar(if (newLockState) "Note locked" else "Note unlocked"))
                              updateWidgets()
                          }
                     }
@@ -894,6 +906,7 @@ class NotesViewModel @Inject constructor(
                 scheduleAutoSave()
             }
             is NotesEvent.OnContentChange -> {
+                viewModelScope.launch { draftRepository.saveNoteDraft(event.content.text) }
                 editorDelegate.onContentChange(event.content, viewModelScope) {
                     saveNote(shouldCollapse = false)
                 }
@@ -1028,7 +1041,7 @@ class NotesViewModel @Inject constructor(
                 viewModelScope.launch {
                     saveNote(shouldCollapse = false)
                     val message = if (newPinnedState) "Note pinned" else "Note unpinned"
-                    _events.emit(NotesUiEvent.ShowToast(message))
+                    _events.emit(NotesUiEvent.ShowSnackbar(message))
                 }
             }
             is NotesEvent.OnToggleArchiveClick -> {
@@ -1066,7 +1079,7 @@ class NotesViewModel @Inject constructor(
                         if (it != -1) {
                             repository.getNoteById(it)?.let { note ->
                                 repository.updateNote(note.note.copy(isBinned = true, binnedOn = System.currentTimeMillis()))
-                                _events.emit(NotesUiEvent.ShowToast("Note moved to Bin"))
+                                _events.emit(NotesUiEvent.ShowSnackbar("Note moved to Bin"))
                                 updateWidgets()
                             }
                         }
@@ -1084,7 +1097,7 @@ class NotesViewModel @Inject constructor(
                             noteWithAttachments.attachments.forEach { attachment ->
                                 repository.insertAttachment(attachment.copy(id = 0, noteId = newNoteId.toInt()))
                             }
-                            _events.emit(NotesUiEvent.ShowToast("Note copied"))
+                            _events.emit(NotesUiEvent.ShowSnackbar("Note copied"))
                         }
                     }
                 }
@@ -1203,7 +1216,7 @@ class NotesViewModel @Inject constructor(
                         repository.updateNote(note.note.copy(projectId = event.projectId))
                     }
                     listDelegate.updateState { it.copy(selectedNoteIds = persistentListOf()) }
-                    _events.emit(NotesUiEvent.ShowToast("${selectedNotes.size} notes moved to project"))
+                    _events.emit(NotesUiEvent.ShowSnackbar("${selectedNotes.size} notes moved to project"))
                 }
             }
             is NotesEvent.OnToggleNoteType -> {
@@ -1277,7 +1290,7 @@ class NotesViewModel @Inject constructor(
                     }
                     
                     onEvent(NotesEvent.CollapseNote)
-                    _events.emit(NotesUiEvent.ShowToast("Converted to Todo successfully"))
+                    _events.emit(NotesUiEvent.ShowSnackbar("Converted to Todo successfully"))
                 }
             }
             is NotesEvent.ToggleCheckedItemsExpanded -> {
@@ -1298,7 +1311,7 @@ class NotesViewModel @Inject constructor(
                     } else {
                          viewModelScope.launch {
                              if (!aiFeatureGate.isEnabled(com.suvojeet.notenext.data.ai.AIFeature.SUMMARIZE)) {
-                                 _events.emit(NotesUiEvent.ShowToast("Summarize is disabled in AI Settings"))
+                                 _events.emit(NotesUiEvent.ShowSnackbar("Summarize is disabled in AI Settings"))
                                  return@launch
                              }
                              aiDelegate.summarize(content, viewModelScope, _events) { transform ->
@@ -1377,10 +1390,10 @@ class NotesViewModel @Inject constructor(
                         context.contentResolver.openOutputStream(event.uri)?.use { outputStream ->
                             outputStream.write(contentToExport.toByteArray())
                         }
-                        _events.emit(NotesUiEvent.ShowToast("Exported successfully"))
+                        _events.emit(NotesUiEvent.ShowSnackbar("Exported successfully"))
                     } catch (e: Exception) {
                         e.printStackTrace()
-                        _events.emit(NotesUiEvent.ShowToast("Export failed: ${e.message}"))
+                        _events.emit(NotesUiEvent.ShowSnackbar("Export failed: ${e.message}"))
                     }
                 }
             }
@@ -1453,7 +1466,7 @@ class NotesViewModel @Inject constructor(
     private fun runToneRewrite(tone: com.suvojeet.notenext.data.ai.ToneOption) {
         val source = editState.value.editingContent.text
         if (source.isBlank()) {
-            viewModelScope.launch { _events.emit(NotesUiEvent.ShowToast("Nothing to rewrite")) }
+            viewModelScope.launch { _events.emit(NotesUiEvent.ShowSnackbar("Nothing to rewrite")) }
             return
         }
         editorDelegate.updateState { it.copy(
@@ -1549,7 +1562,7 @@ class NotesViewModel @Inject constructor(
                     }
                 } catch (e: Exception) {
                     e.printStackTrace()
-                    _events.emit(NotesUiEvent.ShowToast("Failed to save external file: ${e.message}"))
+                    _events.emit(NotesUiEvent.ShowSnackbar("Failed to save external file: ${e.message}"))
                 }
             }
             if (shouldCollapse) {
@@ -1647,9 +1660,9 @@ class NotesViewModel @Inject constructor(
                 require(currentNoteId <= Int.MAX_VALUE) { "Note ID overflow" }
 
                 if (editState.value.editingReminderTime != null) {
-                    alarmScheduler.schedule(note.copy(id = currentNoteId.toInt()))
+                    reminderScheduler.scheduleNoteReminder(note.copy(id = currentNoteId.toInt()))
                 } else if (noteId != -1) {
-                    alarmScheduler.cancel(note.copy(id = currentNoteId.toInt()))
+                    reminderScheduler.cancelNoteReminder(note.copy(id = currentNoteId.toInt()))
                 }
 
                 // Self-destruct: schedule a per-note exact alarm so expiry fires within
@@ -1657,9 +1670,9 @@ class NotesViewModel @Inject constructor(
                 // periodic AutoDeleteWorker. The worker still runs as a safety net.
                 val withId = note.copy(id = currentNoteId.toInt())
                 if (note.expiryTime != null) {
-                    alarmScheduler.scheduleExpiry(withId)
+                    reminderScheduler.scheduleNoteExpiry(withId)
                 } else if (noteId != -1) {
-                    alarmScheduler.cancelExpiry(withId)
+                    reminderScheduler.cancelNoteExpiry(withId)
                 }
 
                 // Handle Checklist Items
@@ -1697,7 +1710,8 @@ class NotesViewModel @Inject constructor(
                 attachmentsToAdd.forEach { attachment ->
                     repository.insertAttachment(attachment.copy(noteId = currentNoteId.toInt()))
                 }
-
+                draftRepository.clearNoteDraft()
+                updateWidgets()
                 // If it was a new note, we now have a real ID. 
                 // We update editingIsNewNote to false so next saves know it's not new anymore.
                 // But we DO NOT update expandedNoteId yet if it was -1, to avoid the 'jolt' in AnimatedContent.

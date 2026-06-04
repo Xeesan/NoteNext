@@ -16,7 +16,7 @@ import javax.inject.Inject
 @HiltViewModel
 class ReminderViewModel @Inject constructor(
     private val repository: NoteRepository,
-    private val alarmScheduler: com.suvojeet.notenext.data.AlarmScheduler
+    private val reminderScheduler: com.suvojeet.notenext.data.ReminderScheduler
 ) : ViewModel() {
 
     private val _allReminders = repository.getAllReminders()
@@ -38,7 +38,7 @@ class ReminderViewModel @Inject constructor(
 
     fun deleteReminder(note: Note) {
         viewModelScope.launch {
-            alarmScheduler.cancel(note)
+            reminderScheduler.cancelNoteReminder(note)
             val updatedNote = note.copy(reminderTime = null, repeatOption = null)
             repository.updateNote(updatedNote)
         }
@@ -59,7 +59,7 @@ class ReminderViewModel @Inject constructor(
             )
             val id = repository.insertNote(newNote)
             val noteWithId = newNote.copy(id = id.toInt())
-            alarmScheduler.schedule(noteWithId)
+            reminderScheduler.scheduleNoteReminder(noteWithId)
         }
     }
 }

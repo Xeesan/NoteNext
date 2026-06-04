@@ -182,8 +182,8 @@ class MainViewModel @Inject constructor(
     }
 
     private fun checkReview() {
-        if (reviewManager.shouldRequestReview()) {
-            viewModelScope.launch {
+        viewModelScope.launch {
+            if (reviewManager.shouldRequestReview()) {
                 _uiEvent.emit(MainUiEvent.RequestReviewFlow)
             }
         }

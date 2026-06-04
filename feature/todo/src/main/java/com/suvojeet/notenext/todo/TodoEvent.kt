@@ -12,6 +12,7 @@ sealed class TodoEvent {
     object ShowAddDialog : TodoEvent()
     data class ShowEditDialog(val todo: TodoItem) : TodoEvent()
     object DismissDialog : TodoEvent()
+    data class OnDraftChange(val content: String) : TodoEvent()
     data class SaveTodo(
         val title: String, 
         val description: String, 

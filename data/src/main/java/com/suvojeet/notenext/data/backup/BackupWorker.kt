@@ -12,34 +12,33 @@ import androidx.work.WorkerParameters
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.withContext
-import java.io.File
-
-
 @HiltWorker
 class BackupWorker @AssistedInject constructor(
     @Assisted appContext: Context,
     @Assisted workerParams: WorkerParameters,
     private val backupRepository: BackupRepository,
-    private val googleDriveManager: GoogleDriveManager
+    private val googleDriveManager: GoogleDriveManager,
+    private val backupSettingsRepository: com.suvojeet.notenext.data.repository.BackupSettingsRepository
 ) : CoroutineWorker(appContext, workerParams) {
 
     override suspend fun doWork(): Result = withContext(Dispatchers.IO) {
         val email = inputData.getString("email")
-        
-        val sharedPrefs = applicationContext.getSharedPreferences("backup_prefs", Context.MODE_PRIVATE)
-        val isSdCardBackupEnabled = sharedPrefs.getBoolean("sd_card_backup_enabled", false)
-        val sdCardFolderUri = sharedPrefs.getString("sd_card_folder_uri", null)
-        val includeAttachments = sharedPrefs.getBoolean("include_backup_attachments", true)
-        val isIncrementalEnabled = sharedPrefs.getBoolean("incremental_backup_enabled", false)
-        val lastBackupTime = if (isIncrementalEnabled) sharedPrefs.getLong("last_backup_time", 0L) else 0L
-        
-        val isEncryptionEnabled = sharedPrefs.getBoolean("backup_encryption_enabled", false) || sharedPrefs.getBoolean("auto_backup_encryption_enabled", false)
-        val encryptionPassword = SecurityUtils.getBackupPassword(applicationContext)
-        
-        val backupPassword = if (isEncryptionEnabled && !encryptionPassword.isNullOrBlank()) encryptionPassword else null
 
-        if (email == null && !isSdCardBackupEnabled) {
+        val isSdCardBackupEnabled = backupSettingsRepository.sdCardEnabled.first()
+        val sdCardFolderUri = backupSettingsRepository.backupLocationUri.first()
+        val includeAttachments = backupSettingsRepository.includeAttachments.first()
+        val isIncrementalEnabled = backupSettingsRepository.incrementalEnabled.first()
+        val lastBackupTime = if (isIncrementalEnabled) backupSettingsRepository.lastBackupTime.first() else 0L
+
+        val isEncryptionEnabled = backupSettingsRepository.encryptionEnabled.first()
+        val encryptionPassword = SecurityUtils.getBackupPassword(applicationContext)
+...
+            if (success) {
+                backupSettingsRepository.setLastBackupTime(startTime)
+                backupSettingsRepository.setEditCounter(0)
+            }
             return@withContext Result.failure()
         }
 

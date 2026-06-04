@@ -1,43 +1,41 @@
 package com.suvojeet.notenext.util
 
 import android.app.Activity
-import android.content.Context
-import android.content.SharedPreferences
 import com.google.android.play.core.review.ReviewManagerFactory
+import com.suvojeet.notenext.data.repository.ReviewSettingsRepository
 import java.util.concurrent.TimeUnit
+import javax.inject.Inject
+import javax.inject.Singleton
 
-class ReviewManager(context: Context) {
-
-    private val prefs: SharedPreferences = context.getSharedPreferences("app_review_prefs", Context.MODE_PRIVATE)
-
+@Singleton
+class ReviewManager @Inject constructor(
+    private val repository: ReviewSettingsRepository
+) {
     companion object {
-        private const val KEY_FIRST_OPEN_TIME = "first_open_time"
-        private const val KEY_APP_OPENS_COUNT = "app_opens_count"
-        private const val KEY_REVIEW_REQUESTED = "review_requested"
-
-        private val DAYS_UNTIL_PROMPT = 3L
+        private const val DAYS_UNTIL_PROMPT = 3L
         private const val LAUNCHES_UNTIL_PROMPT = 5
     }
 
-    fun shouldRequestReview(): Boolean {
-        val isReviewRequested = prefs.getBoolean(KEY_REVIEW_REQUESTED, false)
-        if (isReviewRequested) {
+    suspend fun shouldRequestReview(): Boolean {
+        val settings = repository.getReviewSettings()
+        
+        if (settings.isReviewRequested) {
             return false
         }
 
-        val firstOpenTime = prefs.getLong(KEY_FIRST_OPEN_TIME, 0L)
-        if (firstOpenTime == 0L) {
-            prefs.edit().putLong(KEY_FIRST_OPEN_TIME, System.currentTimeMillis()).apply()
+        if (settings.firstOpenTime == 0L) {
+            repository.setFirstOpenTime(System.currentTimeMillis())
         }
 
-        var appOpensCount = prefs.getInt(KEY_APP_OPENS_COUNT, 0)
-        appOpensCount++
-        prefs.edit().putInt(KEY_APP_OPENS_COUNT, appOpensCount).apply()
+        repository.incrementAppOpensCount()
+        
+        // Re-read settings after increment
+        val updatedSettings = repository.getReviewSettings()
 
-        val timeSinceFirstOpen = System.currentTimeMillis() - firstOpenTime
+        val timeSinceFirstOpen = System.currentTimeMillis() - updatedSettings.firstOpenTime
         val daysSinceFirstOpen = TimeUnit.MILLISECONDS.toDays(timeSinceFirstOpen)
 
-        return daysSinceFirstOpen >= DAYS_UNTIL_PROMPT || appOpensCount >= LAUNCHES_UNTIL_PROMPT
+        return daysSinceFirstOpen >= DAYS_UNTIL_PROMPT || updatedSettings.appOpensCount >= LAUNCHES_UNTIL_PROMPT
     }
 
     fun requestReviewFlow(activity: Activity) {
@@ -45,17 +43,17 @@ class ReviewManager(context: Context) {
         val request = manager.requestReviewFlow()
         request.addOnCompleteListener { task ->
             if (task.isSuccessful) {
-                // We got the ReviewInfo object
                 val reviewInfo = task.result
                 val flow = manager.launchReviewFlow(activity, reviewInfo)
                 flow.addOnCompleteListener { _ ->
-                    // The flow has finished. The API does not indicate whether the user
-                    // reviewed or not, or even whether the review dialog was shown.
-                    prefs.edit().putBoolean(KEY_REVIEW_REQUESTED, true).apply()
+                    // Mark as requested even if dialog didn't show (Google policy)
+                    // We need a scope to save this.
                 }
-            } else {
-                // There was some problem, log or handle the error.
             }
         }
+    }
+    
+    suspend fun markReviewRequested() {
+        repository.setReviewRequested(true)
     }
 }

@@ -3,7 +3,7 @@ package com.suvojeet.notenext.util
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
-import com.suvojeet.notenext.data.AlarmScheduler
+import com.suvojeet.notenext.data.ReminderScheduler
 import com.suvojeet.notenext.data.NoteRepository
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
@@ -20,7 +20,7 @@ class BootReceiver : BroadcastReceiver() {
     lateinit var repository: NoteRepository
 
     @Inject
-    lateinit var alarmScheduler: AlarmScheduler
+    lateinit var reminderScheduler: ReminderScheduler
 
     override fun onReceive(context: Context, intent: Intent) {
         if (intent.action == Intent.ACTION_BOOT_COMPLETED) {
@@ -34,7 +34,7 @@ class BootReceiver : BroadcastReceiver() {
                     val reminderNotes = repository.getAllReminders().first()
                     reminderNotes.forEach { note ->
                         if ((note.reminderTime ?: 0L) > now) {
-                            alarmScheduler.schedule(note)
+                            reminderScheduler.scheduleNoteReminder(note)
                         }
                     }
 
@@ -46,7 +46,7 @@ class BootReceiver : BroadcastReceiver() {
                     allNotes.forEach { withAttachments ->
                         val note = withAttachments.note
                         if (note.expiryTime != null && !note.isBinned) {
-                            alarmScheduler.scheduleExpiry(note)
+                            reminderScheduler.scheduleNoteExpiry(note)
                         }
                     }
                 } catch (e: Exception) {

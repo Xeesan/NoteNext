@@ -106,6 +106,7 @@ fun ProjectNotesScreen(
     }
 
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
+    val snackbarHostState = remember { SnackbarHostState() }
 
     LaunchedEffect(Unit) {
         viewModel.events.collect { event ->
@@ -119,18 +120,25 @@ fun ProjectNotesScreen(
                     val chooser = Intent.createChooser(intent, context.getString(R.string.send_notes_via))
                     context.startActivity(chooser)
                 }
-                is ProjectNotesUiEvent.ShowToast -> {
-                    Toast.makeText(context, event.message, Toast.LENGTH_SHORT).show()
+                is ProjectNotesUiEvent.ShowSnackbar -> {
+                    val result = snackbarHostState.showSnackbar(
+                        message = event.message,
+                        actionLabel = event.actionLabel,
+                        duration = SnackbarDuration.Short
+                    )
+                    if (result == SnackbarResult.ActionPerformed) {
+                        event.onAction?.invoke()
+                    }
                 }
                 is ProjectNotesUiEvent.LinkPreviewRemoved -> {
-                    Toast.makeText(context, context.getString(R.string.link_preview_removed), Toast.LENGTH_SHORT).show()
+                    snackbarHostState.showSnackbar(context.getString(R.string.link_preview_removed))
                 }
                 is ProjectNotesUiEvent.NavigateToNoteByTitle -> {
                     val foundNoteId = viewModel.getNoteIdByTitle(event.title)
                     if (foundNoteId != null) {
                         viewModel.onEvent(ProjectNotesEvent.ExpandNote(noteId = foundNoteId))
                     } else {
-                        Toast.makeText(context, "Note \"${event.title}\" not found", Toast.LENGTH_SHORT).show()
+                        snackbarHostState.showSnackbar("Note \"${event.title}\" not found")
                     }
                 }
                 is ProjectNotesUiEvent.ScrollToSearchResult -> {}
@@ -168,6 +176,7 @@ fun ProjectNotesScreen(
                 if (expandedId == null) {
                     Scaffold(
                         modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
+                        snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
                         topBar = {
                             AnimatedContent(
                                 targetState = isSelectionModeActive,

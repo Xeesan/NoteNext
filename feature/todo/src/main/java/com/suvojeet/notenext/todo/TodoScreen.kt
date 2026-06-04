@@ -38,13 +38,21 @@ fun TodoScreen(
     val state by viewModel.state.collectAsStateWithLifecycle()
     val pagedTodos = viewModel.pagedTodos.collectAsLazyPagingItems()
     val context = androidx.compose.ui.platform.LocalContext.current
+    val snackbarHostState = remember { SnackbarHostState() }
     val shareChooserTitle = stringResource(R.string.todo_share_chooser_title)
 
     androidx.compose.runtime.LaunchedEffect(Unit) {
         viewModel.events.collect { event ->
             when (event) {
-                is TodoUiEvent.ShowToast -> {
-                    android.widget.Toast.makeText(context, event.message, android.widget.Toast.LENGTH_SHORT).show()
+                is TodoUiEvent.ShowSnackbar -> {
+                    val result = snackbarHostState.showSnackbar(
+                        message = event.message,
+                        actionLabel = event.actionLabel,
+                        duration = SnackbarDuration.Short
+                    )
+                    if (result == SnackbarResult.ActionPerformed) {
+                        event.onAction?.invoke()
+                    }
                 }
                 is TodoUiEvent.ShareTodo -> {
                     val intent = android.content.Intent(android.content.Intent.ACTION_SEND).apply {
@@ -63,6 +71,7 @@ fun TodoScreen(
         modifier = Modifier
             .fillMaxSize()
             .nestedScroll(scrollBehavior.nestedScrollConnection),
+        snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
         topBar = {
             LargeTopAppBar(
                 title = {
@@ -186,7 +195,8 @@ fun TodoScreen(
             onDismiss = { viewModel.onEvent(TodoEvent.DismissDialog) },
             onSave = { title, description, priority, dueDate, reminderTime, projectId, subtasks ->
                 viewModel.onEvent(TodoEvent.SaveTodo(title, description, priority, dueDate, reminderTime, projectId, subtasks))
-            }
+            },
+            onDraftChange = { viewModel.onEvent(TodoEvent.OnDraftChange(it)) }
         )
     }
 

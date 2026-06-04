@@ -56,17 +56,18 @@ fun AiChecklistSheet(
     isVisible: Boolean,
     isGenerating: Boolean,
     generatedItems: List<String>,
+    promptHistory: List<String>,
     onDismiss: () -> Unit,
     onGenerate: (String) -> Unit,
     onInsert: (List<String>) -> Unit,
-    onRegenerate: (String) -> Unit
+    onRegenerate: (String) -> Unit,
+    onShowError: (String) -> Unit
 ) {
     val context = LocalContext.current
     var topic by remember { mutableStateOf("") }
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
     
     var editableItems by remember { mutableStateOf(listOf<String>()) }
-    var promptHistory by remember { mutableStateOf(loadPromptHistory(context)) }
     
     LaunchedEffect(generatedItems) {
         if (generatedItems.isNotEmpty()) {
@@ -84,10 +85,9 @@ fun AiChecklistSheet(
     fun saveAndGenerate(prompt: String) {
         if (prompt.isNotBlank()) {
             if (!isNetworkAvailable()) {
-                Toast.makeText(context, context.getString(R.string.ai_checklist_no_internet), Toast.LENGTH_SHORT).show()
+                onShowError(context.getString(R.string.ai_checklist_no_internet))
                 return
             }
-            promptHistory = savePromptToHistory(context, prompt, promptHistory)
             onGenerate(prompt)
         }
     }
@@ -480,17 +480,4 @@ private fun EditableItemRow(
             }
         }
     }
-}
-
-private fun loadPromptHistory(context: Context): List<String> {
-    val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
-    val historyString = prefs.getString(KEY_PROMPT_HISTORY, "") ?: ""
-    return if (historyString.isBlank()) emptyList() else historyString.split("|||")
-}
-
-private fun savePromptToHistory(context: Context, prompt: String, currentHistory: List<String>): List<String> {
-    val newHistory = (listOf(prompt) + currentHistory.filter { it != prompt }).take(MAX_HISTORY_SIZE)
-    val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
-    prefs.edit().putString(KEY_PROMPT_HISTORY, newHistory.joinToString("|||")).apply()
-    return newHistory
 }

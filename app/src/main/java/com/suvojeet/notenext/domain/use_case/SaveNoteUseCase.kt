@@ -10,7 +10,7 @@ import javax.inject.Inject
  */
 class SaveNoteUseCase @Inject constructor(
     private val repository: NoteRepository,
-    private val alarmScheduler: AlarmScheduler
+    private val reminderScheduler: ReminderScheduler
 ) {
     suspend operator fun invoke(
         note: Note,
@@ -69,9 +69,9 @@ class SaveNoteUseCase @Inject constructor(
 
         // Sync Reminders
         if (noteToSave.reminderTime != null) {
-            alarmScheduler.schedule(noteToSave.copy(id = savedNoteId))
+            reminderScheduler.scheduleNoteReminder(noteToSave.copy(id = savedNoteId))
         } else if (!isNewNote && note.id != -1) {
-            alarmScheduler.cancel(noteToSave.copy(id = savedNoteId))
+            reminderScheduler.cancelNoteReminder(noteToSave.copy(id = savedNoteId))
         }
 
         // Sync Checklist Items

@@ -131,7 +131,10 @@ class MainActivity : FragmentActivity() {
                 viewModel.uiEvent.collect { event ->
                     when (event) {
                         is MainUiEvent.StartUpdateFlow -> updateChecker.startUpdate(this@MainActivity)
-                        is MainUiEvent.RequestReviewFlow -> reviewManager.requestReviewFlow(this@MainActivity)
+                        is MainUiEvent.RequestReviewFlow -> {
+                            reviewManager.requestReviewFlow(this@MainActivity)
+                            lifecycleScope.launch { reviewManager.markReviewRequested() }
+                        }
                     }
                 }
             }

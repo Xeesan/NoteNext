@@ -112,6 +112,7 @@ fun AddEditNoteScreen(
     val lazyListState = androidx.compose.foundation.lazy.rememberLazyListState()
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
+    val snackbarHostState = remember { SnackbarHostState() }
     val enableRichLinkPreview by settingsRepository.enableRichLinkPreview.collectAsStateWithLifecycle(initialValue = false)
 
     // Auto-save on background
@@ -242,8 +243,18 @@ fun AddEditNoteScreen(
     LaunchedEffect(Unit) {
         events.collect { event ->
             when (event) {
+                is NotesUiEvent.ShowSnackbar -> {
+                    val result = snackbarHostState.showSnackbar(
+                        message = event.message,
+                        actionLabel = event.actionLabel,
+                        duration = SnackbarDuration.Short
+                    )
+                    if (result == SnackbarResult.ActionPerformed) {
+                        event.onAction?.invoke()
+                    }
+                }
                 is NotesUiEvent.LinkPreviewRemoved -> {
-                    Toast.makeText(context, "Link preview removed", Toast.LENGTH_SHORT).show()
+                    snackbarHostState.showSnackbar("Link preview removed")
                 }
                 is NotesUiEvent.ScrollToSearchResult -> {
                     val globalIndex = event.index
@@ -311,6 +322,7 @@ fun AddEditNoteScreen(
     Box(modifier = modifier.fillMaxSize()) {
         Scaffold(
             containerColor = backgroundColor,
+            snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
             topBar = {
                 AnimatedVisibility(
                     visible = !isFocusMode,
@@ -619,17 +631,23 @@ fun AddEditNoteScreen(
             }
         }
 
+        val aiPromptHistory by viewModel.aiPromptHistory.collectAsStateWithLifecycle()
+
         AiChecklistSheet(
             isVisible = showAiChecklistSheet,
             isGenerating = state.isGeneratingChecklist,
             generatedItems = state.generatedChecklistPreview,
+            promptHistory = aiPromptHistory,
             onDismiss = { 
                 showAiChecklistSheet = false
                 onEvent(NotesEvent.ClearGeneratedChecklist)
             },
             onGenerate = { topic -> onEvent(NotesEvent.GenerateChecklist(topic)) },
             onInsert = { editedItems -> onEvent(NotesEvent.InsertGeneratedChecklist(editedItems)) },
-            onRegenerate = { topic -> onEvent(NotesEvent.GenerateChecklist(topic)) }
+            onRegenerate = { topic -> onEvent(NotesEvent.GenerateChecklist(topic)) },
+            onShowError = { message ->
+                scope.launch { snackbarHostState.showSnackbar(message) }
+            }
         )
     }
 

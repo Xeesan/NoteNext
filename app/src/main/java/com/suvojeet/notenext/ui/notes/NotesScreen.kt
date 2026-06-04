@@ -104,6 +104,7 @@ fun NotesScreen(
     var showShareOptionsDialog by remember { mutableStateOf(false) }
 
     val context = LocalContext.current
+    val snackbarHostState = remember { SnackbarHostState() }
 
     val activity = context.findActivity() as? androidx.fragment.app.FragmentActivity
     val biometricAuthManager = if (activity != null) {
@@ -127,21 +128,28 @@ fun NotesScreen(
                     context.startActivity(chooser)
                 }
 
-                is NotesUiEvent.ShowToast -> {
-                    Toast.makeText(context, event.message, Toast.LENGTH_SHORT).show()
+                is NotesUiEvent.ShowSnackbar -> {
+                    val result = snackbarHostState.showSnackbar(
+                        message = event.message,
+                        actionLabel = event.actionLabel,
+                        duration = SnackbarDuration.Short
+                    )
+                    if (result == SnackbarResult.ActionPerformed) {
+                        event.onAction?.invoke()
+                    }
                 }
                 is NotesUiEvent.LinkPreviewRemoved -> {
-                    Toast.makeText(context, context.getString(R.string.link_preview_removed), Toast.LENGTH_SHORT).show()
+                    snackbarHostState.showSnackbar(context.getString(R.string.link_preview_removed))
                 }
                 is NotesUiEvent.ProjectCreated -> {
-                    Toast.makeText(context, context.getString(R.string.project_created, event.projectName), Toast.LENGTH_SHORT).show()
+                    snackbarHostState.showSnackbar(context.getString(R.string.project_created, event.projectName))
                 }
                 is NotesUiEvent.NavigateToNoteByTitle -> {
                     val noteId = viewModel.getNoteIdByTitle(event.title)
                     if (noteId != null) {
                         viewModel.onEvent(NotesEvent.ExpandNote(noteId as Int))
                     } else {
-                        Toast.makeText(context, "Note \"${event.title}\" not found", Toast.LENGTH_SHORT).show()
+                        snackbarHostState.showSnackbar("Note \"${event.title}\" not found")
                     }
                 }
                 is NotesUiEvent.ScrollToSearchResult -> {}
@@ -186,6 +194,7 @@ fun NotesScreen(
                     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
                     Scaffold(
                         modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
+                        snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
                         topBar = {
                             AnimatedContent(
                                 targetState = isSelectionModeActive,

@@ -11,7 +11,7 @@ import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import com.suvojeet.notenext.MainActivity
 import com.suvojeet.notenext.R
-import com.suvojeet.notenext.data.AlarmScheduler
+import com.suvojeet.notenext.data.ReminderScheduler
 import com.suvojeet.notenext.data.NoteRepository
 import com.suvojeet.notenext.data.RepeatOption
 import dagger.hilt.android.AndroidEntryPoint
@@ -36,7 +36,7 @@ class ReminderBroadcastReceiver : BroadcastReceiver() {
     lateinit var repository: NoteRepository
 
     @Inject
-    lateinit var alarmScheduler: AlarmScheduler
+    lateinit var reminderScheduler: ReminderScheduler
 
     override fun onReceive(context: Context?, intent: Intent?) {
         val pendingResult = goAsync()
@@ -68,7 +68,7 @@ class ReminderBroadcastReceiver : BroadcastReceiver() {
                             repository.deleteNote(current)
                         } else if (expiry != null) {
                             // Timer was extended — re-arm.
-                            alarmScheduler.scheduleExpiry(current)
+                            reminderScheduler.scheduleNoteExpiry(current)
                         }
                     } else {
                         val noteId = intent?.getIntExtra("NOTE_ID", -1) ?: -1
@@ -108,7 +108,7 @@ class ReminderBroadcastReceiver : BroadcastReceiver() {
                                 if (nextTime > System.currentTimeMillis()) {
                                     val updatedNote = note.copy(reminderTime = nextTime)
                                     repository.updateNote(updatedNote)
-                                    alarmScheduler.schedule(updatedNote)
+                                    reminderScheduler.scheduleNoteReminder(updatedNote)
                                 }
                             } catch (e: Exception) {
                                 android.util.Log.e("ReminderReceiver", "Failed to reschedule repeating reminder", e)

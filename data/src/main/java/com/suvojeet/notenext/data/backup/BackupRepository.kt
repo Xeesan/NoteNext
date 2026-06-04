@@ -226,7 +226,7 @@ class BackupRepository @Inject constructor(
         writeEntryWithHash("labels.json", json.encodeToString(ListSerializer(Label.serializer()), labels).toByteArray())
         writeEntryWithHash("projects.json", json.encodeToString(ListSerializer(Project.serializer()), projects).toByteArray())
 
-        // Bug C1 fix: include Todos and their subtasks in FULL backups only.
+        // Include Todos and their subtasks in FULL backups only.
         // TodoItem has no modifiedAt column and the restore flow has no dedup for
         // todos, so exporting them in incremental backups would double them on each
         // incremental restore. Incremental = notes-only delta; a periodic full backup
@@ -425,7 +425,7 @@ class BackupRepository @Inject constructor(
                                 
                                 val targetFile = File(attachmentsDir, uniqueFileName)
 
-                                // Bug H1 fix: use FileProvider to avoid FileUriExposedException when
+                                // Use FileProvider to avoid FileUriExposedException when
                                 // the attachment URI is later shared across app boundaries.
                                 val newUri = androidx.core.content.FileProvider.getUriForFile(
                                     context,

@@ -1,8 +1,9 @@
 @file:OptIn(ExperimentalMaterial3ExpressiveApi::class, ExperimentalMaterial3Api::class)
 package com.suvojeet.notenext.todo
 
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.relocation.BringIntoViewRequester
+import androidx.compose.foundation.relocation.bringIntoViewRequester
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
@@ -11,6 +12,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.onFocusEvent
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -21,6 +23,7 @@ import com.suvojeet.notenext.data.TodoItem
 import com.suvojeet.notenext.data.Project
 import com.suvojeet.notenext.data.TodoSubtask
 import com.suvojeet.notenext.ui.components.springPress
+import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -30,7 +33,8 @@ fun AddEditTodoDialog(
     initialSubtasks: List<TodoSubtask>,
     projects: List<Project>,
     onDismiss: () -> Unit,
-    onSave: (String, String, Int, Long?, Long?, Int?, List<TodoSubtask>) -> Unit
+    onSave: (String, String, Int, Long?, Long?, Int?, List<TodoSubtask>) -> Unit,
+    onDraftChange: (String) -> Unit = {}
 ) {
     var title by remember { mutableStateOf(editingTodo?.title ?: "") }
     var description by remember { mutableStateOf(editingTodo?.description ?: "") }
@@ -46,6 +50,15 @@ fun AddEditTodoDialog(
     var showTimePicker by remember { mutableStateOf(false) }
     var showProjectPicker by remember { mutableStateOf(false) }
 
+    val scope = rememberCoroutineScope()
+    val bringIntoViewRequester = remember { BringIntoViewRequester() }
+
+    LaunchedEffect(title, description) {
+        if (editingTodo == null) {
+            onDraftChange(if (title.isBlank()) description else "$title\n$description")
+        }
+    }
+
     AlertDialog(
         onDismissRequest = onDismiss,
         shape = MaterialTheme.shapes.extraLarge,
@@ -60,6 +73,7 @@ fun AddEditTodoDialog(
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
+                    .imePadding()
                     .verticalScroll(rememberScrollState())
                     .padding(vertical = 8.dp),
                 verticalArrangement = Arrangement.spacedBy(16.dp)
@@ -165,7 +179,16 @@ fun AddEditTodoDialog(
                             value = newSubtaskText,
                             onValueChange = { newSubtaskText = it },
                             placeholder = { Text(stringResource(id = R.string.todo_add_subtask_placeholder), fontSize = 14.sp) },
-                            modifier = Modifier.weight(1f),
+                            modifier = Modifier
+                                .weight(1f)
+                                .bringIntoViewRequester(bringIntoViewRequester)
+                                .onFocusEvent {
+                                    if (it.isFocused) {
+                                        scope.launch {
+                                            bringIntoViewRequester.bringIntoView()
+                                        }
+                                    }
+                                },
                             shape = MaterialTheme.shapes.medium,
                             singleLine = true,
                             trailingIcon = {

@@ -387,9 +387,7 @@ fun BackupScreen(
                         GoogleSignIn.getLastSignedInAccount(context)?.email?.let { email ->
                              viewModel.toggleAutoBackup(state.isAutoBackupEnabled, email, it)
                         } ?: run {
-                             // Just update pref if not signed in / disabled
-                             val sharedPrefs = context.getSharedPreferences("backup_prefs", android.content.Context.MODE_PRIVATE)
-                             sharedPrefs.edit().putString("backup_frequency", it).apply()
+                             viewModel.setBackupFrequency(it)
                         }
                     },
                     onChangeSdLocation = { sdCardLauncher.launch(null) },

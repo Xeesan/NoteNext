@@ -1,6 +1,7 @@
 package com.suvojeet.notenext.data
 
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.sync.withLock
 import androidx.paging.Pager
@@ -24,7 +25,8 @@ class NoteRepositoryImpl @Inject constructor(
     private val labelDao: LabelDao,
     private val projectDao: ProjectDao,
     private val checklistItemDao: ChecklistItemDao,
-    @ApplicationContext private val context: Context
+    @ApplicationContext private val context: Context,
+    private val backupSettingsRepository: com.suvojeet.notenext.data.repository.BackupSettingsRepository
 ) : NoteRepository {
 
     private val editCounterMutex = kotlinx.coroutines.sync.Mutex()
@@ -182,27 +184,26 @@ class NoteRepositoryImpl @Inject constructor(
 
     private suspend fun incrementEditCounter() {
         editCounterMutex.withLock {
-            val sharedPrefs = context.getSharedPreferences("backup_prefs", Context.MODE_PRIVATE)
-            val smartBackupEnabled = sharedPrefs.getBoolean("smart_backup_enabled", false)
+            val smartBackupEnabled = backupSettingsRepository.smartBackupEnabled.first()
             if (!smartBackupEnabled) return@withLock
 
-            val currentCount = sharedPrefs.getInt("edit_counter", 0) + 1
-            val threshold = sharedPrefs.getInt("edits_before_backup", 10)
+            val currentCount = backupSettingsRepository.editCounter.first() + 1
+            val threshold = backupSettingsRepository.editsThreshold.first()
 
             if (currentCount >= threshold) {
                 // Trigger backup
-                val email = sharedPrefs.getString("google_account_email", null)
+                val email = backupSettingsRepository.googleAccountEmail.first()
                 val inputData = androidx.work.Data.Builder()
                 if (email != null) inputData.putString("email", email)
                 
-                val workRequest = OneTimeWorkRequestBuilder<BackupWorker>()
+                val workRequest = OneTimeWorkRequestBuilder<com.suvojeet.notenext.data.backup.BackupWorker>()
                     .setInputData(inputData.build())
                     .build()
                 
                 WorkManager.getInstance(context).enqueue(workRequest)
-                sharedPrefs.edit().putInt("edit_counter", 0).apply()
+                backupSettingsRepository.setEditCounter(0)
             } else {
-                sharedPrefs.edit().putInt("edit_counter", currentCount).apply()
+                backupSettingsRepository.setEditCounter(currentCount)
             }
         }
     }

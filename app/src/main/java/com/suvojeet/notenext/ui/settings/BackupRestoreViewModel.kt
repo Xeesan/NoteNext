@@ -10,11 +10,10 @@ import com.suvojeet.notenext.data.backup.KeepNote
 import com.suvojeet.notenext.data.backup.KeepLabel
 import com.suvojeet.notenext.data.backup.SecurityUtils
 import com.suvojeet.notenext.core.model.NoteType
+import com.suvojeet.notenext.data.repository.BackupSettingsRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.builtins.ListSerializer
@@ -81,7 +80,8 @@ class BackupRestoreViewModel @Inject constructor(
     private val backupRepository: com.suvojeet.notenext.data.backup.BackupRepository,
     private val todoRepository: com.suvojeet.notenext.data.TodoRepository,
     private val application: Application,
-    private val googleDriveManager: GoogleDriveManager
+    private val googleDriveManager: GoogleDriveManager,
+    private val backupSettingsRepository: BackupSettingsRepository
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(BackupRestoreState())
@@ -94,74 +94,90 @@ class BackupRestoreViewModel @Inject constructor(
     }
 
     init {
-        val sharedPrefs = application.getSharedPreferences("backup_prefs", android.content.Context.MODE_PRIVATE)
-        val enabled = sharedPrefs.getBoolean("auto_backup_enabled", false)
-        val frequency = sharedPrefs.getString("backup_frequency", "Daily") ?: "Daily"
-        val includeAttachments = sharedPrefs.getBoolean("include_backup_attachments", true)
-        
-        val sdCardEnabled = sharedPrefs.getBoolean("sd_card_backup_enabled", false)
-        val sdCardUri = sharedPrefs.getString("sd_card_folder_uri", null)
-        
-        // Migrate legacy plain-text password to EncryptedSharedPreferences
-        var encryptionEnabled = sharedPrefs.getBoolean("backup_encryption_enabled", false)
-        val legacyPassword = sharedPrefs.getString("backup_password", null) ?: sharedPrefs.getString("auto_backup_password", null)
-        
-        if (encryptionEnabled && legacyPassword != null) {
-            SecurityUtils.saveBackupPassword(application, legacyPassword)
-            // Use commit() (sync) instead of apply() — losing the plaintext password if the
-            // process dies mid-migration would leave it readable on disk.
-            sharedPrefs.edit().remove("backup_password").remove("auto_backup_password").commit()
-        }
-        
-        val hasPassword = SecurityUtils.getBackupPassword(application) != null
-        
-        val lastTime = sharedPrefs.getLong("last_backup_time", 0L)
-        val lastStatus = sharedPrefs.getString("last_backup_status", null)
-        
-        val incrementalEnabled = sharedPrefs.getBoolean("incremental_backup_enabled", false)
-        val smartEnabled = sharedPrefs.getBoolean("smart_backup_enabled", false)
-        val chargingOnly = sharedPrefs.getBoolean("backup_on_charging_only", false)
-        val threshold = sharedPrefs.getInt("edits_before_backup", 10)
-        val editCount = sharedPrefs.getInt("edit_counter", 0)
+        observeSettings()
+    }
 
-        _state.value = _state.value.copy(
-            isAutoBackupEnabled = enabled, 
-            backupFrequency = frequency,
-            isSdCardAutoBackupEnabled = sdCardEnabled,
-            sdCardFolderUri = sdCardUri,
-            includeAttachments = includeAttachments,
-            isEncryptionEnabled = encryptionEnabled,
-            hasPasswordSet = hasPassword,
-            lastBackupTime = lastTime,
-            lastBackupStatus = lastStatus,
-            isIncrementalEnabled = incrementalEnabled,
-            isSmartBackupEnabled = smartEnabled,
-            isChargingConstraintEnabled = chargingOnly,
-            editsThreshold = threshold,
-            currentEditCount = editCount,
-            googleAccountEmail = sharedPrefs.getString("google_account_email", null)
-        )
+    private fun observeSettings() {
+        backupSettingsRepository.autoBackupEnabled.onEach { valEnabled ->
+            _state.update { it.copy(isAutoBackupEnabled = valEnabled) }
+        }.launchIn(viewModelScope)
+
+        backupSettingsRepository.backupFrequency.onEach { valFreq ->
+            _state.update { it.copy(backupFrequency = valFreq) }
+        }.launchIn(viewModelScope)
+
+        backupSettingsRepository.includeAttachments.onEach { valInc ->
+            _state.update { it.copy(includeAttachments = valInc) }
+        }.launchIn(viewModelScope)
+
+        backupSettingsRepository.sdCardEnabled.onEach { valSd ->
+            _state.update { it.copy(isSdCardAutoBackupEnabled = valSd) }
+        }.launchIn(viewModelScope)
+
+        backupSettingsRepository.backupLocationUri.onEach { valUri ->
+            _state.update { it.copy(sdCardFolderUri = valUri) }
+        }.launchIn(viewModelScope)
+
+        backupSettingsRepository.encryptionEnabled.onEach { valEnc ->
+            _state.update { it.copy(isEncryptionEnabled = valEnc) }
+        }.launchIn(viewModelScope)
+
+        backupSettingsRepository.lastBackupTime.onEach { valTime ->
+            _state.update { it.copy(lastBackupTime = valTime) }
+        }.launchIn(viewModelScope)
+
+        backupSettingsRepository.lastBackupStatus.onEach { valStatus ->
+            _state.update { it.copy(lastBackupStatus = valStatus) }
+        }.launchIn(viewModelScope)
+
+        backupSettingsRepository.incrementalEnabled.onEach { valInc ->
+            _state.update { it.copy(isIncrementalEnabled = valInc) }
+        }.launchIn(viewModelScope)
+
+        backupSettingsRepository.smartBackupEnabled.onEach { valSmart ->
+            _state.update { it.copy(isSmartBackupEnabled = valSmart) }
+        }.launchIn(viewModelScope)
+
+        backupSettingsRepository.chargingConstraint.onEach { valCharge ->
+            _state.update { it.copy(isChargingConstraintEnabled = valCharge) }
+        }.launchIn(viewModelScope)
+
+        backupSettingsRepository.editsThreshold.onEach { valThresh ->
+            _state.update { it.copy(editsThreshold = valThresh) }
+        }.launchIn(viewModelScope)
+
+        backupSettingsRepository.editCounter.onEach { valCount ->
+            _state.update { it.copy(currentEditCount = valCount) }
+        }.launchIn(viewModelScope)
+
+        backupSettingsRepository.googleAccountEmail.onEach { valEmail ->
+            _state.update { it.copy(googleAccountEmail = valEmail) }
+        }.launchIn(viewModelScope)
+
+        // Password set check
+        viewModelScope.launch {
+            val hasPassword = SecurityUtils.getBackupPassword(application) != null
+            _state.update { it.copy(hasPasswordSet = hasPassword) }
+        }
     }
 
     private fun updateLastBackup(status: String) {
         val time = System.currentTimeMillis()
-        val sharedPrefs = application.getSharedPreferences("backup_prefs", android.content.Context.MODE_PRIVATE)
-        sharedPrefs.edit()
-            .putLong("last_backup_time", time)
-            .putString("last_backup_status", status)
-            .apply()
-        _state.value = _state.value.copy(lastBackupTime = time, lastBackupStatus = status)
+        viewModelScope.launch {
+            backupSettingsRepository.setLastBackupTime(time)
+            backupSettingsRepository.setLastBackupStatus(status)
+        }
     }
 
     fun setGoogleAccount(account: com.google.android.gms.auth.api.signin.GoogleSignInAccount?) {
-        val sharedPrefs = application.getSharedPreferences("backup_prefs", android.content.Context.MODE_PRIVATE)
-        sharedPrefs.edit().putString("google_account_email", account?.email).apply()
-        _state.value = _state.value.copy(googleAccountEmail = account?.email)
-        if (account != null) {
-            checkDriveBackupStatus(account)
-            refreshBackupVersions(account)
-        } else {
-            _state.value = _state.value.copy(driveBackupExists = false, backupVersions = emptyList())
+        viewModelScope.launch {
+            backupSettingsRepository.setGoogleAccountEmail(account?.email)
+            if (account != null) {
+                checkDriveBackupStatus(account)
+                refreshBackupVersions(account)
+            } else {
+                _state.update { it.copy(driveBackupExists = false, backupVersions = emptyList()) }
+            }
         }
     }
 
@@ -170,7 +186,10 @@ class BackupRestoreViewModel @Inject constructor(
             context,
             com.google.android.gms.auth.api.signin.GoogleSignInOptions.DEFAULT_SIGN_IN
         ).signOut().addOnCompleteListener {
-             _state.value = _state.value.copy(googleAccountEmail = null, driveBackupExists = false, backupVersions = emptyList())
+             viewModelScope.launch {
+                 backupSettingsRepository.setGoogleAccountEmail(null)
+                 _state.update { it.copy(googleAccountEmail = null, driveBackupExists = false, backupVersions = emptyList()) }
+             }
         }
     }
 
@@ -203,7 +222,7 @@ class BackupRestoreViewModel @Inject constructor(
                 val projectsSize = projectsJson.toByteArray().size.toLong()
                 val totalSize = notesSize + labelsSize + projectsSize + attachmentsSize
 
-                _state.value = _state.value.copy(
+                _state.update { it.copy(
                     backupDetails = BackupDetails(
                         notesCount = notes.size,
                         labelsCount = labels.size,
@@ -215,33 +234,27 @@ class BackupRestoreViewModel @Inject constructor(
                         projectsSize = projectsSize,
                         attachmentsSize = attachmentsSize
                     )
-                )
+                ) }
             }
         }
     }
 
     fun setEncryption(password: String) {
         SecurityUtils.saveBackupPassword(application, password)
-        val sharedPrefs = application.getSharedPreferences("backup_prefs", android.content.Context.MODE_PRIVATE)
-        sharedPrefs.edit().apply {
-            putBoolean("backup_encryption_enabled", true)
-            putBoolean("auto_backup_encryption_enabled", true) 
-            apply()
+        viewModelScope.launch {
+            backupSettingsRepository.setEncryptionEnabled(true)
+            _state.update { it.copy(isEncryptionEnabled = true, hasPasswordSet = true) }
+            refreshWorkerSchedule()
         }
-        _state.value = _state.value.copy(isEncryptionEnabled = true, hasPasswordSet = true)
-        refreshWorkerSchedule()
     }
 
     fun disableEncryption() {
         SecurityUtils.saveBackupPassword(application, null)
-        val sharedPrefs = application.getSharedPreferences("backup_prefs", android.content.Context.MODE_PRIVATE)
-        sharedPrefs.edit().apply {
-            putBoolean("backup_encryption_enabled", false)
-            putBoolean("auto_backup_encryption_enabled", false)
-            apply()
+        viewModelScope.launch {
+            backupSettingsRepository.setEncryptionEnabled(false)
+            _state.update { it.copy(isEncryptionEnabled = false, hasPasswordSet = false) }
+            refreshWorkerSchedule()
         }
-        _state.value = _state.value.copy(isEncryptionEnabled = false, hasPasswordSet = false)
-        refreshWorkerSchedule()
     }
 
     fun changePassword(newPassword: String) {
@@ -250,10 +263,9 @@ class BackupRestoreViewModel @Inject constructor(
 
     fun createBackup(uri: Uri, password: String? = null) {
         viewModelScope.launch {
-            _state.value = _state.value.copy(isBackingUp = true, backupResult = null)
+            _state.update { it.copy(isBackingUp = true, backupResult = null) }
             withContext(Dispatchers.IO) {
                 try {
-                    val sharedPrefs = application.getSharedPreferences("backup_prefs", android.content.Context.MODE_PRIVATE)
                     val storedPassword = SecurityUtils.getBackupPassword(application)
                     val effectivePassword = password ?: if (state.value.isEncryptionEnabled) storedPassword else null
 
@@ -261,7 +273,7 @@ class BackupRestoreViewModel @Inject constructor(
                         application.contentResolver.openOutputStream(uri)?.use { outputStream ->
                             backupRepository.createBackupZip(outputStream, state.value.includeAttachments)
                         }
-                        _state.value = _state.value.copy(isBackingUp = false, backupResult = "Local Backup successful")
+                        _state.update { it.copy(isBackingUp = false, backupResult = "Local Backup successful") }
                         updateLastBackup("Success (Local)")
                     } else {
                         backupRepository.backupToEncryptedStream(
@@ -269,12 +281,12 @@ class BackupRestoreViewModel @Inject constructor(
                             effectivePassword, 
                             state.value.includeAttachments
                         )
-                        _state.value = _state.value.copy(isBackingUp = false, backupResult = "Encrypted Local Backup successful")
+                        _state.update { it.copy(isBackingUp = false, backupResult = "Encrypted Local Backup successful") }
                         updateLastBackup("Success (Encrypted Local)")
                     }
                 } catch (e: Exception) {
                     e.printStackTrace()
-                    _state.value = _state.value.copy(isBackingUp = false, backupResult = "Local Backup failed: ${e.message}")
+                    _state.update { it.copy(isBackingUp = false, backupResult = "Local Backup failed: ${e.message}") }
                     updateLastBackup("Failed (Local)")
                 }
             }
@@ -283,14 +295,13 @@ class BackupRestoreViewModel @Inject constructor(
 
     fun backupToDrive(account: com.google.android.gms.auth.api.signin.GoogleSignInAccount) {
          viewModelScope.launch {
-            _state.value = _state.value.copy(
+            _state.update { it.copy(
                 isBackingUp = true, 
                 backupResult = "Uploading to Drive...",
                 uploadProgress = "Starting..."
-            )
+            ) }
             withContext(Dispatchers.IO) {
                 try {
-                    val sharedPrefs = application.getSharedPreferences("backup_prefs", android.content.Context.MODE_PRIVATE)
                     val storedPassword = SecurityUtils.getBackupPassword(application)
                     val password = if (state.value.isEncryptionEnabled) storedPassword else null
                     
@@ -303,24 +314,24 @@ class BackupRestoreViewModel @Inject constructor(
                         } else {
                             "Uploading..."
                         }
-                        _state.value = _state.value.copy(uploadProgress = progress)
+                        _state.update { it.copy(uploadProgress = progress) }
                     }
                     
-                    _state.value = _state.value.copy(
+                    _state.update { it.copy(
                         isBackingUp = false,
                         backupResult = "Drive Backup successful",
                         driveBackupExists = true,
                         uploadProgress = null
-                    )
+                    ) }
                     updateLastBackup("Success (Drive)")
                     refreshBackupVersions(account)
                 } catch (e: Exception) {
                     e.printStackTrace()
-                    _state.value = _state.value.copy(
+                    _state.update { it.copy(
                         isBackingUp = false, 
                         backupResult = "Drive Backup failed: ${e.message}",
                         uploadProgress = null
-                    )
+                    ) }
                     updateLastBackup("Failed (Drive)")
                 }
             }
@@ -329,15 +340,15 @@ class BackupRestoreViewModel @Inject constructor(
 
     fun restoreBackup(uri: Uri, merge: Boolean = false) {
         viewModelScope.launch {
-            _state.value = _state.value.copy(isRestoring = true, restoreResult = null)
+            _state.update { it.copy(isRestoring = true, restoreResult = null) }
             withContext(Dispatchers.IO) {
                 if (backupRepository.checkIsEncrypted(uri)) {
-                    _state.value = _state.value.copy(
+                    _state.update { it.copy(
                         isRestoring = false, 
                         isPasswordRequired = true, 
                         pendingRestoreUri = uri.toString(),
                         pendingMerge = merge
-                    )
+                    ) }
                     return@withContext
                 }
                 
@@ -347,10 +358,10 @@ class BackupRestoreViewModel @Inject constructor(
                             readBackupFromZip(zis, merge, uri)
                         }
                     }
-                    _state.value = _state.value.copy(isRestoring = false, restoreResult = if (merge) "Merge successful" else "Local Restore successful")
+                    _state.update { it.copy(isRestoring = false, restoreResult = if (merge) "Merge successful" else "Local Restore successful") }
                 } catch (e: Exception) {
                     e.printStackTrace()
-                    _state.value = _state.value.copy(isRestoring = false, restoreResult = "Local Restore failed: ${e.message}")
+                    _state.update { it.copy(isRestoring = false, restoreResult = "Local Restore failed: ${e.message}") }
                 }
             }
         }
@@ -362,7 +373,7 @@ class BackupRestoreViewModel @Inject constructor(
         val merge = state.value.pendingMerge
         
         viewModelScope.launch {
-            _state.value = _state.value.copy(isRestoring = true, restoreResult = null, isPasswordRequired = false)
+            _state.update { it.copy(isRestoring = true, restoreResult = null, isPasswordRequired = false) }
             withContext(Dispatchers.IO) {
                 try {
                     val tempZipFile = backupRepository.decryptBackupToTempFile(uri, password)
@@ -372,16 +383,16 @@ class BackupRestoreViewModel @Inject constructor(
                                 readBackupFromZip(zis, merge, Uri.fromFile(tempZipFile))
                             }
                         }
-                        _state.value = _state.value.copy(isRestoring = false, restoreResult = if (merge) "Encrypted Merge successful" else "Encrypted Restore successful", pendingRestoreUri = null, pendingMerge = false)
+                        _state.update { it.copy(isRestoring = false, restoreResult = if (merge) "Encrypted Merge successful" else "Encrypted Restore successful", pendingRestoreUri = null, pendingMerge = false) }
                     } finally {
                         if (tempZipFile.exists()) tempZipFile.delete()
                     }
                 } catch (e: Exception) {
                     e.printStackTrace()
-                    _state.value = _state.value.copy(
+                    _state.update { it.copy(
                         isRestoring = false, 
                         restoreResult = "Restore failed: ${e.message}"
-                    )
+                    ) }
                 }
             }
         }
@@ -396,7 +407,7 @@ class BackupRestoreViewModel @Inject constructor(
                 if (file.exists()) file.delete()
             }
         }
-        _state.value = _state.value.copy(isPasswordRequired = false, pendingRestoreUri = null)
+        _state.update { it.copy(isPasswordRequired = false, pendingRestoreUri = null) }
     }
     
     private suspend fun readBackupFromZip(zis: ZipInputStream, merge: Boolean = false, zipUri: Uri) {
@@ -405,7 +416,7 @@ class BackupRestoreViewModel @Inject constructor(
         var labelsJson: String? = null
         var projectsJson: String? = null
         var manifestJson: String? = null
-        // Bug C1 fix: read Todo archives so we can restore them below.
+        // Read Todo archives for restoration
         var todosJson: String? = null
         var todoSubtasksJson: String? = null
 
@@ -483,7 +494,7 @@ class BackupRestoreViewModel @Inject constructor(
                 existingNotes.forEach { repository.deleteNote(it.note) }
                 existingLabels.forEach { repository.deleteLabel(it) }
                 existingProjects.forEach { repository.deleteProject(it.id) }
-                // Bug C1 fix: wipe todos on full restore too (subtasks cascade via FK).
+                // Wipe todos on full restore (subtasks cascade via FK).
                 todoRepository.deleteAllTodos()
             }
         }
@@ -567,7 +578,7 @@ class BackupRestoreViewModel @Inject constructor(
                             if (!attachmentsDir.exists()) attachmentsDir.mkdirs()
                             
                             val targetFile = java.io.File(attachmentsDir, uniqueFileName)
-                            // Bug H1 fix: FileProvider URI so the stored attachment URI survives cross-app share.
+                            // Use FileProvider URI so attachment URIs remain valid across app shares.
                             val newUri = androidx.core.content.FileProvider.getUriForFile(
                                 application,
                                 "${application.packageName}.fileprovider",
@@ -586,7 +597,7 @@ class BackupRestoreViewModel @Inject constructor(
             }
         }
 
-        // Bug C1 fix: restore Todos and their Subtasks from the backup archive.
+        // Restore Todos and their Subtasks from the backup archive.
         // Older backups (pre-v1.3.8) did not include these entries — in that case we
         // silently skip. Todos are keyed by (title, createdAt) for merge dedup.
         val todosToRestore: List<TodoItem> = todosJson?.let {
@@ -627,7 +638,7 @@ class BackupRestoreViewModel @Inject constructor(
 
     fun importFromGoogleKeep(uri: Uri) {
         viewModelScope.launch {
-            _state.value = _state.value.copy(isRestoring = true, restoreResult = "Importing from Google Keep...")
+            _state.update { it.copy(isRestoring = true, restoreResult = "Importing from Google Keep...") }
             withContext(Dispatchers.IO) {
                 try {
                     var importedCount = 0
@@ -661,13 +672,13 @@ class BackupRestoreViewModel @Inject constructor(
                             }
                         }
                     }
-                    _state.value = _state.value.copy(
+                    _state.update { it.copy(
                         isRestoring = false,
                         restoreResult = "Imported $importedCount notes from Google Keep"
-                    )
+                    ) }
                 } catch (e: Exception) {
                     e.printStackTrace()
-                    _state.value = _state.value.copy(isRestoring = false, restoreResult = "Import failed: ${e.message}")
+                    _state.update { it.copy(isRestoring = false, restoreResult = "Import failed: ${e.message}") }
                 }
             }
         }
@@ -737,7 +748,7 @@ class BackupRestoreViewModel @Inject constructor(
 
     fun restoreFromDrive(account: com.google.android.gms.auth.api.signin.GoogleSignInAccount, fileId: String? = null, merge: Boolean = false) {
         viewModelScope.launch {
-             _state.value = _state.value.copy(isRestoring = true, restoreResult = null)
+             _state.update { it.copy(isRestoring = true, restoreResult = null) }
              val backupName = if (fileId != null) "selected version" else "latest backup"
             withContext(Dispatchers.IO) {
                 val tempFile = File(application.cacheDir, "temp_restore.zip")
@@ -745,12 +756,12 @@ class BackupRestoreViewModel @Inject constructor(
                 try {
                      googleDriveManager.downloadBackup(application, account, tempFile, fileId)
                      if (backupRepository.checkIsEncrypted(Uri.fromFile(tempFile))) {
-                         _state.value = _state.value.copy(
+                         _state.update { it.copy(
                             isRestoring = false,
                             isPasswordRequired = true,
                             pendingRestoreUri = Uri.fromFile(tempFile).toString(),
                             pendingMerge = merge
-                         )
+                         ) }
                          shouldDeleteTempFile = false
                          return@withContext
                      }
@@ -760,10 +771,10 @@ class BackupRestoreViewModel @Inject constructor(
                              readBackupFromZip(zis, merge, Uri.fromFile(tempFile))
                          }
                      }
-                    _state.value = _state.value.copy(isRestoring = false, restoreResult = if (merge) "Drive Merge successful" else "Drive Restore ($backupName) successful")
+                    _state.update { it.copy(isRestoring = false, restoreResult = if (merge) "Drive Merge successful" else "Drive Restore ($backupName) successful") }
                 } catch (e: Exception) {
                     e.printStackTrace()
-                    _state.value = _state.value.copy(isRestoring = false, restoreResult = "Drive Restore failed: ${e.message}")
+                    _state.update { it.copy(isRestoring = false, restoreResult = "Drive Restore failed: ${e.message}") }
                 } finally {
                     if (shouldDeleteTempFile && tempFile.exists()) {
                         tempFile.delete()
@@ -775,19 +786,19 @@ class BackupRestoreViewModel @Inject constructor(
 
     fun checkDriveBackupStatus(account: com.google.android.gms.auth.api.signin.GoogleSignInAccount) {
         viewModelScope.launch {
-            _state.value = _state.value.copy(isCheckingBackup = true)
+            _state.update { it.copy(isCheckingBackup = true) }
             withContext(Dispatchers.IO) {
                 try {
                     val metadata = googleDriveManager.getBackupMetadata(application, account)
-                    _state.value = _state.value.copy(
+                    _state.update { it.copy(
                         isCheckingBackup = false,
                         driveBackupExists = metadata != null,
                         driveBackupMetadata = metadata,
                         googleAccountEmail = account.email
-                    )
+                    ) }
                 } catch (e: Exception) {
                     e.printStackTrace()
-                   _state.value = _state.value.copy(isCheckingBackup = false, driveBackupExists = false, driveBackupMetadata = null)
+                   _state.update { it.copy(isCheckingBackup = false, driveBackupExists = false, driveBackupMetadata = null) }
                 }
             }
         }
@@ -795,14 +806,14 @@ class BackupRestoreViewModel @Inject constructor(
 
     fun refreshBackupVersions(account: com.google.android.gms.auth.api.signin.GoogleSignInAccount) {
         viewModelScope.launch {
-            _state.value = _state.value.copy(isLoadingVersions = true)
+            _state.update { it.copy(isLoadingVersions = true) }
             withContext(Dispatchers.IO) {
                 try {
                     val versions = googleDriveManager.getBackups(application, account)
-                    _state.value = _state.value.copy(isLoadingVersions = false, backupVersions = versions)
+                    _state.update { it.copy(isLoadingVersions = false, backupVersions = versions) }
                 } catch (e: Exception) {
                     e.printStackTrace()
-                    _state.value = _state.value.copy(isLoadingVersions = false)
+                    _state.update { it.copy(isLoadingVersions = false) }
                 }
             }
         }
@@ -810,16 +821,16 @@ class BackupRestoreViewModel @Inject constructor(
 
     fun deleteBackupVersion(account: com.google.android.gms.auth.api.signin.GoogleSignInAccount, fileId: String) {
         viewModelScope.launch {
-            _state.value = _state.value.copy(isDeleting = true)
+            _state.update { it.copy(isDeleting = true) }
             withContext(Dispatchers.IO) {
                 try {
                     googleDriveManager.deleteBackupFile(application, account, fileId)
                     refreshBackupVersions(account)
                     checkDriveBackupStatus(account)
-                    _state.value = _state.value.copy(isDeleting = false)
+                    _state.update { it.copy(isDeleting = false) }
                 } catch (e: Exception) {
                     e.printStackTrace()
-                    _state.value = _state.value.copy(isDeleting = false, backupResult = "Failed to delete: ${e.message}")
+                    _state.update { it.copy(isDeleting = false, backupResult = "Failed to delete: ${e.message}") }
                 }
             }
         }
@@ -827,19 +838,19 @@ class BackupRestoreViewModel @Inject constructor(
 
     fun deleteDriveBackup(account: com.google.android.gms.auth.api.signin.GoogleSignInAccount) {
         viewModelScope.launch {
-             _state.value = _state.value.copy(isDeleting = true, backupResult = "Deleting Drive Backups...")
+             _state.update { it.copy(isDeleting = true, backupResult = "Deleting Drive Backups...") }
             withContext(Dispatchers.IO) {
                 try {
                      googleDriveManager.deleteBackup(application, account)
-                    _state.value = _state.value.copy(
+                    _state.update { it.copy(
                         isDeleting = false, 
                         backupResult = "Drive Backups deleted successfully",
                         driveBackupExists = false,
                         backupVersions = emptyList()
-                    )
+                    ) }
                 } catch (e: Exception) {
                     e.printStackTrace()
-                    _state.value = _state.value.copy(isDeleting = false, backupResult = "Failed to delete backup: ${e.message}")
+                    _state.update { it.copy(isDeleting = false, backupResult = "Failed to delete backup: ${e.message}") }
                 }
             }
         }
@@ -847,10 +858,8 @@ class BackupRestoreViewModel @Inject constructor(
 
     fun toggleAutoBackup(enabled: Boolean, email: String? = null, frequency: String = "Daily") {
         viewModelScope.launch {
-            val sharedPrefs = application.getSharedPreferences("backup_prefs", android.content.Context.MODE_PRIVATE)
-            sharedPrefs.edit().putBoolean("auto_backup_enabled", enabled).apply()
-            sharedPrefs.edit().putString("backup_frequency", frequency).apply()
-            _state.value = _state.value.copy(isAutoBackupEnabled = enabled, backupFrequency = frequency)
+            backupSettingsRepository.setAutoBackupEnabled(enabled)
+            backupSettingsRepository.setBackupFrequency(frequency)
             if (enabled && email != null) {
                 scheduleWorker(email, frequency)
             } else {
@@ -859,20 +868,23 @@ class BackupRestoreViewModel @Inject constructor(
         }
     }
 
+    fun setBackupFrequency(frequency: String) {
+        viewModelScope.launch {
+            backupSettingsRepository.setBackupFrequency(frequency)
+            refreshWorkerSchedule()
+        }
+    }
+
     fun toggleSdCardAutoBackup(enabled: Boolean) {
         viewModelScope.launch {
-            val sharedPrefs = application.getSharedPreferences("backup_prefs", android.content.Context.MODE_PRIVATE)
-            sharedPrefs.edit().putBoolean("sd_card_backup_enabled", enabled).apply()
-            _state.value = _state.value.copy(isSdCardAutoBackupEnabled = enabled)
+            backupSettingsRepository.setSdCardEnabled(enabled)
             refreshWorkerSchedule()
         }
     }
 
     fun toggleIncludeAttachments(enabled: Boolean) {
          viewModelScope.launch {
-            val sharedPrefs = application.getSharedPreferences("backup_prefs", android.content.Context.MODE_PRIVATE)
-            sharedPrefs.edit().putBoolean("include_backup_attachments", enabled).apply()
-            _state.value = _state.value.copy(includeAttachments = enabled)
+            backupSettingsRepository.setIncludeAttachments(enabled)
         }
     }
 
@@ -886,9 +898,7 @@ class BackupRestoreViewModel @Inject constructor(
             } catch (e: Exception) {
                 e.printStackTrace()
             }
-            val sharedPrefs = application.getSharedPreferences("backup_prefs", android.content.Context.MODE_PRIVATE)
-            sharedPrefs.edit().putString("sd_card_folder_uri", uri.toString()).apply()
-            _state.value = _state.value.copy(sdCardFolderUri = uri.toString())
+            backupSettingsRepository.setBackupLocationUri(uri.toString())
             refreshWorkerSchedule()
         }
     }
@@ -896,21 +906,20 @@ class BackupRestoreViewModel @Inject constructor(
     fun backupToSdCard() {
         val uriString = state.value.sdCardFolderUri ?: return
         viewModelScope.launch {
-            _state.value = _state.value.copy(isBackingUp = true, backupResult = "Backing up to SD Card...")
+            _state.update { it.copy(isBackingUp = true, backupResult = "Backing up to SD Card...") }
             withContext(Dispatchers.IO) {
                 try {
-                    val sharedPrefs = application.getSharedPreferences("backup_prefs", android.content.Context.MODE_PRIVATE)
                     val storedPassword = SecurityUtils.getBackupPassword(application)
                     val result = if (state.value.isEncryptionEnabled && !storedPassword.isNullOrBlank()) {
                          backupRepository.backupToEncryptedFolder(Uri.parse(uriString), storedPassword, state.value.includeAttachments)
                     } else {
                          backupRepository.backupToUri(Uri.parse(uriString), state.value.includeAttachments)
                     }
-                     _state.value = _state.value.copy(isBackingUp = false, backupResult = result)
+                     _state.update { it.copy(isBackingUp = false, backupResult = result) }
                      updateLastBackup("Success (SD Card)")
                 } catch (e: Exception) {
                     e.printStackTrace()
-                     _state.value = _state.value.copy(isBackingUp = false, backupResult = "SD Card Backup failed: ${e.message}")
+                     _state.update { it.copy(isBackingUp = false, backupResult = "SD Card Backup failed: ${e.message}") }
                      updateLastBackup("Failed (SD Card)")
                 }
             }
@@ -930,34 +939,26 @@ class BackupRestoreViewModel @Inject constructor(
 
     fun toggleIncrementalBackup(enabled: Boolean) {
         viewModelScope.launch {
-            val sharedPrefs = application.getSharedPreferences("backup_prefs", android.content.Context.MODE_PRIVATE)
-            sharedPrefs.edit().putBoolean("incremental_backup_enabled", enabled).apply()
-            _state.value = _state.value.copy(isIncrementalEnabled = enabled)
+            backupSettingsRepository.setIncrementalEnabled(enabled)
         }
     }
 
     fun toggleSmartBackup(enabled: Boolean) {
         viewModelScope.launch {
-            val sharedPrefs = application.getSharedPreferences("backup_prefs", android.content.Context.MODE_PRIVATE)
-            sharedPrefs.edit().putBoolean("smart_backup_enabled", enabled).apply()
-            _state.value = _state.value.copy(isSmartBackupEnabled = enabled)
+            backupSettingsRepository.setSmartBackupEnabled(enabled)
         }
     }
 
     fun toggleChargingConstraint(enabled: Boolean) {
         viewModelScope.launch {
-            val sharedPrefs = application.getSharedPreferences("backup_prefs", android.content.Context.MODE_PRIVATE)
-            sharedPrefs.edit().putBoolean("backup_on_charging_only", enabled).apply()
-            _state.value = _state.value.copy(isChargingConstraintEnabled = enabled)
+            backupSettingsRepository.setChargingConstraint(enabled)
             refreshWorkerSchedule()
         }
     }
 
     fun setEditsThreshold(threshold: Int) {
         viewModelScope.launch {
-            val sharedPrefs = application.getSharedPreferences("backup_prefs", android.content.Context.MODE_PRIVATE)
-            sharedPrefs.edit().putInt("edits_before_backup", threshold).apply()
-            _state.value = _state.value.copy(editsThreshold = threshold)
+            backupSettingsRepository.setEditsThreshold(threshold)
         }
     }
 
@@ -998,14 +999,14 @@ class BackupRestoreViewModel @Inject constructor(
 
     fun scanBackup(uri: Uri) {
         viewModelScope.launch {
-            _state.value = _state.value.copy(isScanning = true, restoreResult = null, foundBackupDetails = null)
+            _state.update { it.copy(isScanning = true, restoreResult = null, foundBackupDetails = null) }
             withContext(Dispatchers.IO) {
                 try {
                     val scanResult = backupRepository.scanBackupContent(uri)
-                    _state.value = _state.value.copy(isScanning = false, foundBackupDetails = scanResult)
+                    _state.update { it.copy(isScanning = false, foundBackupDetails = scanResult) }
                 } catch (e: Exception) {
                     e.printStackTrace()
-                    _state.value = _state.value.copy(isScanning = false, restoreResult = "Failed to scan backup: ${e.message}")
+                    _state.update { it.copy(isScanning = false, restoreResult = "Failed to scan backup: ${e.message}") }
                 }
             }
         }
@@ -1013,20 +1014,20 @@ class BackupRestoreViewModel @Inject constructor(
 
     fun restoreSelectedProjects(uri: Uri, selectedProjectIds: List<Int>) {
         viewModelScope.launch {
-            _state.value = _state.value.copy(isRestoring = true, restoreResult = "Restoring selected projects...")
+            _state.update { it.copy(isRestoring = true, restoreResult = "Restoring selected projects...") }
             withContext(Dispatchers.IO) {
                 try {
                     backupRepository.restoreSelectedProjects(uri, selectedProjectIds)
-                    _state.value = _state.value.copy(isRestoring = false, restoreResult = "Selected projects restored successfully", foundBackupDetails = null)
+                    _state.update { it.copy(isRestoring = false, restoreResult = "Selected projects restored successfully", foundBackupDetails = null) }
                 } catch (e: Exception) {
                      e.printStackTrace()
-                    _state.value = _state.value.copy(isRestoring = false, restoreResult = "Restore failed: ${e.message}")
+                    _state.update { it.copy(isRestoring = false, restoreResult = "Restore failed: ${e.message}") }
                 }
             }
         }
     }
 
     fun clearFoundProjects() {
-        _state.value = _state.value.copy(foundBackupDetails = null)
+        _state.update { it.copy(foundBackupDetails = null) }
     }
 }

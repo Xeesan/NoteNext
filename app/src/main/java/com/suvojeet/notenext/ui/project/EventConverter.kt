@@ -116,7 +116,7 @@ fun NotesEvent.toProjectNotesEvent(): ProjectNotesEvent {
 fun ProjectNotesUiEvent.toNotesUiEvent(): NotesUiEvent {
     return when (this) {
         is ProjectNotesUiEvent.SendNotes -> NotesUiEvent.SendNotes(this.title, this.content)
-        is ProjectNotesUiEvent.ShowToast -> NotesUiEvent.ShowToast(this.message)
+        is ProjectNotesUiEvent.ShowSnackbar -> NotesUiEvent.ShowSnackbar(this.message, this.actionLabel, this.onAction)
         is ProjectNotesUiEvent.LinkPreviewRemoved -> NotesUiEvent.LinkPreviewRemoved
         is ProjectNotesUiEvent.NavigateToNoteByTitle -> NotesUiEvent.NavigateToNoteByTitle(this.title)
         is ProjectNotesUiEvent.ScrollToSearchResult -> NotesUiEvent.ScrollToSearchResult(this.index)

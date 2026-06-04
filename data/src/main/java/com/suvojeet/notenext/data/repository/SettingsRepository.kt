@@ -19,7 +19,14 @@ import java.security.SecureRandom
 import javax.crypto.SecretKeyFactory
 import javax.crypto.spec.PBEKeySpec
 
-val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "settings")
+import androidx.datastore.preferences.SharedPreferencesMigration
+
+val Context.dataStore: DataStore<Preferences> by preferencesDataStore(
+    name = "settings",
+    produceMigrations = { context ->
+        listOf(SharedPreferencesMigration(context, "ai_prompt_history_prefs"))
+    }
+)
 
 object PreferencesKeys {
     val THEME_MODE = stringPreferencesKey("theme_mode")
@@ -63,9 +70,24 @@ object PreferencesKeys {
     val AI_FEATURE_LINKED_NOTES = booleanPreferencesKey("ai_feature_linked_notes")
     val AI_FEATURE_TONE_REWRITE = booleanPreferencesKey("ai_feature_tone_rewrite")
     val AI_FEATURE_CUSTOM_PROMPT = booleanPreferencesKey("ai_feature_custom_prompt")
+    val AI_PROMPT_HISTORY = stringPreferencesKey("ai_prompt_history")
 }
 
 class SettingsRepository(private val context: Context) {
+
+    val aiPromptHistory: Flow<List<String>> = context.dataStore.data
+        .map { preferences ->
+            val historyString = preferences[PreferencesKeys.AI_PROMPT_HISTORY] ?: ""
+            if (historyString.isBlank()) emptyList() else historyString.split("|||")
+        }
+
+    suspend fun saveAiPrompt(prompt: String) {
+        context.dataStore.edit { preferences ->
+            val currentHistory = (preferences[PreferencesKeys.AI_PROMPT_HISTORY] ?: "").split("|||").filter { it.isNotBlank() }
+            val newHistory = (listOf(prompt) + currentHistory.filter { it != prompt }).take(10)
+            preferences[PreferencesKeys.AI_PROMPT_HISTORY] = newHistory.joinToString("|||")
+        }
+    }
     
     // Groq API Settings
     val useCustomGroqKey: Flow<Boolean> = context.dataStore.data
