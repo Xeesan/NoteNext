@@ -34,11 +34,9 @@ class BackupWorker @AssistedInject constructor(
 
         val isEncryptionEnabled = backupSettingsRepository.encryptionEnabled.first()
         val encryptionPassword = SecurityUtils.getBackupPassword(applicationContext)
-...
-            if (success) {
-                backupSettingsRepository.setLastBackupTime(startTime)
-                backupSettingsRepository.setEditCounter(0)
-            }
+        val backupPassword = if (isEncryptionEnabled && !encryptionPassword.isNullOrBlank()) encryptionPassword else null
+
+        if (email == null && !isSdCardBackupEnabled) {
             return@withContext Result.failure()
         }
 
@@ -86,12 +84,10 @@ class BackupWorker @AssistedInject constructor(
             }
             
             if (success) {
-                sharedPrefs.edit()
-                    .putLong("last_backup_time", startTime)
-                    .putInt("edit_counter", 0) // Reset edit counter on success
-                    .apply()
+                backupSettingsRepository.setLastBackupTime(startTime)
+                backupSettingsRepository.setEditCounter(0)
             }
-            
+
             showCompletionNotification(success, errorMessage)
 
             if (success) Result.success() else Result.retry()
