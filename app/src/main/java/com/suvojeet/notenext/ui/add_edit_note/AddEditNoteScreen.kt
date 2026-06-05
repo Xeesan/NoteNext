@@ -631,7 +631,7 @@ fun AddEditNoteScreen(
             }
         }
 
-        val aiPromptHistory by viewModel.aiPromptHistory.collectAsStateWithLifecycle()
+        val aiPromptHistory by settingsRepository.aiPromptHistory.collectAsStateWithLifecycle(initialValue = emptyList<String>())
 
         AiChecklistSheet(
             isVisible = showAiChecklistSheet,

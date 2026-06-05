@@ -46,7 +46,7 @@ class AIDelegate @Inject constructor(
         val targetText = if (selection.start != selection.end) fullText.substring(selection.start, selection.end) else fullText
 
         if (targetText.isBlank()) {
-            scope.launch { events.emit(NotesUiEvent.ShowToast("No content to fix")) }
+            scope.launch { events.emit(NotesUiEvent.ShowSnackbar("No content to fix")) }
             return
         }
 
@@ -76,7 +76,7 @@ class AIDelegate @Inject constructor(
                     }
                 }.onFailure { failure ->
                     onUpdate { it.copy(isFixingGrammar = false) }
-                    events.emit(NotesUiEvent.ShowToast("Grammar fix failed"))
+                    events.emit(NotesUiEvent.ShowSnackbar("Grammar fix failed"))
                 }
             }
         }
@@ -99,7 +99,7 @@ class AIDelegate @Inject constructor(
                 }.onFailure { failure ->
                     onUpdate { it.copy(isExtractingTasks = false) }
                     val errorMessage = failure.toUserMessage("Failed to extract tasks.")
-                    events.emit(NotesUiEvent.ShowToast(errorMessage))
+                    events.emit(NotesUiEvent.ShowSnackbar(errorMessage))
                 }
             }
         }

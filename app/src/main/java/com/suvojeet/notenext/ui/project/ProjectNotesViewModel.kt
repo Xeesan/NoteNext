@@ -779,7 +779,7 @@ class ProjectNotesViewModel @Inject constructor(
                         }.onFailure { failure ->
                             val errorMessage = failure.toUserMessage("Summarization failed.")
                             _state.value = _state.value.copy(isSummarizing = false, showSummaryDialog = false)
-                            _events.emit(ProjectNotesUiEvent.ShowSnackbar(errorMessage, actionLabel = "Retry", onAction = { onEvent(ProjectNotesEvent.Summarize) }))
+                            _events.emit(ProjectNotesUiEvent.ShowSnackbar(errorMessage, actionLabel = "Retry", onAction = { onEvent(ProjectNotesEvent.SummarizeNote) }))
                         }
                     }
                 }

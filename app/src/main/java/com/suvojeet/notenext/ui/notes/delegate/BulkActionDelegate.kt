@@ -30,7 +30,7 @@ class BulkActionDelegate @Inject constructor(
                     repository.updateNote(noteWithAttachments.note.copy(isArchived = true, isPinned = false))
                 }
             }
-            events.emit(NotesUiEvent.ShowToast("${selectedIds.size} notes archived"))
+            events.emit(NotesUiEvent.ShowSnackbar("${selectedIds.size} notes archived"))
             onComplete()
         }
     }
@@ -47,7 +47,7 @@ class BulkActionDelegate @Inject constructor(
                     repository.updateNote(noteWithAttachments.note.copy(isBinned = true, isPinned = false))
                 }
             }
-            events.emit(NotesUiEvent.ShowToast("${selectedIds.size} notes moved to Bin"))
+            events.emit(NotesUiEvent.ShowSnackbar("${selectedIds.size} notes moved to Bin"))
             onComplete()
         }
     }
@@ -65,7 +65,7 @@ class BulkActionDelegate @Inject constructor(
                     repository.updateNote(noteWithAttachments.note.copy(label = label))
                 }
             }
-            events.emit(NotesUiEvent.ShowToast("Label updated for ${selectedIds.size} notes"))
+            events.emit(NotesUiEvent.ShowSnackbar("Label updated for ${selectedIds.size} notes"))
             onComplete()
         }
     }
