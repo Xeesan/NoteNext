@@ -725,7 +725,10 @@ class BackupRestoreViewModel @Inject constructor(
         keepNote.labels?.forEach { keepLabel ->
              try {
                 repository.insertLabel(Label(keepLabel.name))
-             } catch (e: Exception) {}
+             } catch (e: Exception) {
+                // Label already exists (duplicate primary key) — expected during import, skip it.
+                android.util.Log.d("BackupRestoreViewModel", "Skipping duplicate label '${keepLabel.name}'")
+             }
         }
     }
     

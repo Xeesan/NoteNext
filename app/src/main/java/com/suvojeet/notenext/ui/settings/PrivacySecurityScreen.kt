@@ -438,8 +438,9 @@ Text(stringResource(id = R.string.priv_decoy_dialog_message))
                     modifier = Modifier.fillMaxWidth()
                 )
 
-                if (error != null) {
-                    Text(error!!, color = MaterialTheme.colorScheme.error, style = MaterialTheme.typography.labelMedium)
+                val errorMessage = error
+                if (errorMessage != null) {
+                    Text(errorMessage, color = MaterialTheme.colorScheme.error, style = MaterialTheme.typography.labelMedium)
                 }
             }
         },

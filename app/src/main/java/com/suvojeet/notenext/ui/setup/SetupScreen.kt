@@ -414,8 +414,9 @@ private fun CloudSyncPage(
             shape = MaterialTheme.shapes.extraLarge
         ) {
             Column(modifier = Modifier.padding(24.dp)) {
+                val accountEmail = backupState.googleAccountEmail
                 Text(
-                    text = if(backupState.googleAccountEmail != null) stringResource(id = R.string.setup_connected_to, backupState.googleAccountEmail!!) else stringResource(id = R.string.setup_cloud_sync_pitch),
+                    text = if (accountEmail != null) stringResource(id = R.string.setup_connected_to, accountEmail) else stringResource(id = R.string.setup_cloud_sync_pitch),
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )

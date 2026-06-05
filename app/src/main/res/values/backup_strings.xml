@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="google_sign_in_failed">Google sign-in failed. Please try again.</string>
+
     <!-- BackupScreen restore method picker -->
     <string name="backup_restore_method_title">How would you like to restore?</string>
     <string name="backup_restore_method_subtitle_local">Select a restoration method for your backup.</string>

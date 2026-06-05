@@ -7,6 +7,7 @@ import com.suvojeet.notenext.data.repository.AiRepository
 import com.suvojeet.notenext.data.repository.AiResult
 import com.suvojeet.notenext.data.repository.onFailure
 import com.suvojeet.notenext.data.repository.onSuccess
+import com.suvojeet.notenext.data.repository.toUserMessage
 import com.suvojeet.notenext.ui.notes.NotesEditState
 import com.suvojeet.notenext.ui.notes.NotesUiEvent
 import com.suvojeet.notenext.util.SimpleDiffUtils
@@ -32,13 +33,7 @@ class AIDelegate @Inject constructor(
                 result.onSuccess { summary ->
                     onUpdate { it.copy(isSummarizing = false, summaryResult = summary) }
                 }.onFailure { failure ->
-                    val errorMessage = when (failure) {
-                        is AiResult.RateLimited -> "AI is busy. Please try again in ${failure.retryAfterSeconds}s."
-                        is AiResult.InvalidKey -> "Invalid API key. Check your settings."
-                        is AiResult.NetworkError -> "Network error: ${failure.message}"
-                        is AiResult.AllModelsFailed -> "All AI models failed to respond. Try again later."
-                        else -> "Failed to summarize note."
-                    }
+                    val errorMessage = failure.toUserMessage("Failed to summarize note.")
                     onUpdate { it.copy(isSummarizing = false, summaryResult = "Error: $errorMessage") }
                 }
             }
@@ -103,13 +98,7 @@ class AIDelegate @Inject constructor(
                     ) }
                 }.onFailure { failure ->
                     onUpdate { it.copy(isExtractingTasks = false) }
-                    val errorMessage = when (failure) {
-                        is AiResult.RateLimited -> "AI is busy. Please try again in ${failure.retryAfterSeconds}s."
-                        is AiResult.InvalidKey -> "Invalid API key. Check settings."
-                        is AiResult.NetworkError -> "Network error: ${failure.message}"
-                        is AiResult.AllModelsFailed -> "AI failed to respond. Try again later."
-                        else -> "Failed to extract tasks."
-                    }
+                    val errorMessage = failure.toUserMessage("Failed to extract tasks.")
                     events.emit(NotesUiEvent.ShowToast(errorMessage))
                 }
             }

@@ -131,7 +131,15 @@ fun BackupScreen(
                 val account = task.getResult(ApiException::class.java)
                 viewModel.setGoogleAccount(account)
                 // viewModel.backupToDrive(account) // Removed automatic backup
-            } catch (e: ApiException) { }
+            } catch (e: ApiException) {
+                // Don't fail silently — the user tapped sign-in and deserves feedback.
+                android.util.Log.w("BackupScreen", "Google sign-in failed: status=${e.statusCode}", e)
+                android.widget.Toast.makeText(
+                    context,
+                    context.getString(R.string.google_sign_in_failed),
+                    android.widget.Toast.LENGTH_SHORT
+                ).show()
+            }
         }
     }
 

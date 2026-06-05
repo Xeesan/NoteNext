@@ -210,7 +210,11 @@ fun NoteContentChunkEditor(
                             scope.launch {
                                 bringIntoViewRequester.bringIntoView(cursorRect)
                             }
-                        } catch (e: Exception) {}
+                        } catch (e: Exception) {
+                            // getCursorRect can throw transiently while the layout is mid-update
+                            // (stale cursor index). The bring-into-view is purely cosmetic, so
+                            // skipping it for one frame is harmless — no need to crash or log spam.
+                        }
                     }
                 }
             }
@@ -320,7 +324,10 @@ fun NoteContentChunkEditor(
                                     radius = 40f,
                                     center = Offset(cursorRect.left, cursorRect.top + cursorRect.height / 2)
                                 )
-                            } catch (e: Exception) {}
+                            } catch (e: Exception) {
+                                // getCursorRect can throw transiently while the layout is mid-update.
+                                // The cursor glow is purely decorative — skip it for this frame.
+                            }
                         }
                     }
                 }

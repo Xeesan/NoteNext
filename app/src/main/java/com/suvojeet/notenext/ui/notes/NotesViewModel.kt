@@ -49,6 +49,9 @@ import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.withContext
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 
 import com.suvojeet.notenext.core.model.AttachmentType
 import com.suvojeet.notenext.core.model.NoteType
@@ -58,6 +61,7 @@ import com.suvojeet.notenext.data.repository.AiRepository
 import com.suvojeet.notenext.data.repository.AiResult
 import com.suvojeet.notenext.data.repository.onFailure
 import com.suvojeet.notenext.data.repository.onSuccess
+import com.suvojeet.notenext.data.repository.toUserMessage
 import com.suvojeet.notenext.data.NoteVersion
 import com.suvojeet.notenext.domain.use_case.NoteUseCases
 import com.suvojeet.notenext.ui.util.UndoRedoManager
@@ -124,6 +128,11 @@ class NotesViewModel @Inject constructor(
 
     private var lastCreatedNoteId: Int? = null
 
+    // Serializes concurrent saveNote() calls (e.g. a debounced auto-save racing a
+    // collapse-triggered save). Without this, two saves of a brand-new note can both
+    // run insertNote() before lastCreatedNoteId is set, creating a duplicate note.
+    private val saveMutex = Mutex()
+
     private fun scheduleAutoSave() {
         editorDelegate.scheduleAutoSave(viewModelScope) {
             saveNote(shouldCollapse = false)
@@ -187,13 +196,7 @@ class NotesViewModel @Inject constructor(
                         }.onFailure { failure ->
                             editorDelegate.updateState { it.copy(isGeneratingChecklist = false, generatedChecklistPreview = persistentListOf()) }
 
-                            val errorMessage = when (failure) {
-                                is AiResult.RateLimited -> "AI is busy. Please try again in ${failure.retryAfterSeconds}s."
-                                is AiResult.InvalidKey -> "Invalid API key. Check your settings."
-                                is AiResult.NetworkError -> "Network error: ${failure.message}"
-                                is AiResult.AllModelsFailed -> "All AI models failed to respond. Try again later."
-                                else -> "Failed to generate checklist."
-                            }
+                            val errorMessage = failure.toUserMessage("Failed to generate checklist.")
                             _events.emit(NotesUiEvent.ShowSnackbar(errorMessage, actionLabel = "Retry", onAction = { onEvent(NotesEvent.GenerateChecklist(event.topic)) }))
                         }
                     }
@@ -1542,30 +1545,34 @@ class NotesViewModel @Inject constructor(
         return repository.getNoteIdByTitle(title)
     }
 
-    private suspend fun saveNote(shouldCollapse: Boolean) {
+    private suspend fun saveNote(shouldCollapse: Boolean) = saveMutex.withLock {
         val expandedId = editState.value.expandedNoteId
         val externalUri = editState.value.externalUri
-        
-        if (expandedId == null) return
-        
-        // Handle external files separately
+
+        if (expandedId == null) return@withLock
+
+        // Handle external files separately. Write synchronously and only collapse on
+        // success — previously the write was fire-and-forget and the editor closed
+        // before it completed, discarding the user's content if the write failed.
         if (externalUri != null) {
-            viewModelScope.launch(kotlinx.coroutines.Dispatchers.IO) {
-                try {
-                    val content = if (editState.value.editingNoteType == NoteType.TEXT) {
-                         editState.value.editingContent.text
-                    } else {
-                        editState.value.editingChecklist.joinToString("\n") { (if (it.isChecked) "[x] " else "[ ] ") + it.text }
-                    }
+            val content = if (editState.value.editingNoteType == NoteType.TEXT) {
+                 editState.value.editingContent.text
+            } else {
+                editState.value.editingChecklist.joinToString("\n") { (if (it.isChecked) "[x] " else "[ ] ") + it.text }
+            }
+            val writeSucceeded = try {
+                withContext(kotlinx.coroutines.Dispatchers.IO) {
                     context.contentResolver.openOutputStream(externalUri, "rwt")?.use { outputStream ->
                         outputStream.write(content.toByteArray())
                     }
-                } catch (e: Exception) {
-                    e.printStackTrace()
-                    _events.emit(NotesUiEvent.ShowSnackbar("Failed to save external file: ${e.message}"))
                 }
+                true
+            } catch (e: Exception) {
+                e.printStackTrace()
+                _events.emit(NotesUiEvent.ShowSnackbar("Failed to save external file: ${e.message}"))
+                false
             }
-            if (shouldCollapse) {
+            if (writeSucceeded && shouldCollapse) {
                  editorDelegate.updateState { it.copy(
                     expandedNoteId = null,
                     externalUri = null,
@@ -1573,7 +1580,7 @@ class NotesViewModel @Inject constructor(
                     editingContent = TextFieldValue()
                 ) }
             }
-            return
+            return@withLock
         }
 
         // If it's a new note (-1), check if we already have a real ID from a previous auto-save
@@ -1592,27 +1599,37 @@ class NotesViewModel @Inject constructor(
             }
         } else {
             val currentTime = System.currentTimeMillis()
-            val note = if (noteId == -1) { // New note (truly new, first save)
-                Note(
-                    title = title,
-                    content = content,
-                    createdAt = currentTime,
-                    lastEdited = currentTime,
-                    color = editState.value.editingColor,
-                    isPinned = editState.value.isPinned,
-                    isArchived = editState.value.isArchived,
-                    label = editState.value.editingLabel,
-                    linkPreviews = editState.value.linkPreviews,
-                    noteType = editState.value.editingNoteType,
-                    isLocked = editState.value.editingIsLocked,
-                    reminderTime = editState.value.editingReminderTime,
-                    repeatOption = editState.value.editingRepeatOption,
-                    expiryTime = editState.value.editingExpiryTime,
-                    isDecoy = isDecoySession
-                )
-            } else { // Existing note
-                repository.getNoteById(noteId)?.let { existingNote ->
-                    existingNote.note.copy(
+
+            // Persist everything for this note atomically. A crash or cancellation
+            // mid-save previously could, for example, delete the checklist before
+            // re-inserting it (data loss). The single getNoteById() read inside the
+            // transaction also replaces the three separate reads used before, so the
+            // version snapshot and attachment diff all see one consistent state.
+            // Returns the saved note (with its real id), or null if the target note
+            // disappeared.
+            val savedNote: Note? = repository.runInTransaction {
+                val existing = if (noteId == -1) null else repository.getNoteById(noteId)
+
+                val note = if (noteId == -1) { // New note (truly new, first save)
+                    Note(
+                        title = title,
+                        content = content,
+                        createdAt = currentTime,
+                        lastEdited = currentTime,
+                        color = editState.value.editingColor,
+                        isPinned = editState.value.isPinned,
+                        isArchived = editState.value.isArchived,
+                        label = editState.value.editingLabel,
+                        linkPreviews = editState.value.linkPreviews,
+                        noteType = editState.value.editingNoteType,
+                        isLocked = editState.value.editingIsLocked,
+                        reminderTime = editState.value.editingReminderTime,
+                        repeatOption = editState.value.editingRepeatOption,
+                        expiryTime = editState.value.editingExpiryTime,
+                        isDecoy = isDecoySession
+                    )
+                } else { // Existing note
+                    existing?.note?.copy(
                         title = title,
                         content = content,
                         lastEdited = currentTime,
@@ -1630,16 +1647,13 @@ class NotesViewModel @Inject constructor(
                         isEncrypted = false,
                         iv = null
                     )
-                }
-            }
-            if (note != null) {
-                val currentNoteId = if (noteId == -1) { // New note
-                    repository.insertNote(note)
+                } ?: return@runInTransaction null
+
+                val currentNoteId: Int = if (noteId == -1) { // New note
+                    repository.insertNote(note).toInt()
                 } else { // Existing note
-                    // Before updating, save current state as a version if it's not a new note
-                    repository.getNoteById(noteId)?.let { oldNoteWithAttachments ->
-                        val oldNote = oldNoteWithAttachments.note
-                        // Only save version if content or title changed
+                    // Before updating, save current state as a version if it changed.
+                    existing?.note?.let { oldNote ->
                         if (oldNote.title != title || oldNote.content != content) {
                             repository.insertNoteVersion(
                                 NoteVersion(
@@ -1655,41 +1669,20 @@ class NotesViewModel @Inject constructor(
                     }
                     check(!note.isEncrypted) { "Attempting to save encrypted note from ViewModel — decrypt first." }
                     repository.updateNote(note)
-                    noteId.toLong() // Convert Int to Long for consistency
-                }
-                require(currentNoteId <= Int.MAX_VALUE) { "Note ID overflow" }
-
-                if (editState.value.editingReminderTime != null) {
-                    reminderScheduler.scheduleNoteReminder(note.copy(id = currentNoteId.toInt()))
-                } else if (noteId != -1) {
-                    reminderScheduler.cancelNoteReminder(note.copy(id = currentNoteId.toInt()))
-                }
-
-                // Self-destruct: schedule a per-note exact alarm so expiry fires within
-                // seconds of the requested time, not "up to one hour late" via the
-                // periodic AutoDeleteWorker. The worker still runs as a safety net.
-                val withId = note.copy(id = currentNoteId.toInt())
-                if (note.expiryTime != null) {
-                    reminderScheduler.scheduleNoteExpiry(withId)
-                } else if (noteId != -1) {
-                    reminderScheduler.cancelNoteExpiry(withId)
+                    noteId
                 }
 
                 // Handle Checklist Items
                 if (editState.value.editingNoteType == NoteType.CHECKLIST) {
                     val checklistItems = editState.value.editingChecklist.mapIndexed { index, item ->
-                        item.copy(noteId = currentNoteId.toInt(), position = index)
+                        item.copy(noteId = currentNoteId, position = index)
                     }
-                    repository.deleteChecklistForNote(currentNoteId.toInt())
+                    repository.deleteChecklistForNote(currentNoteId)
                     repository.insertChecklistItems(checklistItems)
                 }
 
-                // Handle attachments
-                val existingAttachmentsInDb = if (noteId != -1) {
-                    repository.getNoteById(noteId)?.attachments ?: persistentListOf()
-                } else {
-                    persistentListOf()
-                }
+                // Handle attachments (diff against the same `existing` read above)
+                val existingAttachmentsInDb = existing?.attachments ?: persistentListOf()
 
                 val attachmentsToAdd = editState.value.editingAttachments.filter { uiAttachment ->
                     existingAttachmentsInDb.none { dbAttachment ->
@@ -1708,11 +1701,36 @@ class NotesViewModel @Inject constructor(
                 }
 
                 attachmentsToAdd.forEach { attachment ->
-                    repository.insertAttachment(attachment.copy(noteId = currentNoteId.toInt()))
+                    repository.insertAttachment(attachment.copy(noteId = currentNoteId))
                 }
+
+                note.copy(id = currentNoteId)
+            }
+
+            if (savedNote != null) {
+                val currentNoteIdInt = savedNote.id
+
+                // Alarm scheduling and AI suggestions are deliberately OUTSIDE the
+                // transaction — they touch AlarmManager / the network and must not hold
+                // a DB transaction open.
+                if (savedNote.reminderTime != null) {
+                    reminderScheduler.scheduleNoteReminder(savedNote)
+                } else if (noteId != -1) {
+                    reminderScheduler.cancelNoteReminder(savedNote)
+                }
+
+                // Self-destruct: schedule a per-note exact alarm so expiry fires within
+                // seconds of the requested time, not "up to one hour late" via the
+                // periodic AutoDeleteWorker. The worker still runs as a safety net.
+                if (savedNote.expiryTime != null) {
+                    reminderScheduler.scheduleNoteExpiry(savedNote)
+                } else if (noteId != -1) {
+                    reminderScheduler.cancelNoteExpiry(savedNote)
+                }
+
                 draftRepository.clearNoteDraft()
                 updateWidgets()
-                // If it was a new note, we now have a real ID. 
+                // If it was a new note, we now have a real ID.
                 // We update editingIsNewNote to false so next saves know it's not new anymore.
                 // But we DO NOT update expandedNoteId yet if it was -1, to avoid the 'jolt' in AnimatedContent.
                 if (expandedId == -1 && lastCreatedNoteId == null) {
@@ -1721,7 +1739,7 @@ class NotesViewModel @Inject constructor(
                         expandedNoteId = -1, // Keep it -1 to avoid triggering NoteTransition in NotesScreen
                         editingLastEdited = currentTime
                     ) }
-                    lastCreatedNoteId = currentNoteId.toInt()
+                    lastCreatedNoteId = currentNoteIdInt
                     savedStateHandle[KEY_EXPANDED_NOTE_ID] = lastCreatedNoteId
                 } else {
                     // Update lastEdited time so UI (MoreOptionsSheet) shows it
@@ -1733,7 +1751,7 @@ class NotesViewModel @Inject constructor(
                 // Fire AI suggestions (auto-tag, smart reminder, linked notes) — gated inside delegate.
                 // Skipped for empty-collapse and for new-note-with-no-content cases above.
                 fireAISuggestionsAfterSave(
-                    noteId = currentNoteId.toInt(),
+                    noteId = currentNoteIdInt,
                     title = title,
                     content = content
                 )

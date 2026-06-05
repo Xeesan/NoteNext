@@ -169,8 +169,10 @@ fun DrawingScreen(
                                         currentPath = Path().apply { moveTo(offset.x, offset.y) }
                                     },
                                     onDrag = { change, _ ->
-                                        currentPath?.lineTo(change.position.x, change.position.y)
-                                        currentPath = Path().apply { addPath(currentPath!!) }
+                                        currentPath?.let { existing ->
+                                            existing.lineTo(change.position.x, change.position.y)
+                                            currentPath = Path().apply { addPath(existing) }
+                                        }
                                     },
                                     onDragEnd = {
                                         currentPath?.let { viewModel.onEvent(DrawingEvent.PathAdded(it)) }

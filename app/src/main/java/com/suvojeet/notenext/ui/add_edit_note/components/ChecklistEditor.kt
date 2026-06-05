@@ -267,7 +267,11 @@ fun ChecklistItemRow(
                             scope.launch {
                                 bringIntoViewRequester.bringIntoView(cursorRect)
                             }
-                        } catch (e: Exception) {}
+                        } catch (e: Exception) {
+                            // getCursorRect can throw transiently while the layout is mid-update
+                            // (stale cursor index). The bring-into-view is purely cosmetic, so
+                            // skipping it for one frame is harmless — no need to crash or log spam.
+                        }
                     }
                 }
             }

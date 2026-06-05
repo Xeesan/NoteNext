@@ -63,7 +63,12 @@ object AppModule {
             NoteDatabase.MIGRATION_27_28,
             NoteDatabase.MIGRATION_28_29,
             NoteDatabase.MIGRATION_29_30
-        ).build()
+        )
+            // Installing an older APK over a newer one (DB downgrade) would otherwise throw
+            // IllegalStateException on launch and crash-loop the app. Rebuild the DB instead
+            // of crashing. Upgrades remain non-destructive via the migrations above.
+            .fallbackToDestructiveMigrationOnDowngrade(dropAllTables = true)
+            .build()
     }
 
     @Provides

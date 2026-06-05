@@ -46,6 +46,7 @@ import com.suvojeet.notenext.data.repository.AiRepository
 import com.suvojeet.notenext.data.repository.AiResult
 import com.suvojeet.notenext.data.repository.onFailure
 import com.suvojeet.notenext.data.repository.onSuccess
+import com.suvojeet.notenext.data.repository.toUserMessage
 import com.suvojeet.notenext.ui.theme.NoteGradients
 import com.suvojeet.notenext.core.model.NoteType
 import com.suvojeet.notenext.core.model.AttachmentType
@@ -776,13 +777,7 @@ class ProjectNotesViewModel @Inject constructor(
                         result.onSuccess { summary ->
                             _state.value = _state.value.copy(isSummarizing = false, summaryResult = summary)
                         }.onFailure { failure ->
-                            val errorMessage = when (failure) {
-                                is AiResult.RateLimited -> "AI is busy. Please try again in ${failure.retryAfterSeconds}s."
-                                is AiResult.InvalidKey -> "Invalid API key. Check settings."
-                                is AiResult.NetworkError -> "Network error: ${failure.message}"
-                                is AiResult.AllModelsFailed -> "AI failed to respond. Try again later."
-                                else -> "Summarization failed."
-                            }
+                            val errorMessage = failure.toUserMessage("Summarization failed.")
                             _state.value = _state.value.copy(isSummarizing = false, showSummaryDialog = false)
                             _events.emit(ProjectNotesUiEvent.ShowSnackbar(errorMessage, actionLabel = "Retry", onAction = { onEvent(ProjectNotesEvent.Summarize) }))
                         }
@@ -804,13 +799,7 @@ class ProjectNotesViewModel @Inject constructor(
                                 generatedChecklistPreview = items
                             )
                         }.onFailure { failure ->
-                            val errorMessage = when (failure) {
-                                is AiResult.RateLimited -> "AI is busy. Please try again in ${failure.retryAfterSeconds}s."
-                                is AiResult.InvalidKey -> "Invalid API key. Check settings."
-                                is AiResult.NetworkError -> "Network error: ${failure.message}"
-                                is AiResult.AllModelsFailed -> "AI failed to respond. Try again later."
-                                else -> "Generation failed."
-                            }
+                            val errorMessage = failure.toUserMessage("Generation failed.")
                             _state.value = _state.value.copy(isGeneratingChecklist = false)
                             _events.emit(ProjectNotesUiEvent.ShowSnackbar(errorMessage, actionLabel = "Retry", onAction = { onEvent(ProjectNotesEvent.GenerateChecklist(event.topic)) }))
                         }
@@ -850,13 +839,7 @@ class ProjectNotesViewModel @Inject constructor(
                                 originalContentBackup = state.value.editingContent
                             )
                         }.onFailure { failure ->
-                            val errorMessage = when (failure) {
-                                is AiResult.RateLimited -> "AI is busy. Please try again in ${failure.retryAfterSeconds}s."
-                                is AiResult.InvalidKey -> "Invalid API key. Check settings."
-                                is AiResult.NetworkError -> "Network error: ${failure.message}"
-                                is AiResult.AllModelsFailed -> "AI failed to respond. Try again later."
-                                else -> "Grammar fix failed."
-                            }
+                            val errorMessage = failure.toUserMessage("Grammar fix failed.")
                             _state.value = _state.value.copy(isFixingGrammar = false)
                             _events.emit(ProjectNotesUiEvent.ShowSnackbar(errorMessage, actionLabel = "Retry", onAction = { onEvent(ProjectNotesEvent.FixGrammar) }))
                         }

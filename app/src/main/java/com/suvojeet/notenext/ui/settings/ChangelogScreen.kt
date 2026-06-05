@@ -71,11 +71,12 @@ fun ChangelogScreen(
         }
     ) { paddingValues ->
         Box(modifier = Modifier.fillMaxSize().padding(paddingValues)) {
+            val result = changelogResult
             when {
-                changelogResult == null -> {
+                result == null -> {
                     ExpressiveLoading()
                 }
-                changelogResult!!.isFailure -> {
+                result.isFailure -> {
                     Column(
                         modifier = Modifier.fillMaxSize().padding(24.dp),
                         horizontalAlignment = Alignment.CenterHorizontally,
@@ -84,7 +85,7 @@ fun ChangelogScreen(
                         Icon(Icons.Rounded.CloudOff, null, modifier = Modifier.size(64.dp), tint = MaterialTheme.colorScheme.error)
                         Spacer(modifier = Modifier.height(16.dp))
                         Text("Failed to load changelog", style = MaterialTheme.typography.titleMedium)
-                        Text(changelogResult!!.exceptionOrNull()?.message ?: "Unknown error", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                        Text(result.exceptionOrNull()?.message ?: "Unknown error", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
                         Spacer(modifier = Modifier.height(24.dp))
                         Button(onClick = { 
                             changelogResult = null
@@ -94,8 +95,8 @@ fun ChangelogScreen(
                         }
                     }
                 }
-                changelogResult!!.isSuccess -> {
-                    val data = changelogResult!!.getOrThrow()
+                result.isSuccess -> {
+                    val data = result.getOrThrow()
                     LazyColumn(
                         modifier = Modifier.fillMaxSize(),
                         contentPadding = PaddingValues(bottom = 32.dp),

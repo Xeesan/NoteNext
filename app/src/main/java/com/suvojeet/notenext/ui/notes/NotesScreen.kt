@@ -32,6 +32,7 @@ import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.*
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -659,6 +660,19 @@ fun NotesScreen(
                     }
                 }
             } else {
+                 // Flush any pending (debounced) auto-save when the app is backgrounded
+                 // while the editor is open, so edits made in the last ~2s aren't lost if
+                 // the process is killed before the debounce timer fires.
+                 val lifecycleOwner = androidx.lifecycle.compose.LocalLifecycleOwner.current
+                 DisposableEffect(lifecycleOwner) {
+                     val observer = androidx.lifecycle.LifecycleEventObserver { _, event ->
+                         if (event == androidx.lifecycle.Lifecycle.Event.ON_STOP) {
+                             viewModel.onEvent(NotesEvent.AutoSaveNote)
+                         }
+                     }
+                     lifecycleOwner.lifecycle.addObserver(observer)
+                     onDispose { lifecycleOwner.lifecycle.removeObserver(observer) }
+                 }
                  AddEditNoteScreen(
                     state = editState,
                     onEvent = viewModel::onEvent,

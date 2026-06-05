@@ -48,6 +48,18 @@ inline fun <T> AiResult<T>.onFailure(action: (AiResult<Nothing>) -> Unit): AiRes
 }
 
 /**
+ * Maps an [AiResult] failure to a single user-facing message so every AI feature shows
+ * consistent error copy. Pass a feature-specific [fallback] for the unexpected/Success case.
+ */
+fun AiResult<*>.toUserMessage(fallback: String): String = when (this) {
+    is AiResult.RateLimited -> "AI is busy. Please try again in ${retryAfterSeconds}s."
+    is AiResult.InvalidKey -> "Invalid API key. Check your settings."
+    is AiResult.NetworkError -> "Network error: $message"
+    is AiResult.AllModelsFailed -> "All AI models failed to respond. Try again later."
+    is AiResult.Success -> fallback
+}
+
+/**
  * Task 3.3: Per-model rate limit tracking
  */
 object GroqRateLimitManager {
