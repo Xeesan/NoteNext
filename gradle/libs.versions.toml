@@ -1,6 +1,9 @@
 [versions]
 # SDK Versions
-compileSdk = "36"
+# compileSdk must be 37: the Compose BOM 2026.02.01 / material3 1.5.0-alpha21 alphas
+# declare a minCompileSdk of 37 via AAR metadata. targetSdk stays 36 so runtime
+# behavior is unchanged (compileSdk only widens the APIs available at compile time).
+compileSdk = "37"
 minSdk     = "24"
 targetSdk  = "36"
 
