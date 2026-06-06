@@ -481,7 +481,7 @@ fun NotesScreen(
                                                         contentType = { it.note.noteType }
                                                     ) { note ->
                                                         val noteModifier = Modifier
-                                                            .animateItem()
+                                                            .animateItem(placementSpec = androidx.compose.animation.core.spring(stiffness = androidx.compose.animation.core.Spring.StiffnessMediumLow))
                                                             .sharedElement(
                                                                 rememberSharedContentState(key = "note-${note.note.id}"),
                                                                 animatedVisibilityScope = this@AnimatedContent
@@ -530,7 +530,7 @@ fun NotesScreen(
                                                     ) { index ->
                                                         pagedNotes[index]?.let { note ->
                                                             val noteModifier = Modifier
-                                                                .animateItem()
+                                                                .animateItem(placementSpec = androidx.compose.animation.core.spring(stiffness = androidx.compose.animation.core.Spring.StiffnessMediumLow))
                                                                 .sharedElement(
                                                                     rememberSharedContentState(key = "note-${note.note.id}"),
                                                                     animatedVisibilityScope = this@AnimatedContent
@@ -583,7 +583,7 @@ fun NotesScreen(
                                                         contentType = { it.note.noteType }
                                                     ) { note ->
                                                         val noteModifier = Modifier
-                                                            .animateItem()
+                                                            .animateItem(placementSpec = androidx.compose.animation.core.spring(stiffness = androidx.compose.animation.core.Spring.StiffnessMediumLow))
                                                             .sharedElement(
                                                                 rememberSharedContentState(key = "note-${note.note.id}"),
                                                                 animatedVisibilityScope = this@AnimatedContent
@@ -632,7 +632,7 @@ fun NotesScreen(
                                                     ) { index ->
                                                         pagedNotes[index]?.let { note ->
                                                             val noteModifier = Modifier
-                                                                .animateItem()
+                                                                .animateItem(placementSpec = androidx.compose.animation.core.spring(stiffness = androidx.compose.animation.core.Spring.StiffnessMediumLow))
                                                                 .sharedElement(
                                                                     rememberSharedContentState(key = "note-${note.note.id}"),
                                                                     animatedVisibilityScope = this@AnimatedContent

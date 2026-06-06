@@ -101,20 +101,22 @@ fun NoteItem(
     val motionScheme = MaterialTheme.motionScheme
     val surfaceContainer = MaterialTheme.colorScheme.surfaceContainer
     val primary = MaterialTheme.colorScheme.primary
-    val outline = MaterialTheme.colorScheme.outline
-    
+    val outlineVariant = MaterialTheme.colorScheme.outlineVariant
+
+    // Google Keep–style flat cards: no drop shadow. Separation comes from a
+    // crisp thin outline + the container colour, not elevation.
     val elevation by animateDpAsState(
-        targetValue = if (isSelected) 4.dp else (if (isDefaultColor) 1.dp else 0.dp),
+        targetValue = 0.dp,
         animationSpec = motionScheme.fastSpatialSpec(),
         label = "Elevation"
     )
 
-    val cardShape = MaterialTheme.shapes.large
+    val cardShape = MaterialTheme.shapes.medium
 
     val borderStroke = if (isSelected) {
         BorderStroke(2.dp, primary)
     } else if (isDefaultColor) {
-        BorderStroke(1.dp, outline.copy(alpha = 0.12f))
+        BorderStroke(1.dp, outlineVariant)
     } else {
         null
     }
