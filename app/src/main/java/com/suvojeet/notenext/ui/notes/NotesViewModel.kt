@@ -609,8 +609,11 @@ class NotesViewModel @Inject constructor(
             // Single-note swipe actions (from the note list). Both show an Undo
             // snackbar that restores the original flag state.
             is NotesEvent.DeleteNote -> {
-                val original = event.note.note
+                val noteId = event.note.note.id
                 viewModelScope.launch(kotlinx.coroutines.Dispatchers.IO) {
+                    // updateNote needs the full Note; the swipe event only carries the
+                    // NoteSummary, so fetch the full row by id (same as OnDeleteNoteClick).
+                    val original = repository.getNoteById(noteId)?.note ?: return@launch
                     repository.updateNote(original.copy(isBinned = true, binnedOn = System.currentTimeMillis()))
                     updateWidgets()
                     _events.emit(NotesUiEvent.ShowSnackbar(
@@ -626,8 +629,9 @@ class NotesViewModel @Inject constructor(
                 }
             }
             is NotesEvent.ArchiveNote -> {
-                val original = event.note.note
+                val noteId = event.note.note.id
                 viewModelScope.launch(kotlinx.coroutines.Dispatchers.IO) {
+                    val original = repository.getNoteById(noteId)?.note ?: return@launch
                     repository.updateNote(original.copy(isArchived = true))
                     updateWidgets()
                     _events.emit(NotesUiEvent.ShowSnackbar(
