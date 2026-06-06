@@ -352,8 +352,11 @@ fun AddEditNoteScreen(
                     Surface(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(horizontal = 8.dp, vertical = 4.dp)
-                            .imePadding(),
+                            // Float above the keyboard when it's open, above the nav bar
+                            // when it's closed — the union takes the larger of the two, so
+                            // the nav-bar inset is never added on top of the IME inset.
+                            .windowInsetsPadding(WindowInsets.ime.union(WindowInsets.navigationBars))
+                            .padding(horizontal = 8.dp, vertical = 4.dp),
                         shape = MaterialTheme.shapes.extraLarge,
                         color = MaterialTheme.colorScheme.surfaceContainerHigh.copy(alpha = 0.95f),
                         tonalElevation = 2.dp,
@@ -559,7 +562,7 @@ fun AddEditNoteScreen(
             exit = slideOutVertically(targetOffsetY = { it }, animationSpec = spring()) + fadeOut(spring()) + androidx.compose.animation.scaleOut(targetScale = 0.9f, animationSpec = spring()),
             modifier = Modifier
                 .align(Alignment.BottomCenter)
-                .imePadding()
+                .windowInsetsPadding(WindowInsets.ime.union(WindowInsets.navigationBars))
                 .padding(bottom = 120.dp)
         ) {
             Surface(
@@ -590,7 +593,7 @@ fun AddEditNoteScreen(
             exit = fadeOut(spring()) + slideOutVertically(animationSpec = spring()) { it } + androidx.compose.animation.scaleOut(animationSpec = spring(), targetScale = 0.8f),
             modifier = Modifier
                 .align(Alignment.BottomEnd)
-                .imePadding()
+                .windowInsetsPadding(WindowInsets.ime.union(WindowInsets.navigationBars))
                 .offset { IntOffset(aiButtonOffsetX.roundToInt(), aiButtonOffsetY.roundToInt()) }
                 .pointerInput(Unit) {
                     detectDragGestures { change, dragAmount ->
@@ -613,6 +616,9 @@ fun AddEditNoteScreen(
             exit = androidx.compose.animation.scaleOut(animationSpec = spring()) + fadeOut(spring()),
             modifier = Modifier
                 .align(Alignment.BottomEnd)
+                // Was missing IME handling, so it sat behind the keyboard. Now it
+                // rises with the keyboard like the other floating actions.
+                .windowInsetsPadding(WindowInsets.ime.union(WindowInsets.navigationBars))
                 .padding(bottom = 100.dp, end = 16.dp)
         ) {
             Surface(

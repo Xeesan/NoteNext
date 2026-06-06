@@ -51,7 +51,10 @@ fun AddEditNoteBottomAppBar(
 
     BottomAppBar(
         containerColor = backgroundColor,
-        windowInsets = BottomAppBarDefaults.windowInsets,
+        // Insets are handled by the enclosing Surface (ime ∪ navigationBars).
+        // Consuming them again here would double the bottom gap when the
+        // keyboard is open, so this bar takes zero insets.
+        windowInsets = WindowInsets(0, 0, 0, 0),
         modifier = Modifier.height(56.dp)
     ) {
         Row(
