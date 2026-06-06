@@ -16,6 +16,10 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.ui.draw.clip
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
 import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
@@ -741,7 +745,13 @@ private fun MoveToProjectDialog(
         shape = MaterialTheme.shapes.extraLarge,
         title = { Text(stringResource(id = R.string.move_to_project)) },
         text = {
-            Column {
+            // Cap the height and make it scrollable so a long project list can't
+            // overflow the dialog off-screen.
+            Column(
+                modifier = Modifier
+                    .heightIn(max = 360.dp)
+                    .verticalScroll(rememberScrollState())
+            ) {
                 projects.forEach { project ->
                     Row(
                         modifier = Modifier
@@ -753,6 +763,17 @@ private fun MoveToProjectDialog(
                         RadioButton(
                             selected = (selectedProject == project),
                             onClick = { selectedProject = project }
+                        )
+                        // Project color dot for quick visual identification.
+                        Box(
+                            modifier = Modifier
+                                .padding(start = 8.dp)
+                                .size(14.dp)
+                                .clip(CircleShape)
+                                .background(
+                                    project.color?.let { Color(it) }
+                                        ?: MaterialTheme.colorScheme.surfaceVariant
+                                )
                         )
                         Text(text = project.name, modifier = Modifier.padding(start = 8.dp))
                     }

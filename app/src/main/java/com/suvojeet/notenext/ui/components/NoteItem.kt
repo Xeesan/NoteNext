@@ -20,7 +20,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
@@ -50,6 +52,16 @@ fun NoteItem(
     val colorScheme = MaterialTheme.colorScheme
     val onSurface = colorScheme.onSurface
     val onSurfaceVariant = colorScheme.onSurfaceVariant
+
+    // Long-press = enter selection mode → give a tactile confirmation. Wrapping the
+    // callback here covers every long-press path (card + text tap-gesture) in one place.
+    val haptic = LocalHapticFeedback.current
+    val onNoteLongClickHaptic = remember(onNoteLongClick, haptic) {
+        {
+            haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+            onNoteLongClick()
+        }
+    }
 
     val adaptiveColor = remember(note.note.color, isDarkTheme) {
         NoteGradients.getAdaptiveColor(note.note.color, isDarkTheme)
@@ -113,7 +125,7 @@ fun NoteItem(
             .springPress()
             .combinedClickable(
                 onClick = onNoteClick,
-                onLongClick = onNoteLongClick
+                onLongClick = onNoteLongClickHaptic
             ),
         shape = cardShape,
         colors = CardDefaults.cardColors(
@@ -274,7 +286,7 @@ fun NoteItem(
                                 modifier = Modifier.pointerInput(Unit) {
                                     detectTapGestures(
                                         onLongPress = {
-                                            onNoteLongClick()
+                                            onNoteLongClickHaptic()
                                         },
                                         onTap = { pos ->
                                             val layoutResult = textLayoutResult ?: return@detectTapGestures

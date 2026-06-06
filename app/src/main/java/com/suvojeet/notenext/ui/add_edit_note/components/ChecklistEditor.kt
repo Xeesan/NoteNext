@@ -35,7 +35,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.input.key.*
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextLayoutResult
 import androidx.compose.ui.text.TextStyle
@@ -67,13 +69,14 @@ fun LazyListScope.ChecklistEditor(
     itemsIndexed(uncheckedItems, key = { _, item -> item.id }) { index, item ->
         val dragOffset = remember { mutableStateOf(0f) }
         val isDragging = dragOffset.value != 0f
-        
+
         val currentUncheckedItems by rememberUpdatedState(uncheckedItems)
         val currentIndex by rememberUpdatedState(index)
-        
+
         val density = LocalDensity.current
         val itemHeightPx = remember(density) { with(density) { 56.dp.toPx() } }
-        
+        val haptic = LocalHapticFeedback.current
+
         val dragModifier = Modifier
             .pointerInput(Unit) {
                 detectDragGestures(
@@ -81,17 +84,19 @@ fun LazyListScope.ChecklistEditor(
                     onDrag = { change, dragAmount ->
                         change.consume()
                         dragOffset.value += dragAmount.y
-                        
+
                         val items = currentUncheckedItems
                         val i = currentIndex
 
                         if (dragOffset.value > itemHeightPx) {
                             if (i < items.lastIndex) {
+                                haptic.performHapticFeedback(HapticFeedbackType.LongPress)
                                 onEvent(NotesEvent.SwapChecklistItems(item.id, items[i + 1].id))
-                                dragOffset.value -= itemHeightPx 
+                                dragOffset.value -= itemHeightPx
                             }
                         } else if (dragOffset.value < -itemHeightPx) {
                             if (i > 0) {
+                                haptic.performHapticFeedback(HapticFeedbackType.LongPress)
                                 onEvent(NotesEvent.SwapChecklistItems(item.id, items[i - 1].id))
                                 dragOffset.value += itemHeightPx
                             }
@@ -220,6 +225,7 @@ fun ChecklistItemRow(
     val bringIntoViewRequester = remember { BringIntoViewRequester() }
     var textLayoutResult by remember { mutableStateOf<TextLayoutResult?>(null) }
     val scope = rememberCoroutineScope()
+    val haptic = LocalHapticFeedback.current
 
     val dismissState = rememberSwipeToDismissBoxState(
         confirmValueChange = {
@@ -321,6 +327,7 @@ fun ChecklistItemRow(
                 Checkbox(
                     checked = item.isChecked,
                     onCheckedChange = { checked ->
+                        haptic.performHapticFeedback(HapticFeedbackType.TextHandleMove)
                         onEvent(NotesEvent.OnChecklistItemCheckedChange(item.id, checked))
                     },
                     colors = CheckboxDefaults.colors(

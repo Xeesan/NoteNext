@@ -24,6 +24,7 @@ import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.contentColorFor
+import androidx.compose.material3.minimumInteractiveComponentSize
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -114,26 +115,35 @@ private fun ColorCircle(
     )
     
     Box(
+        // Outer box reserves a >=48dp touch target (a11y minimum) while the
+        // visual circle below stays 40dp. minimumInteractiveComponentSize is the
+        // same mechanism Material3 uses for Checkbox/RadioButton hit areas.
         modifier = Modifier
-            .size(40.dp)
-            .scale(scale)
+            .minimumInteractiveComponentSize()
             .clip(CircleShape)
-            .background(
-                if (color != null) Color(color) else Color.Transparent,
-                CircleShape
-            )
-            .border(
-                width = if (isSelected) 3.dp else 2.dp,
-                color = if (isSelected) {
-                    if (color != null) contentColorFor(Color(color)) else MaterialTheme.colorScheme.primary
-                } else {
-                    MaterialTheme.colorScheme.onSurface.copy(alpha = 0.2f)
-                },
-                shape = CircleShape
-            )
             .clickable { onClick() },
         contentAlignment = Alignment.Center
     ) {
+        Box(
+            modifier = Modifier
+                .size(40.dp)
+                .scale(scale)
+                .clip(CircleShape)
+                .background(
+                    if (color != null) Color(color) else Color.Transparent,
+                    CircleShape
+                )
+                .border(
+                    width = if (isSelected) 3.dp else 2.dp,
+                    color = if (isSelected) {
+                        if (color != null) contentColorFor(Color(color)) else MaterialTheme.colorScheme.primary
+                    } else {
+                        MaterialTheme.colorScheme.onSurface.copy(alpha = 0.2f)
+                    },
+                    shape = CircleShape
+                ),
+            contentAlignment = Alignment.Center
+        ) {
         if (color == null) {
             // No color icon
             Icon(
@@ -161,6 +171,7 @@ private fun ColorCircle(
                     .size(20.dp)
                     .scale(checkScale)
             )
+        }
         }
     }
 }

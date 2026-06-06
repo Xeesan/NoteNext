@@ -50,6 +50,7 @@ fun TodoItemCard(
     val todo = todoWithSubtasks.todo
     val subtasks = todoWithSubtasks.subtasks
     var showMenu by remember { mutableStateOf(false) }
+    val haptic = androidx.compose.ui.platform.LocalHapticFeedback.current
 
     val priorityColor = when (todo.priority) {
         2 -> TodoPriorityColors.High
@@ -156,7 +157,10 @@ fun TodoItemCard(
 
                 Checkbox(
                     checked = todo.isCompleted,
-                    onCheckedChange = { onToggleComplete() },
+                    onCheckedChange = {
+                        haptic.performHapticFeedback(androidx.compose.ui.hapticfeedback.HapticFeedbackType.TextHandleMove)
+                        onToggleComplete()
+                    },
                     modifier = Modifier
                         .padding(start = 10.dp)
                         .springPress(),
