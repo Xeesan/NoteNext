@@ -730,7 +730,7 @@ private fun CreateProjectDialog(
 
 @Composable
 private fun MoveToProjectDialog(
-    projects: List<com.suvojeet.notenext.data.Project>,
+    projects: kotlinx.collections.immutable.ImmutableList<com.suvojeet.notenext.data.Project>,
     onDismiss: () -> Unit,
     onConfirm: (Int?) -> Unit
 ) {

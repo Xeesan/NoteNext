@@ -121,6 +121,21 @@ android {
     }
 }
 
+// ── Compose compiler diagnostics ────────────────────────────────────────────
+// Opt-in stability & recomposition reports. OFF by default (no overhead on
+// normal builds). Enable with:
+//     ./gradlew :app:assembleDebug -PcomposeReports
+// Output lands in app/build/compose_compiler/:
+//   *-classes.txt    → which classes are stable / unstable
+//   *-composables.txt → which @Composables are skippable / restartable
+// Use these to confirm the @Immutable state classes actually skip recomposition.
+composeCompiler {
+    if (project.hasProperty("composeReports")) {
+        metricsDestination = layout.buildDirectory.dir("compose_compiler")
+        reportsDestination = layout.buildDirectory.dir("compose_compiler")
+    }
+}
+
 dependencies {
     implementation(project(":core"))
     implementation(project(":data"))

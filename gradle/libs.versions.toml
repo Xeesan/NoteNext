@@ -10,10 +10,10 @@ targetSdk  = "36"
 # ── Toolchain ───────────────────────────────────────────────────
 # AGP 9.x ships with built-in Kotlin — kotlin-android plugin no longer needed
 agp                  = "9.1.0"
-kotlin               = "2.3.10"
-ksp                  = "2.3.5"          # pinned — do not upgrade
+kotlin               = "2.3.21"
+ksp                  = "2.3.9"          # tracks kotlin's 2.3 series — bump together with kotlin
 hilt                 = "2.59.2"
-kotlin-serialization = "2.3.10"         # must stay in sync with kotlin
+kotlin-serialization = "2.3.21"         # must stay in sync with kotlin
 
 # ── Compose & Material ──────────────────────────────────────────
 composeBom     = "2026.02.01"

@@ -12,6 +12,9 @@ import com.suvojeet.notenext.ui.notes.SaveStatus
 
 import com.suvojeet.notenext.core.model.NoteType
 
+import androidx.compose.runtime.Immutable
+
+@Immutable
 data class ProjectNotesState(
     val notes: List<NoteSummaryWithAttachments> = emptyList(),
     val todos: List<com.suvojeet.notenext.data.TodoWithSubtasks> = emptyList(),

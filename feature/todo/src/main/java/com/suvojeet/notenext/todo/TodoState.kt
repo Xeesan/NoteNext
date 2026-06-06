@@ -1,8 +1,10 @@
 package com.suvojeet.notenext.todo
 
+import androidx.compose.runtime.Immutable
 import com.suvojeet.notenext.data.TodoItem
 import com.suvojeet.notenext.data.TodoSubtask
 
+@Immutable
 data class TodoState(
     val filter: TodoFilter = TodoFilter.All,
     val isLoading: Boolean = true,
