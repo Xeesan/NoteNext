@@ -30,6 +30,8 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Archive
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Note
 import androidx.compose.material.icons.filled.Search
@@ -492,14 +494,18 @@ fun NotesScreen(
                                                             { viewModel.onEvent(NotesEvent.ToggleNoteSelection(note.note.id)) }
                                                         }
 
-                                                        NoteItem(
+                                                        SwipeableNoteItem(
                                                             modifier = noteModifier,
                                                             note = note,
                                                             isSelected = listState.selectedNoteIds.contains(note.note.id),
                                                             searchQuery = listState.searchQuery,
+                                                            isDarkTheme = isDarkTheme,
+                                                            swipeEnabled = listState.layoutType == LayoutType.LIST,
+                                                            isSelectionModeActive = isSelectionModeActive,
                                                             onNoteClick = onNoteClick,
                                                             onNoteLongClick = onNoteLongClick,
-                                                            isDarkTheme = isDarkTheme
+                                                            onArchive = { viewModel.onEvent(NotesEvent.ArchiveNote(note)) },
+                                                            onBin = { viewModel.onEvent(NotesEvent.DeleteNote(note)) }
                                                         )
                                                     }
                                                 }
@@ -537,14 +543,18 @@ fun NotesScreen(
                                                                 { viewModel.onEvent(NotesEvent.ToggleNoteSelection(note.note.id)) }
                                                             }
 
-                                                            NoteItem(
+                                                            SwipeableNoteItem(
                                                                 modifier = noteModifier,
                                                                 note = note,
                                                                 isSelected = listState.selectedNoteIds.contains(note.note.id),
                                                                 searchQuery = listState.searchQuery,
+                                                                isDarkTheme = isDarkTheme,
+                                                                swipeEnabled = listState.layoutType == LayoutType.LIST,
+                                                                isSelectionModeActive = isSelectionModeActive,
                                                                 onNoteClick = onNoteClick,
                                                                 onNoteLongClick = onNoteLongClick,
-                                                                isDarkTheme = isDarkTheme
+                                                                onArchive = { viewModel.onEvent(NotesEvent.ArchiveNote(note)) },
+                                                                onBin = { viewModel.onEvent(NotesEvent.DeleteNote(note)) }
                                                             )
                                                         }
                                                     }
@@ -586,14 +596,18 @@ fun NotesScreen(
                                                             { viewModel.onEvent(NotesEvent.ToggleNoteSelection(note.note.id)) }
                                                         }
 
-                                                        NoteItem(
+                                                        SwipeableNoteItem(
                                                             modifier = noteModifier,
                                                             note = note,
                                                             isSelected = listState.selectedNoteIds.contains(note.note.id),
                                                             searchQuery = listState.searchQuery,
+                                                            isDarkTheme = isDarkTheme,
+                                                            swipeEnabled = listState.layoutType == LayoutType.LIST,
+                                                            isSelectionModeActive = isSelectionModeActive,
                                                             onNoteClick = onNoteClick,
                                                             onNoteLongClick = onNoteLongClick,
-                                                            isDarkTheme = isDarkTheme
+                                                            onArchive = { viewModel.onEvent(NotesEvent.ArchiveNote(note)) },
+                                                            onBin = { viewModel.onEvent(NotesEvent.DeleteNote(note)) }
                                                         )
                                                     }
                                                 }
@@ -631,14 +645,18 @@ fun NotesScreen(
                                                                 { viewModel.onEvent(NotesEvent.ToggleNoteSelection(note.note.id)) }
                                                             }
 
-                                                            NoteItem(
+                                                            SwipeableNoteItem(
                                                                 modifier = noteModifier,
                                                                 note = note,
                                                                 isSelected = listState.selectedNoteIds.contains(note.note.id),
                                                                 searchQuery = listState.searchQuery,
+                                                                isDarkTheme = isDarkTheme,
+                                                                swipeEnabled = listState.layoutType == LayoutType.LIST,
+                                                                isSelectionModeActive = isSelectionModeActive,
                                                                 onNoteClick = onNoteClick,
                                                                 onNoteLongClick = onNoteLongClick,
-                                                                isDarkTheme = isDarkTheme
+                                                                onArchive = { viewModel.onEvent(NotesEvent.ArchiveNote(note)) },
+                                                                onBin = { viewModel.onEvent(NotesEvent.DeleteNote(note)) }
                                                             )
                                                         }
                                                     }
@@ -691,6 +709,100 @@ fun NotesScreen(
                 )
             }
         }
+    }
+}
+
+/**
+ * Wraps a [NoteItem] with swipe-to-act gestures (LIST layout only):
+ *  - swipe right (StartToEnd) → archive
+ *  - swipe left  (EndToStart) → move to bin
+ * Both surface an Undo snackbar from the ViewModel. Gestures are disabled while
+ * multi-selecting so they don't fight tap-to-select.
+ */
+@Composable
+private fun SwipeableNoteItem(
+    note: com.suvojeet.notenext.data.NoteSummaryWithAttachments,
+    isSelected: Boolean,
+    searchQuery: String,
+    isDarkTheme: Boolean,
+    swipeEnabled: Boolean,
+    isSelectionModeActive: Boolean,
+    onNoteClick: () -> Unit,
+    onNoteLongClick: () -> Unit,
+    onArchive: () -> Unit,
+    onBin: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    // Swipe is meaningful only in the LIST layout. In GRID (or while selecting)
+    // render the bare card so there's no behavior change there.
+    if (!swipeEnabled) {
+        NoteItem(
+            modifier = modifier,
+            note = note,
+            isSelected = isSelected,
+            searchQuery = searchQuery,
+            onNoteClick = onNoteClick,
+            onNoteLongClick = onNoteLongClick,
+            isDarkTheme = isDarkTheme
+        )
+        return
+    }
+
+    val dismissState = rememberSwipeToDismissBoxState(
+        confirmValueChange = { value ->
+            when (value) {
+                SwipeToDismissBoxValue.StartToEnd -> { onArchive(); true }
+                SwipeToDismissBoxValue.EndToStart -> { onBin(); true }
+                SwipeToDismissBoxValue.Settled -> false
+            }
+        }
+    )
+
+    SwipeToDismissBox(
+        state = dismissState,
+        modifier = modifier,
+        enableDismissFromStartToEnd = !isSelectionModeActive,
+        enableDismissFromEndToStart = !isSelectionModeActive,
+        backgroundContent = {
+            val direction = dismissState.dismissDirection
+            val isArchiveDir = direction == SwipeToDismissBoxValue.StartToEnd
+            val bg = when (direction) {
+                SwipeToDismissBoxValue.StartToEnd -> MaterialTheme.colorScheme.tertiaryContainer
+                SwipeToDismissBoxValue.EndToStart -> MaterialTheme.colorScheme.errorContainer
+                else -> Color.Transparent
+            }
+            val fg = when (direction) {
+                SwipeToDismissBoxValue.StartToEnd -> MaterialTheme.colorScheme.onTertiaryContainer
+                SwipeToDismissBoxValue.EndToStart -> MaterialTheme.colorScheme.onErrorContainer
+                else -> Color.Transparent
+            }
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .clip(MaterialTheme.shapes.large)
+                    .background(bg)
+                    .padding(horizontal = 24.dp),
+                contentAlignment = if (isArchiveDir) Alignment.CenterStart else Alignment.CenterEnd
+            ) {
+                Icon(
+                    imageVector = if (isArchiveDir) Icons.Filled.Archive else Icons.Filled.Delete,
+                    contentDescription = if (isArchiveDir)
+                        stringResource(id = R.string.archive)
+                    else
+                        stringResource(id = R.string.move_to_bin),
+                    tint = fg
+                )
+            }
+        }
+    ) {
+        NoteItem(
+            note = note,
+            isSelected = isSelected,
+            searchQuery = searchQuery,
+            onNoteClick = onNoteClick,
+            onNoteLongClick = onNoteLongClick,
+            isDarkTheme = isDarkTheme
+        )
     }
 }
 

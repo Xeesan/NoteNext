@@ -606,6 +606,42 @@ class NotesViewModel @Inject constructor(
                     updateWidgets()
                 }
             }
+            // Single-note swipe actions (from the note list). Both show an Undo
+            // snackbar that restores the original flag state.
+            is NotesEvent.DeleteNote -> {
+                val original = event.note.note
+                viewModelScope.launch(kotlinx.coroutines.Dispatchers.IO) {
+                    repository.updateNote(original.copy(isBinned = true, binnedOn = System.currentTimeMillis()))
+                    updateWidgets()
+                    _events.emit(NotesUiEvent.ShowSnackbar(
+                        message = "Note moved to Bin",
+                        actionLabel = "Undo",
+                        onAction = {
+                            viewModelScope.launch(kotlinx.coroutines.Dispatchers.IO) {
+                                repository.updateNote(original.copy(isBinned = false, binnedOn = null))
+                                updateWidgets()
+                            }
+                        }
+                    ))
+                }
+            }
+            is NotesEvent.ArchiveNote -> {
+                val original = event.note.note
+                viewModelScope.launch(kotlinx.coroutines.Dispatchers.IO) {
+                    repository.updateNote(original.copy(isArchived = true))
+                    updateWidgets()
+                    _events.emit(NotesUiEvent.ShowSnackbar(
+                        message = "Note archived",
+                        actionLabel = "Undo",
+                        onAction = {
+                            viewModelScope.launch(kotlinx.coroutines.Dispatchers.IO) {
+                                repository.updateNote(original.copy(isArchived = false))
+                                updateWidgets()
+                            }
+                        }
+                    ))
+                }
+            }
             is NotesEvent.ToggleImportantForSelectedNotes -> {
                 viewModelScope.launch(kotlinx.coroutines.Dispatchers.IO) {
                     val selectedNotes = getSelectedNotes()

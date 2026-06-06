@@ -15,6 +15,7 @@ import java.time.LocalTime
 
 sealed class NotesEvent {
     data class DeleteNote(val note: NoteSummaryWithAttachments) : NotesEvent()
+    data class ArchiveNote(val note: NoteSummaryWithAttachments) : NotesEvent()
     object RestoreNote : NotesEvent()
     data class ToggleNoteSelection(val noteId: Int) : NotesEvent()
     object ClearSelection : NotesEvent()
