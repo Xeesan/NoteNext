@@ -38,13 +38,13 @@ android {
                                    calendar.get(Calendar.SECOND)
 
         // Use manual override from gradle.properties as the absolute minimum to prevent regressions
-        val baseVersionCode = (project.findProperty("appVersionCode") as? String)?.toInt() ?: 30
+        val baseVersionCode = (project.findProperty("appVersionCode") as? String)?.toInt() ?: 34
         val generatedVersionCode = (daysSinceEpoch * 100000) + secondsSinceMidnight
 
         versionCode = if (generatedVersionCode > baseVersionCode) generatedVersionCode else baseVersionCode
         
         // Version name includes the manual version and the build timestamp for clarity
-        val baseVersionName = (project.findProperty("appVersionName") as? String) ?: "1.4.0"
+        val baseVersionName = (project.findProperty("appVersionName") as? String) ?: "1.4.4"
         versionName = "$baseVersionName (${SimpleDateFormat("yyyy.MM.dd", Locale.US).format(date)})"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"

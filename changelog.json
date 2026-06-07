@@ -1,6 +1,17 @@
 {
   "releases": [
     {
+      "version": "1.4.4",
+      "date": "June 7, 2026",
+      "items": [
+        {
+          "title": "Maintenance Update",
+          "description": "General performance improvements and stability fixes to ensure a smoother note-taking experience.",
+          "type": "IMPROVEMENT"
+        }
+      ]
+    },
+    {
       "version": "1.4.3",
       "date": "May 6, 2026",
       "items": [
