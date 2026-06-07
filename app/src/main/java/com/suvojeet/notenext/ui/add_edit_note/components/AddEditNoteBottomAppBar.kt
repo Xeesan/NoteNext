@@ -1,249 +1,89 @@
 @file:OptIn(ExperimentalMaterial3ExpressiveApi::class)
 package com.suvojeet.notenext.ui.add_edit_note.components
 
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.core.spring
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
-import androidx.compose.foundation.border
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.rounded.Redo
-import androidx.compose.material.icons.automirrored.rounded.Undo
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.onGloballyPositioned
-import androidx.compose.ui.layout.positionInWindow
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.IntOffset
-import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.window.Popup
-import androidx.compose.ui.window.PopupProperties
 import com.suvojeet.notenext.R
 import com.suvojeet.notenext.ui.components.springPress
-import com.suvojeet.notenext.ui.notes.NotesEvent
-import com.suvojeet.notenext.ui.notes.NotesEditState
-import com.suvojeet.notenext.ui.theme.ThemeMode
-import kotlin.math.roundToInt
 
+/**
+ * Google Keep–style editor bottom bar: a flat row with three tonal action
+ * buttons on the left — "+" (attachment, rounded square), color palette and
+ * "A" formatting (both circular) — and a plain "⋮" more button on the far
+ * right. Reminder lives on the top bar (Keep's bell); undo/redo live in the
+ * more-options sheet. Insets are owned by the enclosing Surface, so this bar
+ * consumes none.
+ */
 @Composable
 fun AddEditNoteBottomAppBar(
-    state: NotesEditState,
-    onEvent: (NotesEvent) -> Unit,
     showColorPicker: (Boolean) -> Unit,
     showFormatBar: (Boolean) -> Unit,
-    showReminderDialog: (Boolean) -> Unit,
     showMoreOptions: (Boolean) -> Unit,
-    onImageClick: () -> Unit,
-    onTakePhotoClick: () -> Unit,
-    onAudioClick: () -> Unit,
-    themeMode: ThemeMode,
+    onAttachmentClick: () -> Unit,
     backgroundColor: Color = MaterialTheme.colorScheme.surface
 ) {
-    var showAttachmentMenu by remember { mutableStateOf(false) }
+    val tonalColors = IconButtonDefaults.filledTonalIconButtonColors(
+        containerColor = MaterialTheme.colorScheme.surfaceContainerHighest,
+        contentColor = MaterialTheme.colorScheme.onSurface
+    )
 
     BottomAppBar(
         containerColor = backgroundColor,
-        // Insets are handled by the enclosing Surface (ime ∪ navigationBars).
-        // Consuming them again here would double the bottom gap when the
-        // keyboard is open, so this bar takes zero insets.
         windowInsets = WindowInsets(0, 0, 0, 0),
-        modifier = Modifier.height(56.dp)
+        modifier = Modifier.height(64.dp)
     ) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 4.dp),
+                .padding(horizontal = 8.dp),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            ButtonGroup(
-                modifier = Modifier, 
-                horizontalArrangement = Arrangement.spacedBy(4.dp)
+            Row(
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                verticalAlignment = Alignment.CenterVertically
             ) {
-                Box {
-                    var fabCoordinates by remember { mutableStateOf<IntOffset?>(null) }
-                    var fabSize by remember { mutableStateOf<IntSize?>(null) }
-
-                    FloatingActionButton(
-                        onClick = { showAttachmentMenu = true },
-                        shape = MaterialTheme.shapes.extraLarge,
-                        modifier = Modifier
-                            .size(36.dp)
-                            .springPress()
-                            .onGloballyPositioned { coordinates ->
-                                fabCoordinates = IntOffset(
-                                    coordinates.positionInWindow().x.roundToInt(),
-                                    coordinates.positionInWindow().y.roundToInt()
-                                )
-                                fabSize = coordinates.size
-                            },
-                        containerColor = MaterialTheme.colorScheme.primaryContainer,
-                        contentColor = MaterialTheme.colorScheme.onPrimaryContainer
-                    ) {
-                        Icon(Icons.Default.Add, contentDescription = stringResource(id = R.string.add_attachment), modifier = Modifier.size(18.dp))
-                    }
-
-                    if (showAttachmentMenu) {
-                        val coords = fabCoordinates
-                        val size = fabSize
-                        if (coords != null && size != null) {
-                            AttachmentMenu(
-                                expanded = showAttachmentMenu,
-                                onDismissRequest = { showAttachmentMenu = false },
-                                offset = IntOffset(x = coords.x, y = coords.y - size.height),
-                                themeMode = themeMode,
-                                onImageClick = onImageClick,
-                                onTakePhotoClick = onTakePhotoClick,
-                                onAudioClick = onAudioClick
-                            )
-                        }
-                    }
+                // "+" attachment — rounded square, like Keep
+                FilledTonalIconButton(
+                    onClick = onAttachmentClick,
+                    modifier = Modifier.springPress(),
+                    shape = MaterialTheme.shapes.medium,
+                    colors = tonalColors
+                ) {
+                    Icon(Icons.Default.Add, contentDescription = stringResource(id = R.string.add_attachment))
                 }
-                FloatingActionButton(
+                // Color palette — circular
+                FilledTonalIconButton(
                     onClick = { showColorPicker(true) },
-                    shape = MaterialTheme.shapes.extraLarge,
-                    modifier = Modifier.size(36.dp).springPress(),
-                    containerColor = MaterialTheme.colorScheme.primaryContainer,
-                    contentColor = MaterialTheme.colorScheme.onPrimaryContainer
+                    modifier = Modifier.springPress(),
+                    colors = tonalColors
                 ) {
-                    Icon(Icons.Default.Palette, contentDescription = stringResource(id = R.string.toggle_color_picker), modifier = Modifier.size(18.dp))
+                    Icon(Icons.Default.Palette, contentDescription = stringResource(id = R.string.toggle_color_picker))
                 }
-                FloatingActionButton(
+                // "A" formatting — circular
+                FilledTonalIconButton(
                     onClick = { showFormatBar(true) },
-                    shape = MaterialTheme.shapes.extraLarge,
-                    modifier = Modifier.size(36.dp).springPress(),
-                    containerColor = MaterialTheme.colorScheme.primaryContainer,
-                    contentColor = MaterialTheme.colorScheme.onPrimaryContainer
+                    modifier = Modifier.springPress(),
+                    colors = tonalColors
                 ) {
-                    Icon(Icons.Default.TextFields, contentDescription = stringResource(id = R.string.toggle_format_bar), modifier = Modifier.size(18.dp))
-                }
-                FloatingActionButton(
-                    onClick = { showReminderDialog(true) },
-                    shape = MaterialTheme.shapes.extraLarge,
-                    modifier = Modifier.size(36.dp).springPress(),
-                    containerColor = MaterialTheme.colorScheme.primaryContainer,
-                    contentColor = MaterialTheme.colorScheme.onPrimaryContainer
-                ) {
-                    Icon(Icons.Default.Alarm, contentDescription = "Set Reminder", modifier = Modifier.size(18.dp))
+                    Icon(Icons.Default.TextFields, contentDescription = stringResource(id = R.string.toggle_format_bar))
                 }
             }
 
-            ButtonGroup(
-                modifier = Modifier, 
-                horizontalArrangement = Arrangement.spacedBy(4.dp)
+            // "⋮" more options — plain, far right
+            IconButton(
+                onClick = { showMoreOptions(true) },
+                modifier = Modifier.springPress()
             ) {
-                if (state.canUndo || state.canRedo) {
-                    FloatingActionButton(
-                        onClick = { onEvent(NotesEvent.OnUndoClick) },
-                        shape = MaterialTheme.shapes.extraLarge,
-                        modifier = Modifier.size(36.dp).springPress(),
-                        containerColor = MaterialTheme.colorScheme.secondaryContainer,
-                        contentColor = if (state.canUndo) MaterialTheme.colorScheme.onSecondaryContainer else MaterialTheme.colorScheme.onSurface.copy(alpha = 0.38f)
-                    ) {
-                        Icon(Icons.AutoMirrored.Rounded.Undo, contentDescription = stringResource(id = R.string.undo), modifier = Modifier.size(18.dp))
-                    }
-
-                    FloatingActionButton(
-                        onClick = { onEvent(NotesEvent.OnRedoClick) },
-                        shape = MaterialTheme.shapes.extraLarge,
-                        modifier = Modifier.size(36.dp).springPress(),
-                        containerColor = MaterialTheme.colorScheme.secondaryContainer,
-                        contentColor = if (state.canRedo) MaterialTheme.colorScheme.onSecondaryContainer else MaterialTheme.colorScheme.onSurface.copy(alpha = 0.38f)
-                    ) {
-                        Icon(Icons.AutoMirrored.Rounded.Redo, contentDescription = stringResource(id = R.string.redo), modifier = Modifier.size(18.dp))
-                    }
-                }
-
-                FloatingActionButton(
-                    onClick = { showMoreOptions(true) },
-                    shape = MaterialTheme.shapes.extraLarge,
-                    modifier = Modifier.size(36.dp).springPress(),
-                    containerColor = MaterialTheme.colorScheme.secondaryContainer,
-                    contentColor = MaterialTheme.colorScheme.onSurface
-                ) {
-                    Icon(Icons.Default.MoreVert, contentDescription = stringResource(id = R.string.more_options), modifier = Modifier.size(18.dp))
-                }
-            }
-        }
-    }
-}
-
-@Composable
-private fun AttachmentMenu(
-    expanded: Boolean,
-    onDismissRequest: () -> Unit,
-    offset: IntOffset,
-    themeMode: ThemeMode,
-    onImageClick: () -> Unit,
-    onTakePhotoClick: () -> Unit,
-    onAudioClick: () -> Unit
-) {
-    Popup(
-        onDismissRequest = onDismissRequest,
-        properties = PopupProperties(focusable = true),
-        offset = offset
-    ) {
-        AnimatedVisibility(
-            visible = expanded,
-            enter = fadeIn(animationSpec = spring()),
-            exit = fadeOut(animationSpec = spring())
-        ) {
-            val isDark = when (themeMode) {
-                ThemeMode.DARK, ThemeMode.AMOLED -> true
-                ThemeMode.SYSTEM -> isSystemInDarkTheme()
-                else -> false
-            }
-            Surface(
-                shape = MaterialTheme.shapes.extraLarge,
-                color = MaterialTheme.colorScheme.surfaceContainerHigh,
-                contentColor = MaterialTheme.colorScheme.onSurface,
-                shadowElevation = 6.dp,
-                modifier = Modifier
-                    .padding(8.dp)
-                    .width(IntrinsicSize.Max)
-                    .then(
-                        if (isDark) {
-                            Modifier.border(
-                                1.dp,
-                                MaterialTheme.colorScheme.outlineVariant,
-                                MaterialTheme.shapes.extraLarge
-                            )
-                        } else {
-                            Modifier
-                        }
-                    )
-            ) {
-                Column(modifier = Modifier.padding(vertical = 8.dp)) {
-                    DropdownMenuItem(
-                        text = { Text(stringResource(id = R.string.add_image)) },
-                        onClick = {
-                            onImageClick()
-                            onDismissRequest()
-                        }
-                    )
-                    DropdownMenuItem(
-                        text = { Text(stringResource(id = R.string.take_photo)) },
-                        onClick = {
-                            onTakePhotoClick()
-                            onDismissRequest()
-                        }
-                    )
-                    DropdownMenuItem(
-                        text = { Text(stringResource(id = R.string.audio_recording)) },
-                        onClick = {
-                            onAudioClick()
-                            onDismissRequest()
-                        }
-                    )
-                }
+                Icon(Icons.Default.MoreVert, contentDescription = stringResource(id = R.string.more_options))
             }
         }
     }

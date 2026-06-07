@@ -12,6 +12,8 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Label
+import androidx.compose.material.icons.automirrored.rounded.Redo
+import androidx.compose.material.icons.automirrored.rounded.Undo
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
@@ -59,6 +61,11 @@ fun MoreOptionsSheet(
 
     val lockLabel = stringResource(id = if (state.editingIsLocked) R.string.unlock else R.string.lock)
     val lockIcon = if (state.editingIsLocked) Icons.Default.LockOpen else Icons.Default.Lock
+    // Hoisted out of remember{} — stringResource cannot be called inside it.
+    val sendLabel = stringResource(id = R.string.send)
+    val makeCopyLabel = stringResource(id = R.string.make_a_copy)
+    val undoLabel = stringResource(id = R.string.undo)
+    val redoLabel = stringResource(id = R.string.redo)
     
     val primaryColor = MaterialTheme.colorScheme.primary
     val secondaryColor = MaterialTheme.colorScheme.secondary
@@ -66,14 +73,14 @@ fun MoreOptionsSheet(
     val errorColor = MaterialTheme.colorScheme.error
 
     // Labels for the grid
-    val options = remember(state.editingIsLocked, state.editingNoteType, state.editingIsNewNote, primaryColor, secondaryColor, tertiaryColor, errorColor) {
+    val options = remember(state.editingIsLocked, state.editingNoteType, state.editingIsNewNote, state.canUndo, state.canRedo, primaryColor, secondaryColor, tertiaryColor, errorColor) {
         mutableListOf<OptionItem>().apply {
             add(OptionItem(lockLabel, lockIcon, primaryColor) { onToggleLock() })
             add(OptionItem("Self-Destruct", Icons.Default.Timer, errorColor) { showExpiryDialog(true) })
             add(OptionItem(if (state.editingNoteType == NoteType.TEXT) "List View" else "Text View", Icons.Default.SwapHoriz, secondaryColor) { onEvent(NotesEvent.OnToggleNoteType) })
             add(OptionItem("Search", Icons.Default.Search, primaryColor) { onEvent(NotesEvent.ToggleNoteSearch) })
             add(OptionItem("Labels", Icons.AutoMirrored.Filled.Label, tertiaryColor) { onEvent(NotesEvent.OnAddLabelsToCurrentNoteClick) })
-            add(OptionItem("Share", Icons.Default.Share, primaryColor) {
+            add(OptionItem(sendLabel, Icons.Default.Share, primaryColor) {
                 val shareContent = if (state.editingNoteType == NoteType.CHECKLIST) {
                     val sb = StringBuilder()
                     state.editingChecklist.forEach { item ->
@@ -92,7 +99,7 @@ fun MoreOptionsSheet(
                 }
                 context.startActivity(Intent.createChooser(sendIntent, null))
             })
-            add(OptionItem("Copy", Icons.Default.ContentCopy, secondaryColor) { onEvent(NotesEvent.OnCopyCurrentNoteClick) })
+            add(OptionItem(makeCopyLabel, Icons.Default.ContentCopy, secondaryColor) { onEvent(NotesEvent.OnCopyCurrentNoteClick) })
             add(OptionItem("Print", Icons.Default.Print, secondaryColor) { onPrint() })
             add(OptionItem("Export", Icons.Default.FileDownload, tertiaryColor) { showSaveAsDialog(true) })
             if (!state.editingIsNewNote) {
@@ -101,6 +108,9 @@ fun MoreOptionsSheet(
             add(OptionItem("Extract Tasks", Icons.Default.AutoFixHigh, tertiaryColor) { onEvent(NotesEvent.ExtractActionItems) })
             add(OptionItem("To Todo", Icons.Default.PlaylistAddCheck, tertiaryColor) { onEvent(NotesEvent.ConvertToTodo) })
             add(OptionItem("Delete", Icons.Default.Delete, errorColor) { showDeleteDialog(true) })
+            // Undo/Redo relocated here from the bottom bar (Keep hides them on the bar).
+            if (state.canUndo) add(OptionItem(undoLabel, Icons.AutoMirrored.Rounded.Undo, secondaryColor) { onEvent(NotesEvent.OnUndoClick) })
+            if (state.canRedo) add(OptionItem(redoLabel, Icons.AutoMirrored.Rounded.Redo, secondaryColor) { onEvent(NotesEvent.OnRedoClick) })
         }
     }
 
@@ -117,20 +127,20 @@ fun MoreOptionsSheet(
                 .padding(bottom = 24.dp)
         ) {
             if (!state.editingIsNewNote && state.editingLastEdited != null && state.editingLastEdited != 0L) {
-                Column(
+                // Keep-style left-aligned "Edited <date>" header.
+                Text(
+                    text = stringResource(id = R.string.edited, dateFormat.format(Date(state.editingLastEdited))),
+                    style = MaterialTheme.typography.labelMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(horizontal = 24.dp, vertical = 8.dp),
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    Text(
-                        text = "Last edited ${dateFormat.format(Date(state.editingLastEdited))}",
-                        style = MaterialTheme.typography.labelMedium,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.7f)
-                    )
-                    Spacer(modifier = Modifier.height(16.dp))
-                    HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.5f))
-                }
+                        .padding(horizontal = 24.dp, vertical = 12.dp)
+                )
+                HorizontalDivider(
+                    color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.5f),
+                    modifier = Modifier.padding(horizontal = 24.dp)
+                )
+                Spacer(modifier = Modifier.height(8.dp))
             }
 
             LazyVerticalGrid(

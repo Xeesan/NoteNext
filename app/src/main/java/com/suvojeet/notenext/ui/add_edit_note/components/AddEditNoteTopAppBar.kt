@@ -12,6 +12,7 @@ import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.AutoAwesome
+import androidx.compose.material.icons.outlined.AddAlert
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Archive
 import androidx.compose.material.icons.filled.Search
@@ -46,6 +47,7 @@ fun AddEditNoteTopAppBar(
     editingNoteType: NoteType,
     onToggleFocusMode: () -> Unit,
     isFocusMode: Boolean,
+    onReminderClick: () -> Unit,
     backgroundColor: Color = MaterialTheme.colorScheme.surface,
     contentColor: Color = MaterialTheme.colorScheme.onSurface,
     scrollBehavior: TopAppBarScrollBehavior? = null
@@ -148,12 +150,37 @@ fun AddEditNoteTopAppBar(
                             )
                         }
                     }
-                    
-                    IconButton(onClick = { onEvent(NotesEvent.OnToggleArchiveClick) }, modifier = Modifier.springPress()) {
+                }
+
+                // Reminder (Keep's bell) — tonal, available for new and existing notes.
+                FilledTonalIconButton(
+                    onClick = onReminderClick,
+                    modifier = Modifier.springPress(),
+                    shape = MaterialTheme.shapes.medium,
+                    colors = IconButtonDefaults.filledTonalIconButtonColors(
+                        containerColor = MaterialTheme.colorScheme.surfaceContainerHigh,
+                        contentColor = contentColor
+                    )
+                ) {
+                    Icon(
+                        imageVector = Icons.Outlined.AddAlert,
+                        contentDescription = stringResource(id = R.string.reminder_icon_description)
+                    )
+                }
+
+                if (!state.editingIsNewNote) {
+                    FilledTonalIconButton(
+                        onClick = { onEvent(NotesEvent.OnToggleArchiveClick) },
+                        modifier = Modifier.springPress(),
+                        shape = MaterialTheme.shapes.medium,
+                        colors = IconButtonDefaults.filledTonalIconButtonColors(
+                            containerColor = MaterialTheme.colorScheme.surfaceContainerHigh,
+                            contentColor = if (state.isArchived) MaterialTheme.colorScheme.primary else contentColor
+                        )
+                    ) {
                         Icon(
                             imageVector = Icons.Filled.Archive,
-                            contentDescription = if (state.isArchived) stringResource(id = R.string.unarchive_note) else stringResource(id = R.string.archive_note),
-                            tint = if (state.isArchived) MaterialTheme.colorScheme.primary else contentColor
+                            contentDescription = if (state.isArchived) stringResource(id = R.string.unarchive_note) else stringResource(id = R.string.archive_note)
                         )
                     }
                 }

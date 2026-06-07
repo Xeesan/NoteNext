@@ -108,6 +108,7 @@ fun AddEditNoteScreen(
 
     var clickedUrl by remember { mutableStateOf<String?>(null) }
     var showExactAlarmDialog by remember { mutableStateOf(false) }
+    var showAttachmentSheet by remember { mutableStateOf(false) }
 
     val lazyListState = androidx.compose.foundation.lazy.rememberLazyListState()
     val context = LocalContext.current
@@ -337,7 +338,7 @@ fun AddEditNoteScreen(
                         editingNoteType = state.editingNoteType,
                         onToggleFocusMode = { isFocusMode = !isFocusMode },
                         isFocusMode = isFocusMode,
-
+                        onReminderClick = { checkAndRequestReminderPermissions() },
                         backgroundColor = backgroundColor,
                         contentColor = contentColor
                     )
@@ -363,29 +364,10 @@ fun AddEditNoteScreen(
                         shadowElevation = 6.dp
                     ) {
                         AddEditNoteBottomAppBar(
-                            state = state,
-                            onEvent = onEvent,
                             showColorPicker = { showColorPicker = !showColorPicker },
                             showFormatBar = { showFormatBar = !showFormatBar },
-                            showReminderDialog = { 
-                                if (it) checkAndRequestReminderPermissions() else showReminderDialog = false 
-                            },
                             showMoreOptions = { showMoreOptions = it },
-                            onImageClick = { getContent.launch("image/*") },
-                            onTakePhotoClick = {
-                                val hasCameraPermission = androidx.core.content.ContextCompat.checkSelfPermission(
-                                    context, android.Manifest.permission.CAMERA
-                                ) == android.content.pm.PackageManager.PERMISSION_GRANTED
-                                if (hasCameraPermission) {
-                                    launchCamera()
-                                } else {
-                                    cameraPermissionLauncher.launch(android.Manifest.permission.CAMERA)
-                                }
-                            },
-                            onAudioClick = {
-                                Toast.makeText(context, "Audio recording not implemented yet", Toast.LENGTH_SHORT).show()
-                            },
-                            themeMode = themeMode,
+                            onAttachmentClick = { showAttachmentSheet = true },
                             backgroundColor = Color.Transparent
                         )
                     }
@@ -817,5 +799,29 @@ fun AddEditNoteScreen(
             )
             Spacer(modifier = Modifier.height(48.dp))
         }
+    }
+
+    if (showAttachmentSheet) {
+        AttachmentSheet(
+            onDismiss = { showAttachmentSheet = false },
+            onTakePhotoClick = {
+                val hasCameraPermission = androidx.core.content.ContextCompat.checkSelfPermission(
+                    context, android.Manifest.permission.CAMERA
+                ) == android.content.pm.PackageManager.PERMISSION_GRANTED
+                if (hasCameraPermission) {
+                    launchCamera()
+                } else {
+                    cameraPermissionLauncher.launch(android.Manifest.permission.CAMERA)
+                }
+            },
+            onImageClick = { getContent.launch("image/*") },
+            onDrawingClick = {
+                Toast.makeText(context, "Drawing not implemented yet", Toast.LENGTH_SHORT).show()
+            },
+            onAudioClick = {
+                Toast.makeText(context, "Audio recording not implemented yet", Toast.LENGTH_SHORT).show()
+            },
+            onTickBoxesClick = { onEvent(NotesEvent.OnToggleNoteType) }
+        )
     }
 }

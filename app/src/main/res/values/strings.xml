@@ -100,6 +100,9 @@
     <string name="exact_alarm_permission">Exact Alarm Permission</string>
     <string name="exact_alarm_permission_description">This permission is required for reminders to work accurately</string>
     <string name="last_edited">Last Edited: %s</string>
+    <string name="edited">Edited %1$s</string>
+    <string name="send">Send</string>
+    <string name="tick_boxes">Tick boxes</string>
     <string name="make_a_copy">Make a Copy</string>
     <string name="save_as">Save As</string>
     <string name="lock">Lock</string>
