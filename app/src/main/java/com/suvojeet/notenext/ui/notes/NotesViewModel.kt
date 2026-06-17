@@ -555,6 +555,16 @@ class NotesViewModel @Inject constructor(
                     updateWidgets()
                 }
             }
+            is NotesEvent.ReorderPinnedNotes -> {
+                viewModelScope.launch {
+                    // Persist the manual order as 0-based positions. The pinned query
+                    // sorts by `position ASC, lastEdited DESC`, so this is authoritative.
+                    event.orderedIds.forEachIndexed { index, id ->
+                        repository.updateNotePosition(id, index)
+                    }
+                    updateWidgets()
+                }
+            }
             is NotesEvent.ToggleLockForSelectedNotes -> {
                 viewModelScope.launch {
                     val selectedNotes = getSelectedNotes()

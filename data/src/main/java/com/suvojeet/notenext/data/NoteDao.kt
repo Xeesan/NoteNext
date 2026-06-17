@@ -277,7 +277,7 @@ interface NoteDao {
         FROM notes WHERE
  isArchived = 0 AND isBinned = 0 AND isPinned = 1
         AND (projectId IS :projectId) AND isDecoy = :isDecoy
-        ORDER BY lastEdited DESC
+        ORDER BY position ASC, lastEdited DESC
     """)
     fun getPinnedNoteSummaries(projectId: Int? = null, isDecoy: Boolean = false): Flow<List<NoteSummaryWithAttachments>>
 

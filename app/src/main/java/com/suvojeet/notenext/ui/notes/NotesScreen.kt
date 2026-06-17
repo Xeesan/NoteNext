@@ -35,6 +35,7 @@ import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Note
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.filled.SwapVert
 import androidx.compose.material3.*
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.runtime.Composable
@@ -60,6 +61,7 @@ import android.content.Intent
 import android.widget.Toast
 import androidx.compose.ui.platform.LocalContext
 import com.suvojeet.notenext.ui.add_edit_note.AddEditNoteScreen
+import com.suvojeet.notenext.ui.add_edit_note.components.PinnedReorderSheet
 import com.suvojeet.notenext.ui.components.*
 import com.suvojeet.notenext.ui.components.*
 import com.suvojeet.notenext.ui.theme.ThemeMode
@@ -109,6 +111,7 @@ fun NotesScreen(
     var showMoveToProjectDialog by remember { mutableStateOf(false) }
     var showColorPickerDialog by remember { mutableStateOf(false) }
     var showShareOptionsDialog by remember { mutableStateOf(false) }
+    var showPinnedReorderSheet by remember { mutableStateOf(false) }
 
     val context = LocalContext.current
     val snackbarHostState = remember { SnackbarHostState() }
@@ -390,12 +393,23 @@ fun NotesScreen(
 
                         if (showShareOptionsDialog) {
                             ShareOptionsDialog(
-                                onDismiss = { 
-                                    showShareOptionsDialog = false 
+                                onDismiss = {
+                                    showShareOptionsDialog = false
                                 },
                                 onShareAsText = {
                                     viewModel.onEvent(NotesEvent.SendSelectedNotes)
                                     showShareOptionsDialog = false
+                                }
+                            )
+                        }
+
+                        if (showPinnedReorderSheet && listState.pinnedNotes.size >= 2) {
+                            PinnedReorderSheet(
+                                pinnedNotes = listState.pinnedNotes,
+                                onDismiss = { showPinnedReorderSheet = false },
+                                onConfirm = { orderedIds ->
+                                    viewModel.onEvent(NotesEvent.ReorderPinnedNotes(orderedIds))
+                                    showPinnedReorderSheet = false
                                 }
                             )
                         }
@@ -468,11 +482,9 @@ fun NotesScreen(
                                             ) {
                                                 if (pinnedNotes.isNotEmpty()) {
                                                     item(span = StaggeredGridItemSpan.FullLine) {
-                                                        Text(
-                                                            text = stringResource(id = R.string.pinned),
-                                                            modifier = Modifier.padding(8.dp),
-                                                            style = MaterialTheme.typography.labelSmall,
-                                                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                                                        PinnedSectionHeader(
+                                                            count = pinnedNotes.size,
+                                                            onReorderClick = { showPinnedReorderSheet = true }
                                                         )
                                                     }
                                                     StaggeredGridItems(
@@ -570,11 +582,9 @@ fun NotesScreen(
                                             ) {
                                                 if (pinnedNotes.isNotEmpty()) {
                                                     item {
-                                                        Text(
-                                                            text = stringResource(id = R.string.pinned),
-                                                            modifier = Modifier.padding(8.dp),
-                                                            style = MaterialTheme.typography.labelSmall,
-                                                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                                                        PinnedSectionHeader(
+                                                            count = pinnedNotes.size,
+                                                            onReorderClick = { showPinnedReorderSheet = true }
                                                         )
                                                     }
                                                     items(
@@ -706,6 +716,42 @@ fun NotesScreen(
                         rememberSharedContentState(key = "note-${expandedId}"),
                         animatedVisibilityScope = this@AnimatedContent
                     )
+                )
+            }
+        }
+    }
+}
+
+/**
+ * Header for the "Pinned" section. Shows the section label and, when there are
+ * at least two pinned notes, a reorder affordance that opens [PinnedReorderSheet].
+ */
+@Composable
+private fun PinnedSectionHeader(
+    count: Int,
+    onReorderClick: () -> Unit
+) {
+    Row(
+        modifier = Modifier.fillMaxWidth().padding(horizontal = 8.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Text(
+            text = stringResource(id = R.string.pinned),
+            modifier = Modifier.padding(8.dp),
+            style = MaterialTheme.typography.labelSmall,
+            color = MaterialTheme.colorScheme.onSurfaceVariant
+        )
+        Spacer(modifier = Modifier.weight(1f))
+        if (count >= 2) {
+            IconButton(
+                onClick = onReorderClick,
+                modifier = Modifier.size(32.dp).springPress()
+            ) {
+                Icon(
+                    imageVector = Icons.Default.SwapVert,
+                    contentDescription = "Reorder pinned notes",
+                    tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                    modifier = Modifier.size(20.dp)
                 )
             }
         }

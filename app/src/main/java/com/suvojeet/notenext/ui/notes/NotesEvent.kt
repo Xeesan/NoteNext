@@ -21,6 +21,8 @@ sealed class NotesEvent {
     object ClearSelection : NotesEvent()
     object SelectAllNotes : NotesEvent()
     object TogglePinForSelectedNotes : NotesEvent()
+    /** Persist a new manual order for the pinned section. [orderedIds] is top-to-bottom. */
+    data class ReorderPinnedNotes(val orderedIds: List<Int>) : NotesEvent()
     object ToggleLockForSelectedNotes : NotesEvent()
     object DeleteSelectedNotes : NotesEvent()
     object ArchiveSelectedNotes : NotesEvent()
