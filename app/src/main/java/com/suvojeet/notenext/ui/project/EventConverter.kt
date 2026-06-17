@@ -102,6 +102,7 @@ fun NotesEvent.toProjectNotesEvent(): ProjectNotesEvent {
         is NotesEvent.AcceptToneRewrite -> ProjectNotesEvent.AcceptToneRewrite
         is NotesEvent.RetryToneRewrite -> ProjectNotesEvent.RetryToneRewrite
 
+        is NotesEvent.ReorderPinnedNotes, // pinned reorder is only wired into the main notes list
         is NotesEvent.ArchiveNote, // swipe-to-archive is only wired into the main notes list
         is NotesEvent.AcceptSuggestedLabel,
         is NotesEvent.DismissSuggestedLabels,
