@@ -184,6 +184,15 @@ fun NotesScreen(
     val gridState = rememberLazyStaggeredGridState()
     val lazyListState = rememberLazyListState()
 
+    // Disable item placement animation while the list is being scrolled. When the screen
+    // returns from the note editor (AnimatedContent recomposes the disposed list), scrolling
+    // re-measures off-screen items and the staggered grid recomputes their lanes; with the
+    // placement spring active this manifests as notes visibly shuffling before settling.
+    // Reordering/pinning still animates because those happen while the list is idle.
+    val isListScrolling by remember {
+        derivedStateOf { gridState.isScrollInProgress || lazyListState.isScrollInProgress }
+    }
+
     SharedTransitionLayout {
         AnimatedContent(
             targetState = editState.expandedNoteId,
@@ -493,7 +502,7 @@ fun NotesScreen(
                                                         contentType = { it.note.noteType }
                                                     ) { note ->
                                                         val noteModifier = Modifier
-                                                            .animateItem(placementSpec = androidx.compose.animation.core.spring(stiffness = androidx.compose.animation.core.Spring.StiffnessMediumLow))
+                                                            .animateItem(placementSpec = if (isListScrolling) null else androidx.compose.animation.core.spring(stiffness = androidx.compose.animation.core.Spring.StiffnessMediumLow))
                                                             .sharedElement(
                                                                 rememberSharedContentState(key = "note-${note.note.id}"),
                                                                 animatedVisibilityScope = this@AnimatedContent
@@ -542,7 +551,7 @@ fun NotesScreen(
                                                     ) { index ->
                                                         pagedNotes[index]?.let { note ->
                                                             val noteModifier = Modifier
-                                                                .animateItem(placementSpec = androidx.compose.animation.core.spring(stiffness = androidx.compose.animation.core.Spring.StiffnessMediumLow))
+                                                                .animateItem(placementSpec = if (isListScrolling) null else androidx.compose.animation.core.spring(stiffness = androidx.compose.animation.core.Spring.StiffnessMediumLow))
                                                                 .sharedElement(
                                                                     rememberSharedContentState(key = "note-${note.note.id}"),
                                                                     animatedVisibilityScope = this@AnimatedContent
@@ -593,7 +602,7 @@ fun NotesScreen(
                                                         contentType = { it.note.noteType }
                                                     ) { note ->
                                                         val noteModifier = Modifier
-                                                            .animateItem(placementSpec = androidx.compose.animation.core.spring(stiffness = androidx.compose.animation.core.Spring.StiffnessMediumLow))
+                                                            .animateItem(placementSpec = if (isListScrolling) null else androidx.compose.animation.core.spring(stiffness = androidx.compose.animation.core.Spring.StiffnessMediumLow))
                                                             .sharedElement(
                                                                 rememberSharedContentState(key = "note-${note.note.id}"),
                                                                 animatedVisibilityScope = this@AnimatedContent
@@ -642,7 +651,7 @@ fun NotesScreen(
                                                     ) { index ->
                                                         pagedNotes[index]?.let { note ->
                                                             val noteModifier = Modifier
-                                                                .animateItem(placementSpec = androidx.compose.animation.core.spring(stiffness = androidx.compose.animation.core.Spring.StiffnessMediumLow))
+                                                                .animateItem(placementSpec = if (isListScrolling) null else androidx.compose.animation.core.spring(stiffness = androidx.compose.animation.core.Spring.StiffnessMediumLow))
                                                                 .sharedElement(
                                                                     rememberSharedContentState(key = "note-${note.note.id}"),
                                                                     animatedVisibilityScope = this@AnimatedContent
