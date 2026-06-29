@@ -33,6 +33,11 @@ sealed class NotesEvent {
     object ShareSelectedNotesViaLink : NotesEvent()
     /** Share the note currently open in the editor as a collaborative link. */
     object ShareCurrentNoteViaLink : NotesEvent()
+    /**
+     * Stop sharing (delete from backend) the note behind a share link. Carries the
+     * creator's secret delete-token; the local row's shareId/token are cleared on success.
+     */
+    data class UnshareNote(val shareId: String, val deleteToken: String?) : NotesEvent()
     data class SetReminderForSelectedNotes(val date: LocalDate, val time: LocalTime, val repeatOption: RepeatOption) : NotesEvent()
     data class SetLabelForSelectedNotes(val label: String) : NotesEvent()
     data class ExpandNote(

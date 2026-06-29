@@ -760,12 +760,17 @@ class NotesViewModel @Inject constructor(
                         val content = editState.value.editingContent.text
                         shareRepository.shareNote(title, content)
                             .onSuccess { result ->
-                                _events.emit(NotesUiEvent.ShareLinkReady(result.url, result.shareId, title))
+                                _events.emit(NotesUiEvent.ShareLinkReady(result.url, result.shareId, title, result.deleteToken))
                             }
                             .onFailure {
                                 _events.emit(NotesUiEvent.ShowSnackbar(context.getString(R.string.share_link_failed)))
                             }
                     }
+                }
+            }
+            is NotesEvent.UnshareNote -> {
+                viewModelScope.launch {
+                    unshareNote(event.shareId, event.deleteToken)
                 }
             }
             is NotesEvent.SetReminderForSelectedNotes -> {
@@ -1632,26 +1637,61 @@ class NotesViewModel @Inject constructor(
         val existingId = note.shareId
         if (existingId != null) {
             // Reuse: refresh the shared copy (best-effort) and surface the same link.
+            // The unshare token (if we still hold it) comes from the local row.
             shareRepository.pushUpdate(existingId, note.title, note.content)
             _events.emit(
                 NotesUiEvent.ShareLinkReady(
                     com.suvojeet.notenext.data.share.ShareConstants.shareUrl(existingId),
                     existingId,
-                    note.title
+                    note.title,
+                    note.shareDeleteToken
                 )
             )
             return
         }
         shareRepository.shareNote(note.title, note.content)
             .onSuccess { result ->
-                // Persist the id so re-sharing keeps the same link/collaboration room.
+                // Persist the id + delete-token so re-sharing keeps the same link
+                // and a later unshare can prove ownership.
                 if (note.id != 0) {
-                    runCatching { repository.updateNote(note.copy(shareId = result.shareId)) }
+                    runCatching {
+                        repository.updateNote(
+                            note.copy(shareId = result.shareId, shareDeleteToken = result.deleteToken)
+                        )
+                    }
                 }
-                _events.emit(NotesUiEvent.ShareLinkReady(result.url, result.shareId, note.title))
+                _events.emit(
+                    NotesUiEvent.ShareLinkReady(result.url, result.shareId, note.title, result.deleteToken)
+                )
             }
             .onFailure {
                 _events.emit(NotesUiEvent.ShowSnackbar(context.getString(R.string.share_link_failed)))
+            }
+    }
+
+    /**
+     * Stops sharing a note: deletes it from the backend (proving ownership with
+     * the secret delete-token) and clears the local shareId/token so a future
+     * share starts fresh. A public shareId without the token cannot delete.
+     */
+    private suspend fun unshareNote(shareId: String, deleteToken: String?) {
+        // Fall back to the locally-stored token if the caller didn't carry one.
+        val token = deleteToken ?: repository.getNoteByShareId(shareId)?.shareDeleteToken
+        if (token.isNullOrEmpty()) {
+            _events.emit(NotesUiEvent.ShowSnackbar(context.getString(R.string.share_link_unshare_no_token)))
+            return
+        }
+        shareRepository.deleteNote(shareId, token)
+            .onSuccess {
+                runCatching {
+                    repository.getNoteByShareId(shareId)?.let { local ->
+                        repository.updateNote(local.copy(shareId = null, shareDeleteToken = null))
+                    }
+                }
+                _events.emit(NotesUiEvent.ShowSnackbar(context.getString(R.string.share_link_unshared)))
+            }
+            .onFailure {
+                _events.emit(NotesUiEvent.ShowSnackbar(context.getString(R.string.share_link_unshare_failed)))
             }
     }
 

@@ -440,6 +440,13 @@ fun NotesScreen(
                                     val id = link.shareId
                                     shareLinkReady = null
                                     onOpenSharedNote(id)
+                                },
+                                // Only the creator (holder of the delete-token) can revoke.
+                                onStopSharing = link.deleteToken?.let { token ->
+                                    {
+                                        viewModel.onEvent(NotesEvent.UnshareNote(link.shareId, token))
+                                        shareLinkReady = null
+                                    }
                                 }
                             )
                         }

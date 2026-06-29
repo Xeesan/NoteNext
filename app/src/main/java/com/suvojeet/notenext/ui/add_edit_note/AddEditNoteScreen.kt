@@ -746,6 +746,13 @@ fun AddEditNoteScreen(
                 )
                 context.startActivity(viewIntent)
                 shareLinkReady = null
+            },
+            // Only the creator (holder of the delete-token) can revoke the link.
+            onStopSharing = link.deleteToken?.let { token ->
+                {
+                    onEvent(NotesEvent.UnshareNote(link.shareId, token))
+                    shareLinkReady = null
+                }
             }
         )
     }

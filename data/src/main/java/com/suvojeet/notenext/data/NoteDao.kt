@@ -264,6 +264,9 @@ interface NoteDao {
     @Query("SELECT * FROM notes WHERE title = :title AND createdAt = :createdAt LIMIT 1")
     suspend fun getNoteByTitleAndCreatedAt(title: String, createdAt: Long): Note?
 
+    @Query("SELECT * FROM notes WHERE shareId = :shareId LIMIT 1")
+    suspend fun getNoteByShareId(shareId: String): Note?
+
     @Query("DELETE FROM notes WHERE expiryTime IS NOT NULL AND expiryTime < :now")
     suspend fun deleteExpiredNotes(now: Long)
 

@@ -12,6 +12,7 @@ import androidx.compose.material.icons.filled.Link
 import androidx.compose.material.icons.filled.ContentCopy
 import androidx.compose.material.icons.filled.OpenInNew
 import androidx.compose.material.icons.filled.Share
+import androidx.compose.material.icons.filled.LinkOff
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -118,7 +119,8 @@ fun ShareLinkDialog(
     url: String,
     onDismiss: () -> Unit,
     onShare: () -> Unit,
-    onOpen: () -> Unit
+    onOpen: () -> Unit,
+    onStopSharing: (() -> Unit)? = null
 ) {
     val clipboard = LocalClipboardManager.current
     val context = LocalContext.current
@@ -202,6 +204,21 @@ fun ShareLinkDialog(
                     Icon(Icons.Default.OpenInNew, contentDescription = null, modifier = Modifier.size(18.dp))
                     Spacer(Modifier.width(6.dp))
                     Text(stringResource(R.string.share_link_open))
+                }
+
+                // Creator-only: revoke the link (deletes the note from the backend).
+                if (onStopSharing != null) {
+                    TextButton(
+                        onClick = onStopSharing,
+                        modifier = Modifier.fillMaxWidth(),
+                        colors = ButtonDefaults.textButtonColors(
+                            contentColor = MaterialTheme.colorScheme.error
+                        )
+                    ) {
+                        Icon(Icons.Default.LinkOff, contentDescription = null, modifier = Modifier.size(18.dp))
+                        Spacer(Modifier.width(6.dp))
+                        Text(stringResource(R.string.share_link_stop))
+                    }
                 }
             }
         }

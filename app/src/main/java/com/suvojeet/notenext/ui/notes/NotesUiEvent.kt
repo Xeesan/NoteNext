@@ -2,8 +2,17 @@ package com.suvojeet.notenext.ui.notes
 
 sealed class NotesUiEvent {
     data class SendNotes(val title: String, val content: String) : NotesUiEvent()
-    /** A collaborative share link was created and is ready to share / open. */
-    data class ShareLinkReady(val url: String, val shareId: String, val title: String) : NotesUiEvent()
+    /**
+     * A collaborative share link was created and is ready to share / open.
+     * [deleteToken] is the creator's secret unshare token (null if we don't hold
+     * one for this link, e.g. a share created before tokens existed).
+     */
+    data class ShareLinkReady(
+        val url: String,
+        val shareId: String,
+        val title: String,
+        val deleteToken: String? = null
+    ) : NotesUiEvent()
     data class ShowSnackbar(
         val message: String,
         val actionLabel: String? = null,

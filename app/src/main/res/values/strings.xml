@@ -134,6 +134,10 @@
     <string name="share_link_copied">Link copied</string>
     <string name="share_link_share">Share link</string>
     <string name="share_link_open">Open collaboration</string>
+    <string name="share_link_stop">Stop sharing</string>
+    <string name="share_link_unshared">Sharing stopped. Link no longer works.</string>
+    <string name="share_link_unshare_failed">Couldn\'t stop sharing. Check your connection.</string>
+    <string name="share_link_unshare_no_token">Only the person who created this link can stop sharing it.</string>
     <string name="share_via_link">Share link via</string>
     
     <!-- Heading Styles -->

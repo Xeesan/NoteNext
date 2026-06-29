@@ -23,6 +23,7 @@ interface NoteRepository {
     fun getNotesByProjectId(projectId: Int, isDecoy: Boolean = false): Flow<List<NoteWithAttachments>>
     fun getNotesModifiedSince(timestamp: Long): Flow<List<NoteWithAttachments>>
     suspend fun getNoteById(id: Int): NoteWithAttachments?
+    suspend fun getNoteByShareId(shareId: String): Note?
     suspend fun insertNote(note: Note): Long
     suspend fun updateNote(note: Note)
     suspend fun updateNotePosition(id: Int, position: Int)

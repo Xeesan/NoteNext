@@ -12,11 +12,24 @@ import javax.inject.Singleton
 class ShareRepository @Inject constructor(
     private val api: NoteNextApiService
 ) {
-    /** Publishes a note and returns its share id + public URL. */
+    /** Publishes a note and returns its share id + public URL + delete-token. */
     suspend fun shareNote(title: String, content: String): Result<ShareResult> = runCatching {
         val response = api.shareNote(ShareNoteRequest(title = title, content = content))
         val id = response.shareId
-        ShareResult(shareId = id, url = response.shareUrl ?: ShareConstants.shareUrl(id))
+        ShareResult(
+            shareId = id,
+            url = response.shareUrl ?: ShareConstants.shareUrl(id),
+            deleteToken = response.deleteToken
+        )
+    }
+
+    /**
+     * Deletes (unshares) a note from the backend. Requires the secret delete-token
+     * issued at share time; only the creator holds it.
+     */
+    suspend fun deleteNote(shareId: String, deleteToken: String): Result<Unit> = runCatching {
+        api.deleteNote(shareId, deleteToken)
+        Unit
     }
 
     /** Fetches the current state of a shared note. */

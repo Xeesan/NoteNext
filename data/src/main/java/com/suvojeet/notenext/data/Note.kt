@@ -52,7 +52,13 @@ data class Note(
      * Reused on subsequent shares so the same link/collaboration room is kept
      * instead of generating a new one each time.
      */
-    val shareId: String? = null
+    val shareId: String? = null,
+    /**
+     * Secret capability token returned by the backend at share time. Required to
+     * delete (unshare) the note later — proves we are the creator, since the app
+     * has no accounts. Stored only on this device; never displayed.
+     */
+    val shareDeleteToken: String? = null
 ) {
     fun toNoteSummary(): NoteSummary {
         return NoteSummary(

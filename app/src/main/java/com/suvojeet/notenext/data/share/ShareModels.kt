@@ -34,13 +34,21 @@ data class ShareNoteResponse(
     val message: String? = null,
     val shareId: String,
     val shareUrl: String? = null,
+    /**
+     * Secret delete-token, returned exactly once at share time. Must be stored
+     * on-device and presented to delete (unshare) the note later. Null when the
+     * backend predates the delete feature.
+     */
+    val deleteToken: String? = null,
     val note: SharedNoteDto? = null
 )
 
 /** Result of creating a share link. */
 data class ShareResult(
     val shareId: String,
-    val url: String
+    val url: String,
+    /** Secret token required to later unshare this note (creator-only proof). */
+    val deleteToken: String? = null
 )
 
 /**
