@@ -92,6 +92,8 @@ fun AddEditNoteScreen(
     val slashCommandSheetState = rememberModalBottomSheetState()
 
     var showMoreOptions by remember { mutableStateOf(false) }
+    var showShareOptions by remember { mutableStateOf(false) }
+    var shareLinkReady by remember { mutableStateOf<NotesUiEvent.ShareLinkReady?>(null) }
     var showLabelDialog by remember { mutableStateOf(false) }
     var showSaveAsDialog by remember { mutableStateOf(false) }
     var showExpiryDialog by remember { mutableStateOf(false) }
@@ -256,6 +258,9 @@ fun AddEditNoteScreen(
                 }
                 is NotesUiEvent.LinkPreviewRemoved -> {
                     snackbarHostState.showSnackbar("Link preview removed")
+                }
+                is NotesUiEvent.ShareLinkReady -> {
+                    shareLinkReady = event
                 }
                 is NotesUiEvent.ScrollToSearchResult -> {
                     val globalIndex = event.index
@@ -653,6 +658,7 @@ fun AddEditNoteScreen(
         onShowDeleteDialogChange = { showDeleteDialog = it },
         showMoreOptions = showMoreOptions,
         onShowMoreOptionsChange = { showMoreOptions = it },
+        onShare = { showShareOptions = true },
         showLabelDialog = showLabelDialog,
         onShowLabelDialogChange = { showLabelDialog = it },
         showSaveAsDialog = showSaveAsDialog,
@@ -687,6 +693,63 @@ fun AddEditNoteScreen(
              createMdLauncher.launch("${state.editingTitle.ifBlank { "Untitled" }}.md")
         }
     )
+
+    if (showShareOptions) {
+        com.suvojeet.notenext.ui.components.ShareOptionsDialog(
+            onDismiss = { showShareOptions = false },
+            onShareAsText = {
+                val shareContent = if (state.editingNoteType == com.suvojeet.notenext.core.model.NoteType.CHECKLIST) {
+                    buildString {
+                        state.editingChecklist.forEach { item ->
+                            append(if (item.isChecked) "[x] " else "[ ] ")
+                            append(item.text)
+                            append('\n')
+                        }
+                    }
+                } else {
+                    state.editingContent.text
+                }
+                val sendIntent = android.content.Intent(android.content.Intent.ACTION_SEND).apply {
+                    type = "text/plain"
+                    putExtra(android.content.Intent.EXTRA_TEXT, state.editingTitle + "\n\n" + shareContent)
+                }
+                context.startActivity(android.content.Intent.createChooser(sendIntent, null))
+                showShareOptions = false
+            },
+            onShareViaLink = {
+                onEvent(NotesEvent.ShareCurrentNoteViaLink)
+                showShareOptions = false
+            }
+        )
+    }
+
+    shareLinkReady?.let { link ->
+        com.suvojeet.notenext.ui.components.ShareLinkDialog(
+            url = link.url,
+            onDismiss = { shareLinkReady = null },
+            onShare = {
+                val sendIntent = android.content.Intent(android.content.Intent.ACTION_SEND).apply {
+                    type = "text/plain"
+                    putExtra(android.content.Intent.EXTRA_TEXT, link.url)
+                }
+                context.startActivity(
+                    android.content.Intent.createChooser(sendIntent, context.getString(com.suvojeet.notenext.R.string.share_via_link))
+                )
+                shareLinkReady = null
+            },
+            onOpen = {
+                // Open the link — App Links route it back into the in-app collaborative
+                // editor when verified, otherwise it opens in the browser.
+                val viewIntent = android.content.Intent(
+                    android.content.Intent.ACTION_VIEW,
+                    android.net.Uri.parse(link.url)
+                )
+                context.startActivity(viewIntent)
+                shareLinkReady = null
+            }
+        )
+    }
+
     if (showImageViewer) {
         selectedImageData?.let { data ->
             ImageViewerScreen(

@@ -31,6 +31,8 @@ sealed class NotesEvent {
     object CopySelectedNotes : NotesEvent()
     object SendSelectedNotes : NotesEvent()
     object ShareSelectedNotesViaLink : NotesEvent()
+    /** Share the note currently open in the editor as a collaborative link. */
+    object ShareCurrentNoteViaLink : NotesEvent()
     data class SetReminderForSelectedNotes(val date: LocalDate, val time: LocalTime, val repeatOption: RepeatOption) : NotesEvent()
     data class SetLabelForSelectedNotes(val label: String) : NotesEvent()
     data class ExpandNote(

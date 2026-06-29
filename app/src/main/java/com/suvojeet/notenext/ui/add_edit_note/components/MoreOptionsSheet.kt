@@ -1,7 +1,6 @@
 @file:OptIn(ExperimentalMaterial3ExpressiveApi::class, ExperimentalMaterial3Api::class)
 package com.suvojeet.notenext.ui.add_edit_note.components
 
-import android.content.Intent
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -21,7 +20,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -53,16 +51,16 @@ fun MoreOptionsSheet(
     showHistoryDialog: (Boolean) -> Unit,
     showExpiryDialog: (Boolean) -> Unit,
     onPrint: () -> Unit,
-    onToggleLock: () -> Unit
+    onToggleLock: () -> Unit,
+    onShare: () -> Unit
 ) {
     val dateFormat = remember { SimpleDateFormat("MMM dd, yyyy • hh:mm a", Locale.getDefault()) }
-    val context = LocalContext.current
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = false)
 
     val lockLabel = stringResource(id = if (state.editingIsLocked) R.string.unlock else R.string.lock)
     val lockIcon = if (state.editingIsLocked) Icons.Default.LockOpen else Icons.Default.Lock
     // Hoisted out of remember{} — stringResource cannot be called inside it.
-    val sendLabel = stringResource(id = R.string.send)
+    val shareLabel = stringResource(id = R.string.share)
     val makeCopyLabel = stringResource(id = R.string.make_a_copy)
     val undoLabel = stringResource(id = R.string.undo)
     val redoLabel = stringResource(id = R.string.redo)
@@ -73,32 +71,16 @@ fun MoreOptionsSheet(
     val errorColor = MaterialTheme.colorScheme.error
 
     // Labels for the grid
-    val options = remember(state.editingIsLocked, state.editingNoteType, state.editingIsNewNote, state.canUndo, state.canRedo, primaryColor, secondaryColor, tertiaryColor, errorColor) {
+    val options = remember(state.editingIsLocked, state.editingNoteType, state.editingIsNewNote, state.canUndo, state.canRedo, primaryColor, secondaryColor, tertiaryColor, errorColor, shareLabel) {
         mutableListOf<OptionItem>().apply {
             add(OptionItem(lockLabel, lockIcon, primaryColor) { onToggleLock() })
             add(OptionItem("Self-Destruct", Icons.Default.Timer, errorColor) { showExpiryDialog(true) })
             add(OptionItem(if (state.editingNoteType == NoteType.TEXT) "List View" else "Text View", Icons.Default.SwapHoriz, secondaryColor) { onEvent(NotesEvent.OnToggleNoteType) })
             add(OptionItem("Search", Icons.Default.Search, primaryColor) { onEvent(NotesEvent.ToggleNoteSearch) })
             add(OptionItem("Labels", Icons.AutoMirrored.Filled.Label, tertiaryColor) { onEvent(NotesEvent.OnAddLabelsToCurrentNoteClick) })
-            add(OptionItem(sendLabel, Icons.Default.Share, primaryColor) {
-                val shareContent = if (state.editingNoteType == NoteType.CHECKLIST) {
-                    val sb = StringBuilder()
-                    state.editingChecklist.forEach { item ->
-                        val status = if (item.isChecked) "[x]" else "[ ]"
-                        sb.append("$status ${item.text}\n")
-                    }
-                    sb.toString()
-                } else {
-                    state.editingContent.text
-                }
-
-                val sendIntent: Intent = Intent().apply {
-                    action = Intent.ACTION_SEND
-                    putExtra(Intent.EXTRA_TEXT, state.editingTitle + "\n\n" + shareContent)
-                    type = "text/plain"
-                }
-                context.startActivity(Intent.createChooser(sendIntent, null))
-            })
+            // Opens the Share dialog (Text vs. collaborative Link) instead of going
+            // straight to the system text-share sheet.
+            add(OptionItem(shareLabel, Icons.Default.Share, primaryColor) { onShare() })
             add(OptionItem(makeCopyLabel, Icons.Default.ContentCopy, secondaryColor) { onEvent(NotesEvent.OnCopyCurrentNoteClick) })
             add(OptionItem("Print", Icons.Default.Print, secondaryColor) { onPrint() })
             add(OptionItem("Export", Icons.Default.FileDownload, tertiaryColor) { showSaveAsDialog(true) })

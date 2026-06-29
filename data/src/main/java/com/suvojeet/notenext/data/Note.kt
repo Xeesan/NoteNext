@@ -46,7 +46,13 @@ data class Note(
     val iv: String? = null,
     val isEncrypted: Boolean = false,
     val expiryTime: Long? = null,
-    val isDecoy: Boolean = false
+    val isDecoy: Boolean = false,
+    /**
+     * Backend share id, set once this note has been published via a share link.
+     * Reused on subsequent shares so the same link/collaboration room is kept
+     * instead of generating a new one each time.
+     */
+    val shareId: String? = null
 ) {
     fun toNoteSummary(): NoteSummary {
         return NoteSummary(

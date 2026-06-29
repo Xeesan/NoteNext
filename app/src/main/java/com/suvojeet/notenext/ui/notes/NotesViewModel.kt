@@ -742,15 +742,30 @@ class NotesViewModel @Inject constructor(
                     } else {
                         _events.emit(NotesUiEvent.ShowSnackbar(context.getString(R.string.share_link_creating)))
                     }
-                    val note = target.note
-                    shareRepository.shareNote(note.title, note.content)
-                        .onSuccess { result ->
-                            _events.emit(NotesUiEvent.ShareLinkReady(result.url, result.shareId, note.title))
-                        }
-                        .onFailure {
-                            _events.emit(NotesUiEvent.ShowSnackbar(context.getString(R.string.share_link_failed)))
-                        }
+                    shareNoteViaLink(target.note)
                     listDelegate.updateState { it.copy(selectedNoteIds = persistentListOf()) }
+                }
+            }
+            is NotesEvent.ShareCurrentNoteViaLink -> {
+                viewModelScope.launch {
+                    _events.emit(NotesUiEvent.ShowSnackbar(context.getString(R.string.share_link_creating)))
+                    val noteId = editState.value.expandedNoteId
+                    val note = if (noteId != null && noteId > 0) repository.getNoteById(noteId)?.note else null
+                    if (note != null) {
+                        shareNoteViaLink(note)
+                    } else {
+                        // Brand-new, unsaved note — share an ephemeral snapshot from the
+                        // editor state. There's no row yet, so the share id can't be persisted.
+                        val title = editState.value.editingTitle
+                        val content = editState.value.editingContent.text
+                        shareRepository.shareNote(title, content)
+                            .onSuccess { result ->
+                                _events.emit(NotesUiEvent.ShareLinkReady(result.url, result.shareId, title))
+                            }
+                            .onFailure {
+                                _events.emit(NotesUiEvent.ShowSnackbar(context.getString(R.string.share_link_failed)))
+                            }
+                    }
                 }
             }
             is NotesEvent.SetReminderForSelectedNotes -> {
@@ -1604,6 +1619,40 @@ class NotesViewModel @Inject constructor(
         return selectedIds.mapNotNull { id ->
             repository.getNoteById(id)
         }
+    }
+
+    /**
+     * Publishes [note] as a collaborative share link. If the note was shared
+     * before (it already has a [com.suvojeet.notenext.data.Note.shareId]) the
+     * same link/room is reused — the latest content is pushed to it — instead of
+     * minting a brand-new link every time. Otherwise a new link is created and
+     * its id is persisted back onto the note so the next share reuses it.
+     */
+    private suspend fun shareNoteViaLink(note: com.suvojeet.notenext.data.Note) {
+        val existingId = note.shareId
+        if (existingId != null) {
+            // Reuse: refresh the shared copy (best-effort) and surface the same link.
+            shareRepository.pushUpdate(existingId, note.title, note.content)
+            _events.emit(
+                NotesUiEvent.ShareLinkReady(
+                    com.suvojeet.notenext.data.share.ShareConstants.shareUrl(existingId),
+                    existingId,
+                    note.title
+                )
+            )
+            return
+        }
+        shareRepository.shareNote(note.title, note.content)
+            .onSuccess { result ->
+                // Persist the id so re-sharing keeps the same link/collaboration room.
+                if (note.id != 0) {
+                    runCatching { repository.updateNote(note.copy(shareId = result.shareId)) }
+                }
+                _events.emit(NotesUiEvent.ShareLinkReady(result.url, result.shareId, note.title))
+            }
+            .onFailure {
+                _events.emit(NotesUiEvent.ShowSnackbar(context.getString(R.string.share_link_failed)))
+            }
     }
 
     private fun updateWidgets() {

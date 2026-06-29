@@ -45,6 +45,7 @@ fun AddEditNoteDialogs(
     onShowDeleteDialogChange: (Boolean) -> Unit,
     showMoreOptions: Boolean,
     onShowMoreOptionsChange: (Boolean) -> Unit,
+    onShare: () -> Unit,
     showLabelDialog: Boolean,
     onShowLabelDialogChange: (Boolean) -> Unit,
     showSaveAsDialog: Boolean,
@@ -131,7 +132,8 @@ fun AddEditNoteDialogs(
                 } else {
                     Toast.makeText(context, "Authentication unavailable", Toast.LENGTH_SHORT).show()
                 }
-            }
+            },
+            onShare = onShare
         )
     }
 
