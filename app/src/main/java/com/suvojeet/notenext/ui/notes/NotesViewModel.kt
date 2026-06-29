@@ -99,7 +99,8 @@ class NotesViewModel @Inject constructor(
     private val bulkActionDelegate: com.suvojeet.notenext.ui.notes.delegate.BulkActionDelegate,
     private val aiDelegate: com.suvojeet.notenext.ui.notes.delegate.AIDelegate,
     private val aiSuggestionsDelegate: com.suvojeet.notenext.ui.notes.delegate.AISuggestionsDelegate,
-    private val aiFeatureGate: com.suvojeet.notenext.data.ai.AIFeatureGate
+    private val aiFeatureGate: com.suvojeet.notenext.data.ai.AIFeatureGate,
+    private val shareRepository: com.suvojeet.notenext.data.share.ShareRepository
 ) : ViewModel() {
 
     companion object {
@@ -725,6 +726,30 @@ class NotesViewModel @Inject constructor(
                         }
                         _events.emit(NotesUiEvent.SendNotes(title, contentBuilder.toString()))
                     }
+                    listDelegate.updateState { it.copy(selectedNoteIds = persistentListOf()) }
+                }
+            }
+            is NotesEvent.ShareSelectedNotesViaLink -> {
+                viewModelScope.launch {
+                    val selectedNotes = getSelectedNotes()
+                    val target = selectedNotes.firstOrNull()
+                    if (target == null) {
+                        _events.emit(NotesUiEvent.ShowSnackbar(context.getString(R.string.share_link_select_one)))
+                        return@launch
+                    }
+                    if (selectedNotes.size > 1) {
+                        _events.emit(NotesUiEvent.ShowSnackbar(context.getString(R.string.share_link_only_first)))
+                    } else {
+                        _events.emit(NotesUiEvent.ShowSnackbar(context.getString(R.string.share_link_creating)))
+                    }
+                    val note = target.note
+                    shareRepository.shareNote(note.title, note.content)
+                        .onSuccess { result ->
+                            _events.emit(NotesUiEvent.ShareLinkReady(result.url, result.shareId, note.title))
+                        }
+                        .onFailure {
+                            _events.emit(NotesUiEvent.ShowSnackbar(context.getString(R.string.share_link_failed)))
+                        }
                     listDelegate.updateState { it.copy(selectedNoteIds = persistentListOf()) }
                 }
             }

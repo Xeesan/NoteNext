@@ -16,6 +16,7 @@ fun NotesEvent.toProjectNotesEvent(): ProjectNotesEvent {
         is NotesEvent.ChangeColorForSelectedNotes -> ProjectNotesEvent.ChangeColorForSelectedNotes(this.color)
         is NotesEvent.CopySelectedNotes -> ProjectNotesEvent.CopySelectedNotes
         is NotesEvent.SendSelectedNotes -> ProjectNotesEvent.SendSelectedNotes
+        is NotesEvent.ShareSelectedNotesViaLink -> throw IllegalArgumentException("ShareSelectedNotesViaLink event cannot be converted")
         is NotesEvent.SetReminderForSelectedNotes -> ProjectNotesEvent.SetReminderForSelectedNotes(this.date, this.time, this.repeatOption)
         is NotesEvent.ToggleImportantForSelectedNotes -> ProjectNotesEvent.ToggleImportantForSelectedNotes
         is NotesEvent.SetLabelForSelectedNotes -> ProjectNotesEvent.SetLabelForSelectedNotes(this.label)

@@ -89,6 +89,7 @@ fun NotesScreen(
     onMenuClick: () -> Unit = {},
     onDrawingClick: () -> Unit = {},
     onTodoClick: () -> Unit = {},
+    onOpenSharedNote: (String) -> Unit = {},
     events: SharedFlow<NotesUiEvent>
 ) {
     val listState by viewModel.listState.collectAsStateWithLifecycle()
@@ -112,6 +113,7 @@ fun NotesScreen(
     var showColorPickerDialog by remember { mutableStateOf(false) }
     var showShareOptionsDialog by remember { mutableStateOf(false) }
     var showPinnedReorderSheet by remember { mutableStateOf(false) }
+    var shareLinkReady by remember { mutableStateOf<NotesUiEvent.ShareLinkReady?>(null) }
 
     val context = LocalContext.current
     val snackbarHostState = remember { SnackbarHostState() }
@@ -163,6 +165,9 @@ fun NotesScreen(
                     }
                 }
                 is NotesUiEvent.ScrollToSearchResult -> {}
+                is NotesUiEvent.ShareLinkReady -> {
+                    shareLinkReady = event
+                }
             }
         }
     }
@@ -408,6 +413,33 @@ fun NotesScreen(
                                 onShareAsText = {
                                     viewModel.onEvent(NotesEvent.SendSelectedNotes)
                                     showShareOptionsDialog = false
+                                },
+                                onShareViaLink = {
+                                    viewModel.onEvent(NotesEvent.ShareSelectedNotesViaLink)
+                                    showShareOptionsDialog = false
+                                }
+                            )
+                        }
+
+                        shareLinkReady?.let { link ->
+                            ShareLinkDialog(
+                                url = link.url,
+                                onDismiss = { shareLinkReady = null },
+                                onShare = {
+                                    val sendIntent = Intent(Intent.ACTION_SEND).apply {
+                                        type = "text/plain"
+                                        putExtra(Intent.EXTRA_SUBJECT, link.title)
+                                        putExtra(Intent.EXTRA_TEXT, link.url)
+                                    }
+                                    context.startActivity(
+                                        Intent.createChooser(sendIntent, context.getString(R.string.share_via_link))
+                                    )
+                                    shareLinkReady = null
+                                },
+                                onOpen = {
+                                    val id = link.shareId
+                                    shareLinkReady = null
+                                    onOpenSharedNote(id)
                                 }
                             )
                         }

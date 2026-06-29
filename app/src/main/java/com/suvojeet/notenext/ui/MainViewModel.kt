@@ -81,6 +81,9 @@ class MainViewModel @Inject constructor(
     private val _externalUri = MutableStateFlow<Uri?>(null)
     val externalUri = _externalUri.asStateFlow()
 
+    private val _sharedNoteId = MutableStateFlow<String?>(null)
+    val sharedNoteId = _sharedNoteId.asStateFlow()
+
     private val _unlockedByAuth = MutableStateFlow(false)
     val unlockedByAuth = _unlockedByAuth.asStateFlow()
 
@@ -115,7 +118,13 @@ class MainViewModel @Inject constructor(
         _initialTitle.value = intent.getStringExtra("TITLE") ?: intent.getStringExtra(Intent.EXTRA_SUBJECT)
         _searchQuery.value = intent.getStringExtra("QUERY")
         
-        if (intent.action == Intent.ACTION_VIEW || intent.action == Intent.ACTION_EDIT) {
+        // A share deep link (App Link https://…/s/<id> or notenext://note/<id>) takes
+        // priority over the generic external-file path, which would otherwise try to
+        // import the URL as a text file.
+        val incomingShareId = if (intent.action == Intent.ACTION_VIEW) extractShareId(intent.data) else null
+        _sharedNoteId.value = incomingShareId
+
+        if (incomingShareId == null && (intent.action == Intent.ACTION_VIEW || intent.action == Intent.ACTION_EDIT)) {
             _externalUri.value = intent.data
         } else {
             _externalUri.value = null
@@ -131,6 +140,29 @@ class MainViewModel @Inject constructor(
             else -> null
         }
         _sharedText.value = sharedText
+    }
+
+    /**
+     * Extracts a note share id from an incoming deep-link URI, or null if it isn't one.
+     * Handles the App Link form (https://api.notenext.suvojeetsengupta.in/s/<id>) and the
+     * custom-scheme fallback (notenext://note/<id>).
+     */
+    private fun extractShareId(uri: Uri?): String? {
+        if (uri == null) return null
+        val scheme = uri.scheme?.lowercase()
+        return when (scheme) {
+            "notenext" -> uri.lastPathSegment?.takeIf { it.isNotBlank() }
+            "http", "https" -> {
+                val host = uri.host?.lowercase()
+                val segments = uri.pathSegments
+                if (host == "api.notenext.suvojeetsengupta.in" &&
+                    segments.size >= 2 && segments[0] == "s"
+                ) {
+                    segments[1].takeIf { it.isNotBlank() }
+                } else null
+            }
+            else -> null
+        }
     }
 
     fun onUnlock(isDecoy: Boolean = false) {

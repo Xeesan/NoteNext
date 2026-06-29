@@ -280,6 +280,7 @@ class MainActivity : FragmentActivity() {
                                 val initialTitle by viewModel.initialTitle.collectAsStateWithLifecycle()
                                 val searchQuery by viewModel.searchQuery.collectAsStateWithLifecycle()
                                 val externalUri by viewModel.externalUri.collectAsStateWithLifecycle()
+                                val sharedNoteId by viewModel.sharedNoteId.collectAsStateWithLifecycle()
 
                                 NavGraph(
                                     themeMode = themeMode,
@@ -292,7 +293,8 @@ class MainActivity : FragmentActivity() {
                                     sharedText = sharedText,
                                     initialTitle = initialTitle,
                                     searchQuery = searchQuery,
-                                    externalUri = externalUri
+                                    externalUri = externalUri,
+                                    sharedNoteId = sharedNoteId
                                 )
                             }
                         }

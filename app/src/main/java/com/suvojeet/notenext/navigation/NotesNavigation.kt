@@ -24,6 +24,7 @@ import com.suvojeet.notenext.ui.reminder.ReminderScreen
 import com.suvojeet.notenext.ui.reminder.AddEditReminderScreen
 import com.suvojeet.notenext.todo.TodoScreen
 import com.suvojeet.notenext.ui.drawing.DrawingScreen
+import com.suvojeet.notenext.ui.shared.SharedNoteScreen
 import com.suvojeet.notenext.ui.theme.ThemeMode
 import com.suvojeet.notenext.data.repository.SettingsRepository
 import kotlinx.coroutines.flow.map
@@ -66,6 +67,7 @@ fun NavGraphBuilder.notesGraph(
             onMenuClick = onMenuClick,
             onDrawingClick = { navController.navigate(Destination.Drawing) },
             onTodoClick = { navController.navigate(Destination.Todo) },
+            onOpenSharedNote = { shareId -> navController.navigate(Destination.SharedNote(shareId)) },
             events = notesViewModel.events
         )
     }
@@ -118,6 +120,23 @@ fun NavGraphBuilder.notesGraph(
         exitTransition = { slideExit }
     ) {
         TodoScreen(onBackClick = { navController.popBackStack() })
+    }
+
+    composable<Destination.SharedNote>(
+        enterTransition = { slideEnter },
+        exitTransition = { slideExit }
+    ) { backStackEntry ->
+        val route: Destination.SharedNote = backStackEntry.toRoute()
+        SharedNoteScreen(
+            shareId = route.shareId,
+            onBack = {
+                if (!navController.popBackStack()) {
+                    navController.navigate(Destination.Notes()) {
+                        popUpTo<Destination.SharedNote> { inclusive = true }
+                    }
+                }
+            }
+        )
     }
 
     composable<Destination.Drawing>(

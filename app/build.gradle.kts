@@ -250,6 +250,12 @@ dependencies {
     implementation(libs.okhttp)
     implementation(libs.okhttp.logging)
 
+    // Real-time collaboration (Socket.IO). org.json is provided by the Android
+    // platform, so exclude the bundled copy to avoid a duplicate-class clash.
+    implementation(libs.socketio.client) {
+        exclude(group = "org.json", module = "json")
+    }
+
     // In-App Update
     implementation(libs.app.update)
     implementation(libs.app.update.ktx)

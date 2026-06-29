@@ -76,7 +76,11 @@ sealed interface Destination {
     
     @Serializable
     data class AddEditNote(val projectId: Int = -1, val noteType: NoteType = NoteType.TEXT, val externalUri: String? = null) : Destination
-    
+
     @Serializable
     data object Drawing : Destination
+
+    /** A shared/collaborative note opened from a share link (https://…/s/<id> or notenext://note/<id>). */
+    @Serializable
+    data class SharedNote(val shareId: String) : Destination
 }

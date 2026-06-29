@@ -68,7 +68,8 @@ fun NavGraph(
     sharedText: String? = null,
     initialTitle: String? = null,
     searchQuery: String? = null,
-    externalUri: android.net.Uri? = null
+    externalUri: android.net.Uri? = null,
+    sharedNoteId: String? = null
 ) {
     val navController = rememberNavController()
     val context = LocalContext.current
@@ -162,6 +163,14 @@ fun NavGraph(
     LaunchedEffect(externalUri) {
         if (externalUri != null) {
             notesViewModel.onEvent(NotesEvent.LoadExternalFile(externalUri))
+        }
+    }
+
+    LaunchedEffect(sharedNoteId) {
+        if (!sharedNoteId.isNullOrBlank()) {
+            navController.navigate(Destination.SharedNote(sharedNoteId)) {
+                launchSingleTop = true
+            }
         }
     }
 
