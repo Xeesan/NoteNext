@@ -81,7 +81,18 @@ jobs:
 
     - name: Decode Keystore
       run: |
-        echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 --decode > my-release-key.keystore
+        base64 --decode my-release-key.keystore.base64 > my-release-key.keystore
+
+    - name: Verify Keystore
+      run: |
+        echo "Keystore size: $(wc -c < my-release-key.keystore) bytes"
+        keytool -list -keystore my-release-key.keystore -storepass "$KEYSTORE_PASSWORD" -alias "$KEY_ALIAS" > /dev/null 2>&1 \
+          && echo "✅ Keystore verified successfully" \
+          || { echo "❌ Keystore verification failed"; exit 1; }
+      env:
+        KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
+        KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
+
 
     - name: Build and Sign Testing Artifacts (APK & AAB)
       run: gradle assembleRelease bundleRelease --parallel --no-daemon
