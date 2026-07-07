@@ -9,6 +9,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.glance.GlanceId
 import androidx.glance.GlanceModifier
+import androidx.glance.GlanceTheme
 import androidx.glance.action.ActionParameters
 import androidx.glance.action.actionParametersOf
 import androidx.glance.action.clickable
@@ -52,8 +53,10 @@ class NoteGlanceWidget : GlanceAppWidget() {
         }
 
         provideContent {
-            val notes by notesFlow.collectAsState(initial = emptyList())
-            WidgetContent(context, notes)
+            GlanceTheme {
+                val notes by notesFlow.collectAsState(initial = emptyList())
+                WidgetContent(context, notes)
+            }
         }
     }
 
@@ -62,7 +65,7 @@ class NoteGlanceWidget : GlanceAppWidget() {
         Column(
             modifier = GlanceModifier
                 .fillMaxSize()
-                .background(ColorProvider(androidx.compose.ui.graphics.Color.White))
+                .background(GlanceTheme.colors.widgetBackground)
                 .padding(8.dp)
         ) {
             Header(context)
@@ -73,7 +76,7 @@ class NoteGlanceWidget : GlanceAppWidget() {
                 ) {
                     Text(
                         text = "No pinned notes",
-                        style = TextStyle(color = ColorProvider(androidx.compose.ui.graphics.Color.Black))
+                        style = TextStyle(color = GlanceTheme.colors.onSurface)
                     )
                 }
             } else {
@@ -97,7 +100,7 @@ class NoteGlanceWidget : GlanceAppWidget() {
                 style = TextStyle(
                     fontWeight = FontWeight.Bold,
                     fontSize = 18.sp,
-                    color = ColorProvider(androidx.compose.ui.graphics.Color.Black)
+                    color = GlanceTheme.colors.onSurface
                 )
             )
             Spacer(modifier = GlanceModifier.defaultWeight())
@@ -111,7 +114,7 @@ class NoteGlanceWidget : GlanceAppWidget() {
                 style = TextStyle(
                     fontWeight = FontWeight.Bold,
                     fontSize = 24.sp,
-                    color = ColorProvider(androidx.compose.ui.graphics.Color.Blue)
+                    color = GlanceTheme.colors.primary
                 )
             )
         }
@@ -129,7 +132,7 @@ class NoteGlanceWidget : GlanceAppWidget() {
             modifier = GlanceModifier
                 .fillMaxWidth()
                 .padding(vertical = 4.dp)
-                .background(ColorProvider(androidx.compose.ui.graphics.Color(0xFFF5F5F5)))
+                .background(GlanceTheme.colors.surfaceVariant)
                 .padding(8.dp)
                 .clickable(actionStartActivity(intent))
         ) {
@@ -138,7 +141,7 @@ class NoteGlanceWidget : GlanceAppWidget() {
                 style = TextStyle(
                     fontWeight = FontWeight.Medium,
                     fontSize = 16.sp,
-                    color = ColorProvider(androidx.compose.ui.graphics.Color.Black)
+                    color = GlanceTheme.colors.onSurface
                 )
             )
             
@@ -151,7 +154,7 @@ class NoteGlanceWidget : GlanceAppWidget() {
                     maxLines = 3,
                     style = TextStyle(
                         fontSize = 14.sp,
-                        color = ColorProvider(androidx.compose.ui.graphics.Color.Gray)
+                        color = GlanceTheme.colors.onSurfaceVariant
                     )
                 )
             }
@@ -180,7 +183,7 @@ class NoteGlanceWidget : GlanceAppWidget() {
                         maxLines = 1,
                         style = TextStyle(
                             fontSize = 14.sp,
-                            color = ColorProvider(androidx.compose.ui.graphics.Color.Gray)
+                            color = GlanceTheme.colors.onSurfaceVariant
                         ),
                         modifier = GlanceModifier.padding(start = 4.dp)
                     )
@@ -191,7 +194,7 @@ class NoteGlanceWidget : GlanceAppWidget() {
                     text = "... and ${items.size - 3} more",
                     style = TextStyle(
                         fontSize = 12.sp,
-                        color = ColorProvider(androidx.compose.ui.graphics.Color.Gray)
+                        color = GlanceTheme.colors.onSurfaceVariant
                     ),
                     modifier = GlanceModifier.padding(start = 28.dp)
                 )
